@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2022 OpenSynergy Indonesia
+     Copyright 2022 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="school_curiculum_view_search" model="ir.ui.view">
+        <field name="name">school_curiculum - search</field>
+        <field name="model">school_curiculum</field>
+    <field
+            name="inherit_id"
+            ref="ssi_transaction_mixin.mixin_transaction_view_search"
+        />
+    <field name="mode">primary</field>
+    <field name="arch" type="xml">
+        <data>
+        </data>
+    </field>
+</record>
+
+<record id="school_curiculum_view_tree" model="ir.ui.view">
+    <field name="name">school_curiculum - tree</field>
+    <field name="model">school_curiculum</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="ssi_transaction_mixin.mixin_transaction_view_tree" />
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name="grade_type_id" />
+                <field name="date" />
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_curiculum_view_form" model="ir.ui.view">
+    <field name="name">school_curiculum - form</field>
+    <field name="model">school_curiculum</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="ssi_transaction_mixin.mixin_transaction_view_form" />
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="grade_type_id" />
+            </xpath>
+            <xpath expr="//group[@name='header_right']" position="inside">
+                <field name="date" />
+            </xpath>
+            <xpath expr="//page[1]" position="before">
+                <page name="detail" string="Details">
+                    <field name="detail_ids">
+                        <tree name="detail_ids" editable="top">
+                            <field
+                                    name="grade_id"
+                                    domain="[('type_id','=',parent.grade_type_id)]"
+                                />
+                            <field name="subject_id" />
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_curiculum_action" model="ir.actions.act_window">
+    <field name="name">Curiculums</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">school_curiculum</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<menuitem
+        id="school_curiculum_menu"
+        name="Curiculums"
+        parent="ssi_school.menu_school_root"
+        action="school_curiculum_action"
+        groups="school_curiculum_viewer_group"
+        sequence="130"
+    />
+
+</odoo>

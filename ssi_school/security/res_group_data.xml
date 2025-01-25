@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2022 OpenSynergy Indonesia
+     Copyright 2022 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+<odoo>
+<record id="school_subject_group" model="res.groups">
+    <field name="name">Subject</field>
+    <field name="category_id" ref="school_configurator_module_category" />
+    <field
+            name="users"
+            eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"
+        />
+</record>
+
+<record id="school_grade_type_group" model="res.groups">
+    <field name="name">Grade Type</field>
+    <field name="category_id" ref="school_configurator_module_category" />
+    <field
+            name="users"
+            eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"
+        />
+</record>
+
+<record id="school_grade_group" model="res.groups">
+    <field name="name">Grade</field>
+    <field name="category_id" ref="school_configurator_module_category" />
+    <field
+            name="users"
+            eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"
+        />
+</record>
+
+<record id="school_academic_year_group" model="res.groups">
+    <field name="name">Academic Year</field>
+    <field name="category_id" ref="school_configurator_module_category" />
+    <field
+            name="users"
+            eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"
+        />
+</record>
+
+<record id="school_academic_term_group" model="res.groups">
+    <field name="name">Academic Term</field>
+    <field name="category_id" ref="school_configurator_module_category" />
+    <field
+            name="users"
+            eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"
+        />
+</record>
+
+<record id="school_subject_grade_group" model="res.groups">
+    <field name="name">Subject Grade</field>
+    <field name="category_id" ref="school_configurator_module_category" />
+    <field
+            name="users"
+            eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"
+        />
+</record>
+
+<record id="school_student_group" model="res.groups">
+    <field name="name">Student</field>
+    <field name="category_id" ref="school_configurator_module_category" />
+    <field
+            name="users"
+            eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"
+        />
+</record>
+
+<record id="school_teacher_group" model="res.groups">
+    <field name="name">Teacher</field>
+    <field name="category_id" ref="school_configurator_module_category" />
+    <field
+            name="users"
+            eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"
+        />
+</record>
+
+</odoo>

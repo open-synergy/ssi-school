@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2022 OpenSynergy Indonesia
+     Copyright 2022 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+<odoo>
+<record id="school_academic_year1" model="school_academic_year">
+    <field eval="time.strftime('%Y') + ' (demo)'" name="name" />
+    <field eval="'X'+time.strftime('%Y')" name="code" />
+    <field eval="time.strftime('%Y')+'-01-01'" name="date_start" />
+    <field eval="time.strftime('%Y')+'-12-31'" name="date_end" />
+</record>
+</odoo>
