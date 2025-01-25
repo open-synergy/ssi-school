@@ -1,0 +1,14 @@
+odoo14-addon-ssi-stock-account
+odoo14-addon-ssi-master-data-mixin
+odoo14-addon-ssi-transaction-mixin
+odoo14-addon-ssi-transaction-cancel-mixin
+odoo14-addon-ssi-transaction-confirm-mixin
+odoo14-addon-ssi-transaction-done-mixin
+odoo14-addon-ssi-transaction-date-duration-mixin
+odoo14-addon-ssi-transaction-queue-mixin
+odoo14-addon-ssi-transaction-queue-done-mixin
+odoo14-addon-ssi-transaction-queue-cancel-mixin
+odoo14-addon-ssi-m2o-configurator-mixin
+odoo14-addon-ssi-product
+odoo14-addon-queue-job
+odoo14-addon-queue-job-batch
