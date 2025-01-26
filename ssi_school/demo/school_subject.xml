@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2022 OpenSynergy Indonesia
+     Copyright 2022 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+<odoo>
+<record id="school_subject1" model="school_subject">
+    <field name="name">Religion (demo)</field>
+    <field name="code">X001</field>
+</record>
+
+<record id="school_subject2" model="school_subject">
+    <field name="name">Pancasila and civics (demo)</field>
+    <field name="code">X002</field>
+</record>
+
+<record id="school_subject3" model="school_subject">
+    <field name="name">Physical education (demo)</field>
+    <field name="code">X003</field>
+</record>
+
+<record id="school_subject4" model="school_subject">
+    <field name="name">Home economics (demo)</field>
+    <field name="code">X004</field>
+</record>
+
+<record id="school_subject5" model="school_subject">
+    <field name="name">Indonesian language (demo)</field>
+    <field name="code">X005</field>
+</record>
+
+<record id="school_subject6" model="school_subject">
+    <field name="name">English language (demo)</field>
+    <field name="code">X006</field>
+</record>
+
+<record id="school_subject7" model="school_subject">
+    <field name="name">Mathematics (demo)</field>
+    <field name="code">X007</field>
+</record>
+
+<record id="school_subject8" model="school_subject">
+    <field name="name">Physics (demo)</field>
+    <field name="code">X008</field>
+</record>
+
+<record id="school_subject9" model="school_subject">
+    <field name="name">Biology (demo)</field>
+    <field name="code">X009</field>
+</record>
+
+<record id="school_subject10" model="school_subject">
+    <field name="name">History (demo)</field>
+    <field name="code">X010</field>
+</record>
+
+<record id="school_subject11" model="school_subject">
+    <field name="name">Geography (demo)</field>
+    <field name="code">X011</field>
+</record>
+
+<record id="school_subject12" model="school_subject">
+    <field name="name">Economics (demo)</field>
+    <field name="code">X012</field>
+</record>
+
+
+
+</odoo>

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2022 OpenSynergy Indonesia
+     Copyright 2022 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+<record id="policy_template_school_report_card" model="policy.template">
+    <field name="name">Standard</field>
+    <field name="model_id" ref="model_school_report_card" />
+    <field
+            name="state_field_id"
+            search="[('model_id.model','=','school_report_card'),('name','=','state')]"
+        />
+    <field name="sequence" eval="100" />
+    <field name="python_code">result=True</field>
+</record>
+
+<!-- Confirm -->
+<record id="policy_template_school_report_card_confirm" model="policy.template_detail">
+    <field name="template_id" ref="policy_template_school_report_card" />
+    <field
+            name="field_id"
+            search="[('model_id.model','=','school_report_card'),('name','=','confirm_ok')]"
+        />
+    <field name="restrict_state" eval="1" />
+    <field
+            name="state_ids"
+            search="[('field_id.model_id.model','=','school_report_card'),('value','=','draft')]"
+        />
+    <field name="restrict_user" eval="1" />
+    <field name="computation_method">use_group</field>
+    <field name="group_ids" eval="[(6,0,[ref('school_report_card_user_group')])]" />
+    <field name="restrict_additional" eval="0" />
+</record>
+
+<!-- Done -->
+<record id="policy_template_school_report_card_done" model="policy.template_detail">
+    <field name="template_id" ref="policy_template_school_report_card" />
+    <field
+            name="field_id"
+            search="[('model_id.model','=','school_report_card'),('name','=','done_ok')]"
+        />
+    <field name="restrict_state" eval="1" />
+    <field
+            name="state_ids"
+            search="[('field_id.model_id.model','=','school_report_card'),('value','=','open')]"
+        />
+    <field name="restrict_user" eval="1" />
+    <field name="computation_method">use_group</field>
+    <field name="group_ids" eval="[(6,0,[ref('school_report_card_user_group')])]" />
+    <field name="restrict_additional" eval="0" />
+</record>
+
+<!-- Cancel -->
+<record id="policy_template_school_report_card_cancel" model="policy.template_detail">
+    <field name="template_id" ref="policy_template_school_report_card" />
+    <field
+            name="field_id"
+            search="[('model_id.model','=','school_report_card'),('name','=','cancel_ok')]"
+        />
+    <field name="restrict_state" eval="1" />
+    <field
+            name="state_ids"
+            search="[('field_id.model_id.model','=','school_report_card'),('value','in',['draft','open','done'])]"
+        />
+            <field name="restrict_user" eval="1" />
+            <field name="computation_method">use_group</field>
+            <field
+            name="group_ids"
+            eval="[(6,0,[ref('school_report_card_validator_group')])]"
+        />
+            <field name="restrict_additional" eval="0" />
+</record>
+
+<!-- Restart -->
+<record id="policy_template_school_report_card_restart" model="policy.template_detail">
+    <field name="template_id" ref="policy_template_school_report_card" />
+    <field
+            name="field_id"
+            search="[('model_id.model','=','school_report_card'),('name','=','restart_ok')]"
+        />
+    <field name="restrict_state" eval="1" />
+    <field
+            name="state_ids"
+            search="[('field_id.model_id.model','=','school_report_card'),('value','in',['cancel','reject'])]"
+        />
+            <field name="restrict_user" eval="1" />
+            <field name="computation_method">use_group</field>
+            <field
+            name="group_ids"
+            eval="[(6,0,[ref('school_report_card_validator_group')])]"
+        />
+            <field name="restrict_additional" eval="0" />
+</record>
+
+<!-- Reject -->
+<record id="policy_template_school_report_card_reject" model="policy.template_detail">
+    <field name="template_id" ref="policy_template_school_report_card" />
+    <field
+            name="field_id"
+            search="[('model_id.model','=','school_report_card'),('name','=','reject_ok')]"
+        />
+    <field name="restrict_state" eval="1" />
+    <field
+            name="state_ids"
+            search="[('field_id.model_id.model','=','school_report_card'),('value','=','confirm')]"
+        />
+    <field name="restrict_user" eval="0" />
+    <field name="restrict_additional" eval="1" />
+    <field name="additional_python_code">result = False
+if env.user.id in document.active_approver_user_ids.ids:
+    result = True</field>
+</record>
+
+<!-- Approve -->
+<record id="policy_template_school_report_card_approve" model="policy.template_detail">
+    <field name="template_id" ref="policy_template_school_report_card" />
+    <field
+            name="field_id"
+            search="[('model_id.model','=','school_report_card'),('name','=','approve_ok')]"
+        />
+    <field name="restrict_state" eval="1" />
+    <field
+            name="state_ids"
+            search="[('field_id.model_id.model','=','school_report_card'),('value','=','confirm')]"
+        />
+    <field name="restrict_user" eval="0" />
+    <field name="restrict_additional" eval="1" />
+    <field name="additional_python_code">result = False
+if env.user.id in document.active_approver_user_ids.ids:
+    result = True</field>
+</record>
+
+<!-- Manual Number -->
+<record
+        id="policy_template_school_report_card_manual_number"
+        model="policy.template_detail"
+    >
+    <field name="template_id" ref="policy_template_school_report_card" />
+    <field
+            name="field_id"
+            search="[('model_id.model','=','school_report_card'),('name','=','manual_number_ok')]"
+        />
+    <field name="restrict_state" eval="1" />
+    <field
+            name="state_ids"
+            search="[('field_id.model_id.model','=','school_report_card'),('value','=','draft')]"
+        />
+    <field name="restrict_user" eval="1" />
+    <field name="computation_method">use_group</field>
+    <field
+            name="group_ids"
+            eval="[(6,0,[ref('school_report_card_validator_group')])]"
+        />
+    <field name="restrict_additional" eval="0" />
+</record>
+</odoo>

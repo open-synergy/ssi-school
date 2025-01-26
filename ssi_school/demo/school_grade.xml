@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2022 OpenSynergy Indonesia
+     Copyright 2022 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+<odoo>
+<record id="school_grade1_type" model="school_grade">
+    <field name="name">1st Grade (demo)</field>
+    <field name="code">X001</field>
+    <field name="type_id" ref="elementary_school_grade_type" />
+    <field name="sequence" eval="1" />
+</record>
+
+<record id="school_grade2_type" model="school_grade">
+    <field name="name">2nd Grade (demo)</field>
+    <field name="code">X002</field>
+    <field name="type_id" ref="elementary_school_grade_type" />
+    <field name="sequence" eval="2" />
+</record>
+
+<record id="school_grade3_type" model="school_grade">
+    <field name="name">3rd Grade (demo)</field>
+    <field name="code">X003</field>
+    <field name="type_id" ref="elementary_school_grade_type" />
+    <field name="sequence" eval="3" />
+</record>
+
+<record id="school_grade4_type" model="school_grade">
+    <field name="name">4th Grade (demo)</field>
+    <field name="code">X004</field>
+    <field name="type_id" ref="elementary_school_grade_type" />
+    <field name="sequence" eval="4" />
+</record>
+
+<record id="school_grade5_type" model="school_grade">
+    <field name="name">5th Grade (demo)</field>
+    <field name="code">X005</field>
+    <field name="type_id" ref="elementary_school_grade_type" />
+    <field name="sequence" eval="5" />
+</record>
+
+<record id="school_grade6_type" model="school_grade">
+    <field name="name">6th Grade (demo)</field>
+    <field name="code">X006</field>
+    <field name="type_id" ref="elementary_school_grade_type" />
+    <field name="sequence" eval="6" />
+</record>
+
+<record id="school_grade7_type" model="school_grade">
+    <field name="name">7th Grade (demo)</field>
+    <field name="code">X007</field>
+    <field name="type_id" ref="middle_school_grade_type" />
+    <field name="sequence" eval="7" />
+</record>
+
+<record id="school_grade8_type" model="school_grade">
+    <field name="name">8th Grade (demo)</field>
+    <field name="code">X008</field>
+    <field name="type_id" ref="middle_school_grade_type" />
+    <field name="sequence" eval="8" />
+</record>
+
+<record id="school_grade9_type" model="school_grade">
+    <field name="name">9th Grade (demo)</field>
+    <field name="code">X009</field>
+    <field name="type_id" ref="middle_school_grade_type" />
+    <field name="sequence" eval="9" />
+</record>
+
+<record id="school_grade10_type" model="school_grade">
+    <field name="name">10th Grade (demo)</field>
+    <field name="code">X010</field>
+    <field name="type_id" ref="high_school_grade_type" />
+    <field name="sequence" eval="10" />
+</record>
+
+<record id="school_grade11_type" model="school_grade">
+    <field name="name">11th Grade (demo)</field>
+    <field name="code">X011</field>
+    <field name="type_id" ref="high_school_grade_type" />
+    <field name="sequence" eval="11" />
+</record>
+
+<record id="school_grade12_type" model="school_grade">
+    <field name="name">12th Grade (demo)</field>
+    <field name="code">X012</field>
+    <field name="type_id" ref="high_school_grade_type" />
+    <field name="sequence" eval="12" />
+</record>
+
+
+
+
+</odoo>
