@@ -27,6 +27,7 @@
                 <field name="contact_id" />
                 <field name="current_grade_id" />
                 <field name="current_grade_type_id" />
+                <field name="state" />
             </xpath>
         </data>
     </field>
@@ -39,6 +40,9 @@
     <field name="mode">primary</field>
     <field name="arch" type="xml">
         <data>
+            <xpath expr="//header" position="inside">
+                <field name="state" widget="statusbar" />
+            </xpath>
             <xpath expr="//field[@name='name']" position="after">
                 <field name="contact_id" />
                 <field name="current_grade_id" />

@@ -26,3 +26,12 @@ class SchoolStudent(models.Model):
         related="current_grade_id.type_id",
         store=True,
     )
+    state = fields.Selection(
+        string="State",
+        selection=[
+            ("draft", "Waiting for Enrollment"),
+            ("enrol", "Enrolled"),
+            ("graduate", "Graduated"),
+        ],
+        default="draft",
+    )
