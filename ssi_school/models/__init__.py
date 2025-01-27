@@ -14,6 +14,7 @@ from . import (
     school_curiculum,
     school_curiculum_detail,
     school_enrollment,
+    school_homeroom,
     school_class,
     school_student_class_assignment,
     school_report_card,

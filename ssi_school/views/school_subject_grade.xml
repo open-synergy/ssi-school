@@ -24,6 +24,8 @@
     <field name="arch" type="xml">
         <data>
             <xpath expr="//field[@name='name']" position="after">
+                <field name="min_value" />
+                <field name="max_value" />
             </xpath>
         </data>
     </field>
@@ -36,7 +38,9 @@
     <field name="mode">primary</field>
     <field name="arch" type="xml">
         <data>
-            <xpath expr="//field[@name='name']" position="after">
+            <xpath expr="//field[@name='active']" position="after">
+                <field name="min_value" />
+                <field name="max_value" />
             </xpath>
         </data>
     </field>

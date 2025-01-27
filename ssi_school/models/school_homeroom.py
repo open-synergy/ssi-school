@@ -6,15 +6,15 @@ from odoo import api, fields, models
 from odoo.addons.ssi_decorator import ssi_decorator
 
 
-class SchoolEnrollment(models.Model):
-    _name = "school_enrollment"
+class SchoolHomeroom(models.Model):
+    _name = "school_homeroom"
     _inherit = [
         "mixin.transaction_cancel",
         "mixin.transaction_done",
-        "mixin.transaction_open",
         "mixin.transaction_confirm",
+        "mixin.transaction_open",
     ]
-    _description = "School Enrollment"
+    _description = "School Homeroom"
 
     # Multiple Approval Attribute
     _approval_from_state = "draft"
@@ -27,22 +27,22 @@ class SchoolEnrollment(models.Model):
     _automatically_insert_open_policy_fields = False
     _automatically_insert_open_button = False
 
-    _statusbar_visible_label = "draft,confirm,open,done"
+    _statusbar_visible_label = "draft,open,confirm,done"
     _policy_field_order = [
+        "open_ok",
         "confirm_ok",
         "approve_ok",
         "reject_ok",
         "restart_approval_ok",
-        "done_ok",
         "cancel_ok",
         "restart_ok",
         "manual_number_ok",
     ]
     _header_button_order = [
+        "action_open",
         "action_confirm",
         "action_approve_approval",
         "action_reject_approval",
-        "action_done",
         "%(ssi_transaction_cancel_mixin.base_select_cancel_reason_action)d",
         "action_restart",
     ]
@@ -50,9 +50,9 @@ class SchoolEnrollment(models.Model):
     # Attributes related to add element on search view automatically
     _state_filter_order = [
         "dom_draft",
+        "dom_open",
         "dom_confirm",
         "dom_reject",
-        "dom_open",
         "dom_done",
         "dom_cancel",
     ]
@@ -114,9 +114,9 @@ class SchoolEnrollment(models.Model):
             ],
         },
     )
-    curiculum_id = fields.Many2one(
-        string="Curiculum",
-        comodel_name="school_curiculum",
+    teacher_id = fields.Many2one(
+        string="Teacher",
+        comodel_name="school_teacher",
         required=True,
         readonly=True,
         states={
@@ -125,9 +125,20 @@ class SchoolEnrollment(models.Model):
             ],
         },
     )
-    student_id = fields.Many2one(
-        string="Student",
-        comodel_name="school_student",
+    num_of_student = fields.Integer(
+        string="Num of Student",
+        compute="_compute_num_of_student",
+        store=True,
+        compute_sudo=True,
+    )
+    seat_avalilable = fields.Integer(
+        string="Seat Available",
+        compute="_compute_num_of_student",
+        store=True,
+        compute_sudo=True,
+    )
+    homeroom_capacity = fields.Integer(
+        string="Capacity",
         required=True,
         readonly=True,
         states={
@@ -136,39 +147,23 @@ class SchoolEnrollment(models.Model):
             ],
         },
     )
-    homeroom_id = fields.Many2one(
-        string="# Homeroom",
-        comodel_name="school_homeroom",
-        required=True,
+    enrollment_ids = fields.One2many(
+        string="Enrollments",
+        comodel_name="school_enrollment",
+        inverse_name="homeroom_id",
         readonly=True,
-        states={
-            "draft": [
-                ("readonly", False),
-            ],
-        },
     )
-    report_card_id = fields.Many2one(
-        string="# Report Card",
-        comodel_name="school_report_card",
-        required=False,
-        readonly=True,
-        states={
-            "draft": [
-                ("readonly", False),
-            ],
-        },
+
+    @api.depends(
+        "homeroom_capacity",
+        "enrollment_ids",
     )
-    class_assignment_ids = fields.One2many(
-        string="Class Assignments",
-        comodel_name="school_student_class_assignment",
-        inverse_name="enrollment_id",
-        readonly=True,
-        states={
-            "draft": [
-                ("readonly", False),
-            ],
-        },
-    )
+    def _compute_num_of_student(self):
+        for record in self:
+            num_of_student = len(record.enrollment_ids)
+            available = record.homeroom_capacity - num_of_student
+            record.num_of_student = num_of_student
+            record.seat_avalilable = available
 
     @api.onchange(
         "academic_year_id",
@@ -182,75 +177,9 @@ class SchoolEnrollment(models.Model):
     def onchange_grade_id(self):
         self.grade_id = False
 
-    @api.onchange(
-        "grade_type_id",
-    )
-    def onchange_curiculum_id(self):
-        self.curiculum_id = False
-        if self.grade_type_id:
-            criteria = [
-                ("grade_type_id", "=", self.grade_type_id.id),
-                ("state", "=", "open"),
-            ]
-            curiculums = self.env["school_curiculum"].search(criteria)
-            if len(curiculums) > 0:
-                self.curiculum_id = curiculums[0]
-
-    @api.onchange(
-        "academic_term_id",
-        "grade_id",
-    )
-    def onchange_homeroom_id(self):
-        self.homeroom_id = False
-
-    def action_load_assignment(self):
-        for record in self.sudo():
-            record._load_assignment()
-
-    def _load_assignment(self):
-        self.ensure_one()
-        self.class_assignment_ids.unlink()
-        criteria = [
-            ("curiculum_id", "=", self.curiculum_id.id),
-        ]
-        for detail in self.env["school_curiculum.detail"].search(criteria):
-            data = {
-                "enrollment_id": self.id,
-                "subject_id": detail.subject_id.id,
-            }
-            detail = self.env["school_student_class_assignment"].create(data)
-            detail._load_assignment()
-
-    @ssi_decorator.post_open_action()
-    def _create_report_card(self):
-        self.ensure_one()
-        if self.report_card_id:
-            return True
-
-        data = self._prepare_report_card()
-        report_card = self.env["school_report_card"].create(data)
-        self.write(
-            {
-                "report_card_id": report_card.id,
-            }
-        )
-
-    def _prepare_report_card(self):
-        self.ensure_one()
-        return {
-            "academic_year_id": self.academic_year_id.id,
-            "academic_term_id": self.academic_term_id.id,
-            "date": self.date,
-            "grade_type_id": self.grade_type_id.id,
-            "grade_id": self.grade_id.id,
-            "curiculum_id": self.curiculum_id.id,
-            "enrollment_id": self.id,
-            "student_id": self.student_id.id,
-        }
-
     @api.model
     def _get_policy_field(self):
-        res = super(SchoolEnrollment, self)._get_policy_field()
+        res = super(SchoolHomeroom, self)._get_policy_field()
         policy_field = [
             "confirm_ok",
             "approve_ok",
