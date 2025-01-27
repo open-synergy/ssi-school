@@ -39,6 +39,11 @@ class SchoolStudent(models.Model):
         related="current_grade_id.type_id",
         store=True,
     )
+    next_grade_id = fields.Many2one(
+        string="Next Grade",
+        related="current_grade_id.next_grade_id",
+        store=True,
+    )
     enrollment_ids = fields.One2many(
         string="Enrollments",
         comodel_name="school_enrollment",

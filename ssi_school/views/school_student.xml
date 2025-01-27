@@ -57,6 +57,7 @@
                         <group name="enrollment_1_2" colspan="1" col="2">
                             <field name="current_grade_id" />
                             <field name="current_grade_type_id" />
+                            <field name="next_grade_id" />
                         </group>
                     </group>
                     <field name="enrollment_ids" />
