@@ -17,3 +17,12 @@ class SchoolStudent(models.Model):
         required=True,
         ondelete="restrict",
     )
+    current_grade_id = fields.Many2one(
+        string="Current Grade",
+        comodel_name="school_grade",
+        required=True,
+    )
+    current_grade_type_id = fields.Many2one(
+        related="current_grade_id.type_id",
+        store=True,
+    )

@@ -25,6 +25,8 @@
         <data>
             <xpath expr="//field[@name='name']" position="after">
                 <field name="contact_id" />
+                <field name="current_grade_id" />
+                <field name="current_grade_type_id" />
             </xpath>
         </data>
     </field>
@@ -39,6 +41,8 @@
         <data>
             <xpath expr="//field[@name='name']" position="after">
                 <field name="contact_id" />
+                <field name="current_grade_id" />
+                <field name="current_grade_type_id" />
             </xpath>
         </data>
     </field>

@@ -84,6 +84,8 @@
         "views/school_report_card.xml",
     ],
     "demo": [
+        "demo/res_partner.xml",
+        "demo/school_student.xml",
         "demo/school_grade_type.xml",
         "demo/school_grade.xml",
         "demo/school_subject.xml",
