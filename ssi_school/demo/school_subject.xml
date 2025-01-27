@@ -3,7 +3,6 @@
      Copyright 2022 PT. Simetri Sinergi Indonesia
      License AGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
 <odoo>
-<data>
 <record id="school_subject1" model="school_subject">
     <field name="name">Religion (demo)</field>
     <field name="code">X001</field>
@@ -63,7 +62,6 @@
     <field name="name">Economics (demo)</field>
     <field name="code">X012</field>
 </record>
-</data>
 
 
 </odoo>
