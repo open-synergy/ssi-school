@@ -3,7 +3,7 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class SchoolAcademicYear(models.Model):
@@ -20,3 +20,35 @@ class SchoolAcademicYear(models.Model):
         string="Date End",
         required=True,
     )
+    term_ids = fields.One2many(
+        string="Terms",
+        comodel_name="school_academic_term",
+        inverse_name="year_id",
+        readony=True,
+    )
+    first_term_id = fields.Many2one(
+        string="First Term",
+        comodel_name="school_academic_term",
+        compute="_compute_first_last_term",
+        store=True,
+        compute_sudo=True,
+    )
+    last_term_id = fields.Many2one(
+        string="Last Term",
+        comodel_name="school_academic_term",
+        compute="_compute_first_last_term",
+        store=True,
+        compute_sudo=True,
+    )
+
+    @api.depends(
+        "term_ids",
+    )
+    def _compute_first_last_term(self):
+        for record in self:
+            first_term = last_term = False
+            if record.term_ids:
+                first_term = record.term_ids[0]
+                last_term = record.term_ids[-1]
+            record.first_term_id = first_term
+            record.last_term_id = last_term

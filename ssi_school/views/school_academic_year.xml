@@ -42,6 +42,15 @@
                 <field name="date_start" />
                 <field name="date_end" />
             </xpath>
+            <xpath expr="//page[1]" position="before">
+                <page name="term" string="Terms">
+                    <group name="term_1" colspan="4" col="2">
+                        <field name="first_term_id" />
+                        <field name="last_term_id" />
+                    </group>
+                    <field name="term_ids" />
+                </page>
+            </xpath>
         </data>
     </field>
 </record>
