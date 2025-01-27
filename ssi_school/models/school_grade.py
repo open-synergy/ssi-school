@@ -64,18 +64,18 @@ class SchoolGrade(models.Model):
             grade_index = grades.ids.index(record.id)
             try:
                 if grade_index - 1 < 0:
-                    previous = False
+                    previous_grade = False
                 else:
-                    previous = grades[grade_index - 1]
+                    previous_grade = grades[grade_index - 1]
             except BaseException:
-                previous = False
+                previous_grade = False
             try:
-                next = grades[grade_index + 1]
+                next_grade = grades[grade_index + 1]
             except BaseException:
-                next = False
+                next_grade = False
             record.write(
                 {
-                    "previous_grade_id": previous and previous.id or False,
-                    "next_grade_id": next and next.id or False,
+                    "previous_grade_id": previous_grade and previous_grade.id or False,
+                    "next_grade_id": next_grade and next_grade.id or False,
                 }
             )
