@@ -25,6 +25,9 @@
         <data>
             <xpath expr="//field[@name='name']" position="after">
                 <field name="contact_id" />
+                <field name="current_grade_id" />
+                <field name="current_grade_type_id" />
+                <field name="state" />
             </xpath>
         </data>
     </field>
@@ -37,8 +40,28 @@
     <field name="mode">primary</field>
     <field name="arch" type="xml">
         <data>
+            <xpath expr="//header" position="inside">
+                <field name="state" widget="statusbar" />
+            </xpath>
             <xpath expr="//field[@name='name']" position="after">
                 <field name="contact_id" />
+
+            </xpath>
+            <xpath expr="//page[1]" position="before">
+                <page name="enrollment" string="Enrollments">
+                    <group name="enrollment_1" colspan="4" col="2">
+                        <group name="enrollment_1_1" colspan="1" col="2">
+                            <field name="initial_grade_id" />
+                            <field name="initial_grade_type_id" />
+                        </group>
+                        <group name="enrollment_1_2" colspan="1" col="2">
+                            <field name="current_grade_id" />
+                            <field name="current_grade_type_id" />
+                            <field name="next_grade_id" />
+                        </group>
+                    </group>
+                    <field name="enrollment_ids" />
+                </page>
             </xpath>
         </data>
     </field>

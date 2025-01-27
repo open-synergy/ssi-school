@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2022 OpenSynergy Indonesia
+     Copyright 2022 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+<record id="school_student_1" model="school_student">
+    <field name="name">Yuda Mohammad (demo)</field>
+    <field name="code">X001</field>
+    <field name="contact_id" ref="res_partner_1" />
+    <field name="initial_grade_id" ref="school_grade1_type" />
+</record>
+
+<record id="school_student_2" model="school_student">
+    <field name="name">Sri Wahyuni Umar (demo)</field>
+    <field name="code">X002</field>
+    <field name="contact_id" ref="res_partner_2" />
+    <field name="initial_grade_id" ref="school_grade1_type" />
+</record>
+
+<record id="school_student_3" model="school_student">
+    <field name="name">Anisa Hakim (demo)</field>
+    <field name="code">X003</field>
+    <field name="contact_id" ref="res_partner_3" />
+    <field name="initial_grade_id" ref="school_grade1_type" />
+
+</record>
+
+<record id="school_student_4" model="school_student">
+    <field name="name">Latifah Ismail (demo)</field>
+    <field name="code">X004</field>
+    <field name="contact_id" ref="res_partner_4" />
+    <field name="initial_grade_id" ref="school_grade6_type" />
+</record>
+
+<record id="school_student_5" model="school_student">
+    <field name="name">Faris Rizky (demo)</field>
+    <field name="code">X005</field>
+    <field name="contact_id" ref="res_partner_5" />
+    <field name="initial_grade_id" ref="school_grade6_type" />
+</record>
+
+<record id="school_student_6" model="school_student">
+    <field name="name">Joko Wahyudi (demo)</field>
+    <field name="code">X006</field>
+    <field name="contact_id" ref="res_partner_6" />
+    <field name="initial_grade_id" ref="school_grade9_type" />
+</record>
+
+<record id="school_student_7" model="school_student">
+    <field name="name">Cinta Cahaya (demo)</field>
+    <field name="code">X007</field>
+    <field name="contact_id" ref="res_partner_7" />
+    <field name="initial_grade_id" ref="school_grade12_type" />
+</record>
+
+
+
+</odoo>

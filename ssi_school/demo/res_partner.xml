@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2022 OpenSynergy Indonesia
+     Copyright 2022 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+<record id="res_partner_1" model="res.partner">
+    <field name="name">Yuda Mohammad</field>
+    <field name="company_id" ref="base.main_company" />
+    <field name="company_name" eval="" />
+    <field name="country_id" ref="base.id" />
+    <field name="tz">Asia/Jakarta</field>
+    <field name="email">yuda.mohammad@example.com</field>
+</record>
+
+<record id="res_partner_2" model="res.partner">
+    <field name="name">Sri Wahyuni Umar</field>
+    <field name="company_id" ref="base.main_company" />
+    <field name="company_name" eval="" />
+    <field name="country_id" ref="base.id" />
+    <field name="tz">Asia/Jakarta</field>
+    <field name="email">sri.umar@example.com</field>
+</record>
+
+<record id="res_partner_3" model="res.partner">
+    <field name="name">Anisa Hakim</field>
+    <field name="company_id" ref="base.main_company" />
+    <field name="company_name" eval="" />
+    <field name="country_id" ref="base.id" />
+    <field name="tz">Asia/Jakarta</field>
+    <field name="email">anisa.hakim@example.com</field>
+</record>
+
+<record id="res_partner_4" model="res.partner">
+    <field name="name">Latifah Ismail</field>
+    <field name="company_id" ref="base.main_company" />
+    <field name="company_name" eval="" />
+    <field name="country_id" ref="base.id" />
+    <field name="tz">Asia/Jakarta</field>
+    <field name="email">latifah.ismail@example.com</field>
+</record>
+
+<record id="res_partner_5" model="res.partner">
+    <field name="name">Faris Rizky</field>
+    <field name="company_id" ref="base.main_company" />
+    <field name="company_name" eval="" />
+    <field name="country_id" ref="base.id" />
+    <field name="tz">Asia/Jakarta</field>
+    <field name="email">faris.rizky@example.com</field>
+</record>
+
+<record id="res_partner_6" model="res.partner">
+    <field name="name">Joko Wahyudi</field>
+    <field name="company_id" ref="base.main_company" />
+    <field name="company_name" eval="" />
+    <field name="country_id" ref="base.id" />
+    <field name="tz">Asia/Jakarta</field>
+    <field name="email">joko.wahyudi@example.com</field>
+</record>
+
+<record id="res_partner_7" model="res.partner">
+    <field name="name">Cinta Cahaya</field>
+    <field name="company_id" ref="base.main_company" />
+    <field name="company_name" eval="" />
+    <field name="country_id" ref="base.id" />
+    <field name="tz">Asia/Jakarta</field>
+    <field name="email">cinta.cahaya@example.com</field>
+</record>
+
+<record id="res_partner_8" model="res.partner">
+    <field name="name">Jamaluddin Ismail</field>
+    <field name="company_id" ref="base.main_company" />
+    <field name="company_name" eval="" />
+    <field name="country_id" ref="base.id" />
+    <field name="tz">Asia/Jakarta</field>
+    <field name="email">jamaluddin.ismail@example.com</field>
+</record>
+
+<record id="res_partner_9" model="res.partner">
+    <field name="name">Nila Asih</field>
+    <field name="company_id" ref="base.main_company" />
+    <field name="company_name" eval="" />
+    <field name="country_id" ref="base.id" />
+    <field name="tz">Asia/Jakarta</field>
+    <field name="email">nila.asih@example.com</field>
+</record>
+
+<record id="res_partner_10" model="res.partner">
+    <field name="name">Guntur Imam</field>
+    <field name="company_id" ref="base.main_company" />
+    <field name="company_name" eval="" />
+    <field name="country_id" ref="base.id" />
+    <field name="tz">Asia/Jakarta</field>
+    <field name="email">guntur.imam@example.com</field>
+</record>
+
+<record id="res_partner_11" model="res.partner">
+    <field name="name">Dewi Tirta</field>
+    <field name="company_id" ref="base.main_company" />
+    <field name="company_name" eval="" />
+    <field name="country_id" ref="base.id" />
+    <field name="tz">Asia/Jakarta</field>
+    <field name="email">dewi.tirta@example.com</field>
+</record>
+
+
+
+</odoo>

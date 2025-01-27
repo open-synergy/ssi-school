@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2022 OpenSynergy Indonesia
+     Copyright 2022 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+<record id="school_teacher_1" model="school_teacher">
+    <field name="name">Jamaluddin Ismail (demo)</field>
+    <field name="code">X001</field>
+    <field name="contact_id" ref="res_partner_8" />
+</record>
+
+<record id="school_teacher_2" model="school_teacher">
+    <field name="name">Nila Asih (demo)</field>
+    <field name="code">X002</field>
+    <field name="contact_id" ref="res_partner_9" />
+</record>
+
+<record id="school_teacher_3" model="school_teacher">
+    <field name="name">Guntur Imam (demo)</field>
+    <field name="code">X003</field>
+    <field name="contact_id" ref="res_partner_10" />
+</record>
+
+<record id="school_teacher_4" model="school_teacher">
+    <field name="name">Dewi Tirta (demo)</field>
+    <field name="code">X004</field>
+    <field name="contact_id" ref="res_partner_11" />
+</record>
+
+
+
+
+</odoo>

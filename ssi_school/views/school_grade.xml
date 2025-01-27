@@ -28,6 +28,8 @@
             </xpath>
             <xpath expr="//field[@name='name']" position="after">
                 <field name="type_id" />
+                <field name="previous_grade_id" />
+                <field name="next_grade_id" />
             </xpath>
         </data>
     </field>
@@ -43,6 +45,8 @@
             <xpath expr="//field[@name='active']" position="after">
                 <field name="sequence" />
                 <field name="type_id" />
+                <field name="previous_grade_id" />
+                <field name="next_grade_id" />
             </xpath>
         </data>
     </field>
