@@ -44,6 +44,7 @@ class SchoolStudentClassAssignment(models.Model):
             ("academic_term_id", "=", self.enrollment_id.academic_term_id.id),
             ("subject_id", "=", self.subject_id.id),
             ("state", "=", "open"),
+            ("grade_id", "=", self.enrollment_id.grade_id.id),
         ]
 
         classes = self.env["school_class"].search(criteria)
