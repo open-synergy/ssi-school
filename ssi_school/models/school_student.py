@@ -48,7 +48,7 @@ class SchoolStudent(models.Model):
         string="Enrollments",
         comodel_name="school_enrollment",
         inverse_name="student_id",
-        readony=True,
+        readonly=True,
     )
     state = fields.Selection(
         string="State",
