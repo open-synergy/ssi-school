@@ -3,6 +3,7 @@
      Copyright 2022 PT. Simetri Sinergi Indonesia
      License AGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
 <odoo>
+<data>
 <record id="elementary_school_grade_type" model="school_grade_type">
     <field name="name">Elementary School (demo)</field>
     <field name="code">X001</field>
@@ -20,7 +21,7 @@
     <field name="code">X003</field>
     <field nema="sequence" eval="3" />
 </record>
-
+</data>
 
 
 </odoo>
