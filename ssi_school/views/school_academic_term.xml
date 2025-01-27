@@ -28,6 +28,7 @@
                 <field name="date_start" />
                 <field name="date_end" />
                 <field name="first_term" />
+                <field name="state" />
             </xpath>
         </data>
     </field>
@@ -40,11 +41,56 @@
     <field name="mode">primary</field>
     <field name="arch" type="xml">
         <data>
+            <xpath expr="//header" position="inside">
+                <button
+                        name="action_open"
+                        string="Start"
+                        type="object"
+                        class="oe_highlight"
+                        attrs="{'invisible':[('state','!=','draft')]}"
+                    />
+                <button
+                        name="action_done"
+                        string="Done"
+                        type="object"
+                        class="oe_highlight"
+                        attrs="{'invisible':[('state','!=','open')]}"
+                    />
+                <button
+                        name="action_restart"
+                        string="Restart"
+                        type="object"
+                        class="oe_highlight"
+                        attrs="{'invisible':[('state','=','draft')]}"
+                    />
+                <button
+                        name="action_open_enrollment"
+                        string="Open Enrollment"
+                        type="object"
+                        class="oe_highlight"
+                        attrs="{'invisible':[('enrollment_state','=','open')]}"
+                    />
+                <button
+                        name="action_close_enrollment"
+                        string="Close Enrollment"
+                        type="object"
+                        class="oe_highlight"
+                        attrs="{'invisible':[('enrollment_state','=','close')]}"
+                    />
+                <field name="state" widget="statusbar" />
+            </xpath>
             <xpath expr="//field[@name='name']" position="after">
                 <field name="year_id" />
                 <field name="date_start" />
                 <field name="date_end" />
                 <field name="first_term" />
+            </xpath>
+            <xpath expr="//page[1]" position="before">
+                <page name="enrollment" string="Enrollment">
+                    <group name="enrollment_1" colspan="4" col="2">
+                        <field name="enrollment_state" />
+                    </group>
+                </page>
             </xpath>
         </data>
     </field>
