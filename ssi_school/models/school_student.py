@@ -3,7 +3,7 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class SchoolStudent(models.Model):
@@ -17,14 +17,33 @@ class SchoolStudent(models.Model):
         required=True,
         ondelete="restrict",
     )
-    current_grade_id = fields.Many2one(
-        string="Current Grade",
+    initial_grade_id = fields.Many2one(
+        string="Initial Grade",
         comodel_name="school_grade",
         required=True,
     )
-    current_grade_type_id = fields.Many2one(
+    initial_grade_type_id = fields.Many2one(
+        string="Initial Grade Type",
         related="current_grade_id.type_id",
         store=True,
+    )
+    current_grade_id = fields.Many2one(
+        string="Current Grade",
+        comodel_name="school_grade",
+        compute="_compute_current_grade_id",
+        store=True,
+        compute_sudo=True,
+    )
+    current_grade_type_id = fields.Many2one(
+        string="Current Grade Type",
+        related="current_grade_id.type_id",
+        store=True,
+    )
+    enrollment_ids = fields.One2many(
+        string="Enrollments",
+        comodel_name="school_enrollment",
+        inverse_name="student_id",
+        readony=True,
     )
     state = fields.Selection(
         string="State",
@@ -35,3 +54,16 @@ class SchoolStudent(models.Model):
         ],
         default="draft",
     )
+
+    @api.depends("initial_grade_id", "enrollment_ids", "enrollment_ids.state")
+    def _compute_current_grade_id(self):
+        for record in self:
+            result = record.initial_grade_id
+            criteria = [
+                ("state", "in", ["open", "done"]),
+                ("student_id", "=", record.id),
+            ]
+            enrollments = self.env["school_enrollment"].search(criteria)
+            if len(enrollments) > 0:
+                result = enrollments[-1].grade_id
+            record.current_grade_id = result
