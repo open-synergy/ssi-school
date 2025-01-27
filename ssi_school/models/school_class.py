@@ -147,8 +147,20 @@ class SchoolClass(models.Model):
             ],
         },
     )
+    num_of_student = fields.Integer(
+        string="Num of Student",
+        compute="_compute_num_of_student",
+        store=True,
+        compute_sudo=True,
+    )
+    seat_avalilable = fields.Integer(
+        string="Seat Available",
+        compute="_compute_num_of_student",
+        store=True,
+        compute_sudo=True,
+    )
     class_capacity = fields.Integer(
-        string="Class",
+        string="Capacity",
         required=True,
         readonly=True,
         states={
@@ -168,6 +180,43 @@ class SchoolClass(models.Model):
             ],
         },
     )
+
+    @api.depends(
+        "class_capacity",
+        "class_assignment_ids",
+    )
+    def _compute_num_of_student(self):
+        for record in self:
+            num_of_student = len(record.class_assignment_ids)
+            available = record.class_capacity - num_of_student
+            record.num_of_student = num_of_student
+            record.seat_avalilable = available
+
+    @api.onchange(
+        "academic_year_id",
+    )
+    def onchange_academic_term_id(self):
+        self.academic_term_id = False
+
+    @api.onchange(
+        "grade_type_id",
+    )
+    def onchange_grade_id(self):
+        self.grade_id = False
+
+    @api.onchange(
+        "grade_type_id",
+    )
+    def onchange_curiculum_id(self):
+        self.curiculum_id = False
+        if self.grade_type_id:
+            criteria = [
+                ("grade_type_id", "=", self.grade_type_id.id),
+                ("state", "=", "open"),
+            ]
+            curiculums = self.env["school_curiculum"].search(criteria)
+            if len(curiculums) > 0:
+                self.curiculum_id = curiculums[0]
 
     @api.model
     def _get_policy_field(self):
