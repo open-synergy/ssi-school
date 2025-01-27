@@ -3,7 +3,7 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class SchoolAcademicTerm(models.Model):
@@ -26,3 +26,19 @@ class SchoolAcademicTerm(models.Model):
         required=True,
         ondelete="restrict",
     )
+    first_term = fields.Boolean(
+        string="First Term of Academic Year?",
+        compute="_compute_first_term",
+        store=True,
+    )
+
+    @api.depends(
+        "year_id",
+        "year_id.first_term_id",
+    )
+    def _compute_first_term(self):
+        for record in self:
+            result = False
+            if record == record.year_id.first_term_id:
+                result = True
+            record.first_term = result
