@@ -30,7 +30,7 @@ class SchoolGrade(models.Model):
         readonly=True,
     )
     next_grade_id = fields.Many2one(
-        strinng="Next Grade",
+        string="Next Grade",
         comodel_name="school_grade",
         compute=False,
         readonly=True,

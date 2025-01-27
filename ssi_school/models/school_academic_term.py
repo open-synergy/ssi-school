@@ -31,6 +31,24 @@ class SchoolAcademicTerm(models.Model):
         compute="_compute_first_term",
         store=True,
     )
+    state = fields.Selection(
+        string="State",
+        selection=[
+            ("draft", "Unstarted"),
+            ("open", "On progress"),
+            ("done", "Done"),
+        ],
+        default="draft",
+    )
+    enrollment_state = fields.Selection(
+        string="Enrollment State",
+        selection=[
+            ("close", "Close"),
+            ("open", "Open for Enrollment"),
+        ],
+        default="close",
+        readonly=True,
+    )
 
     @api.depends(
         "year_id",
@@ -42,3 +60,63 @@ class SchoolAcademicTerm(models.Model):
             if record == record.year_id.first_term_id:
                 result = True
             record.first_term = result
+
+    def action_open(self):
+        for record in self.sudo():
+            record._open()
+
+    def action_done(self):
+        for record in self.sudo():
+            record._done()
+
+    def action_restart(self):
+        for record in self.sudo():
+            record._restart()
+
+    def action_open_enrollment(self):
+        for record in self.sudo():
+            record._open_enrollment()
+
+    def action_close_enrollment(self):
+        for record in self.sudo():
+            record._close_enrollment()
+
+    def _open(self):
+        self.ensure_one()
+        self.write(
+            {
+                "state": "open",
+            }
+        )
+
+    def _done(self):
+        self.ensure_one()
+        self.write(
+            {
+                "state": "done",
+            }
+        )
+
+    def _restart(self):
+        self.ensure_one()
+        self.write(
+            {
+                "state": "draft",
+            }
+        )
+
+    def _open_enrollment(self):
+        self.ensure_one()
+        self.write(
+            {
+                "enrollment_state": "open",
+            }
+        )
+
+    def _close_enrollment(self):
+        self.ensure_one()
+        self.write(
+            {
+                "enrollment_state": "close",
+            }
+        )

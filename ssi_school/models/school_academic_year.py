@@ -24,7 +24,7 @@ class SchoolAcademicYear(models.Model):
         string="Terms",
         comodel_name="school_academic_term",
         inverse_name="year_id",
-        readony=True,
+        readonly=True,
     )
     first_term_id = fields.Many2one(
         string="First Term",

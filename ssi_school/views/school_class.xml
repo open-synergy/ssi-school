@@ -51,7 +51,7 @@
                 <field name="academic_year_id" />
                 <field
                         name="academic_term_id"
-                        domain="[('year_id','=',academic_year_id)]"
+                        domain="[('year_id','=',academic_year_id),('state','=','draft')]"
                     />
                 <field name="grade_type_id" />
                 <field name="grade_id" domain="[('type_id','=',grade_type_id)]" />
