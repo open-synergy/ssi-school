@@ -11,8 +11,8 @@ class SchoolHomeroom(models.Model):
     _inherit = [
         "mixin.transaction_cancel",
         "mixin.transaction_done",
-        "mixin.transaction_confirm",
         "mixin.transaction_open",
+        "mixin.transaction_confirm",
     ]
     _description = "School Homeroom"
 
