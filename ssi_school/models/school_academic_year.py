@@ -10,6 +10,7 @@ class SchoolAcademicYear(models.Model):
     _name = "school_academic_year"
     _inherit = ["mixin.master_data"]
     _description = "School Academic Year"
+    _order = "date_start asc, id asc"
 
     date_start = fields.Date(
         string="Date Start",
