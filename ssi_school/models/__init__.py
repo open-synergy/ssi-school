@@ -5,6 +5,7 @@
 from . import (
     school_grade_type,
     school_grade,
+    school_score_type,
     school_subject,
     school_academic_year,
     school_academic_term,
