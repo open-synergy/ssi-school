@@ -63,6 +63,7 @@
             <xpath expr="//group[@name='header_right']" position="inside">
                 <field name="subject_id" />
                 <field name="teacher_id" />
+                <field name="scoring_system_id" />
                 <field name="date" />
             </xpath>
             <xpath expr="//page[1]" position="before">

@@ -147,6 +147,17 @@ class SchoolClass(models.Model):
             ],
         },
     )
+    scoring_system_id = fields.Many2one(
+        string="Scoring System",
+        comodel_name="school_scoring_system",
+        required=True,
+        readonly=True,
+        states={
+            "draft": [
+                ("readonly", False),
+            ],
+        },
+    )
     num_of_student = fields.Integer(
         string="Num of Student",
         compute="_compute_num_of_student",
