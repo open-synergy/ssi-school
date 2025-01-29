@@ -64,6 +64,7 @@ class SchoolClass(models.Model):
 
     date = fields.Date(
         string="Date",
+        default=lambda r: datetime_date.today(),
         required=True,
         readonly=True,
         states={
