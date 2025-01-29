@@ -21,4 +21,6 @@ from . import (
     school_class,
     school_student_class_assignment,
     school_report_card,
+    school_student_score_sheet,
+    school_student_score,
 )

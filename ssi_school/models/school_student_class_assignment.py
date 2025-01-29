@@ -1,7 +1,7 @@
 # Copyright 2022 OpenSynergy Indonesia
 # Copyright 2022 PT. Simetri Sinergi Indonesia
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class SchoolStudentClassAssignment(models.Model):
@@ -13,6 +13,11 @@ class SchoolStudentClassAssignment(models.Model):
         comodel_name="school_enrollment",
         required=True,
         ondelete="cascade",
+    )
+    report_card_id = fields.Many2one(
+        string="# Report Card",
+        related="enrollment_id.report_card_id",
+        store=True,
     )
     student_id = fields.Many2one(
         string="Student",
@@ -30,6 +35,28 @@ class SchoolStudentClassAssignment(models.Model):
         comodel_name="school_class",
         ondelete="set null",
     )
+    score_ids = fields.One2many(
+        string="Scores",
+        comodel_name="school_student_score",
+        inverse_name="class_assignment_id",
+    )
+    score = fields.Float(
+        string="Score",
+        compute="_compute_score",
+        store=True,
+        compute_sudo=True,
+    )
+
+    @api.depends(
+        "score_ids",
+        "score_ids.final_score",
+    )
+    def _compute_score(self):
+        for record in self:
+            result = 0.0
+            for score in record.score_ids:
+                result += score.final_score
+            record.score = result
 
     def action_load_assignment(self):
         for record in self.sudo():

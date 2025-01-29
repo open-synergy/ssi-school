@@ -73,16 +73,27 @@
                         <field name="num_of_student" />
                         <field name="seat_avalilable" />
                     </group>
+                    <button
+                            name="action_create_score_sheet"
+                            type="object"
+                            icon="fa-gear"
+                            class="oe_highlight"
+                            string="Create Score Sheet"
+                        />
                     <field name="class_assignment_ids">
                         <tree>
                             <field name="enrollment_id" />
                             <field name="student_id" />
+                            <field name="score" />
                             <button
                                     name="action_load_assignment"
                                     type="object"
                                     icon="fa-gear"
+                                    class="oe_highlight"
                                     help="Load Assignment"
                                 />
+
+
                         </tree>
                     </field>
                 </page>
