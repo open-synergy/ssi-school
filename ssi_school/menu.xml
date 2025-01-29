@@ -10,6 +10,13 @@
     />
 
 <menuitem
+        id="menu_school_classroom"
+        name="Classroom"
+        parent="menu_school_root"
+        sequence="400"
+    />
+
+<menuitem
         id="menu_school_report"
         name="Report"
         parent="menu_school_root"

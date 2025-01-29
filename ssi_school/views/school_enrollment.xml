@@ -48,11 +48,16 @@
                 <field name="academic_year_id" />
                 <field
                         name="academic_term_id"
-                        domain="[('year_id','=',academic_year_id)]"
+                        domain="[('year_id','=',academic_year_id),('enrollment_state','=','open')]"
                     />
                 <field name="grade_type_id" />
                 <field name="grade_id" domain="[('type_id','=',grade_type_id)]" />
-                <field name="student_id" />
+                <field
+                        name="allowed_student_ids"
+                        widget="many2many_tags"
+                        invisible="1"
+                    />
+                <field name="student_id" domain="[('id','=',allowed_student_ids)]" />
                 <field
                         name="homeroom_id"
                         domain="[('academic_term_id','=',academic_term_id),('grade_id','=',grade_id),('state','=','open'),('seat_avalilable','&gt;',0)]"

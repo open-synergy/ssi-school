@@ -3,9 +3,9 @@
      Copyright 2022 PT. Simetri Sinergi Indonesia
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
-    <record id="school_report_card_view_search" model="ir.ui.view">
-        <field name="name">school_report_card - search</field>
-        <field name="model">school_report_card</field>
+    <record id="school_student_score_sheet_view_search" model="ir.ui.view">
+        <field name="name">school_student_score_sheet - search</field>
+        <field name="model">school_student_score_sheet</field>
     <field
             name="inherit_id"
             ref="ssi_transaction_mixin.mixin_transaction_view_search"
@@ -17,28 +17,30 @@
     </field>
 </record>
 
-<record id="school_report_card_view_tree" model="ir.ui.view">
-    <field name="name">school_report_card - tree</field>
-    <field name="model">school_report_card</field>
+<record id="school_student_score_sheet_view_tree" model="ir.ui.view">
+    <field name="name">school_student_score_sheet - tree</field>
+    <field name="model">school_student_score_sheet</field>
     <field name="mode">primary</field>
     <field name="inherit_id" ref="ssi_transaction_mixin.mixin_transaction_view_tree" />
     <field name="arch" type="xml">
         <data>
             <xpath expr="//field[@name='company_id']" position="after">
                 <field name="date" />
-                <field name="student_id" />
                 <field name="academic_year_id" />
                 <field name="academic_term_id" />
                 <field name="grade_type_id" />
                 <field name="grade_id" />
+                <field name="class_id" />
+                <field name="teacher_id" />
+                <field name="score_type_id" />
             </xpath>
         </data>
     </field>
 </record>
 
-<record id="school_report_card_view_form" model="ir.ui.view">
-    <field name="name">school_report_card - form</field>
-    <field name="model">school_report_card</field>
+<record id="school_student_score_sheet_view_form" model="ir.ui.view">
+    <field name="name">school_student_score_sheet - form</field>
+    <field name="model">school_student_score_sheet</field>
     <field name="mode">primary</field>
     <field name="inherit_id" ref="ssi_transaction_mixin.mixin_transaction_view_form" />
     <field name="arch" type="xml">
@@ -51,24 +53,29 @@
                     />
                 <field name="grade_type_id" />
                 <field name="grade_id" domain="[('type_id','=',grade_type_id)]" />
-                <field name="student_id" />
-                <field name="enrollment_id" />
+                <field name="class_id" />
+                <field name="teacher_id" />
+                <field name="score_type_id" />
             </xpath>
             <xpath expr="//group[@name='header_right']" position="inside">
                 <field name="date" />
             </xpath>
             <xpath expr="//page[1]" position="before">
-                <page name="curiculum" string="Curiculum">
-                    <group name="curiculum_1" colspan="4" col="2">
-                        <field
-                                name="curiculum_id"
-                                domain="[('state','=','open'),('grade_type_id','=',grade_type_id)]"
-                            />
-                    </group>
-                    <field name="class_assignment_ids">
-                        <tree editable="top">
-                            <field name="subject_id" />
+                <page name="score" string="Scores">
+                    <button
+                            name="action_load_student_score"
+                            string="Load Student Score"
+                            icon="gtk-gear"
+                            class="oe_highlight"
+                            attrs="{'invisible': [('state','!=','open')]}"
+                        />
+                    <field name="score_ids">
+                        <tree editable="top" create="false" delete="false">
+                            <field name="class_assignment_id" invisible="1" />
+                            <field name="student_id" />
                             <field name="score" />
+                            <field name="percentage" />
+                            <field name="final_score" />
                         </tree>
                     </field>
                 </page>
@@ -77,20 +84,20 @@
     </field>
 </record>
 
-<record id="school_report_card_action" model="ir.actions.act_window">
-    <field name="name">Report Cards</field>
+<record id="school_student_score_sheet_action" model="ir.actions.act_window">
+    <field name="name">Student Score Sheets</field>
     <field name="type">ir.actions.act_window</field>
-    <field name="res_model">school_report_card</field>
+    <field name="res_model">school_student_score_sheet</field>
     <field name="view_mode">tree,form</field>
 </record>
 
 <menuitem
-        id="school_report_card_menu"
-        name="Report Cards"
+        id="school_student_score_sheet_menu"
+        name="Student Score Sheets"
         parent="ssi_school.menu_school_classroom"
-        action="school_report_card_action"
-        groups="school_report_card_viewer_group"
-        sequence="140"
+        action="school_student_score_sheet_action"
+        groups="school_student_score_sheet_viewer_group"
+        sequence="130"
     />
 
 </odoo>

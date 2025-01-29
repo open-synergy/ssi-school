@@ -1,6 +1,9 @@
 # Copyright 2022 OpenSynergy Indonesia
 # Copyright 2022 PT. Simetri Sinergi Indonesia
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
+
+from datetime import date as datetime_date
+
 from odoo import api, fields, models
 
 from odoo.addons.ssi_decorator import ssi_decorator
@@ -62,6 +65,7 @@ class SchoolHomeroom(models.Model):
 
     date = fields.Date(
         string="Date",
+        default=lambda r: datetime_date.today(),
         required=True,
         readonly=True,
         states={

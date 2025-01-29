@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2022 OpenSynergy Indonesia
+     Copyright 2022 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+<odoo>
+<record id="nonpracticum_school_scoring_system" model="school_scoring_system">
+    <field name="name">Without Practicum (demo)</field>
+    <field name="code">X001</field>
+</record>
+
+<record
+        id="nonpracticum_school_scoring_system_detail_1"
+        model="school_scoring_system.detail"
+    >
+    <field name="scoring_system_id" ref="nonpracticum_school_scoring_system" />
+    <field name="sequence" eval="1" />
+    <field name="score_type_id" ref="midterm_school_score_type" />
+    <field name="percentage" eval="40.0" />
+</record>
+
+<record
+        id="nonpracticum_school_scoring_system_detail_2"
+        model="school_scoring_system.detail"
+    >
+    <field name="scoring_system_id" ref="nonpracticum_school_scoring_system" />
+    <field name="sequence" eval="2" />
+    <field name="score_type_id" ref="final_school_score_type" />
+    <field name="percentage" eval="60.0" />
+</record>
+
+<record id="practicum_school_scoring_system" model="school_scoring_system">
+    <field name="name">Practicum (demo)</field>
+    <field name="code">X002</field>
+</record>
+
+<record
+        id="practicum_school_scoring_system_detail_1"
+        model="school_scoring_system.detail"
+    >
+    <field name="scoring_system_id" ref="practicum_school_scoring_system" />
+    <field name="sequence" eval="1" />
+    <field name="score_type_id" ref="midterm_school_score_type" />
+    <field name="percentage" eval="40.0" />
+</record>
+
+<record
+        id="practicum_school_scoring_system_detail_2"
+        model="school_scoring_system.detail"
+    >
+    <field name="scoring_system_id" ref="practicum_school_scoring_system" />
+    <field name="sequence" eval="3" />
+    <field name="score_type_id" ref="practicum_school_score_type" />
+    <field name="percentage" eval="10.0" />
+</record>
+
+<record
+        id="practicum_school_scoring_system_detail_3"
+        model="school_scoring_system.detail"
+    >
+    <field name="scoring_system_id" ref="practicum_school_scoring_system" />
+    <field name="sequence" eval="3" />
+    <field name="score_type_id" ref="final_school_score_type" />
+    <field name="percentage" eval="50.0" />
+</record>
+</odoo>

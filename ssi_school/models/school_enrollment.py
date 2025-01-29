@@ -1,6 +1,9 @@
 # Copyright 2022 OpenSynergy Indonesia
 # Copyright 2022 PT. Simetri Sinergi Indonesia
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
+
+from datetime import date as datetime_date
+
 from odoo import api, fields, models
 
 from odoo.addons.ssi_decorator import ssi_decorator
@@ -62,6 +65,7 @@ class SchoolEnrollment(models.Model):
 
     date = fields.Date(
         string="Date",
+        default=lambda r: datetime_date.today(),
         required=True,
         readonly=True,
         states={
@@ -125,6 +129,13 @@ class SchoolEnrollment(models.Model):
             ],
         },
     )
+    allowed_student_ids = fields.Many2many(
+        string="Allowed Students",
+        comodel_name="school_student",
+        compute="_compute_allowed_student_ids",
+        store=False,
+        compute_sudo=True,
+    )
     student_id = fields.Many2one(
         string="Student",
         comodel_name="school_student",
@@ -170,6 +181,24 @@ class SchoolEnrollment(models.Model):
         },
     )
 
+    @api.depends(
+        "academic_term_id",
+        "grade_id",
+    )
+    def _compute_allowed_student_ids(self):
+        for record in self:
+            result = False
+            if record.academic_term_id and record.grade_id:
+                criteria = [
+                    ("state", "=", "draft"),
+                ]
+                if record.academic_term_id.first_term:
+                    criteria += [("next_grade_id", "=", record.grade_id.id)]
+                else:
+                    criteria += [("current_grade_id", "=", record.grade_id.id)]
+                result = self.env["school_student"].search(criteria).ids
+            record.allowed_student_ids = result
+
     @api.onchange(
         "academic_year_id",
     )
@@ -202,6 +231,13 @@ class SchoolEnrollment(models.Model):
     )
     def onchange_homeroom_id(self):
         self.homeroom_id = False
+
+    @api.onchange(
+        "academic_term_id",
+        "grade_id",
+    )
+    def onchange_student_id(self):
+        self.student_id = False
 
     def action_load_assignment(self):
         for record in self.sudo():

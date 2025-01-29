@@ -1,6 +1,8 @@
 # Copyright 2022 OpenSynergy Indonesia
 # Copyright 2022 PT. Simetri Sinergi Indonesia
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
+from datetime import date as datetime_date
+
 from odoo import api, fields, models
 
 from odoo.addons.ssi_decorator import ssi_decorator
@@ -62,6 +64,7 @@ class SchoolClass(models.Model):
 
     date = fields.Date(
         string="Date",
+        default=lambda r: datetime_date.today(),
         required=True,
         readonly=True,
         states={
@@ -147,6 +150,17 @@ class SchoolClass(models.Model):
             ],
         },
     )
+    scoring_system_id = fields.Many2one(
+        string="Scoring System",
+        comodel_name="school_scoring_system",
+        required=True,
+        readonly=True,
+        states={
+            "draft": [
+                ("readonly", False),
+            ],
+        },
+    )
     num_of_student = fields.Integer(
         string="Num of Student",
         compute="_compute_num_of_student",
@@ -217,6 +231,33 @@ class SchoolClass(models.Model):
             curiculums = self.env["school_curiculum"].search(criteria)
             if len(curiculums) > 0:
                 self.curiculum_id = curiculums[0]
+
+    def action_create_score_sheet(self):
+        for record in self.sudo():
+            record._create_score_sheet()
+
+    def _create_score_sheet(self):
+        self.ensure_one()
+        for score_type in self.scoring_system_id.detail_ids:
+            data = self._prepare_score_sheet()
+            data.update(
+                {
+                    "score_type_id": score_type.score_type_id.id,
+                }
+            )
+            score_sheet = self.env["school_student_score_sheet"].create(data)
+            score_sheet.action_load_student_score()
+
+    def _prepare_score_sheet(self):
+        self.ensure_one()
+        return {
+            "date": datetime_date.today(),
+            "academic_year_id": self.academic_year_id.id,
+            "academic_term_id": self.academic_term_id.id,
+            "grade_type_id": self.grade_type_id.id,
+            "grade_id": self.grade_id.id,
+            "class_id": self.id,
+        }
 
     @api.model
     def _get_policy_field(self):

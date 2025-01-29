@@ -63,6 +63,7 @@
             <xpath expr="//group[@name='header_right']" position="inside">
                 <field name="subject_id" />
                 <field name="teacher_id" />
+                <field name="scoring_system_id" />
                 <field name="date" />
             </xpath>
             <xpath expr="//page[1]" position="before">
@@ -72,16 +73,27 @@
                         <field name="num_of_student" />
                         <field name="seat_avalilable" />
                     </group>
+                    <button
+                            name="action_create_score_sheet"
+                            type="object"
+                            icon="fa-gear"
+                            class="oe_highlight"
+                            string="Create Score Sheet"
+                        />
                     <field name="class_assignment_ids">
                         <tree>
                             <field name="enrollment_id" />
                             <field name="student_id" />
+                            <field name="score" />
                             <button
                                     name="action_load_assignment"
                                     type="object"
                                     icon="fa-gear"
+                                    class="oe_highlight"
                                     help="Load Assignment"
                                 />
+
+
                         </tree>
                     </field>
                 </page>
@@ -100,10 +112,10 @@
 <menuitem
         id="school_class_menu"
         name="Classes"
-        parent="ssi_school.menu_school_root"
+        parent="ssi_school.menu_school_classroom"
         action="school_class_action"
         groups="school_class_viewer_group"
-        sequence="140"
+        sequence="120"
     />
 
 </odoo>

@@ -9,14 +9,14 @@ from odoo import api, fields, models
 from odoo.addons.ssi_decorator import ssi_decorator
 
 
-class SchoolReportCard(models.Model):
-    _name = "school_report_card"
+class SchoolStudentScoreSheet(models.Model):
+    _name = "school_student_score_sheet"
     _inherit = [
         "mixin.transaction_cancel",
         "mixin.transaction_done",
         "mixin.transaction_confirm",
     ]
-    _description = "School Report Card"
+    _description = "School Student Score Sheet Sheet"
 
     # Multiple Approval Attribute
     _approval_from_state = "draft"
@@ -70,16 +70,6 @@ class SchoolReportCard(models.Model):
             ],
         },
     )
-    date = fields.Date(
-        string="Date",
-        required=True,
-        readonly=True,
-        states={
-            "draft": [
-                ("readonly", False),
-            ],
-        },
-    )
     academic_year_id = fields.Many2one(
         string="Academic Year",
         comodel_name="school_academic_year",
@@ -124,9 +114,9 @@ class SchoolReportCard(models.Model):
             ],
         },
     )
-    curiculum_id = fields.Many2one(
-        string="Curiculum",
-        comodel_name="school_curiculum",
+    class_id = fields.Many2one(
+        string="# Class",
+        comodel_name="school_class",
         required=True,
         readonly=True,
         states={
@@ -135,9 +125,14 @@ class SchoolReportCard(models.Model):
             ],
         },
     )
-    enrollment_id = fields.Many2one(
-        string="# Enrollment",
-        comodel_name="school_enrollment",
+    teacher_id = fields.Many2one(
+        string="Teacher",
+        related="class_id.teacher_id",
+        store=True,
+    )
+    score_type_id = fields.Many2one(
+        string="Score Type",
+        comodel_name="school_score_type",
         required=True,
         readonly=True,
         states={
@@ -146,21 +141,10 @@ class SchoolReportCard(models.Model):
             ],
         },
     )
-    student_id = fields.Many2one(
-        string="Student",
-        comodel_name="school_student",
-        required=True,
-        readonly=True,
-        states={
-            "draft": [
-                ("readonly", False),
-            ],
-        },
-    )
-    class_assignment_ids = fields.One2many(
-        string="Class Assignments",
-        comodel_name="school_student_class_assignment",
-        inverse_name="report_card_id",
+    score_ids = fields.One2many(
+        string="Scores",
+        comodel_name="school_student_score",
+        inverse_name="sheet_id",
         readonly=True,
         states={
             "draft": [
@@ -169,9 +153,30 @@ class SchoolReportCard(models.Model):
         },
     )
 
+    def action_load_student_score(self):
+        for record in self.sudo():
+            record._load_student_score()
+
+    def _load_student_score(self):
+        self.ensure_one()
+        for assignment in self.class_id.class_assignment_ids:
+            data = self._prepare_student_score()
+            data.update(
+                {
+                    "class_assignment_id": assignment.id,
+                }
+            )
+            self.env["school_student_score"].create(data)
+
+    def _prepare_student_score(self):
+        self.ensure_one()
+        return {
+            "sheet_id": self.id,
+        }
+
     @api.model
     def _get_policy_field(self):
-        res = super(SchoolReportCard, self)._get_policy_field()
+        res = super(SchoolStudentScoreSheet, self)._get_policy_field()
         policy_field = [
             "confirm_ok",
             "approve_ok",

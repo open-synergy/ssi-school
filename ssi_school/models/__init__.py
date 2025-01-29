@@ -5,6 +5,9 @@
 from . import (
     school_grade_type,
     school_grade,
+    school_score_type,
+    school_scoring_system,
+    school_scoring_system_detail,
     school_subject,
     school_academic_year,
     school_academic_term,
@@ -18,4 +21,6 @@ from . import (
     school_class,
     school_student_class_assignment,
     school_report_card,
+    school_student_score_sheet,
+    school_student_score,
 )
