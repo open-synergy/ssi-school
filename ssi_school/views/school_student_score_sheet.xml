@@ -94,10 +94,10 @@
 <menuitem
         id="school_student_score_sheet_menu"
         name="Student Score Sheets"
-        parent="ssi_school.menu_school_root"
+        parent="ssi_school.menu_school_classroom"
         action="school_student_score_sheet_action"
         groups="school_student_score_sheet_viewer_group"
-        sequence="160"
+        sequence="130"
     />
 
 </odoo>

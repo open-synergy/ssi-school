@@ -83,10 +83,10 @@
 <menuitem
         id="school_homeroom_menu"
         name="Homerooms"
-        parent="ssi_school.menu_school_root"
+        parent="ssi_school.menu_school_classroom"
         action="school_homeroom_action"
         groups="school_homeroom_viewer_group"
-        sequence="139"
+        sequence="110"
     />
 
 </odoo>

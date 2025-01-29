@@ -87,10 +87,10 @@
 <menuitem
         id="school_report_card_menu"
         name="Report Cards"
-        parent="ssi_school.menu_school_root"
+        parent="ssi_school.menu_school_classroom"
         action="school_report_card_action"
         groups="school_report_card_viewer_group"
-        sequence="160"
+        sequence="140"
     />
 
 </odoo>

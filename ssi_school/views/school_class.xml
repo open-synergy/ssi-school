@@ -112,10 +112,10 @@
 <menuitem
         id="school_class_menu"
         name="Classes"
-        parent="ssi_school.menu_school_root"
+        parent="ssi_school.menu_school_classroom"
         action="school_class_action"
         groups="school_class_viewer_group"
-        sequence="140"
+        sequence="120"
     />
 
 </odoo>
