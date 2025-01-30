@@ -18,7 +18,7 @@ Available addons
 ----------------
 addon | version | maintainers | summary
 --- | --- | --- | ---
-[ssi_school](ssi_school/) | 14.0.1.6.0 |  | School
+[ssi_school](ssi_school/) | 14.0.2.0.0 |  | School
 
 [//]: # (end addons)
 
