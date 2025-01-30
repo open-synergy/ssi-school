@@ -5,6 +5,7 @@
 from datetime import date as datetime_date
 
 from odoo import api, fields, models
+from odoo.tools.safe_eval import safe_eval
 
 from odoo.addons.ssi_decorator import ssi_decorator
 
@@ -15,6 +16,7 @@ class SchoolReportCard(models.Model):
         "mixin.transaction_cancel",
         "mixin.transaction_done",
         "mixin.transaction_confirm",
+        "mixin.localdict",
     ]
     _description = "School Report Card"
 
@@ -102,6 +104,11 @@ class SchoolReportCard(models.Model):
             ],
         },
     )
+    last_term = fields.Boolean(
+        string="Last Term of Academic Year?",
+        related="academic_term_id.last_term",
+        store=True,
+    )
     grade_type_id = fields.Many2one(
         string="Grade Type",
         comodel_name="school_grade_type",
@@ -157,6 +164,37 @@ class SchoolReportCard(models.Model):
             ],
         },
     )
+    override_pass_result = fields.Boolean(
+        string="Override Pass/ Result",
+        default=False,
+        readonly=True,
+        states={
+            "draft": [
+                ("readonly", False),
+            ],
+        },
+    )
+    auto_pass = fields.Boolean(
+        string="Pass to Next Grade? (Automatic)",
+        compute="_compute_auto_pass",
+        store=True,
+        compute_sudo=True,
+    )
+    override_reason = fields.Text(
+        string="Override Reason",
+        readonly=True,
+        states={
+            "draft": [
+                ("readonly", False),
+            ],
+        },
+    )
+    final_pass = fields.Boolean(
+        string="Pass to Next Grade? (Final Decision)",
+        compute="_compute_final_pass",
+        store=True,
+        compute_sudo=True,
+    )
     class_assignment_ids = fields.One2many(
         string="Class Assignments",
         comodel_name="school_student_class_assignment",
@@ -168,6 +206,41 @@ class SchoolReportCard(models.Model):
             ],
         },
     )
+
+    @api.depends(
+        "class_assignment_ids",
+        "class_assignment_ids.score",
+    )
+    def _compute_auto_pass(self):
+        for record in self:
+            result = record._get_automatic_result()
+            record.auto_pass = result
+
+    @api.depends(
+        "override_pass_result",
+        "auto_pass",
+    )
+    def _compute_final_pass(self):
+        for record in self:
+            result = record.auto_pass
+            if record.override_pass_result:
+                result = not record.auto_pass
+            record.final_pass = result
+
+    def _get_automatic_result(self):
+        self.ensure_one()
+        localdict = self._get_default_localdict()
+        try:
+            safe_eval(
+                self.enrollment_id.homeroom_id.pass_criteria_id.python_code,
+                localdict,
+                mode="exec",
+                nocopy=True,
+            )
+            result = localdict["result"]
+        except Exception:
+            result = False
+        return result
 
     @api.model
     def _get_policy_field(self):

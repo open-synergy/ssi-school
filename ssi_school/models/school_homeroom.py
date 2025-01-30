@@ -107,6 +107,17 @@ class SchoolHomeroom(models.Model):
             ],
         },
     )
+    pass_criteria_id = fields.Many2one(
+        string="Pass Criteria",
+        comodel_name="school_pass_criteria",
+        required=True,
+        readonly=True,
+        states={
+            "draft": [
+                ("readonly", False),
+            ],
+        },
+    )
     grade_id = fields.Many2one(
         string="Grade",
         comodel_name="school_grade",

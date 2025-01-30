@@ -62,6 +62,9 @@
                     </group>
                     <field name="enrollment_ids" />
                 </page>
+                <page name="report_card" string="Report Card">
+                    <field name="report_card_ids" />
+                </page>
             </xpath>
         </data>
     </field>
