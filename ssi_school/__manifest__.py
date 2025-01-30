@@ -15,6 +15,7 @@
         "ssi_transaction_open_mixin",
         "ssi_transaction_done_mixin",
         "ssi_transaction_cancel_mixin",
+        "ssi_localdict_mixin",
     ],
     "data": [
         "security/ir_module_category_data.xml",
@@ -32,6 +33,7 @@
         "security/res_group/school_homeroom.xml",
         "security/res_group/school_report_card.xml",
         "security/ir_model_access/school_subject.xml",
+        "security/ir_model_access/school_pass_criteria.xml",
         "security/ir_model_access/school_grade_type.xml",
         "security/ir_model_access/school_grade.xml",
         "security/ir_model_access/school_student.xml",
@@ -80,6 +82,7 @@
         "approval_template/school_report_card.xml",
         "menu.xml",
         "views/school_subject.xml",
+        "views/school_pass_criteria.xml",
         "views/school_grade_type.xml",
         "views/school_grade.xml",
         "views/school_score_type.xml",
@@ -107,5 +110,6 @@
         "demo/school_subject.xml",
         "demo/school_academic_year.xml",
         "demo/school_academic_term.xml",
+        "demo/school_pass_criteria.xml",
     ],
 }

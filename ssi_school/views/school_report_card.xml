@@ -49,6 +49,7 @@
                         name="academic_term_id"
                         domain="[('year_id','=',academic_year_id)]"
                     />
+                <field name="last_term" invisible="1" />
                 <field name="grade_type_id" />
                 <field name="grade_id" domain="[('type_id','=',grade_type_id)]" />
                 <field name="student_id" />
@@ -71,6 +72,18 @@
                             <field name="score" />
                         </tree>
                     </field>
+                </page>
+                <page
+                        name="pass"
+                        string="Pass/Faill to Next Grade"
+                        attrs="{'invisible':[('last_term','=',False)]}"
+                    >
+                    <group name="pass_1" colspan="4" col="2">
+                        <field name="auto_pass" />
+                        <field name="override_pass_result" />
+                        <field name="override_reason" />
+                        <field name="final_pass" />
+                    </group>
                 </page>
             </xpath>
         </data>

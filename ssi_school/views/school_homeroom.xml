@@ -57,6 +57,7 @@
             </xpath>
             <xpath expr="//group[@name='header_right']" position="inside">
                 <field name="teacher_id" />
+                <field name="pass_criteria_id" />
                 <field name="date" />
             </xpath>
             <xpath expr="//page[1]" position="before">

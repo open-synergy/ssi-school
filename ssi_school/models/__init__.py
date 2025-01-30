@@ -9,6 +9,7 @@ from . import (
     school_scoring_system,
     school_scoring_system_detail,
     school_subject,
+    school_pass_criteria,
     school_academic_year,
     school_academic_term,
     school_subject_grade,

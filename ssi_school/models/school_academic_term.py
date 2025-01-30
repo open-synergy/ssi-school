@@ -30,6 +30,13 @@ class SchoolAcademicTerm(models.Model):
         string="First Term of Academic Year?",
         compute="_compute_first_term",
         store=True,
+        compute_sudo=True,
+    )
+    last_term = fields.Boolean(
+        string="Last Term of Academic Year?",
+        compute="_compute_last_term",
+        store=True,
+        compute_sudo=True,
     )
     state = fields.Selection(
         string="State",
@@ -60,6 +67,17 @@ class SchoolAcademicTerm(models.Model):
             if record == record.year_id.first_term_id:
                 result = True
             record.first_term = result
+
+    @api.depends(
+        "year_id",
+        "year_id.last_term_id",
+    )
+    def _compute_last_term(self):
+        for record in self:
+            result = False
+            if record == record.year_id.last_term_id:
+                result = True
+            record.last_term = result
 
     def action_open(self):
         for record in self.sudo():
