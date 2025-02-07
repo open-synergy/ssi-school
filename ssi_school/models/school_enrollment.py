@@ -258,7 +258,7 @@ class SchoolEnrollment(models.Model):
             detail._load_assignment()
 
     @ssi_decorator.post_open_action()
-    def _create_report_card(self):
+    def _10_create_report_card(self):
         self.ensure_one()
         if self.report_card_id:
             return True
@@ -268,6 +268,41 @@ class SchoolEnrollment(models.Model):
         self.write(
             {
                 "report_card_id": report_card.id,
+            }
+        )
+
+    @ssi_decorator.post_open_action()
+    def _20_enroll_student(self):
+        self.ensure_one()
+        self.student_id.write(
+            {
+                "state": "enroll",
+            }
+        )
+
+    @ssi_decorator.post_done_action()
+    def _30_unenroll_or_graduate_student(self):
+        self.ensure_one()
+        criteria = [
+            ("next_grade_id", "=", False),
+        ]
+        last_grade = self.env["school_grade"].search(criteria)[0]
+        if self.grade_id == last_grade:
+            state = "graduate"
+        else:
+            state = "draft"
+        self.student_id.write(
+            {
+                "state": state,
+            }
+        )
+
+    @ssi_decorator.post_cancel_action()
+    def _10_unenroll_student(self):
+        self.ensure_one()
+        self.student_id.write(
+            {
+                "state": "draft",
             }
         )
 
