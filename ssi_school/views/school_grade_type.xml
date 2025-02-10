@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!-- Copyright 2022 OpenSynergy Indonesia
      Copyright 2022 PT. Simetri Sinergi Indonesia
-     License AGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
 <record id="school_grade_type_view_search" model="ir.ui.view">
     <field name="name">school_grade_type - search</field>
@@ -54,10 +54,10 @@
 <menuitem
         id="school_grade_type_menu"
         name="Grade Types"
-        parent="menu_school_configuration"
+        parent="menu_grade_configuration"
         action="school_grade_type_action"
         groups="school_grade_type_group"
-        sequence="102"
+        sequence="110"
     />
 
 </odoo>

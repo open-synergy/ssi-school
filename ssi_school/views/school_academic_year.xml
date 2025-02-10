@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!-- Copyright 2022 OpenSynergy Indonesia
      Copyright 2022 PT. Simetri Sinergi Indonesia
-     License AGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
 <record id="school_academic_year_view_search" model="ir.ui.view">
     <field name="name">school_academic_year - search</field>
@@ -65,10 +65,10 @@
 <menuitem
         id="school_academic_year_menu"
         name="Academic Years"
-        parent="menu_school_configuration"
+        parent="menu_period_configuration"
         action="school_academic_year_action"
         groups="school_academic_year_group"
-        sequence="105"
+        sequence="110"
     />
 
 </odoo>

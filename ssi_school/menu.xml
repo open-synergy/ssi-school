@@ -29,4 +29,27 @@
         parent="menu_school_root"
         sequence="990"
     />
+
+<menuitem
+        id="menu_period_configuration"
+        name="Period"
+        parent="menu_school_configuration"
+        sequence="110"
+    />
+
+<menuitem
+        id="menu_grade_configuration"
+        name="Grade"
+        parent="menu_school_configuration"
+        sequence="120"
+    />
+
+<menuitem
+        id="menu_subject_configuration"
+        name="Subject &amp; Scoring"
+        parent="menu_school_configuration"
+        sequence="130"
+    />
+
+
 </odoo>
