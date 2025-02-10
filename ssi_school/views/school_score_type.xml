@@ -48,10 +48,10 @@
 <menuitem
         id="school_score_type_menu"
         name="Score Types"
-        parent="menu_school_configuration"
+        parent="menu_subject_configuration"
         action="school_score_type_action"
         groups="school_score_type_group"
-        sequence="102"
+        sequence="130"
     />
 
 </odoo>

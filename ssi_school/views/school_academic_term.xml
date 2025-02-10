@@ -108,10 +108,10 @@
 <menuitem
         id="school_academic_term_menu"
         name="Academic Terms"
-        parent="menu_school_configuration"
+        parent="menu_period_configuration"
         action="school_academic_term_action"
         groups="school_academic_term_group"
-        sequence="105"
+        sequence="120"
     />
 
 </odoo>

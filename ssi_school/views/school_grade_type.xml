@@ -54,10 +54,10 @@
 <menuitem
         id="school_grade_type_menu"
         name="Grade Types"
-        parent="menu_school_configuration"
+        parent="menu_grade_configuration"
         action="school_grade_type_action"
         groups="school_grade_type_group"
-        sequence="102"
+        sequence="110"
     />
 
 </odoo>

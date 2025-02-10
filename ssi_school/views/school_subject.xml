@@ -48,10 +48,10 @@
 <menuitem
         id="school_subject_menu"
         name="Subjects"
-        parent="menu_school_configuration"
+        parent="menu_subject_configuration"
         action="school_subject_action"
         groups="school_subject_group"
-        sequence="101"
+        sequence="110"
     />
 
 </odoo>

@@ -56,10 +56,10 @@
 <menuitem
         id="school_subject_grade_menu"
         name="Subject Grades"
-        parent="menu_school_configuration"
+        parent="menu_subject_configuration"
         action="school_subject_grade_action"
         groups="school_subject_grade_group"
-        sequence="102"
+        sequence="120"
     />
 
 </odoo>

@@ -62,10 +62,10 @@
 <menuitem
         id="school_scoring_system_menu"
         name="Scoring Systems"
-        parent="menu_school_configuration"
+        parent="menu_subject_configuration"
         action="school_scoring_system_action"
         groups="school_scoring_system_group"
-        sequence="102"
+        sequence="140"
     />
 
 </odoo>

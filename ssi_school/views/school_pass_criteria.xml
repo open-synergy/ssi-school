@@ -53,10 +53,10 @@
 <menuitem
         id="school_pass_criteria_menu"
         name="Pass Criteria"
-        parent="menu_school_configuration"
+        parent="menu_subject_configuration"
         action="school_pass_criteria_action"
         groups="school_pass_criteria_group"
-        sequence="101"
+        sequence="150"
     />
 
 </odoo>
