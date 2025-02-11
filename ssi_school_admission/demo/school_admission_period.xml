@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2022 OpenSynergy Indonesia
+     Copyright 2022 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+<record id="school_admission_period1" model="school_admission_period">
+    <field eval="'Period 1 ' + time.strftime('%Y') + ' (demo)'" name="name" />
+    <field eval="'X'+time.strftime('%Y')+'-1'" name="code" />
+    <field eval="time.strftime('%Y')+'-01-01'" name="date_start" />
+    <field eval="time.strftime('%Y')+'-01-31'" name="date_end" />
+    <field name="term_id" ref="ssi_school.school_academic_term2" />
+</record>
+
+<record id="school_admission_period2" model="school_admission_period">
+    <field eval="'Period 2 ' + time.strftime('%Y') + ' (demo)'" name="name" />
+    <field eval="'X'+time.strftime('%Y')+'-2'" name="code" />
+    <field eval="time.strftime('%Y')+'-03-01'" name="date_start" />
+    <field eval="time.strftime('%Y')+'-03-31'" name="date_end" />
+    <field name="term_id" ref="ssi_school.school_academic_term2" />
+</record>
+
+
+
+</odoo>
