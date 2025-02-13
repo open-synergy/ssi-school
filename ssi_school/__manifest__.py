@@ -16,6 +16,7 @@
         "ssi_transaction_done_mixin",
         "ssi_transaction_cancel_mixin",
         "ssi_localdict_mixin",
+        "base_address_city",
     ],
     "data": [
         "security/ir_module_category_data.xml",
