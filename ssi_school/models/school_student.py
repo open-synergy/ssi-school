@@ -67,15 +67,21 @@ class SchoolStudent(models.Model):
         store=True,
         readonly=False,
     )
+    school_id = fields.Many2one(
+        string="School",
+        comodel_name="school",
+        required=True,
+        ondelete="restrict",
+    )
+    initial_grade_type_id = fields.Many2one(
+        string="Initial Grade Type",
+        related="school_id.grade_type_id",
+        store=True,
+    )
     initial_grade_id = fields.Many2one(
         string="Initial Grade",
         comodel_name="school_grade",
         required=False,
-    )
-    initial_grade_type_id = fields.Many2one(
-        string="Initial Grade Type",
-        related="current_grade_id.type_id",
-        store=True,
     )
     current_grade_id = fields.Many2one(
         string="Current Grade",
@@ -103,28 +109,44 @@ class SchoolStudent(models.Model):
         inverse_name="student_id",
         readonly=True,
     )
-    report_card_ids = fields.One2many(
-        string="Report Cards",
-        comodel_name="school_report_card",
-        inverse_name="student_id",
-        readonly=True,
-    )
-    latest_report_card_id = fields.Many2one(
-        string="Lastest Report Card",
-        comodel_name="school_report_card",
-        compute="_compute_latest_report_card_id",
+    active_enrollment_id = fields.Many2one(
+        string="Active Enrollment",
+        comodel_name="school_enrollment",
+        compute="_compute_active_enrollment_id",
         store=True,
         compute_sudo=True,
+    )
+    grade_class_id = fields.Many2one(
+        string="Grade Class",
+        comodel_name="school_grade_class",
+        related="active_enrollment_id.grade_class_id",
+        store=True,
     )
     state = fields.Selection(
         string="State",
         selection=[
             ("draft", "Waiting for Enrollment"),
             ("enrol", "Enrolled"),
+            ("on_leave", "Cuti / Penangguhan"),
+            ("suspended", "Skorsing"),
             ("graduate", "Graduated"),
+            ("transferred", "Mutasi Keluar"),
+            ("dropped", "Dikeluarkan / Drop Out"),
+            ("resigned", "Mengundurkan Diri"),
+            ("deceased", "Meninggal Dunia"),
         ],
         default="draft",
     )
+
+    @api.depends("enrollment_ids", "enrollment_ids.state")
+    def _compute_active_enrollment_id(self):
+        for record in self:
+            active_enrollment = record.enrollment_ids.filtered(
+                lambda enrollment: enrollment.state == "open"
+            )
+            record.active_enrollment_id = (
+                active_enrollment[:1].id if active_enrollment else False
+            )
 
     @api.depends("initial_grade_id", "enrollment_ids", "enrollment_ids.state")
     def _compute_current_grade_id(self):
@@ -140,39 +162,144 @@ class SchoolStudent(models.Model):
             record.current_grade_id = result
 
     @api.depends(
-        "report_card_ids",
-        "report_card_ids.state",
-        "report_card_ids.final_pass",
-        "report_card_ids.last_term",
-    )
-    def _compute_latest_report_card_id(self):
-        for record in self:
-            result = False
-            criteria = [
-                ("student_id", "=", record.id),
-                ("state", "=", "done"),
-                ("final_pass", "=", True),
-                ("last_term", "=", True),
-            ]
-            report_cards = self.env["school_report_card"].search(criteria)
-            if len(report_cards) > 0:
-                result = report_cards[0]
-            record.latest_report_card_id = result
-
-    @api.depends(
         "initial_grade_id",
         "enrollment_ids",
         "enrollment_ids.state",
-        "latest_report_card_id",
     )
     def _compute_next_grade_id(self):
         for record in self:
+            result = False
             if not record.initial_grade_id and not record.enrollment_ids:
                 result = self.env["school_grade"].search([])[0]
             elif record.initial_grade_id and not record.enrollment_ids:
                 result = record.initial_grade_id.next_grade_id
-            elif record.enrollment_ids and not record.latest_report_card_id:
-                result = record.enrollment_ids[-1].grade_id
-            elif record.enrollment_ids and record.latest_report_card_id:
-                result = record.latest_report_card_id.grade_id.next_grade_id
+            elif record.enrollment_ids:
+                criteria = [
+                    ("state", "=", "done"),
+                    ("student_id", "=", record.id),
+                ]
+                enrollments = self.env["school_enrollment"].search(criteria)
+                if len(enrollments) > 0:
+                    last_enrollment = enrollments[-1]
+                    if last_enrollment.last_term:
+                        result = (
+                            last_enrollment.promote_to_grade_id
+                            or last_enrollment.grade_id
+                        )
+                    else:
+                        result = last_enrollment.grade_id
             record.next_grade_id = result
+
+    @api.onchange(
+        "school_id",
+    )
+    def onchange_initial_grade_id(self):
+        self.initial_grade_id = False
+
+    def action_set_to_draft(self):
+        for record in self.sudo():
+            record._set_to_draft()
+
+    def action_set_to_enroll(self):
+        for record in self.sudo():
+            record._set_to_enroll()
+
+    def action_set_to_on_leave(self):
+        for record in self.sudo():
+            record._set_to_on_leave()
+
+    def action_set_to_suspended(self):
+        for record in self.sudo():
+            record._set_to_suspended()
+
+    def action_set_to_graduate(self):
+        for record in self.sudo():
+            record._set_to_graduate()
+
+    def action_set_to_transferred(self):
+        for record in self.sudo():
+            record._set_to_transferred()
+
+    def action_set_to_dropped(self):
+        for record in self.sudo():
+            record._set_to_dropped()
+
+    def action_set_to_resigned(self):
+        for record in self.sudo():
+            record._set_to_resigned()
+
+    def action_set_to_deceased(self):
+        for record in self.sudo():
+            record._set_to_deceased()
+
+    def _set_to_draft(self):
+        self.ensure_one()
+        self.write(
+            {
+                "state": "draft",
+            }
+        )
+
+    def _set_to_enroll(self):
+        self.ensure_one()
+        self.write(
+            {
+                "state": "enrol",
+            }
+        )
+
+    def _set_to_on_leave(self):
+        self.ensure_one()
+        self.write(
+            {
+                "state": "on_leave",
+            }
+        )
+
+    def _set_to_suspended(self):
+        self.ensure_one()
+        self.write(
+            {
+                "state": "suspended",
+            }
+        )
+
+    def _set_to_graduate(self):
+        self.ensure_one()
+        self.write(
+            {
+                "state": "graduate",
+            }
+        )
+
+    def _set_to_transferred(self):
+        self.ensure_one()
+        self.write(
+            {
+                "state": "transferred",
+            }
+        )
+
+    def _set_to_dropped(self):
+        self.ensure_one()
+        self.write(
+            {
+                "state": "dropped",
+            }
+        )
+
+    def _set_to_resigned(self):
+        self.ensure_one()
+        self.write(
+            {
+                "state": "resigned",
+            }
+        )
+
+    def _set_to_deceased(self):
+        self.ensure_one()
+        self.write(
+            {
+                "state": "deceased",
+            }
+        )

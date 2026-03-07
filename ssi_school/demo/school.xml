@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 OpenSynergy Indonesia
+     Copyright 2026 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="school_demo_1" model="school">
+        <field name="name">Elementary School A</field>
+        <field name="code">ES-A</field>
+        <field name="grade_type_id" ref="ssi_school.elementary_school_grade_type" />
+    </record>
+
+    <record id="school_demo_2" model="school">
+        <field name="name">Elementary School B</field>
+        <field name="code">ES-B</field>
+        <field name="grade_type_id" ref="ssi_school.elementary_school_grade_type" />
+    </record>
+
+    <record id="school_demo_3" model="school">
+        <field name="name">Middle School A</field>
+        <field name="code">MS-A</field>
+        <field name="grade_type_id" ref="ssi_school.middle_school_grade_type" />
+    </record>
+
+    <record id="school_demo_4" model="school">
+        <field name="name">Middle School B</field>
+        <field name="code">MS-B</field>
+        <field name="grade_type_id" ref="ssi_school.middle_school_grade_type" />
+    </record>
+
+    <record id="school_demo_5" model="school">
+        <field name="name">High School A</field>
+        <field name="code">HS-A</field>
+        <field name="grade_type_id" ref="ssi_school.high_school_grade_type" />
+    </record>
+
+    <record id="school_demo_6" model="school">
+        <field name="name">High School B</field>
+        <field name="code">HS-B</field>
+        <field name="grade_type_id" ref="ssi_school.high_school_grade_type" />
+    </record>
+</odoo>

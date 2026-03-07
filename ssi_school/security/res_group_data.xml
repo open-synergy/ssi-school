@@ -3,15 +3,6 @@
      Copyright 2022 PT. Simetri Sinergi Indonesia
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
-<record id="school_subject_group" model="res.groups">
-    <field name="name">Subject</field>
-    <field name="category_id" ref="school_configurator_module_category" />
-    <field
-            name="users"
-            eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"
-        />
-</record>
-
 <record id="school_grade_type_group" model="res.groups">
     <field name="name">Grade Type</field>
     <field name="category_id" ref="school_configurator_module_category" />
@@ -21,8 +12,26 @@
         />
 </record>
 
+<record id="school_group" model="res.groups">
+    <field name="name">School</field>
+    <field name="category_id" ref="school_configurator_module_category" />
+    <field
+            name="users"
+            eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"
+        />
+</record>
+
 <record id="school_grade_group" model="res.groups">
     <field name="name">Grade</field>
+    <field name="category_id" ref="school_configurator_module_category" />
+    <field
+            name="users"
+            eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"
+        />
+</record>
+
+<record id="school_grade_class_group" model="res.groups">
+    <field name="name">Grade Class</field>
     <field name="category_id" ref="school_configurator_module_category" />
     <field
             name="users"
@@ -48,15 +57,6 @@
         />
 </record>
 
-<record id="school_subject_grade_group" model="res.groups">
-    <field name="name">Subject Grade</field>
-    <field name="category_id" ref="school_configurator_module_category" />
-    <field
-            name="users"
-            eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"
-        />
-</record>
-
 <record id="school_student_group" model="res.groups">
     <field name="name">Student</field>
     <field name="category_id" ref="school_configurator_module_category" />
@@ -74,32 +74,4 @@
             eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"
         />
 </record>
-
-<record id="school_score_type_group" model="res.groups">
-    <field name="name">Score Type</field>
-    <field name="category_id" ref="school_configurator_module_category" />
-    <field
-            name="users"
-            eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"
-        />
-</record>
-
-<record id="school_scoring_system_group" model="res.groups">
-    <field name="name">Scoring System</field>
-    <field name="category_id" ref="school_configurator_module_category" />
-    <field
-            name="users"
-            eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"
-        />
-</record>
-
-<record id="school_pass_criteria_group" model="res.groups">
-    <field name="name">Pass Criteria</field>
-    <field name="category_id" ref="school_configurator_module_category" />
-    <field
-            name="users"
-            eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"
-        />
-</record>
-
 </odoo>

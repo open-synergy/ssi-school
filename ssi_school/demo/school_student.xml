@@ -7,6 +7,7 @@
     <field name="name">Yuda Mohammad (demo)</field>
     <field name="code">X001</field>
     <field name="contact_id" ref="res_partner_1" />
+    <field name="school_id" ref="ssi_school.school_demo_1" />
     <field name="initial_grade_id" ref="school_grade1_type" />
 </record>
 
@@ -14,6 +15,7 @@
     <field name="name">Sri Wahyuni Umar (demo)</field>
     <field name="code">X002</field>
     <field name="contact_id" ref="res_partner_2" />
+    <field name="school_id" ref="ssi_school.school_demo_1" />
     <field name="initial_grade_id" ref="school_grade1_type" />
 </record>
 
@@ -21,14 +23,15 @@
     <field name="name">Anisa Hakim (demo)</field>
     <field name="code">X003</field>
     <field name="contact_id" ref="res_partner_3" />
+    <field name="school_id" ref="ssi_school.school_demo_2" />
     <field name="initial_grade_id" ref="school_grade1_type" />
-
 </record>
 
 <record id="school_student_4" model="school_student">
     <field name="name">Latifah Ismail (demo)</field>
     <field name="code">X004</field>
     <field name="contact_id" ref="res_partner_4" />
+    <field name="school_id" ref="ssi_school.school_demo_2" />
     <field name="initial_grade_id" ref="school_grade6_type" />
 </record>
 
@@ -36,6 +39,7 @@
     <field name="name">Faris Rizky (demo)</field>
     <field name="code">X005</field>
     <field name="contact_id" ref="res_partner_5" />
+    <field name="school_id" ref="ssi_school.school_demo_1" />
     <field name="initial_grade_id" ref="school_grade6_type" />
 </record>
 
@@ -43,6 +47,7 @@
     <field name="name">Joko Wahyudi (demo)</field>
     <field name="code">X006</field>
     <field name="contact_id" ref="res_partner_6" />
+    <field name="school_id" ref="ssi_school.school_demo_3" />
     <field name="initial_grade_id" ref="school_grade9_type" />
 </record>
 
@@ -50,6 +55,7 @@
     <field name="name">Cinta Cahaya (demo)</field>
     <field name="code">X007</field>
     <field name="contact_id" ref="res_partner_7" />
+    <field name="school_id" ref="ssi_school.school_demo_5" />
     <field name="initial_grade_id" ref="school_grade12_type" />
 </record>
 
