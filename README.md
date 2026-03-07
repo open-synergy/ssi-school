@@ -18,8 +18,8 @@ Available addons
 ----------------
 addon | version | maintainers | summary
 --- | --- | --- | ---
-[ssi_school](ssi_school/) | 14.0.3.1.0 |  | School
-[ssi_school_admission](ssi_school_admission/) | 14.0.0.0.0 |  | School Admission
+[ssi_school](ssi_school/) | 14.0.4.0.0 |  | School
+[ssi_school_admission](ssi_school_admission/) | 14.0.1.0.0 |  | School Admission
 
 [//]: # (end addons)
 
