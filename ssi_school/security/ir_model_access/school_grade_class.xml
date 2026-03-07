@@ -3,18 +3,18 @@
      Copyright 2022 PT. Simetri Sinergi Indonesia
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
-<record id="school_subject_grade_all_access" model="ir.model.access">
-    <field name="name">school_subject_grade - all</field>
-    <field name="model_id" ref="model_school_subject_grade" />
+<record id="school_grade_class_all_access" model="ir.model.access">
+    <field name="name">school_grade_class - all</field>
+    <field name="model_id" ref="model_school_grade_class" />
     <field name="perm_read" eval="1" />
     <field name="perm_create" eval="0" />
     <field name="perm_write" eval="0" />
     <field name="perm_unlink" eval="0" />
 </record>
-<record id="school_subject_grade_user_access" model="ir.model.access">
-    <field name="name">school_subject_grade - user</field>
-    <field name="model_id" ref="model_school_subject_grade" />
-    <field name="group_id" ref="school_subject_grade_group" />
+<record id="school_grade_class_user_access" model="ir.model.access">
+    <field name="name">school_grade_class - user</field>
+    <field name="model_id" ref="model_school_grade_class" />
+    <field name="group_id" ref="school_grade_class_group" />
     <field name="perm_read" eval="1" />
     <field name="perm_create" eval="1" />
     <field name="perm_write" eval="1" />

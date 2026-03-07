@@ -47,7 +47,94 @@
     <field name="restrict_user" eval="1" />
     <field name="computation_method">use_group</field>
     <field name="group_ids" eval="[(6,0,[ref('school_enrollment_user_group')])]" />
-    <field name="restrict_additional" eval="0" />
+    <field name="restrict_additional" eval="1" />
+    <field name="additional_python_code">result = False
+if not document.last_term:
+    result = True</field>
+</record>
+
+<!-- Pass -->
+<record id="policy_template_school_enrollment_pass" model="policy.template_detail">
+    <field name="template_id" ref="policy_template_school_enrollment" />
+    <field
+            name="field_id"
+            search="[('model_id.model','=','school_enrollment'),('name','=','pass_ok')]"
+        />
+    <field name="restrict_state" eval="1" />
+    <field
+            name="state_ids"
+            search="[('field_id.model_id.model','=','school_enrollment'),('value','=','open')]"
+        />
+    <field name="restrict_user" eval="1" />
+    <field name="computation_method">use_group</field>
+    <field name="group_ids" eval="[(6,0,[ref('school_enrollment_user_group')])]" />
+    <field name="restrict_additional" eval="1" />
+    <field name="additional_python_code">result = False
+if document.last_term:
+    result = True</field>
+</record>
+
+<!-- Fail -->
+<record id="policy_template_school_enrollment_fail" model="policy.template_detail">
+    <field name="template_id" ref="policy_template_school_enrollment" />
+    <field
+            name="field_id"
+            search="[('model_id.model','=','school_enrollment'),('name','=','fail_ok')]"
+        />
+    <field name="restrict_state" eval="1" />
+    <field
+            name="state_ids"
+            search="[('field_id.model_id.model','=','school_enrollment'),('value','=','open')]"
+        />
+    <field name="restrict_user" eval="1" />
+    <field name="computation_method">use_group</field>
+    <field name="group_ids" eval="[(6,0,[ref('school_enrollment_user_group')])]" />
+    <field name="restrict_additional" eval="1" />
+    <field name="additional_python_code">result = False
+if document.last_term:
+    result = True</field>
+</record>
+
+<!-- Graduate -->
+<record id="policy_template_school_enrollment_graduate" model="policy.template_detail">
+    <field name="template_id" ref="policy_template_school_enrollment" />
+    <field
+            name="field_id"
+            search="[('model_id.model','=','school_enrollment'),('name','=','graduate_ok')]"
+        />
+    <field name="restrict_state" eval="1" />
+    <field
+            name="state_ids"
+            search="[('field_id.model_id.model','=','school_enrollment'),('value','=','open')]"
+        />
+    <field name="restrict_user" eval="1" />
+    <field name="computation_method">use_group</field>
+    <field name="group_ids" eval="[(6,0,[ref('school_enrollment_user_group')])]" />
+    <field name="restrict_additional" eval="1" />
+    <field name="additional_python_code">result = False
+if document.last_term:
+    result = True</field>
+</record>
+
+<!-- Drop Out -->
+<record id="policy_template_school_enrollment_drop_out" model="policy.template_detail">
+    <field name="template_id" ref="policy_template_school_enrollment" />
+    <field
+            name="field_id"
+            search="[('model_id.model','=','school_enrollment'),('name','=','drop_out_ok')]"
+        />
+    <field name="restrict_state" eval="1" />
+    <field
+            name="state_ids"
+            search="[('field_id.model_id.model','=','school_enrollment'),('value','=','open')]"
+        />
+    <field name="restrict_user" eval="1" />
+    <field name="computation_method">use_group</field>
+    <field name="group_ids" eval="[(6,0,[ref('school_enrollment_user_group')])]" />
+    <field name="restrict_additional" eval="1" />
+    <field name="additional_python_code">result = False
+if document.last_term:
+    result = True</field>
 </record>
 
 <!-- Cancel -->

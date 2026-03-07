@@ -45,8 +45,8 @@ class SchoolEnrollment(models.Model):
         "action_confirm",
         "action_approve_approval",
         "action_reject_approval",
-        "action_done",
         "%(ssi_transaction_cancel_mixin.base_select_cancel_reason_action)d",
+        "action_done",
         "action_restart",
     ]
 
@@ -96,9 +96,9 @@ class SchoolEnrollment(models.Model):
             ],
         },
     )
-    grade_type_id = fields.Many2one(
-        string="Grade Type",
-        comodel_name="school_grade_type",
+    school_id = fields.Many2one(
+        string="School",
+        comodel_name="school",
         required=True,
         readonly=True,
         states={
@@ -106,6 +106,13 @@ class SchoolEnrollment(models.Model):
                 ("readonly", False),
             ],
         },
+    )
+    grade_type_id = fields.Many2one(
+        string="Grade Type",
+        comodel_name="school_grade_type",
+        related="school_id.grade_type_id",
+        required=False,
+        readonly=True,
     )
     grade_id = fields.Many2one(
         string="Grade",
@@ -118,9 +125,9 @@ class SchoolEnrollment(models.Model):
             ],
         },
     )
-    curiculum_id = fields.Many2one(
-        string="Curiculum",
-        comodel_name="school_curiculum",
+    grade_class_id = fields.Many2one(
+        string="Grade Class",
+        comodel_name="school_grade_class",
         required=True,
         readonly=True,
         states={
@@ -128,6 +135,13 @@ class SchoolEnrollment(models.Model):
                 ("readonly", False),
             ],
         },
+    )
+    last_term = fields.Boolean(
+        string="Last Term of Academic Year?",
+        related="academic_term_id.last_term",
+        store=True,
+        compute_sudo=True,
+        readonly=True,
     )
     allowed_student_ids = fields.Many2many(
         string="Allowed Students",
@@ -147,50 +161,57 @@ class SchoolEnrollment(models.Model):
             ],
         },
     )
-    homeroom_id = fields.Many2one(
-        string="# Homeroom",
-        comodel_name="school_homeroom",
-        required=True,
-        readonly=True,
-        states={
-            "draft": [
-                ("readonly", False),
-            ],
-        },
+
+    academic_year_result = fields.Selection(
+        string="Academic Year Result",
+        selection=[
+            ("passed", "Passed"),
+            ("failed", "Failed"),
+            ("drop_out", "Drop Out"),
+            ("graduate", "Graduate"),
+        ],
     )
-    report_card_id = fields.Many2one(
-        string="# Report Card",
-        comodel_name="school_report_card",
-        required=False,
-        readonly=True,
-        states={
-            "draft": [
-                ("readonly", False),
-            ],
-        },
+    promote_to_grade_id = fields.Many2one(
+        string="Promote To Grade",
+        comodel_name="school_grade",
     )
-    class_assignment_ids = fields.One2many(
-        string="Class Assignments",
-        comodel_name="school_student_class_assignment",
-        inverse_name="enrollment_id",
-        readonly=True,
-        states={
-            "draft": [
-                ("readonly", False),
-            ],
-        },
+    pass_ok = fields.Boolean(
+        string="Pass",
+        compute="_compute_policy",
+        store=False,
+        compute_sudo=True,
+    )
+    fail_ok = fields.Boolean(
+        string="Fail",
+        compute="_compute_policy",
+        store=False,
+        compute_sudo=True,
+    )
+    drop_out_ok = fields.Boolean(
+        string="Drop Out",
+        compute="_compute_policy",
+        store=False,
+        compute_sudo=True,
+    )
+    graduate_ok = fields.Boolean(
+        string="Graduate",
+        compute="_compute_policy",
+        store=False,
+        compute_sudo=True,
     )
 
-    @api.depends(
-        "academic_term_id",
-        "grade_id",
-    )
+    def _compute_policy(self):
+        _super = super()
+        _super._compute_policy()
+
+    @api.depends("academic_term_id", "grade_id", "school_id")
     def _compute_allowed_student_ids(self):
         for record in self:
             result = False
-            if record.academic_term_id and record.grade_id:
+            if record.academic_term_id and record.grade_id and record.school_id:
                 criteria = [
                     ("state", "=", "draft"),
+                    ("school_id", "=", record.school_id.id),
                 ]
                 if record.academic_term_id.first_term:
                     criteria += [("next_grade_id", "=", record.grade_id.id)]
@@ -212,112 +233,93 @@ class SchoolEnrollment(models.Model):
         self.grade_id = False
 
     @api.onchange(
-        "grade_type_id",
-    )
-    def onchange_curiculum_id(self):
-        self.curiculum_id = False
-        if self.grade_type_id:
-            criteria = [
-                ("grade_type_id", "=", self.grade_type_id.id),
-                ("state", "=", "open"),
-            ]
-            curiculums = self.env["school_curiculum"].search(criteria)
-            if len(curiculums) > 0:
-                self.curiculum_id = curiculums[0]
-
-    @api.onchange(
         "academic_term_id",
-        "grade_id",
-    )
-    def onchange_homeroom_id(self):
-        self.homeroom_id = False
-
-    @api.onchange(
-        "academic_term_id",
+        "school_id",
         "grade_id",
     )
     def onchange_student_id(self):
         self.student_id = False
 
-    def action_load_assignment(self):
+    @api.onchange(
+        "grade_id",
+        "school_id",
+    )
+    def onchange_grade_class_id(self):
+        self.grade_class_id = False
+
+    def action_set_result_to_passed(self):
         for record in self.sudo():
-            record._load_assignment()
+            record._set_result_to_passed()
 
-    def _load_assignment(self):
+    def action_set_result_to_failed(self):
+        for record in self.sudo():
+            record._set_result_to_failed()
+
+    def action_set_result_to_drop_out(self):
         self.ensure_one()
-        self.class_assignment_ids.unlink()
-        criteria = [
-            ("curiculum_id", "=", self.curiculum_id.id),
-        ]
-        for detail in self.env["school_curiculum.detail"].search(criteria):
-            data = {
-                "enrollment_id": self.id,
-                "subject_id": detail.subject_id.id,
-            }
-            detail = self.env["school_student_class_assignment"].create(data)
-            detail._load_assignment()
+        for record in self.sudo():
+            record._set_result_to_drop_out()
 
-    @ssi_decorator.post_open_action()
-    def _10_create_report_card(self):
+    def action_set_result_to_graduate(self):
         self.ensure_one()
-        if self.report_card_id:
-            return True
+        for record in self.sudo():
+            record._set_result_to_graduate()
 
-        data = self._prepare_report_card()
-        report_card = self.env["school_report_card"].create(data)
+    def _set_result_to_graduate(self):
+        self.ensure_one()
+        self.with_context(bypass_policy_check=True).action_done()
         self.write(
             {
-                "report_card_id": report_card.id,
+                "academic_year_result": "graduate",
             }
         )
+        self.student_id.action_set_to_graduate()
+
+    def _set_result_to_drop_out(self):
+        self.ensure_one()
+        self.with_context(bypass_policy_check=True).action_done()
+        self.write(
+            {
+                "academic_year_result": "drop_out",
+            }
+        )
+        self.student_id.action_set_to_dropped()
+
+    def _set_result_to_failed(self):
+        self.ensure_one()
+        self.with_context(bypass_policy_check=True).action_done()
+        self.write(
+            {
+                "academic_year_result": "failed",
+            }
+        )
+        self.student_id.action_set_to_draft()
+
+    def _set_result_to_passed(self):
+        self.ensure_one()
+        self.with_context(bypass_policy_check=True).action_done()
+        self.write(
+            {
+                "academic_year_result": "passed",
+                "promote_to_grade_id": self.grade_id.next_grade_id.id,
+            }
+        )
+        self.student_id.action_set_to_draft()
 
     @ssi_decorator.post_open_action()
-    def _20_enroll_student(self):
+    def _10_enroll_student(self):
         self.ensure_one()
-        self.student_id.write(
-            {
-                "state": "enroll",
-            }
-        )
+        self.student_id.action_set_to_enroll()
 
     @ssi_decorator.post_done_action()
     def _30_unenroll_or_graduate_student(self):
         self.ensure_one()
-        criteria = [
-            ("next_grade_id", "=", False),
-        ]
-        last_grade = self.env["school_grade"].search(criteria)[0]
-        if self.grade_id == last_grade:
-            state = "graduate"
-        else:
-            state = "draft"
-        self.student_id.write(
-            {
-                "state": state,
-            }
-        )
+        self.student_id.action_set_to_draft()
 
     @ssi_decorator.post_cancel_action()
     def _10_unenroll_student(self):
         self.ensure_one()
-        self.student_id.write(
-            {
-                "state": "draft",
-            }
-        )
-
-    def _prepare_report_card(self):
-        self.ensure_one()
-        return {
-            "academic_year_id": self.academic_year_id.id,
-            "academic_term_id": self.academic_term_id.id,
-            "date": self.date,
-            "grade_type_id": self.grade_type_id.id,
-            "grade_id": self.grade_id.id,
-            "curiculum_id": self.curiculum_id.id,
-            "enrollment_id": self.id,
-            "student_id": self.student_id.id,
-        }
+        self.student_id.action_set_to_draft()
 
     @api.model
     def _get_policy_field(self):
@@ -331,6 +333,10 @@ class SchoolEnrollment(models.Model):
             "restart_ok",
             "restart_approval_ok",
             "manual_number_ok",
+            "pass_ok",
+            "fail_ok",
+            "drop_out_ok",
+            "graduate_ok",
         ]
         res += policy_field
         return res

@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2022 OpenSynergy Indonesia
+     Copyright 2022 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+<!-- Class 1 -->
+<record id="school_grade_class1" model="school_grade_class">
+    <field name="name">I-A (demo)</field>
+    <field name="code">X001</field>
+    <field name="school_id" ref="school_demo_1" />
+    <field name="grade_id" ref="school_grade1_type" />
+</record>
+<record id="school_grade_class2" model="school_grade_class">
+    <field name="name">I-B (demo)</field>
+    <field name="code">X002</field>
+    <field name="school_id" ref="school_demo_1" />
+    <field name="grade_id" ref="school_grade1_type" />
+</record>
+<record id="school_grade_class3" model="school_grade_class">
+    <field name="name">I-A (demo)</field>
+    <field name="code">X003</field>
+    <field name="school_id" ref="school_demo_2" />
+    <field name="grade_id" ref="school_grade1_type" />
+</record>
+
+<!-- Class 2 -->
+<record id="school_grade_class4" model="school_grade_class">
+    <field name="name">II-A (demo)</field>
+    <field name="code">X004</field>
+    <field name="school_id" ref="school_demo_1" />
+    <field name="grade_id" ref="school_grade2_type" />
+</record>
+<record id="school_grade_class5" model="school_grade_class">
+    <field name="name">II-B (demo)</field>
+    <field name="code">X005</field>
+    <field name="school_id" ref="school_demo_1" />
+    <field name="grade_id" ref="school_grade2_type" />
+</record>
+<record id="school_grade_class6" model="school_grade_class">
+    <field name="name">II-A (demo)</field>
+    <field name="code">X006</field>
+    <field name="school_id" ref="school_demo_2" />
+    <field name="grade_id" ref="school_grade2_type" />
+</record>
+
+<!-- Class 3 -->
+<record id="school_grade_class7" model="school_grade_class">
+    <field name="name">III-A (demo)</field>
+    <field name="code">X007</field>
+    <field name="school_id" ref="school_demo_1" />
+    <field name="grade_id" ref="school_grade3_type" />
+</record>
+<record id="school_grade_class8" model="school_grade_class">
+    <field name="name">III-B (demo)</field>
+    <field name="code">X008</field>
+    <field name="school_id" ref="school_demo_1" />
+    <field name="grade_id" ref="school_grade3_type" />
+</record>
+<record id="school_grade_class9" model="school_grade_class">
+    <field name="name">III-A (demo)</field>
+    <field name="code">X009</field>
+    <field name="school_id" ref="school_demo_2" />
+    <field name="grade_id" ref="school_grade3_type" />
+</record>
+
+<!-- Class 4 -->
+<record id="school_grade_class10" model="school_grade_class">
+    <field name="name">IV-A (demo)</field>
+    <field name="code">X010</field>
+    <field name="school_id" ref="school_demo_1" />
+    <field name="grade_id" ref="school_grade4_type" />
+</record>
+<record id="school_grade_class11" model="school_grade_class">
+    <field name="name">IV-B (demo)</field>
+    <field name="code">X011</field>
+    <field name="school_id" ref="school_demo_1" />
+    <field name="grade_id" ref="school_grade4_type" />
+</record>
+<record id="school_grade_class12" model="school_grade_class">
+    <field name="name">IV-A (demo)</field>
+    <field name="code">X012</field>
+    <field name="school_id" ref="school_demo_2" />
+    <field name="grade_id" ref="school_grade4_type" />
+</record>
+
+<!-- Class 5 -->
+<record id="school_grade_class13" model="school_grade_class">
+    <field name="name">V-A (demo)</field>
+    <field name="code">X013</field>
+    <field name="school_id" ref="school_demo_1" />
+    <field name="grade_id" ref="school_grade5_type" />
+</record>
+<record id="school_grade_class14" model="school_grade_class">
+    <field name="name">V-B (demo)</field>
+    <field name="code">X014</field>
+    <field name="school_id" ref="school_demo_1" />
+    <field name="grade_id" ref="school_grade5_type" />
+</record>
+<record id="school_grade_class15" model="school_grade_class">
+    <field name="name">V-A (demo)</field>
+    <field name="code">X015</field>
+    <field name="school_id" ref="school_demo_2" />
+    <field name="grade_id" ref="school_grade5_type" />
+</record>
+
+<!-- Class 6 -->
+<record id="school_grade_class16" model="school_grade_class">
+    <field name="name">VI-A (demo)</field>
+    <field name="code">X016</field>
+    <field name="school_id" ref="school_demo_1" />
+    <field name="grade_id" ref="school_grade6_type" />
+</record>
+<record id="school_grade_class17" model="school_grade_class">
+    <field name="name">VI-B (demo)</field>
+    <field name="code">X017</field>
+    <field name="school_id" ref="school_demo_1" />
+    <field name="grade_id" ref="school_grade6_type" />
+</record>
+<record id="school_grade_class18" model="school_grade_class">
+    <field name="name">VI-A (demo)</field>
+    <field name="code">X018</field>
+    <field name="school_id" ref="school_demo_2" />
+    <field name="grade_id" ref="school_grade6_type" />
+</record>
+
+<!-- Class 7 -->
+<record id="school_grade_class19" model="school_grade_class">
+    <field name="name">VII-A (demo)</field>
+    <field name="code">X019</field>
+    <field name="school_id" ref="school_demo_3" />
+    <field name="grade_id" ref="school_grade7_type" />
+</record>
+<record id="school_grade_class20" model="school_grade_class">
+    <field name="name">VII-B (demo)</field>
+    <field name="code">X020</field>
+    <field name="school_id" ref="school_demo_3" />
+    <field name="grade_id" ref="school_grade7_type" />
+</record>
+<record id="school_grade_class21" model="school_grade_class">
+    <field name="name">VII-A (demo)</field>
+    <field name="code">X021</field>
+    <field name="school_id" ref="school_demo_4" />
+    <field name="grade_id" ref="school_grade7_type" />
+</record>
+
+<!-- Class 8 -->
+<record id="school_grade_class22" model="school_grade_class">
+    <field name="name">VIII-A (demo)</field>
+    <field name="code">X022</field>
+    <field name="school_id" ref="school_demo_3" />
+    <field name="grade_id" ref="school_grade8_type" />
+</record>
+<record id="school_grade_class23" model="school_grade_class">
+    <field name="name">VIII-B (demo)</field>
+    <field name="code">X023</field>
+    <field name="school_id" ref="school_demo_3" />
+    <field name="grade_id" ref="school_grade8_type" />
+</record>
+<record id="school_grade_class24" model="school_grade_class">
+    <field name="name">VIII-A (demo)</field>
+    <field name="code">X024</field>
+    <field name="school_id" ref="school_demo_4" />
+    <field name="grade_id" ref="school_grade8_type" />
+</record>
+
+<!-- Class 9 -->
+<record id="school_grade_class25" model="school_grade_class">
+    <field name="name">IX-A (demo)</field>
+    <field name="code">X025</field>
+    <field name="school_id" ref="school_demo_3" />
+    <field name="grade_id" ref="school_grade9_type" />
+</record>
+<record id="school_grade_class26" model="school_grade_class">
+    <field name="name">IX-B (demo)</field>
+    <field name="code">X026</field>
+    <field name="school_id" ref="school_demo_3" />
+    <field name="grade_id" ref="school_grade9_type" />
+</record>
+<record id="school_grade_class27" model="school_grade_class">
+    <field name="name">IX-A (demo)</field>
+    <field name="code">X027</field>
+    <field name="school_id" ref="school_demo_4" />
+    <field name="grade_id" ref="school_grade9_type" />
+</record>
+
+<!-- Class 10 -->
+<record id="school_grade_class28" model="school_grade_class">
+    <field name="name">X-A (demo)</field>
+    <field name="code">X028</field>
+    <field name="school_id" ref="school_demo_5" />
+    <field name="grade_id" ref="school_grade10_type" />
+</record>
+<record id="school_grade_class29" model="school_grade_class">
+    <field name="name">X-B (demo)</field>
+    <field name="code">X029</field>
+    <field name="school_id" ref="school_demo_5" />
+    <field name="grade_id" ref="school_grade10_type" />
+</record>
+<record id="school_grade_class30" model="school_grade_class">
+    <field name="name">X-A (demo)</field>
+    <field name="code">X030</field>
+    <field name="school_id" ref="school_demo_6" />
+    <field name="grade_id" ref="school_grade10_type" />
+</record>
+
+<!-- Class 11 -->
+<record id="school_grade_class31" model="school_grade_class">
+    <field name="name">XI-A (demo)</field>
+    <field name="code">X031</field>
+    <field name="school_id" ref="school_demo_5" />
+    <field name="grade_id" ref="school_grade11_type" />
+</record>
+<record id="school_grade_class32" model="school_grade_class">
+    <field name="name">XI-B (demo)</field>
+    <field name="code">X032</field>
+    <field name="school_id" ref="school_demo_5" />
+    <field name="grade_id" ref="school_grade11_type" />
+</record>
+<record id="school_grade_class33" model="school_grade_class">
+    <field name="name">XI-A (demo)</field>
+    <field name="code">X033</field>
+    <field name="school_id" ref="school_demo_6" />
+    <field name="grade_id" ref="school_grade11_type" />
+</record>
+
+<!-- Class 12 -->
+<record id="school_grade_class34" model="school_grade_class">
+    <field name="name">XII-A (demo)</field>
+    <field name="code">X034</field>
+    <field name="school_id" ref="school_demo_5" />
+    <field name="grade_id" ref="school_grade12_type" />
+</record>
+<record id="school_grade_class35" model="school_grade_class">
+    <field name="name">XII-B (demo)</field>
+    <field name="code">X035</field>
+    <field name="school_id" ref="school_demo_5" />
+    <field name="grade_id" ref="school_grade12_type" />
+</record>
+<record id="school_grade_class36" model="school_grade_class">
+    <field name="name">XII-A (demo)</field>
+    <field name="code">X036</field>
+    <field name="school_id" ref="school_demo_6" />
+    <field name="grade_id" ref="school_grade12_type" />
+</record>
+</odoo>

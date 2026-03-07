@@ -6,12 +6,13 @@
 from odoo import fields, models
 
 
-class SchoolPassCriteria(models.Model):
-    _name = "school_pass_criteria"
+class School(models.Model):
+    _name = "school"
     _inherit = ["mixin.master_data"]
-    _description = "School Pass Criteria"
+    _description = "School"
 
-    python_code = fields.Text(
-        string="Python Code",
-        default="result = True",
+    grade_type_id = fields.Many2one(
+        "school_grade_type",
+        string="Grade Type",
+        required=True,
     )

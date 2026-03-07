@@ -3,9 +3,9 @@
      Copyright 2022 PT. Simetri Sinergi Indonesia
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
-<record id="school_subject_view_search" model="ir.ui.view">
-    <field name="name">school_subject - search</field>
-    <field name="model">school_subject</field>
+<record id="school_view_search" model="ir.ui.view">
+    <field name="name">school - search</field>
+    <field name="model">school</field>
     <field
             name="inherit_id"
             ref="ssi_master_data_mixin.mixin_master_data_view_search"
@@ -16,42 +16,48 @@
     </field>
 </record>
 
-<record id="school_subject_view_tree" model="ir.ui.view">
-    <field name="name">school_subject -tree</field>
-    <field name="model">school_subject</field>
+<record id="school_view_tree" model="ir.ui.view">
+    <field name="name">school -tree</field>
+    <field name="model">school</field>
     <field name="inherit_id" ref="ssi_master_data_mixin.mixin_master_data_view_tree" />
     <field name="mode">primary</field>
     <field name="arch" type="xml">
         <data>
+            <xpath expr="//field[@name='code']" position="after">
+                <field name="grade_type_id" />
+            </xpath>
         </data>
     </field>
 </record>
 
-<record id="school_subject_view_form" model="ir.ui.view">
-    <field name="name">school_subject - form</field>
-    <field name="model">school_subject</field>
+<record id="school_view_form" model="ir.ui.view">
+    <field name="name">school - form</field>
+    <field name="model">school</field>
     <field name="inherit_id" ref="ssi_master_data_mixin.mixin_master_data_view_form" />
     <field name="mode">primary</field>
     <field name="arch" type="xml">
         <data>
+            <xpath expr="//field[@name='active']" position="after">
+                <field name="grade_type_id" />
+            </xpath>
         </data>
     </field>
 </record>
 
-<record id="school_subject_action" model="ir.actions.act_window">
-    <field name="name">School Subjects</field>
+<record id="school_action" model="ir.actions.act_window">
+    <field name="name">Schools</field>
     <field name="type">ir.actions.act_window</field>
-    <field name="res_model">school_subject</field>
+    <field name="res_model">school</field>
     <field name="view_mode">tree,form</field>
 </record>
 
 <menuitem
-        id="school_subject_menu"
-        name="Subjects"
-        parent="menu_subject_configuration"
-        action="school_subject_action"
-        groups="school_subject_group"
-        sequence="110"
+        id="school_menu"
+        name="Schools"
+        parent="menu_grade_configuration"
+        action="school_action"
+        groups="school_group"
+        sequence="130"
     />
 
 </odoo>

@@ -29,9 +29,10 @@
                 <field name="student_id" />
                 <field name="academic_year_id" />
                 <field name="academic_term_id" />
+                <field name="school_id" />
                 <field name="grade_type_id" />
                 <field name="grade_id" />
-                <field name="homeroom_id" />
+                <field name="grade_class_id" />
             </xpath>
         </data>
     </field>
@@ -44,12 +45,48 @@
     <field name="inherit_id" ref="ssi_transaction_mixin.mixin_transaction_view_form" />
     <field name="arch" type="xml">
         <data>
+            <xpath expr="//header/field[@name='state']" position="before">
+                <button
+                        name="action_set_result_to_passed"
+                        type="object"
+                        string="Pass"
+                        confirm="Set result to Pass?"
+                        attrs="{'invisible':[('pass_ok','=',False)]}"
+                        groups="ssi_school.school_enrollment_user_group"
+                    />
+                <button
+                        name="action_set_result_to_failed"
+                        type="object"
+                        string="Fail"
+                        confirm="Set result to Fail?"
+                        attrs="{'invisible':[('fail_ok','=',False)]}"
+                        groups="ssi_school.school_enrollment_user_group"
+                    />
+                <button
+                        name="action_set_result_to_drop_out"
+                        type="object"
+                        string="Drop Out"
+                        confirm="Set result to Drop Out?"
+                        attrs="{'invisible':[('drop_out_ok','=',False)]}"
+                        groups="ssi_school.school_enrollment_user_group"
+                    />
+                <button
+                        name="action_set_result_to_graduate"
+                        type="object"
+                        string="Graduate"
+                        confirm="Set result to Graduate?"
+                        attrs="{'invisible':[('graduate_ok','=',False)]}"
+                        groups="ssi_school.school_enrollment_user_group"
+                    />
+            </xpath>
             <xpath expr="//field[@name='user_id']" position="after">
                 <field name="academic_year_id" />
                 <field
                         name="academic_term_id"
                         domain="[('year_id','=',academic_year_id),('enrollment_state','=','open')]"
                     />
+                <field name="last_term" />
+                <field name="school_id" />
                 <field name="grade_type_id" />
                 <field name="grade_id" domain="[('type_id','=',grade_type_id)]" />
                 <field
@@ -59,42 +96,30 @@
                     />
                 <field name="student_id" domain="[('id','=',allowed_student_ids)]" />
                 <field
-                        name="homeroom_id"
-                        domain="[('academic_term_id','=',academic_term_id),('grade_id','=',grade_id),('state','=','open'),('seat_avalilable','&gt;',0)]"
+                        name="grade_class_id"
+                        domain="[('grade_id','=',grade_id),('school_id','=',school_id)]"
                     />
             </xpath>
             <xpath expr="//group[@name='header_right']" position="inside">
                 <field name="date" />
             </xpath>
             <xpath expr="//page[1]" position="before">
-                <page name="curiculum" string="Curiculum">
-                    <group name="curiculum_1" colspan="4" col="2">
-                        <field
-                                name="curiculum_id"
-                                domain="[('state','=','open'),('grade_type_id','=',grade_type_id)]"
-                            />
+                <page
+                        name="academic_year_result"
+                        attrs="{'invisible':[('last_term','=',False)]}"
+                        string="Academic Year Result"
+                    >
+                    <group name="academic_year_result_group" colspan="4" col="2">
+                        <field name="academic_year_result" />
+                        <field name="promote_to_grade_id" />
                     </group>
-                    <button
-                            name="action_load_assignment"
-                            string="Load Assignment"
-                            type="object"
-                            icon="fa-gear"
-                            class="oe_highlight"
-                            attrs="{'invisible':[('state','!=','draft')]}"
-                        />
-                    <field name="class_assignment_ids">
-                        <tree editable="top">
-                            <field name="subject_id" />
-                            <field name="class_id" />
-                            <button
-                                    name="action_load_assignment"
-                                    type="object"
-                                    icon="fa-gear"
-                                    help="Load Assignment"
-                                />
-                        </tree>
-                    </field>
                 </page>
+            </xpath>
+            <xpath expr="//group[@name='policy_2']" position="inside">
+                <field name="pass_ok" />
+                <field name="fail_ok" />
+                <field name="drop_out_ok" />
+                <field name="graduate_ok" />
             </xpath>
         </data>
     </field>
