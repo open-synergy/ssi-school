@@ -127,6 +127,13 @@
                     </group>
                     <field name="enrollment_ids" />
                 </page>
+                <page name="family" string="Family">
+                    <group name="family_1" colspan="4" col="2">
+                        <field name="father_id" />
+                        <field name="mother_id" />
+                        <field name="guardian_id" />
+                    </group>
+                </page>
             </xpath>
         </data>
     </field>

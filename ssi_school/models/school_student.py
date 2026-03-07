@@ -122,6 +122,20 @@ class SchoolStudent(models.Model):
         related="active_enrollment_id.grade_class_id",
         store=True,
     )
+
+    # Family
+    father_id = fields.Many2one(
+        string="Father",
+        comodel_name="res.partner",
+    )
+    mother_id = fields.Many2one(
+        string="Mother",
+        comodel_name="res.partner",
+    )
+    guardian_id = fields.Many2one(
+        string="Guardian",
+        comodel_name="res.partner",
+    )
     state = fields.Selection(
         string="State",
         selection=[
