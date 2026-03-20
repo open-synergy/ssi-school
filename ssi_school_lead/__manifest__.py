@@ -14,5 +14,6 @@
     ],
     "data": [
         "views/crm_lead_views.xml",
+        "views/school_views.xml",
     ],
 }
