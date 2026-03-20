@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2025 OpenSynergy Indonesia
+     Copyright 2025 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+
+<record id="school_grade_type_rule_ou" model="ir.rule">
+    <field name="name">school_grade_type - operating unit</field>
+    <field name="model_id" ref="ssi_school.model_school_grade_type" />
+    <field name="domain_force">
+        ['|', ('operating_unit_ids','=',False),
+        ('operating_unit_ids','in',user.operating_unit_ids.ids)]
+    </field>
+    <field name="global" eval="True" />
+    <field name="perm_unlink" eval="0" />
+    <field name="perm_write" eval="0" />
+    <field name="perm_read" eval="1" />
+    <field name="perm_create" eval="0" />
+</record>
+
+</odoo>
