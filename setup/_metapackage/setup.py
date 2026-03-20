@@ -10,6 +10,7 @@ setuptools.setup(
     install_requires=[
         'odoo14-addon-ssi_school',
         'odoo14-addon-ssi_school_admission',
+        'odoo14-addon-ssi_school_lead',
     ],
     classifiers=[
         'Programming Language :: Python',
