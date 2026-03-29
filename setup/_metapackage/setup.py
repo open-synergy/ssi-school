@@ -11,6 +11,7 @@ setuptools.setup(
         'odoo14-addon-ssi_school',
         'odoo14-addon-ssi_school_admission',
         'odoo14-addon-ssi_school_admission_lead',
+        'odoo14-addon-ssi_school_admission_operating_unit',
         'odoo14-addon-ssi_school_lead',
         'odoo14-addon-ssi_school_operating_unit',
     ],
