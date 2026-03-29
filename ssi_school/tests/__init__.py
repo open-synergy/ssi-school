@@ -3,6 +3,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from . import (  # noqa: F401
+    common,
     test_school_grade_type,
     test_school_grade,
     test_school,
@@ -12,4 +13,5 @@ from . import (  # noqa: F401
     test_school_teacher,
     test_school_student,
     test_school_enrollment_payment_template,
+    test_school_enrollment,
 )

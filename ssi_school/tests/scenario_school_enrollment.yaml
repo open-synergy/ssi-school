@@ -1,0 +1,27 @@
+scenario_create_confirm_approve_done:
+  attribute:
+    description:
+      "Create enrollment with payment template, confirm, compute payment, approve,
+      create invoices, then done"
+    date: "2024-07-01"
+    user: "base.user_admin"
+    academic_year_name: "academic_year"
+    academic_term_name: "academic_term"
+    school_name: "school"
+    grade_name: "grade"
+    grade_class_name: "grade_class"
+    student_name: "student"
+    payment_template_name: "payment_template"
+    pricelist_name: "pricelist"
+    receivable_journal_name: "receivable_journal"
+  workflow_steps:
+    - name: confirm
+      error: false
+    - name: compute_payment
+      error: false
+    - name: approve
+      error: false
+    - name: create_invoice
+      error: false
+    - name: done
+      error: false
