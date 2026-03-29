@@ -47,6 +47,7 @@ class SchoolAdmissionForm(models.Model):
         "cancel_ok",
         "restart_ok",
         "manual_number_ok",
+        "create_admission_test_ok",
     ]
     _header_button_order = [
         "action_confirm",
@@ -218,6 +219,11 @@ class SchoolAdmissionForm(models.Model):
         comodel_name="school_admission_test",
         inverse_name="admission_form_id",
     )
+    create_admission_test_ok = fields.Boolean(
+        string="Can Create Admission Test",
+        compute="_compute_policy",
+        compute_sudo=True,
+    )
     admission_test_id = fields.Many2one(
         string="Admission Test",
         comodel_name="school_admission_test",
@@ -360,6 +366,7 @@ class SchoolAdmissionForm(models.Model):
             "restart_ok",
             "manual_number_ok",
             "restart_approval_ok",
+            "create_admission_test_ok",
         ]
         res += policy_field
         return res
