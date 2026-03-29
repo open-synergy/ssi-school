@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2022 OpenSynergy Indonesia
+     Copyright 2022 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+<record id="school_admission_form_view_search" model="ir.ui.view">
+    <field name="name">school_admission_form - search</field>
+    <field name="model">school_admission_form</field>
+    <field
+            name="inherit_id"
+            ref="ssi_transaction_mixin.mixin_transaction_view_search"
+        />
+    <field name="mode">primary</field>
+    <field name="arch" type="xml">
+        <data>
+        </data>
+    </field>
+</record>
+
+<record id="school_admission_form_view_tree" model="ir.ui.view">
+    <field name="name">school_admission_form - tree</field>
+    <field name="model">school_admission_form</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="ssi_transaction_mixin.mixin_transaction_view_tree" />
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name="date" />
+                <field name="academic_year_id" />
+                <field name="academic_term_id" />
+                <field name="student_id" />
+                <field name="parent_id" />
+                <field name="school_id" />
+                <field name="grade_id" />
+                <field name="pricelist_id" />
+                <field name="currency_id" />
+                <field name="amount_untaxed" />
+                <field name="amount_tax" />
+                <field name="amount_total" />
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_admission_form_view_form" model="ir.ui.view">
+    <field name="name">school_admission_form - form</field>
+    <field name="model">school_admission_form</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="ssi_transaction_mixin.mixin_transaction_view_form" />
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="academic_year_id" />                <field
+                        name="academic_term_id"
+                        domain="[('year_id','=',academic_year_id)]"
+                    />
+                <field name="student_id" />
+                <field name="parent_id" />
+                <field name="school_id" />
+                <field name="grade_id" />
+                <field name="pricelist_id" />
+                <field name="currency_id" />
+            </xpath>
+            <xpath expr="//group[@name='header_right']" position="inside">
+                <field name="date" />
+            </xpath>
+            <xpath expr="//page[1]" position="before">
+                <page name="page_detail" string="Fee Details">
+                    <group name="fee_template_group" colspan="4" col="2">
+                        <group name="fee_template_left" colspan="1" col="2">
+                            <field
+                                    name="fee_template_id"
+                                    domain="[('school_id','in',[school_id,False]),('grade_id','in',[grade_id,False])]"
+                                />
+                        </group>
+                        <group name="fee_template_right" colspan="1" col="2">
+                            <button
+                                    name="action_compute_fee"
+                                    type="object"
+                                    string="Compute Fee"
+                                    confirm="This will replace existing fee details. Continue?"
+                                    attrs="{'invisible':['|',('fee_template_id','=',False),('state','!=','draft')]}"
+                                    class="btn-primary"
+                                />
+                        </group>
+                    </group>
+                    <field
+                            name="line_ids"
+                            context="{'default_currency_id': currency_id, 'default_pricelist_id': pricelist_id}"
+                        >
+                        <tree editable="bottom">
+                            <field name="currency_id" invisible="1" />
+                            <field name="sequence" widget="handle" />
+                            <field name="product_id" />
+                            <field name="usage_id" optional="hide" />
+                            <field name="account_id" optional="hide" />
+                            <field name="name" />
+                            <field name="analytic_account_id" optional="show" />
+                            <field name="price_unit" />
+                            <field name="uom_quantity" />
+                            <field name="uom_id" />
+                            <field
+                                    name="tax_ids"
+                                    widget="many2many_tags"
+                                    optional="hide"
+                                />
+                            <field name="price_subtotal" />
+                            <field name="price_tax" optional="hide" />
+                            <field name="price_total" optional="hide" />
+                        </tree>
+                    </field>
+                    <group class="oe_subtotal_footer oe_right">
+                        <field name="amount_untaxed" />
+                        <field name="amount_tax" />
+                        <field name="amount_total" />
+                    </group>
+                </page>
+                <page name="accounting" string="Accounting">
+                    <group name="accounting_1" colspan="4" col="2">
+                        <group name="accounting_1_1" colspan="1" col="2">
+                            <field name="journal_id" />
+                            <field name="account_id" />
+                            <field name="analytic_account_id" />
+                        </group>
+                        <group name="accounting_1_2" colspan="1" col="2">
+                            <field name="move_id" />
+                            <field name="move_line_id" />
+                            <field name="realized" />
+                        </group>
+                    </group>
+                    <button
+                            name="action_compute_tax"
+                            string="Compute Tax"
+                            type="object"
+                            class="oe_highlight"
+                            icon="fa-gear"
+                            attrs="{'invisible':[('state','!=','draft')]}"
+                        />
+                    <field name="tax_ids">
+                        <tree editable="top">
+                            <field name="tax_id" />
+                            <field name="name" />
+                            <field name="currency_id" invisible="True" />
+                            <field name="account_id" />
+                            <field name="analytic_account_id" />
+                            <field name="manual" invisible="True" />
+                            <field name="base_amount" />
+                            <field name="tax_amount" />
+                        </tree>
+                        <form>
+                            <group name="tax" colspan="4" col="2">
+                                <field name="tax_id" />
+                                <field name="currency_id" invisible="True" />
+                                <field name="account_id" />
+                                <field name="analytic_account_id" />
+                                <field name="manual" invisible="True" />
+                                <field name="base_amount" />
+                                <field name="tax_amount" />
+                                <field name="account_move_line_id" />
+                            </group>
+                        </form>
+                    </field>
+                </page>
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_admission_form_action" model="ir.actions.act_window">
+    <field name="name">Admission Forms</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">school_admission_form</field>
+    <field name="view_mode">tree,form</field>
+    <field name="context">{}</field>
+</record>
+
+<menuitem
+        id="school_admission_form_menu"
+        name="Admission Forms"
+        parent="ssi_school.menu_school_root"
+        action="school_admission_form_action"
+        groups="school_admission_form_user_group"
+        sequence="20"
+    />
+</odoo>
