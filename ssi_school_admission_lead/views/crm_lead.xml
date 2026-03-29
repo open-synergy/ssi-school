@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2024 OpenSynergy Indonesia
+     Copyright 2024 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+
+<record id="crm_lead_admission_form_view" model="ir.ui.view">
+    <field name="name">crm.lead - School Admission Lead - Form</field>
+    <field name="model">crm.lead</field>
+    <field name="inherit_id" ref="crm.crm_lead_view_form" />
+    <field name="arch" type="xml">
+        <data>
+            <xpath
+                    expr="//group[@name='opportunity_partner']//field[@name='student_id']"
+                    position="after"
+                >
+                <field name="admission_form_id" />
+                <field name="admission_test_id" />
+                <field name="create_admission_form_ok" invisible="1" />
+                <button
+                        name="action_create_admission_form"
+                        type="object"
+                        string="Create Admission Form"
+                        class="btn-primary"
+                        attrs="{'invisible': [('create_admission_form_ok', '=', False)]}"
+                    />
+            </xpath>
+            <xpath
+                    expr="//group[@name='lead_partner']//field[@name='student_id']"
+                    position="after"
+                >
+                <field name="admission_form_id" />
+                <field name="admission_test_id" />
+                <field name="create_admission_form_ok" invisible="1" />
+                <button
+                        name="action_create_admission_form"
+                        type="object"
+                        string="Create Admission Form"
+                        class="btn-primary"
+                        attrs="{'invisible': [('create_admission_form_ok', '=', False)]}"
+                    />
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="crm_lead_admission_kanban_view" model="ir.ui.view">
+    <field name="name">crm.lead - School Admission Lead - Kanban</field>
+    <field name="model">crm.lead</field>
+    <field name="inherit_id" ref="crm.view_crm_lead_kanban" />
+    <field name="arch" type="xml">
+        <data>
+            <field name="name" position="after">
+                <field name="admission_form_id" />
+                <field name="admission_test_id" />
+            </field>
+            <xpath
+                    expr="//div/span[hasclass('o_kanban_record_subtitle')]/.."
+                    position="after"
+                >
+                <t t-if="record.admission_form_id.raw_value">
+                    <div>
+                        <strong>Admission: </strong>
+                        <t t-esc="record.admission_form_id.value" />
+                    </div>
+                </t>
+                <t t-if="record.admission_test_id.raw_value">
+                    <div>
+                        <strong>Test: </strong>
+                        <t t-esc="record.admission_test_id.value" />
+                    </div>
+                </t>
+            </xpath>
+        </data>
+    </field>
+</record>
+
+</odoo>
