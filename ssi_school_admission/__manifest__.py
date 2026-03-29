@@ -10,8 +10,15 @@
     "installable": True,
     "depends": [
         "ssi_school",
+        "ssi_master_data_mixin",
+        "ssi_transaction_confirm_mixin",
+        "ssi_transaction_open_mixin",
+        "ssi_transaction_done_mixin",
+        "ssi_transaction_cancel_mixin",
         "ssi_accounting_entry_mixin",
         "ssi_company_currency_mixin",
+        "ssi_transaction_total_mixin",
+        "ssi_product_line_account_mixin",
     ],
     "data": [
         "ir_module_category/school_admission_form.xml",
