@@ -114,3 +114,86 @@ class TestSchoolAcademicTerm(SavepointCase):
         self.term_2.invalidate_cache()
         self.assertFalse(self.term_1.last_term)
         self.assertTrue(self.term_2.last_term)
+
+    # --- ACTION METHODS: state ---
+
+    def test_action_open(self):
+        """Tombol Open: draft → open."""
+        record = self.env["school_academic_term"].create(
+            {
+                "name": "Term Action Open",
+                "code": "TAO",
+                "date_start": "2027-07-01",
+                "date_end": "2027-12-31",
+                "year_id": self.academic_year.id,
+            }
+        )
+        self.assertEqual(record.state, "draft")
+        record.action_open()
+        self.assertEqual(record.state, "open")
+
+    def test_action_done(self):
+        """Tombol Done: open → done."""
+        record = self.env["school_academic_term"].create(
+            {
+                "name": "Term Action Done",
+                "code": "TAD",
+                "date_start": "2027-07-01",
+                "date_end": "2027-12-31",
+                "year_id": self.academic_year.id,
+            }
+        )
+        record.action_open()
+        self.assertEqual(record.state, "open")
+        record.action_done()
+        self.assertEqual(record.state, "done")
+
+    def test_action_restart(self):
+        """Tombol Restart: done → draft."""
+        record = self.env["school_academic_term"].create(
+            {
+                "name": "Term Action Restart",
+                "code": "TAR",
+                "date_start": "2027-07-01",
+                "date_end": "2027-12-31",
+                "year_id": self.academic_year.id,
+            }
+        )
+        record.action_open()
+        record.action_done()
+        self.assertEqual(record.state, "done")
+        record.action_restart()
+        self.assertEqual(record.state, "draft")
+
+    # --- ACTION METHODS: enrollment_state ---
+
+    def test_action_open_enrollment(self):
+        """Tombol Open Enrollment: close → open."""
+        record = self.env["school_academic_term"].create(
+            {
+                "name": "Term Enroll Open",
+                "code": "TEO",
+                "date_start": "2027-07-01",
+                "date_end": "2027-12-31",
+                "year_id": self.academic_year.id,
+            }
+        )
+        self.assertEqual(record.enrollment_state, "close")
+        record.action_open_enrollment()
+        self.assertEqual(record.enrollment_state, "open")
+
+    def test_action_close_enrollment(self):
+        """Tombol Close Enrollment: open → close."""
+        record = self.env["school_academic_term"].create(
+            {
+                "name": "Term Enroll Close",
+                "code": "TEC",
+                "date_start": "2027-07-01",
+                "date_end": "2027-12-31",
+                "year_id": self.academic_year.id,
+            }
+        )
+        record.action_open_enrollment()
+        self.assertEqual(record.enrollment_state, "open")
+        record.action_close_enrollment()
+        self.assertEqual(record.enrollment_state, "close")
