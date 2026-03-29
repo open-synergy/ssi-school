@@ -213,6 +213,53 @@ class SchoolAdmissionForm(models.Model):
         inverse_name="admission_form_id",
         readonly=True,
     )
+    admission_test_ids = fields.One2many(
+        string="Admission Tests",
+        comodel_name="school_admission_test",
+        inverse_name="admission_form_id",
+    )
+    admission_test_id = fields.Many2one(
+        string="Admission Test",
+        comodel_name="school_admission_test",
+        compute="_compute_admission_test_id",
+        inverse="_inverse_admission_test_id",
+        store=False,
+    )
+
+    @api.depends("admission_test_ids")
+    def _compute_admission_test_id(self):
+        for record in self:
+            record.admission_test_id = record.admission_test_ids[:1]
+
+    def _inverse_admission_test_id(self):
+        for record in self:
+            if record.admission_test_id:
+                record.admission_test_id.admission_form_id = record
+
+    def action_create_admission_test(self):
+        self.ensure_one()
+        if not self.admission_test_id:
+            test = self.env["school_admission_test"].create(
+                {
+                    "date": self.date,
+                    "academic_year_id": self.academic_year_id.id,
+                    "academic_term_id": self.academic_term_id.id,
+                    "school_id": self.school_id.id,
+                    "grade_id": self.grade_id.id,
+                    "admission_form_id": self.id,
+                    "student_id": self.student_id.id,
+                }
+            )
+        else:
+            test = self.admission_test_id
+        return {
+            "type": "ir.actions.act_window",
+            "name": "Admission Test",
+            "res_model": "school_admission_test",
+            "res_id": test.id,
+            "view_mode": "form",
+            "target": "current",
+        }
 
     @api.onchange("academic_year_id")
     def _onchange_academic_term_id(self):

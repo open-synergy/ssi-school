@@ -37,6 +37,7 @@
                 <field name="amount_untaxed" />
                 <field name="amount_tax" />
                 <field name="amount_total" />
+                <field name="admission_test_id" />
             </xpath>
         </data>
     </field>
@@ -60,6 +61,17 @@
                 <field name="grade_id" />
                 <field name="pricelist_id" />
                 <field name="currency_id" />
+                <field
+                        name="admission_test_id"
+                        attrs="{'invisible': [('admission_test_id', '=', False)]}"
+                    />
+                <button
+                        name="action_create_admission_test"
+                        type="object"
+                        string="Create Admission Test"
+                        class="btn-primary"
+                        attrs="{'invisible': [('admission_test_id', '!=', False)]}"
+                    />
             </xpath>
             <xpath expr="//group[@name='header_right']" position="inside">
                 <field name="date" />
