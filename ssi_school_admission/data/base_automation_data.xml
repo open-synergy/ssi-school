@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2022 OpenSynergy Indonesia
+     Copyright 2022 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+<record id="school_admission_form_action_done" model="ir.actions.server">
+    <field name="name">Action Done</field>
+    <field name="model_id" ref="model_school_admission_form" />
+    <field name="state">code</field>
+    <field name="code">records.action_done()</field>
+</record>
+
+<record id="school_admission_form_action_open" model="ir.actions.server">
+    <field name="name">Action Open</field>
+    <field name="model_id" ref="model_school_admission_form" />
+    <field name="state">code</field>
+    <field name="code">records.action_open()</field>
+</record>
+
+<record id="school_admission_form_open_2_done" model="base.automation">
+    <field name="action_server_id" ref="school_admission_form_action_done" />
+    <field name="trigger">on_write</field>
+    <field name="filter_pre_domain">[('realized','=',False)]</field>
+    <field name="filter_domain">[('realized','=',True)]</field>
+</record>
+
+<record id="school_admission_form_done_2_open" model="base.automation">
+    <field name="action_server_id" ref="school_admission_form_action_open" />
+    <field name="trigger">on_write</field>
+    <field name="filter_pre_domain">[('realized','=',True)]</field>
+    <field name="filter_domain">[('realized','=',False)]</field>
+</record>
+</odoo>

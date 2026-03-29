@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2022 OpenSynergy Indonesia
+     Copyright 2022 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="demo_account_receivable" model="account.account">
+        <field name="name">School Admission Receivable - (demo)</field>
+        <field name="code">XSAF-AR01</field>
+        <field name="user_type_id" ref="account.data_account_type_receivable" />
+        <field name="internal_type">receivable</field>
+        <field name="reconcile" eval="1" />
+    </record>
+
+    <record id="demo_account_income" model="account.account">
+        <field name="name">School Admission Income - (demo)</field>
+        <field name="code">XSAF-IC01</field>
+        <field name="user_type_id" ref="account.data_account_type_revenue" />
+        <field name="internal_type">other</field>
+    </record>
+</odoo>

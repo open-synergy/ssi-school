@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2022 OpenSynergy Indonesia
+     Copyright 2022 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+
+<record id="school_admission_fee_template_view_search" model="ir.ui.view">
+    <field name="name">school_admission_fee_template - search</field>
+    <field name="model">school_admission_fee_template</field>
+    <field
+            name="inherit_id"
+            ref="ssi_master_data_mixin.mixin_master_data_view_search"
+        />
+    <field name="mode">primary</field>
+    <field name="arch" type="xml">
+        <data />
+    </field>
+</record>
+
+<record id="school_admission_fee_template_view_tree" model="ir.ui.view">
+    <field name="name">school_admission_fee_template - tree</field>
+    <field name="model">school_admission_fee_template</field>
+    <field name="inherit_id" ref="ssi_master_data_mixin.mixin_master_data_view_tree" />
+    <field name="mode">primary</field>
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="school_id" />
+                <field name="grade_id" />
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_admission_fee_template_view_form" model="ir.ui.view">
+    <field name="name">school_admission_fee_template - form</field>
+    <field name="model">school_admission_fee_template</field>
+    <field name="inherit_id" ref="ssi_master_data_mixin.mixin_master_data_view_form" />
+    <field name="mode">primary</field>
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='active']" position="after">
+                <field name="school_id" />
+                <field name="grade_id" domain="[('type_id','=',grade_type_id)]" />
+                <field name="grade_type_id" invisible="1" />
+                <field name="journal_id" />
+                <field name="account_id" />
+            </xpath>
+            <xpath expr="//page[1]" position="before">
+                <page name="fee_lines" string="Fee Lines">
+                    <field name="line_ids" colspan="4" nolabel="1">
+                        <tree editable="bottom">
+                            <field name="sequence" widget="handle" />
+                            <field name="product_id" />
+                            <field name="name" />
+                            <field name="account_id" optional="show" />
+                            <field name="analytic_account_id" optional="hide" />
+                            <field name="uom_quantity" string="Quantity" />
+                            <field name="uom_id" />
+                            <field name="price_unit" />
+                            <field
+                                    name="tax_ids"
+                                    widget="many2many_tags"
+                                    optional="hide"
+                                />
+                            <field name="price_subtotal" />
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_admission_fee_template_action" model="ir.actions.act_window">
+    <field name="name">Admission Fee Templates</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">school_admission_fee_template</field>
+    <field name="view_mode">tree,form</field>
+    <field name="context">{}</field>
+</record>
+
+<menuitem
+        id="school_admission_fee_template_menu"
+        name="Admission Fee Templates"
+        parent="ssi_school.menu_school_configuration"
+        action="school_admission_fee_template_action"
+        groups="school_admission_fee_template_group"
+        sequence="15"
+    />
+
+</odoo>
