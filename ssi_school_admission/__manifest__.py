@@ -19,6 +19,7 @@
         "ssi_company_currency_mixin",
         "ssi_transaction_total_mixin",
         "ssi_product_line_account_mixin",
+        "base_automation",
     ],
     "data": [
         "ir_module_category/school_admission_form.xml",
