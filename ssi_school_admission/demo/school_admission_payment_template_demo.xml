@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2024 OpenSynergy Indonesia
+     Copyright 2024 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="demo_payment_template_1" model="school_admission_payment_template">
+        <field
+            name="name"
+        >Elementary School A - Grade 1 Admission Payment Template (demo)</field>
+        <field name="code">XSAP-T001</field>
+        <field name="academic_term_id" ref="ssi_school.school_academic_term1" />
+        <field name="school_id" ref="ssi_school.school_demo_1" />
+        <field name="grade_id" ref="ssi_school.school_grade1_type" />
+        <field
+            name="term_ids"
+            eval="[
+            (0, 0, {
+                'sequence': 5,
+                'name': 'Term 1',
+                'detail_ids': [
+                    (0, 0, {
+                        'sequence': 5,
+                        'product_id': ref('ssi_school_admission.demo_product_admission_1'),
+                        'name': 'Registration Fee',
+                        'account_id': ref('ssi_school_admission.demo_account_income'),
+                        'uom_quantity': 1.0,
+                        'uom_id': ref('uom.product_uom_unit'),
+                        'price_unit': 500000.0,
+                    }),
+                    (0, 0, {
+                        'sequence': 10,
+                        'product_id': ref('ssi_school_admission.demo_product_admission_2'),
+                        'name': 'Books and Uniform Fee',
+                        'account_id': ref('ssi_school_admission.demo_account_income'),
+                        'uom_quantity': 1.0,
+                        'uom_id': ref('uom.product_uom_unit'),
+                        'price_unit': 1500000.0,
+                    }),
+                ],
+            }),
+            (0, 0, {
+                'sequence': 10,
+                'name': 'Term 2',
+                'detail_ids': [
+                    (0, 0, {
+                        'sequence': 5,
+                        'product_id': ref('ssi_school_admission.demo_product_admission_2'),
+                        'name': 'Books and Uniform Fee',
+                        'account_id': ref('ssi_school_admission.demo_account_income'),
+                        'uom_quantity': 1.0,
+                        'uom_id': ref('uom.product_uom_unit'),
+                        'price_unit': 1500000.0,
+                    }),
+                ],
+            }),
+        ]"
+        />
+    </record>
+
+    <record id="demo_payment_template_2" model="school_admission_payment_template">
+        <field
+            name="name"
+        >Elementary School A - Grade 2 Admission Payment Template (demo)</field>
+        <field name="code">XSAP-T002</field>
+        <field name="academic_term_id" ref="ssi_school.school_academic_term1" />
+        <field name="school_id" ref="ssi_school.school_demo_1" />
+        <field name="grade_id" ref="ssi_school.school_grade2_type" />
+        <field
+            name="term_ids"
+            eval="[
+            (0, 0, {
+                'sequence': 5,
+                'name': 'Term 1',
+                'detail_ids': [
+                    (0, 0, {
+                        'sequence': 5,
+                        'product_id': ref('ssi_school_admission.demo_product_admission_1'),
+                        'name': 'Registration Fee',
+                        'account_id': ref('ssi_school_admission.demo_account_income'),
+                        'uom_quantity': 1.0,
+                        'uom_id': ref('uom.product_uom_unit'),
+                        'price_unit': 500000.0,
+                    }),
+                    (0, 0, {
+                        'sequence': 10,
+                        'product_id': ref('ssi_school_admission.demo_product_admission_2'),
+                        'name': 'Books and Uniform Fee',
+                        'account_id': ref('ssi_school_admission.demo_account_income'),
+                        'uom_quantity': 1.0,
+                        'uom_id': ref('uom.product_uom_unit'),
+                        'price_unit': 1500000.0,
+                    }),
+                ],
+            }),
+            (0, 0, {
+                'sequence': 10,
+                'name': 'Term 2',
+                'detail_ids': [
+                    (0, 0, {
+                        'sequence': 5,
+                        'product_id': ref('ssi_school_admission.demo_product_admission_2'),
+                        'name': 'Books and Uniform Fee',
+                        'account_id': ref('ssi_school_admission.demo_account_income'),
+                        'uom_quantity': 1.0,
+                        'uom_id': ref('uom.product_uom_unit'),
+                        'price_unit': 1500000.0,
+                    }),
+                ],
+            }),
+        ]"
+        />
+    </record>
+</odoo>

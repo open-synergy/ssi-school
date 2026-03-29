@@ -9,4 +9,10 @@ from . import (  # noqa: F401
     school_admission_form_line,
     school_admission_form_tax,
     school_admission_test,
+    school_admission_payment_template,
+    school_admission_payment_template_term,
+    school_admission_payment_template_term_detail,
+    school_admission,
+    school_admission_payment_term,
+    school_admission_payment_term_detail,
 )

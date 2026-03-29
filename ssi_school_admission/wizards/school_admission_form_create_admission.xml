@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2024 OpenSynergy Indonesia
+     Copyright 2024 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+<record id="school_admission_form_wizard_create_admission_view_form" model="ir.ui.view">
+    <field name="name">school_admission_form.wizard_create_admission - form</field>
+    <field name="model">school_admission_form.wizard_create_admission</field>
+    <field name="arch" type="xml">
+        <form string="Create School Admission">
+            <group name="main" colspan="4" col="2">
+                <group name="main_left" colspan="1" col="2">
+                    <field name="admission_form_id" />
+                    <field name="currency_id" />
+                    <field name="allowed_pricelist_ids" invisible="1" />
+                    <field
+                            name="pricelist_id"
+                            domain="[('id', 'in', allowed_pricelist_ids)]"
+                        />
+                    <field name="payment_template_id" />
+                </group>
+                <group name="main_right" colspan="1" col="2">
+                    <field name="receivable_journal_id" />
+                    <field name="receivable_account_id" />
+                </group>
+            </group>
+            <footer>
+                <button
+                        name="action_create_admission"
+                        type="object"
+                        string="Create Admission"
+                        class="btn-primary"
+                    />
+                <button string="Cancel" class="btn-default" special="cancel" />
+            </footer>
+        </form>
+    </field>
+</record>
+
+<record
+        id="school_admission_form_action_create_admission"
+        model="ir.actions.act_window"
+    >
+    <field name="name">Create School Admission</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">school_admission_form.wizard_create_admission</field>
+    <field name="view_mode">form</field>
+    <field name="target">new</field>
+    <field name="context">{"active_id": active_id}</field>
+</record>
+</odoo>

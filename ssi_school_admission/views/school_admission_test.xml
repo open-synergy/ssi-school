@@ -56,6 +56,14 @@
                 <field name="grade_id" domain="[('type_id','=',grade_type_id)]" />
                 <field name="admission_form_id" />
                 <field name="student_id" />
+                <field name="create_school_admission_ok" invisible="1" />
+                <button
+                        name="%(school_admission_test_action_create_admission)d"
+                        type="action"
+                        string="Create School Admission"
+                        class="btn-primary"
+                        attrs="{'invisible': [('create_school_admission_ok', '=', False)]}"
+                    />
             </xpath>
             <xpath expr="//group[@name='header_right']" position="inside">
                 <field name="date" />
