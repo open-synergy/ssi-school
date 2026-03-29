@@ -65,6 +65,14 @@
                         name="admission_test_id"
                         attrs="{'invisible': [('admission_test_id', '=', False)]}"
                     />
+                <field name="create_admission_ok" invisible="1" />
+                <button
+                        name="%(school_admission_form_action_create_admission)d"
+                        type="action"
+                        string="Create Admission"
+                        class="btn-primary"
+                        attrs="{'invisible': [('create_admission_ok', '=', False)]}"
+                    />
                 <field name="create_admission_test_ok" invisible="1" />
                 <button
                         name="action_create_admission_test"

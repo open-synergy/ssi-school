@@ -180,4 +180,26 @@ if env.user.id in document.active_approver_user_ids.ids:
     <field name="group_ids" eval="[(6,0,[ref('school_admission_test_user_group')])]" />
     <field name="restrict_additional" eval="0" />
 </record>
+
+<!-- Create School Admission -->
+<record
+        id="policy_template_school_admission_test_create_school_admission"
+        model="policy.template_detail"
+    >
+    <field name="template_id" ref="policy_template_school_admission_test" />
+    <field
+            name="field_id"
+            search="[('model_id.model','=','school_admission_test'),('name','=','create_school_admission_ok')]"
+        />
+    <field name="restrict_state" eval="1" />
+    <field
+            name="state_ids"
+            search="[('field_id.model_id.model','=','school_admission_test'),('value','=','done')]"
+        />
+    <field name="restrict_user" eval="1" />
+    <field name="computation_method">use_group</field>
+    <field name="group_ids" eval="[(6,0,[ref('school_admission_test_user_group')])]" />
+    <field name="restrict_additional" eval="1" />
+    <field name="additional_python_code">result = document.passed</field>
+</record>
 </odoo>

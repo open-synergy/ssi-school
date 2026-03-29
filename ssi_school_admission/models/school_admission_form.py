@@ -47,6 +47,7 @@ class SchoolAdmissionForm(models.Model):
         "cancel_ok",
         "restart_ok",
         "manual_number_ok",
+        "create_admission_ok",
         "create_admission_test_ok",
     ]
     _header_button_order = [
@@ -214,10 +215,20 @@ class SchoolAdmissionForm(models.Model):
         inverse_name="admission_form_id",
         readonly=True,
     )
+    admission_ids = fields.One2many(
+        string="Admissions",
+        comodel_name="school_admission",
+        inverse_name="admission_form_id",
+    )
     admission_test_ids = fields.One2many(
         string="Admission Tests",
         comodel_name="school_admission_test",
         inverse_name="admission_form_id",
+    )
+    create_admission_ok = fields.Boolean(
+        string="Can Create Admission",
+        compute="_compute_policy",
+        compute_sudo=True,
     )
     create_admission_test_ok = fields.Boolean(
         string="Can Create Admission Test",
@@ -366,6 +377,7 @@ class SchoolAdmissionForm(models.Model):
             "restart_ok",
             "manual_number_ok",
             "restart_approval_ok",
+            "create_admission_ok",
             "create_admission_test_ok",
         ]
         res += policy_field

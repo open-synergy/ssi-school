@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2024 OpenSynergy Indonesia
+     Copyright 2024 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+<record id="policy_template_school_admission" model="policy.template">
+    <field name="name">Standard</field>
+    <field name="model_id" ref="model_school_admission" />
+    <field
+            name="state_field_id"
+            search="[('model_id.model','=','school_admission'),('name','=','state')]"
+        />
+    <field name="sequence" eval="100" />
+    <field name="python_code">result=True</field>
+</record>
+
+<!-- Confirm -->
+<record id="policy_template_school_admission_confirm" model="policy.template_detail">
+    <field name="template_id" ref="policy_template_school_admission" />
+    <field
+            name="field_id"
+            search="[('model_id.model','=','school_admission'),('name','=','confirm_ok')]"
+        />
+    <field name="restrict_state" eval="1" />
+    <field
+            name="state_ids"
+            search="[('field_id.model_id.model','=','school_admission'),('value','=','draft')]"
+        />
+    <field name="restrict_user" eval="1" />
+    <field name="computation_method">use_group</field>
+    <field name="group_ids" eval="[(6,0,[ref('school_admission_user_group')])]" />
+    <field name="restrict_additional" eval="0" />
+</record>
+
+<!-- Done -->
+<record id="policy_template_school_admission_done" model="policy.template_detail">
+    <field name="template_id" ref="policy_template_school_admission" />
+    <field
+            name="field_id"
+            search="[('model_id.model','=','school_admission'),('name','=','done_ok')]"
+        />
+    <field name="restrict_state" eval="1" />
+    <field
+            name="state_ids"
+            search="[('field_id.model_id.model','=','school_admission'),('value','=','open')]"
+        />
+    <field name="restrict_user" eval="1" />
+    <field name="computation_method">use_group</field>
+    <field name="group_ids" eval="[(6,0,[ref('school_admission_user_group')])]" />
+    <field name="restrict_additional" eval="0" />
+</record>
+
+<!-- Cancel -->
+<record id="policy_template_school_admission_cancel" model="policy.template_detail">
+    <field name="template_id" ref="policy_template_school_admission" />
+    <field
+            name="field_id"
+            search="[('model_id.model','=','school_admission'),('name','=','cancel_ok')]"
+        />
+    <field name="restrict_state" eval="1" />
+    <field
+            name="state_ids"
+            search="[('field_id.model_id.model','=','school_admission'),('value','in',['draft','open','done'])]"
+        />
+    <field name="restrict_user" eval="1" />
+    <field name="computation_method">use_group</field>
+    <field name="group_ids" eval="[(6,0,[ref('school_admission_validator_group')])]" />
+    <field name="restrict_additional" eval="0" />
+</record>
+
+<!-- Restart -->
+<record id="policy_template_school_admission_restart" model="policy.template_detail">
+    <field name="template_id" ref="policy_template_school_admission" />
+    <field
+            name="field_id"
+            search="[('model_id.model','=','school_admission'),('name','=','restart_ok')]"
+        />
+    <field name="restrict_state" eval="1" />
+    <field
+            name="state_ids"
+            search="[('field_id.model_id.model','=','school_admission'),('value','in',['cancel','reject'])]"
+        />
+    <field name="restrict_user" eval="1" />
+    <field name="computation_method">use_group</field>
+    <field name="group_ids" eval="[(6,0,[ref('school_admission_validator_group')])]" />
+    <field name="restrict_additional" eval="0" />
+</record>
+
+<!-- Approve -->
+<record id="policy_template_school_admission_approve" model="policy.template_detail">
+    <field name="template_id" ref="policy_template_school_admission" />
+    <field
+            name="field_id"
+            search="[('model_id.model','=','school_admission'),('name','=','approve_ok')]"
+        />
+    <field name="restrict_state" eval="1" />
+    <field
+            name="state_ids"
+            search="[('field_id.model_id.model','=','school_admission'),('value','=','confirm')]"
+        />
+    <field name="restrict_user" eval="0" />
+    <field name="restrict_additional" eval="1" />
+    <field name="additional_python_code">result = False
+if env.user.id in document.active_approver_user_ids.ids:
+    result = True</field>
+</record>
+
+<!-- Reject -->
+<record id="policy_template_school_admission_reject" model="policy.template_detail">
+    <field name="template_id" ref="policy_template_school_admission" />
+    <field
+            name="field_id"
+            search="[('model_id.model','=','school_admission'),('name','=','reject_ok')]"
+        />
+    <field name="restrict_state" eval="1" />
+    <field
+            name="state_ids"
+            search="[('field_id.model_id.model','=','school_admission'),('value','=','confirm')]"
+        />
+    <field name="restrict_user" eval="0" />
+    <field name="restrict_additional" eval="1" />
+    <field name="additional_python_code">result = False
+if env.user.id in document.active_approver_user_ids.ids:
+    result = True</field>
+</record>
+</odoo>

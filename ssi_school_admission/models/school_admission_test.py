@@ -41,6 +41,7 @@ class SchoolAdmissionTest(models.Model):
         "cancel_ok",
         "restart_ok",
         "manual_number_ok",
+        "create_school_admission_ok",
     ]
     _header_button_order = [
         "action_confirm",
@@ -157,6 +158,11 @@ class SchoolAdmissionTest(models.Model):
             ],
         },
     )
+    create_school_admission_ok = fields.Boolean(
+        string="Can Create School Admission",
+        compute="_compute_policy",
+        compute_sudo=True,
+    )
 
     @api.constrains("admission_form_id")
     def _check_admission_form_uniqueness(self):
@@ -208,6 +214,7 @@ class SchoolAdmissionTest(models.Model):
             "restart_ok",
             "manual_number_ok",
             "restart_approval_ok",
+            "create_school_admission_ok",
         ]
         res += policy_field
         return res

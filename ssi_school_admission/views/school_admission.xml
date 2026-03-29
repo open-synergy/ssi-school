@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2024 OpenSynergy Indonesia
+     Copyright 2024 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+<record id="school_admission_view_search" model="ir.ui.view">
+    <field name="name">school_admission - search</field>
+    <field name="model">school_admission</field>
+    <field
+            name="inherit_id"
+            ref="ssi_transaction_mixin.mixin_transaction_view_search"
+        />
+    <field name="mode">primary</field>
+    <field name="arch" type="xml">
+        <data>
+        </data>
+    </field>
+</record>
+
+<record id="school_admission_view_tree" model="ir.ui.view">
+    <field name="name">school_admission - tree</field>
+    <field name="model">school_admission</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="ssi_transaction_mixin.mixin_transaction_view_tree" />
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name="date" />
+                <field name="student_id" />
+                <field name="academic_year_id" />
+                <field name="academic_term_id" />
+                <field name="school_id" />
+                <field name="grade_type_id" />
+                <field name="grade_id" />
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_admission_view_form" model="ir.ui.view">
+    <field name="name">school_admission - form</field>
+    <field name="model">school_admission</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="ssi_transaction_mixin.mixin_transaction_view_form" />
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="academic_year_id" />
+                <field
+                        name="academic_term_id"
+                        domain="[('year_id','=',academic_year_id)]"
+                    />
+                <field name="school_id" />
+                <field name="grade_type_id" />
+                <field name="grade_id" domain="[('type_id','=',grade_type_id)]" />
+                <field name="student_id" />
+                <field name="admission_form_id" />
+                <field name="admission_test_id" />
+            </xpath>
+            <xpath expr="//group[@name='header_right']" position="inside">
+                <field name="date" />
+                <field name="currency_id" />
+                <field
+                        name="allowed_pricelist_ids"
+                        widget="many2many_tags"
+                        invisible="1"
+                    />
+                <field
+                        name="pricelist_id"
+                        domain="[('id','in',allowed_pricelist_ids)]"
+                    />
+            </xpath>
+            <xpath expr="//page[1]" position="before">
+                <page name="billing" string="Billing">
+                    <group name="billing_template" colspan="4" col="2">
+                        <group name="billing_template_left" colspan="1" col="2">
+                            <field
+                                    name="payment_template_id"
+                                    domain="[('academic_term_id','in',[academic_term_id,False]),('school_id','in',[school_id,False]),('grade_id','in',[grade_id,False])]"
+                                />
+                        </group>
+                        <group name="billing_template_right" colspan="1" col="2">
+                            <button
+                                    name="action_compute_payment"
+                                    type="object"
+                                    string="Compute Payment"
+                                    confirm="This will replace existing payment terms. Continue?"
+                                    attrs="{'invisible':['|',('payment_template_id','=',False),('state','!=','draft')]}"
+                                    class="btn-primary"
+                                />
+                        </group>
+                    </group>
+                    <field
+                            name="payment_term_ids"
+                            colspan="4"
+                            nolabel="1"
+                            context="{'form_view_ref': 'ssi_school_admission.school_admission_payment_term_view_form_embedded'}"
+                        >
+                        <tree>
+                            <field name="sequence" invisible="1" />
+                            <field name="name" />
+                            <field name="date_invoice" />
+                            <field name="date_due" />
+                            <field name="currency_id" invisible="1" />
+                            <field name="amount_untaxed" />
+                            <field name="amount_tax" />
+                            <field name="amount_total" />
+                            <field name="invoice_id" />
+                            <field name="state" />
+                            <button
+                                    name="action_create_invoice"
+                                    title="Create Invoice"
+                                    type="object"
+                                    icon="fa-cogs"
+                                    states="uninvoiced"
+                                />
+                            <button
+                                    name="action_delete_invoice"
+                                    title="Delete Invoice"
+                                    type="object"
+                                    icon="fa-eraser"
+                                    states="invoiced"
+                                />
+                        </tree>
+                    </field>
+                    <group name="billing_account" colspan="4" col="2">
+                        <group name="billing_account_left" colspan="1" col="2">
+                            <field name="receivable_journal_id" />
+                            <field name="receivable_account_id" />
+                        </group>
+                    </group>
+                </page>
+                <page name="result" string="Result">
+                    <group name="result_group" colspan="4" col="2">
+                        <field name="school_student_id" />
+                    </group>
+                </page>
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_admission_action" model="ir.actions.act_window">
+    <field name="name">School Admissions</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">school_admission</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<menuitem
+        id="school_admission_menu"
+        name="Admissions"
+        parent="ssi_school.menu_school_root"
+        action="school_admission_action"
+        groups="school_admission_user_group"
+        sequence="300"
+    />
+
+</odoo>
