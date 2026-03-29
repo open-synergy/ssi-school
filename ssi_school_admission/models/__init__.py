@@ -8,4 +8,5 @@ from . import (  # noqa: F401
     school_admission_form,
     school_admission_form_line,
     school_admission_form_tax,
+    school_admission_test,
 )

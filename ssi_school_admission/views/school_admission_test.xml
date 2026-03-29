@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2022 OpenSynergy Indonesia
+     Copyright 2022 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+<record id="school_admission_test_view_search" model="ir.ui.view">
+    <field name="name">school_admission_test - search</field>
+    <field name="model">school_admission_test</field>
+    <field
+            name="inherit_id"
+            ref="ssi_transaction_mixin.mixin_transaction_view_search"
+        />
+    <field name="mode">primary</field>
+    <field name="arch" type="xml">
+        <data>
+        </data>
+    </field>
+</record>
+
+<record id="school_admission_test_view_tree" model="ir.ui.view">
+    <field name="name">school_admission_test - tree</field>
+    <field name="model">school_admission_test</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="ssi_transaction_mixin.mixin_transaction_view_tree" />
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name="date" />
+                <field name="academic_year_id" />
+                <field name="academic_term_id" />
+                <field name="school_id" />
+                <field name="grade_id" />
+                <field name="admission_form_id" />
+                <field name="student_id" />
+                <field name="passed" />
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_admission_test_view_form" model="ir.ui.view">
+    <field name="name">school_admission_test - form</field>
+    <field name="model">school_admission_test</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="ssi_transaction_mixin.mixin_transaction_view_form" />
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="academic_year_id" />
+                <field
+                        name="academic_term_id"
+                        domain="[('year_id','=',academic_year_id)]"
+                    />
+                <field name="school_id" />
+                <field name="grade_type_id" invisible="1" />
+                <field name="grade_id" domain="[('type_id','=',grade_type_id)]" />
+                <field name="admission_form_id" />
+                <field name="student_id" />
+            </xpath>
+            <xpath expr="//group[@name='header_right']" position="inside">
+                <field name="date" />
+            </xpath>
+            <xpath expr="//page[1]" position="before">
+                <page name="page_result" string="Test Result">
+                    <group name="result_group" colspan="4" col="2">
+                        <group name="result_left" colspan="1" col="2">
+                            <field name="passed" />
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_admission_test_action" model="ir.actions.act_window">
+    <field name="name">Admission Tests</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">school_admission_test</field>
+    <field name="view_mode">tree,form</field>
+    <field name="context">{}</field>
+</record>
+
+<menuitem
+        id="school_admission_test_menu"
+        name="Admission Tests"
+        parent="ssi_school.menu_school_root"
+        action="school_admission_test_action"
+        groups="school_admission_test_user_group"
+        sequence="30"
+    />
+</odoo>
