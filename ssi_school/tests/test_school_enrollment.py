@@ -3,7 +3,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from ddt import ddt, file_data
-from odoo_unittest_ddt import WorkflowScenarioMixin
+from odoo_unittest_ddt import WorkflowScenarioMixin, resolve_record_ids
 
 from odoo.tests import SavepointCase, tagged
 
@@ -158,26 +158,8 @@ class TestSchoolEnrollmentWorkflow(
         )
 
     def _create_enrollment(self, attribute):
-        vals = {
-            "date": attribute["date"],
-            "academic_year_id": getattr(self, attribute["academic_year_name"]).id,
-            "academic_term_id": getattr(self, attribute["academic_term_name"]).id,
-            "school_id": getattr(self, attribute["school_name"]).id,
-            "grade_id": getattr(self, attribute["grade_name"]).id,
-            "grade_class_id": getattr(self, attribute["grade_class_name"]).id,
-            "student_id": getattr(self, attribute["student_name"]).id,
-            "currency_id": self.env.company.currency_id.id,
-        }
-        if attribute.get("payment_template_name"):
-            vals["payment_template_id"] = getattr(
-                self, attribute["payment_template_name"]
-            ).id
-        if attribute.get("pricelist_name"):
-            vals["pricelist_id"] = getattr(self, attribute["pricelist_name"]).id
-        if attribute.get("receivable_journal_name"):
-            vals["receivable_journal_id"] = getattr(
-                self, attribute["receivable_journal_name"]
-            ).id
+        vals = resolve_record_ids(self, attribute, exclude_keys=["user", "description"])
+        vals["currency_id"] = self.env.company.currency_id.id
         return self.env["school_enrollment"].create(vals)
 
     @file_data("scenario_school_enrollment.yaml")
@@ -214,6 +196,50 @@ class TestSchoolEnrollmentWorkflow(
 
     def action_enrollment_create_invoice_no_error(self, record, data):
         for term in record.payment_term_ids:
+            term.action_create_invoice()
+            term.invalidate_cache()
+            self.assertTrue(
+                term.invoice_id,
+                "Term '%s' harus memiliki invoice setelah create invoice" % term.name,
+            )
+            invoice = term.invoice_id
+            self.assertAlmostEqual(
+                invoice.amount_untaxed,
+                term.amount_untaxed,
+                places=2,
+                msg="Nominal invoice '%s' harus sama dengan amount_untaxed payment term"
+                % term.name,
+            )
+            term_details = {d.product_id.id: d for d in term.detail_ids}
+            for inv_line in invoice.invoice_line_ids:
+                detail = term_details.get(inv_line.product_id.id)
+                self.assertIsNotNone(
+                    detail,
+                    "Produk '%s' pada invoice line tidak ditemukan di payment term detail"
+                    % inv_line.product_id.display_name,
+                )
+                self.assertEqual(
+                    inv_line.account_id,
+                    detail.account_id,
+                    "Akun invoice line '%s' harus sama dengan akun payment term detail"
+                    % inv_line.product_id.display_name,
+                )
+
+    def action_enrollment_create_invoice_one_manual_no_error(self, record, data):
+        terms = record.payment_term_ids.sorted("sequence")
+        first_term = terms[0]
+        first_term.action_mark_as_manual()
+        first_term.invalidate_cache()
+        self.assertEqual(
+            first_term.state,
+            "manual",
+            "Term pertama harus berstatus 'manual' setelah mark as manual",
+        )
+        self.assertFalse(
+            first_term.invoice_id,
+            "Term pertama tidak boleh memiliki invoice setelah mark as manual",
+        )
+        for term in terms[1:]:
             term.action_create_invoice()
             term.invalidate_cache()
             self.assertTrue(
