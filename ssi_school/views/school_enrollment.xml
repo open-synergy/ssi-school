@@ -102,6 +102,16 @@
             </xpath>
             <xpath expr="//group[@name='header_right']" position="inside">
                 <field name="date" />
+                <field name="currency_id" />
+                <field
+                        name="allowed_pricelist_ids"
+                        widget="many2many_tags"
+                        invisible="1"
+                    />
+                <field
+                        name="pricelist_id"
+                        domain="[('id','in',allowed_pricelist_ids)]"
+                    />
             </xpath>
             <xpath expr="//page[1]" position="before">
                 <page
@@ -112,6 +122,86 @@
                     <group name="academic_year_result_group" colspan="4" col="2">
                         <field name="academic_year_result" />
                         <field name="promote_to_grade_id" />
+                    </group>
+                </page>
+                <page name="billing" string="Billing">
+                    <group name="billing_template" colspan="4" col="2">
+                        <group name="billing_template_left" colspan="1" col="2">
+                            <field
+                                    name="payment_template_id"
+                                    domain="[('academic_term_id','in',[academic_term_id,False]),('school_id','in',[school_id,False]),('grade_id','in',[grade_id,False])]"
+                                />
+                        </group>
+                        <group name="billing_template_right" colspan="1" col="2">
+                            <button
+                                    name="action_compute_payment"
+                                    type="object"
+                                    string="Compute Payment"
+                                    confirm="This will replace existing payment terms. Continue?"
+                                    attrs="{'invisible':['|',('payment_template_id','=',False),('state','!=','draft')]}"
+                                    class="btn-primary"
+                                />
+                        </group>
+                    </group>
+                    <field
+                            name="payment_term_ids"
+                            colspan="4"
+                            nolabel="1"
+                            context="{'form_view_ref': 'ssi_school.school_enrollment_payment_term_view_form_embedded'}"
+                        >
+                        <tree create="true" edit="true" delete="true">
+                            <field name="sequence" widget="handle" />
+                            <field name="name" />
+                            <field name="date_invoice" />
+                            <field name="date_due" />
+                            <field name="currency_id" invisible="1" />
+                            <field name="amount_untaxed" />
+                            <field name="amount_tax" />
+                            <field name="amount_total" />
+                            <field name="invoice_id" />
+                            <field name="state" />
+                            <button
+                                    name="action_create_invoice"
+                                    title="Create Invoice"
+                                    type="object"
+                                    icon="fa-cogs"
+                                    states="uninvoiced"
+                                />
+                            <button
+                                    name="action_delete_invoice"
+                                    title="Delete Invoice"
+                                    type="object"
+                                    icon="fa-eraser"
+                                    states="invoiced"
+                                />
+                            <button
+                                    name="action_disconnect_invoice"
+                                    title="Disconnect Invoice"
+                                    type="object"
+                                    icon="fa-unlink"
+                                    states="invoiced"
+                                />
+                            <button
+                                    name="action_mark_as_manual"
+                                    title="Mark as Manual"
+                                    type="object"
+                                    icon="fa-square-o"
+                                    states="uninvoiced"
+                                />
+                            <button
+                                    name="action_unmark_as_manual"
+                                    title="Unmark as Manual"
+                                    type="object"
+                                    icon="fa-check-square-o"
+                                    states="manual"
+                                />
+                        </tree>
+                    </field>
+                </page>
+                <page name="accounting" string="Accounting">
+                    <group name="accounting_group" colspan="4" col="2">
+                        <field name="receivable_journal_id" />
+                        <field name="receivable_account_id" />
                     </group>
                 </page>
             </xpath>

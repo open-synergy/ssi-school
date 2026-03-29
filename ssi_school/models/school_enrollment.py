@@ -175,6 +175,77 @@ class SchoolEnrollment(models.Model):
         string="Promote To Grade",
         comodel_name="school_grade",
     )
+    currency_id = fields.Many2one(
+        string="Currency",
+        comodel_name="res.currency",
+        required=True,
+        readonly=True,
+        states={
+            "draft": [
+                ("readonly", False),
+            ],
+        },
+        default=lambda self: self.env.company.currency_id,
+    )
+    allowed_pricelist_ids = fields.Many2many(
+        string="Allowed Pricelists",
+        comodel_name="product.pricelist",
+        compute="_compute_allowed_pricelist_ids",
+        store=False,
+    )
+    pricelist_id = fields.Many2one(
+        string="Pricelist",
+        comodel_name="product.pricelist",
+        required=False,
+        readonly=True,
+        states={
+            "draft": [
+                ("readonly", False),
+            ],
+        },
+    )
+    partner_id = fields.Many2one(
+        string="Partner",
+        comodel_name="res.partner",
+        related="student_id.contact_id",
+        store=True,
+    )
+    payment_template_id = fields.Many2one(
+        string="Payment Template",
+        comodel_name="school_enrollment_payment_template",
+        required=False,
+        readonly=True,
+        states={
+            "draft": [
+                ("readonly", False),
+            ],
+        },
+    )
+    payment_term_ids = fields.One2many(
+        string="Payment Terms",
+        comodel_name="school_enrollment_payment_term",
+        inverse_name="enrollment_id",
+    )
+    receivable_journal_id = fields.Many2one(
+        string="Receivable Journal",
+        comodel_name="account.journal",
+        readonly=True,
+        states={
+            "draft": [
+                ("readonly", False),
+            ],
+        },
+    )
+    receivable_account_id = fields.Many2one(
+        string="Receivable Account",
+        comodel_name="account.account",
+        readonly=True,
+        states={
+            "draft": [
+                ("readonly", False),
+            ],
+        },
+    )
     pass_ok = fields.Boolean(
         string="Pass",
         compute="_compute_policy",
@@ -203,6 +274,24 @@ class SchoolEnrollment(models.Model):
     def _compute_policy(self):
         _super = super()
         _super._compute_policy()
+
+    @api.depends(
+        "currency_id",
+    )
+    def _compute_allowed_pricelist_ids(self):
+        Pricelist = self.env["product.pricelist"]
+        for record in self:
+            result = []
+            if record.currency_id:
+                criteria = [("currency_id", "=", record.currency_id.id)]
+                result = Pricelist.search(criteria).ids
+            record.allowed_pricelist_ids = result
+
+    @api.onchange(
+        "currency_id",
+    )
+    def onchange_pricelist_id(self):
+        self.pricelist_id = False
 
     @api.depends("academic_term_id", "grade_id", "school_id")
     def _compute_allowed_student_ids(self):
@@ -250,6 +339,40 @@ class SchoolEnrollment(models.Model):
     def action_set_result_to_passed(self):
         for record in self.sudo():
             record._set_result_to_passed()
+
+    def action_compute_payment(self):
+        for record in self.sudo():
+            record._compute_payment_from_template()
+
+    def _compute_payment_from_template(self):
+        self.ensure_one()
+        template = self.payment_template_id
+        if not template:
+            return
+        self.payment_term_ids.unlink()
+        Term = self.env["school_enrollment_payment_term"]
+        Detail = self.env["school_enrollment_payment_term_detail"]
+        for tterm in template.term_ids.sorted("sequence"):
+            term = Term.create(
+                {
+                    "enrollment_id": self.id,
+                    "name": tterm.name,
+                    "sequence": tterm.sequence,
+                }
+            )
+            for tdetail in tterm.detail_ids.sorted("sequence"):
+                Detail.create(
+                    {
+                        "term_id": term.id,
+                        "product_id": tdetail.product_id.id,
+                        "name": tdetail.name,
+                        "account_id": tdetail.account_id.id,
+                        "uom_quantity": tdetail.uom_quantity,
+                        "uom_id": tdetail.uom_id.id if tdetail.uom_id else False,
+                        "price_unit": tdetail.price_unit,
+                        "tax_ids": [(6, 0, tdetail.tax_ids.ids)],
+                    }
+                )
 
     def action_set_result_to_failed(self):
         for record in self.sudo():

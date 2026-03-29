@@ -11,5 +11,10 @@ from . import (  # noqa: F401
     school_academic_term,
     school_student,
     school_teacher,
+    school_enrollment_payment_template,
+    school_enrollment_payment_template_term,
+    school_enrollment_payment_template_term_detail,
     school_enrollment,
+    school_enrollment_payment_term,
+    school_enrollment_payment_term_detail,
 )

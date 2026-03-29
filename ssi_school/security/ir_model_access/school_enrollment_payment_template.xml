@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2023 OpenSynergy Indonesia
+     Copyright 2023 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+
+<!-- school_enrollment_payment_template -->
+<record id="school_enrollment_payment_template_all_access" model="ir.model.access">
+    <field name="name">school_enrollment_payment_template - all</field>
+    <field name="model_id" ref="model_school_enrollment_payment_template" />
+    <field name="perm_read" eval="1" />
+    <field name="perm_create" eval="0" />
+    <field name="perm_write" eval="0" />
+    <field name="perm_unlink" eval="0" />
+</record>
+<record id="school_enrollment_payment_template_user_access" model="ir.model.access">
+    <field name="name">school_enrollment_payment_template - user</field>
+    <field name="model_id" ref="model_school_enrollment_payment_template" />
+    <field name="group_id" ref="school_enrollment_payment_template_group" />
+    <field name="perm_read" eval="1" />
+    <field name="perm_create" eval="1" />
+    <field name="perm_write" eval="1" />
+    <field name="perm_unlink" eval="1" />
+</record>
+
+<!-- school_enrollment_payment_template.term -->
+<record id="school_enrollment_payment_template_term_all_access" model="ir.model.access">
+    <field name="name">school_enrollment_payment_template.term - all</field>
+    <field name="model_id" ref="model_school_enrollment_payment_template_term" />
+    <field name="perm_read" eval="1" />
+    <field name="perm_create" eval="0" />
+    <field name="perm_write" eval="0" />
+    <field name="perm_unlink" eval="0" />
+</record>
+<record
+        id="school_enrollment_payment_template_term_user_access"
+        model="ir.model.access"
+    >
+    <field name="name">school_enrollment_payment_template.term - user</field>
+    <field name="model_id" ref="model_school_enrollment_payment_template_term" />
+    <field name="group_id" ref="school_enrollment_payment_template_group" />
+    <field name="perm_read" eval="1" />
+    <field name="perm_create" eval="1" />
+    <field name="perm_write" eval="1" />
+    <field name="perm_unlink" eval="1" />
+</record>
+
+<!-- school_enrollment_payment_template.term.detail -->
+<record
+        id="school_enrollment_payment_template_term_detail_all_access"
+        model="ir.model.access"
+    >
+    <field name="name">school_enrollment_payment_template.term.detail - all</field>
+    <field name="model_id" ref="model_school_enrollment_payment_template_term_detail" />
+    <field name="perm_read" eval="1" />
+    <field name="perm_create" eval="0" />
+    <field name="perm_write" eval="0" />
+    <field name="perm_unlink" eval="0" />
+</record>
+<record
+        id="school_enrollment_payment_template_term_detail_user_access"
+        model="ir.model.access"
+    >
+    <field name="name">school_enrollment_payment_template.term.detail - user</field>
+    <field name="model_id" ref="model_school_enrollment_payment_template_term_detail" />
+    <field name="group_id" ref="school_enrollment_payment_template_group" />
+    <field name="perm_read" eval="1" />
+    <field name="perm_create" eval="1" />
+    <field name="perm_write" eval="1" />
+    <field name="perm_unlink" eval="1" />
+</record>
+
+</odoo>

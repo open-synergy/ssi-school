@@ -16,7 +16,9 @@
         "ssi_transaction_done_mixin",
         "ssi_transaction_cancel_mixin",
         "ssi_localdict_mixin",
+        "ssi_product_line_account_mixin",
         "base_address_city",
+        "ssi_financial_accounting",
     ],
     "data": [
         "security/ir_module_category_data.xml",
@@ -32,6 +34,9 @@
         "security/ir_model_access/school_academic_year.xml",
         "security/ir_model_access/school_academic_term.xml",
         "security/ir_model_access/school_enrollment.xml",
+        "security/ir_model_access/school_enrollment_payment_term.xml",
+        "security/ir_model_access/school_enrollment_payment_term_detail.xml",
+        "security/ir_model_access/school_enrollment_payment_template.xml",
         "security/ir_rule/school_enrollment.xml",
         "ir_sequence/school_enrollment.xml",
         "sequence_template/school_enrollment.xml",
@@ -47,6 +52,8 @@
         "views/school_academic_year.xml",
         "views/school_academic_term.xml",
         "views/school_enrollment.xml",
+        "views/school_enrollment_payment_term_views.xml",
+        "views/school_enrollment_payment_template_views.xml",
     ],
     "demo": [
         "demo/res_partner.xml",

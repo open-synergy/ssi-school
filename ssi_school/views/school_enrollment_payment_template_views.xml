@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2023 OpenSynergy Indonesia
+     Copyright 2023 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+
+<record id="school_enrollment_payment_template_view_search" model="ir.ui.view">
+    <field name="name">school_enrollment_payment_template - search</field>
+    <field name="model">school_enrollment_payment_template</field>
+    <field
+            name="inherit_id"
+            ref="ssi_master_data_mixin.mixin_master_data_view_search"
+        />
+    <field name="mode">primary</field>
+    <field name="arch" type="xml">
+        <data />
+    </field>
+</record>
+
+<record id="school_enrollment_payment_template_view_tree" model="ir.ui.view">
+    <field name="name">school_enrollment_payment_template - tree</field>
+    <field name="model">school_enrollment_payment_template</field>
+    <field name="inherit_id" ref="ssi_master_data_mixin.mixin_master_data_view_tree" />
+    <field name="mode">primary</field>
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="academic_term_id" />
+                <field name="school_id" />
+                <field name="grade_id" />
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_enrollment_payment_template_view_form" model="ir.ui.view">
+    <field name="name">school_enrollment_payment_template - form</field>
+    <field name="model">school_enrollment_payment_template</field>
+    <field name="inherit_id" ref="ssi_master_data_mixin.mixin_master_data_view_form" />
+    <field name="mode">primary</field>
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='active']" position="after">
+                <field name="academic_term_id" />
+                <field name="school_id" />
+                <field name="grade_id" domain="[('type_id','=',grade_type_id)]" />
+                <field name="grade_type_id" invisible="1" />
+            </xpath>
+            <xpath expr="//page[1]" position="before">
+                <page name="payment_terms" string="Payment Terms">
+                    <field name="term_ids" colspan="4" nolabel="1">
+                        <tree>
+                            <field name="sequence" widget="handle" />
+                            <field name="name" />
+                        </tree>
+                        <form>
+                            <header />
+                            <sheet>
+                                <group name="term_header" colspan="4" col="2">
+                                    <group name="term_header_left" colspan="1" col="2">
+                                        <field name="name" />
+                                    </group>
+                                    <group name="term_header_right" colspan="1" col="2">
+                                        <field name="sequence" />
+                                    </group>
+                                </group>
+                                <notebook>
+                                    <page name="term_detail" string="Detail">
+                                        <field
+                                                name="detail_ids"
+                                                colspan="2"
+                                                nolabel="1"
+                                            >
+                                            <tree>
+                                                <field
+                                                        name="sequence"
+                                                        widget="handle"
+                                                    />
+                                                <field name="product_id" />
+                                                <field name="name" />
+                                                <field name="account_id" />
+                                                <field
+                                                        name="uom_quantity"
+                                                        string="Quantity"
+                                                    />
+                                                <field name="uom_id" />
+                                                <field name="price_unit" />
+                                                <field
+                                                        name="tax_ids"
+                                                        widget="many2many_tags"
+                                                    />
+                                            </tree>
+                                            <form>
+                                                <header />
+                                                <sheet>
+                                                    <group
+                                                            name="detail_group"
+                                                            colspan="4"
+                                                            col="2"
+                                                        >
+                                                        <group
+                                                                name="detail_left"
+                                                                colspan="1"
+                                                                col="2"
+                                                            >
+                                                            <field name="product_id" />
+                                                            <field name="name" />
+                                                            <field name="account_id" />
+                                                        </group>
+                                                        <group
+                                                                name="detail_right"
+                                                                colspan="1"
+                                                                col="2"
+                                                            >
+                                                            <label
+                                                                    for="uom_quantity"
+                                                                    string="Quantity"
+                                                                />
+                                                            <div>
+                                                                <field
+                                                                        name="uom_quantity"
+                                                                        class="oe_inline"
+                                                                    />
+                                                                <field
+                                                                        name="uom_id"
+                                                                        class="oe_inline"
+                                                                    />
+                                                            </div>
+                                                            <field name="price_unit" />
+                                                            <field
+                                                                    name="tax_ids"
+                                                                    widget="many2many_tags"
+                                                                />
+                                                        </group>
+                                                    </group>
+                                                </sheet>
+                                            </form>
+                                        </field>
+                                    </page>
+                                </notebook>
+                            </sheet>
+                        </form>
+                    </field>
+                </page>
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_enrollment_payment_template_action" model="ir.actions.act_window">
+    <field name="name">Enrollment Payment Templates</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">school_enrollment_payment_template</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<menuitem
+        id="school_enrollment_payment_template_menu"
+        name="Enrollment Payment Templates"
+        parent="menu_school_configuration"
+        action="school_enrollment_payment_template_action"
+        groups="school_enrollment_payment_template_group"
+        sequence="140"
+    />
+
+</odoo>
