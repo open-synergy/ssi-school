@@ -1,0 +1,31 @@
+scenario_create_then_confirm:
+  attribute:
+    description: "Create enrollment then confirm - normal flow"
+    date: "2024-07-01"
+    academic_year_name: "academic_year"
+    academic_term_name: "academic_term"
+    school_name: "school"
+    grade_name: "grade"
+    grade_class_name: "grade_class"
+    student_name: "student"
+  workflow_steps:
+    - name: confirm
+      error: false
+
+scenario_create_confirm_approve_done:
+  attribute:
+    description: "Create enrollment, confirm, approve, then done"
+    date: "2024-07-01"
+    academic_year_name: "academic_year"
+    academic_term_name: "academic_term"
+    school_name: "school"
+    grade_name: "grade"
+    grade_class_name: "grade_class"
+    student_name: "student"
+  workflow_steps:
+    - name: confirm
+      error: false
+    - name: approve
+      error: false
+    - name: done
+      error: false

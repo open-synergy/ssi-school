@@ -12,4 +12,5 @@ from . import (  # noqa: F401
     test_school_teacher,
     test_school_student,
     test_school_enrollment_payment_template,
+    test_school_enrollment,
 )
