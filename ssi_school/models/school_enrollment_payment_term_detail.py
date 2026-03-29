@@ -1,0 +1,54 @@
+# Copyright 2023 OpenSynergy Indonesia
+# Copyright 2023 PT. Simetri Sinergi Indonesia
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+
+from odoo import fields, models
+
+
+class SchoolEnrollmentPaymentTermDetail(models.Model):
+    _name = "school_enrollment_payment_term_detail"
+    _description = "School Enrollment Payment Term Detail"
+    _order = "sequence, product_category_id, product_id, id"
+    _inherit = [
+        "mixin.product_line_account",
+    ]
+
+    term_id = fields.Many2one(
+        string="Payment Term",
+        comodel_name="school_enrollment_payment_term",
+        ondelete="cascade",
+    )
+    product_id = fields.Many2one(required=True)
+    currency_id = fields.Many2one(
+        string="Currency",
+        comodel_name="res.currency",
+        related="term_id.enrollment_id.currency_id",
+        store=True,
+        required=False,
+    )
+    pricelist_id = fields.Many2one(
+        string="Pricelist",
+        comodel_name="product.pricelist",
+        related="term_id.enrollment_id.pricelist_id",
+        store=True,
+    )
+    invoice_line_id = fields.Many2one(
+        string="Invoice Line",
+        comodel_name="account.move.line",
+        readonly=True,
+        ondelete="restrict",
+    )
+
+    def _prepare_invoice_line(self):
+        self.ensure_one()
+        aa = self.analytic_account_id and self.analytic_account_id.id or False
+        return {
+            "product_id": self.product_id.id,
+            "name": self.name,
+            "account_id": self.account_id.id,
+            "quantity": self.uom_quantity,
+            "product_uom_id": self.uom_id.id,
+            "price_unit": self.price_unit,
+            "tax_ids": [(6, 0, self.tax_ids.ids)],
+            "analytic_account_id": aa or False,
+        }
