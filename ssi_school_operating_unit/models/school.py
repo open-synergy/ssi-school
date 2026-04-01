@@ -6,6 +6,11 @@ from odoo import models
 
 
 class School(models.Model):
+    """
+    Extends the School model with multiple operating unit support,
+    enabling operating unit-based data access control.
+    """
+
     _name = "school"
     _inherit = [
         "school",

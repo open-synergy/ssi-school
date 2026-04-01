@@ -6,6 +6,11 @@ from odoo import models
 
 
 class SchoolGradeType(models.Model):
+    """
+    Extends School Grade Type with multiple operating unit support
+    for operating unit-based data segregation.
+    """
+
     _name = "school_grade_type"
     _inherit = [
         "school_grade_type",

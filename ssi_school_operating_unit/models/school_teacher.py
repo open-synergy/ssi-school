@@ -6,6 +6,11 @@ from odoo import models
 
 
 class SchoolTeacher(models.Model):
+    """
+    Extends School Teacher with multiple operating unit support
+    for operating unit-based data segregation.
+    """
+
     _name = "school_teacher"
     _inherit = [
         "school_teacher",

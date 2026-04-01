@@ -6,6 +6,11 @@ from odoo import models
 
 
 class SchoolAcademicTerm(models.Model):
+    """
+    Extends School Academic Term with multiple operating unit support
+    for operating unit-based data segregation.
+    """
+
     _name = "school_academic_term"
     _inherit = [
         "school_academic_term",
