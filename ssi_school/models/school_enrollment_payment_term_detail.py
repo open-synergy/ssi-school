@@ -6,6 +6,15 @@ from odoo import fields, models
 
 
 class SchoolEnrollmentPaymentTermDetail(models.Model):
+    """
+    Represents a product/fee line detail on an actual enrollment payment term.
+    Inherits mixin.product_line_account which provides standard product line fields
+    such as name, account_id, uom_id, uom_quantity, price_unit, tax_ids,
+    price_subtotal, price_tax, and price_total. If the term is linked to an invoice,
+    each detail line will reference the corresponding invoice line (invoice_line_id)
+    created when the invoice is generated.
+    """
+
     _name = "school_enrollment_payment_term_detail"
     _description = "School Enrollment Payment Term Detail"
     _order = "sequence, product_category_id, product_id, id"
@@ -17,6 +26,7 @@ class SchoolEnrollmentPaymentTermDetail(models.Model):
         string="Payment Term",
         comodel_name="school_enrollment_payment_term",
         ondelete="cascade",
+        help="The enrollment payment term that owns this fee line.",
     )
     product_id = fields.Many2one(required=True)
     currency_id = fields.Many2one(
@@ -25,18 +35,24 @@ class SchoolEnrollmentPaymentTermDetail(models.Model):
         related="term_id.enrollment_id.currency_id",
         store=True,
         required=False,
+        help="The billing currency, automatically taken from the enrollment.",
     )
     pricelist_id = fields.Many2one(
         string="Pricelist",
         comodel_name="product.pricelist",
         related="term_id.enrollment_id.pricelist_id",
         store=True,
+        help="The pricelist used, automatically taken from the enrollment.",
     )
     invoice_line_id = fields.Many2one(
         string="Invoice Line",
         comodel_name="account.move.line",
         readonly=True,
         ondelete="restrict",
+        help=(
+            "The invoice line linked to this detail, "
+            "automatically populated when the invoice is generated."
+        ),
     )
 
     def _prepare_invoice_line(self):
