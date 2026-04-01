@@ -6,6 +6,11 @@ from odoo import models
 
 
 class SchoolAdmissionTest(models.Model):
+    """
+    Extends School Admission Test with single operating unit support
+    for operating unit-based access and data segregation.
+    """
+
     _name = "school_admission_test"
     _inherit = [
         "school_admission_test",
