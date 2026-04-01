@@ -6,6 +6,11 @@ from odoo import fields, models
 
 
 class School(models.Model):
+    """
+    Extends the School model to associate a default sales team
+    for CRM lead routing and assignment automation.
+    """
+
     _name = "school"
     _inherit = "school"
 
@@ -14,4 +19,8 @@ class School(models.Model):
         comodel_name="crm.team",
         required=False,
         ondelete="restrict",
+        help=(
+            "The default sales team assigned to this school "
+            "for automatic CRM lead routing."
+        ),
     )
