@@ -7,6 +7,15 @@ from odoo import api, fields, models
 
 
 class SchoolAcademicYear(models.Model):
+    """
+    Represents an academic year of a school.
+    An academic year defines a full year of study consisting of one or more
+    semesters/terms. The system automatically determines the first (first_term_id)
+    and last (last_term_id) term based on the one2many relation to
+    school_academic_term. This information is used by enrollment to
+    determine whether a student is in the first or a subsequent term.
+    """
+
     _name = "school_academic_year"
     _inherit = ["mixin.master_data"]
     _description = "School Academic Year"
@@ -15,16 +24,19 @@ class SchoolAcademicYear(models.Model):
     date_start = fields.Date(
         string="Date Start",
         required=True,
+        help="The start date of this academic year.",
     )
     date_end = fields.Date(
         string="Date End",
         required=True,
+        help="The end date of this academic year.",
     )
     term_ids = fields.One2many(
         string="Terms",
         comodel_name="school_academic_term",
         inverse_name="year_id",
         readonly=True,
+        help="List of semesters/terms belonging to this academic year.",
     )
     first_term_id = fields.Many2one(
         string="First Term",
@@ -32,6 +44,7 @@ class SchoolAcademicYear(models.Model):
         compute="_compute_first_last_term",
         store=True,
         compute_sudo=True,
+        help="The first term of the academic year, automatically computed.",
     )
     last_term_id = fields.Many2one(
         string="Last Term",
@@ -39,6 +52,7 @@ class SchoolAcademicYear(models.Model):
         compute="_compute_first_last_term",
         store=True,
         compute_sudo=True,
+        help="The last term of the academic year, automatically computed.",
     )
 
     @api.depends(

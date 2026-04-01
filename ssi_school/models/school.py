@@ -7,6 +7,12 @@ from odoo import fields, models
 
 
 class School(models.Model):
+    """
+    Represents a school entity.
+    A school is associated with one grade type that defines the class level
+    structure used within it. Inherits from mixin.master_data.
+    """
+
     _name = "school"
     _inherit = ["mixin.master_data"]
     _description = "School"
@@ -15,4 +21,8 @@ class School(models.Model):
         "school_grade_type",
         string="Grade Type",
         required=True,
+        help=(
+            "The education level type used by this school, "
+            "e.g. Elementary, Junior High, or Senior High School."
+        ),
     )

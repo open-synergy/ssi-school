@@ -6,6 +6,11 @@ from odoo import models
 
 
 class SchoolEnrollment(models.Model):
+    """
+    Extends School Enrollment with single operating unit support,
+    restricting each enrollment record to one operating unit.
+    """
+
     _name = "school_enrollment"
     _inherit = [
         "school_enrollment",

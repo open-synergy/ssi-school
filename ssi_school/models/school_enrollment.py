@@ -10,6 +10,19 @@ from odoo.addons.ssi_decorator import ssi_decorator
 
 
 class SchoolEnrollment(models.Model):
+    """
+    Represents the enrollment process of a student into a school for a specific
+    academic term and grade. Enrollment is the primary transaction document
+    recording a student's participation in one academic term. The approval
+    workflow uses multi-approval mixins:
+    Draft → Confirm → Approve → Open → Done / Cancel.
+    After enrollment is completed (Done), the system records the academic result
+    (academic_year_result) and the next promotion grade (promote_to_grade_id),
+    which are used by SchoolStudent to update current_grade_id and next_grade_id.
+    Enrollment also manages payment billing through payment_term_ids, and a
+    payment template (payment_template_id) can be used to auto-populate billing.
+    """
+
     _name = "school_enrollment"
     _inherit = [
         "mixin.transaction_cancel",
@@ -73,6 +86,7 @@ class SchoolEnrollment(models.Model):
                 ("readonly", False),
             ],
         },
+        help="The date the enrollment document was created.",
     )
     academic_year_id = fields.Many2one(
         string="Academic Year",
@@ -84,6 +98,7 @@ class SchoolEnrollment(models.Model):
                 ("readonly", False),
             ],
         },
+        help="The academic year this enrollment is based on.",
     )
     academic_term_id = fields.Many2one(
         string="Academic Term",
@@ -95,6 +110,10 @@ class SchoolEnrollment(models.Model):
                 ("readonly", False),
             ],
         },
+        help=(
+            "The academic term in which the student is enrolled. "
+            "Must belong to the selected academic year."
+        ),
     )
     school_id = fields.Many2one(
         string="School",
@@ -106,6 +125,7 @@ class SchoolEnrollment(models.Model):
                 ("readonly", False),
             ],
         },
+        help="The destination school for this enrollment.",
     )
     grade_type_id = fields.Many2one(
         string="Grade Type",
@@ -113,6 +133,10 @@ class SchoolEnrollment(models.Model):
         related="school_id.grade_type_id",
         required=False,
         readonly=True,
+        help=(
+            "The education level type, automatically populated "
+            "from the selected school."
+        ),
     )
     grade_id = fields.Many2one(
         string="Grade",
@@ -124,6 +148,7 @@ class SchoolEnrollment(models.Model):
                 ("readonly", False),
             ],
         },
+        help="The class level the student will attend in this enrollment.",
     )
     grade_class_id = fields.Many2one(
         string="Grade Class",
@@ -135,6 +160,7 @@ class SchoolEnrollment(models.Model):
                 ("readonly", False),
             ],
         },
+        help="The specific homeroom class the student is placed in.",
     )
     last_term = fields.Boolean(
         string="Last Term of Academic Year?",
@@ -142,6 +168,10 @@ class SchoolEnrollment(models.Model):
         store=True,
         compute_sudo=True,
         readonly=True,
+        help=(
+            "Indicates whether this is the last term of the academic year, "
+            "derived from the term data."
+        ),
     )
     allowed_student_ids = fields.Many2many(
         string="Allowed Students",
@@ -149,6 +179,10 @@ class SchoolEnrollment(models.Model):
         compute="_compute_allowed_student_ids",
         store=False,
         compute_sudo=True,
+        help=(
+            "List of students eligible for selection in this enrollment, "
+            "computed based on the selected grade and term."
+        ),
     )
     student_id = fields.Many2one(
         string="Student",
@@ -160,6 +194,7 @@ class SchoolEnrollment(models.Model):
                 ("readonly", False),
             ],
         },
+        help="The student being enrolled.",
     )
 
     academic_year_result = fields.Selection(
@@ -170,10 +205,18 @@ class SchoolEnrollment(models.Model):
             ("drop_out", "Drop Out"),
             ("graduate", "Graduate"),
         ],
+        help=(
+            "The student's academic result at the end of the enrollment period: "
+            "Passed, Failed, Drop Out, or Graduate."
+        ),
     )
     promote_to_grade_id = fields.Many2one(
         string="Promote To Grade",
         comodel_name="school_grade",
+        help=(
+            "The target grade for promotion if the student passes "
+            "at the end of the academic year."
+        ),
     )
     currency_id = fields.Many2one(
         string="Currency",
@@ -186,12 +229,14 @@ class SchoolEnrollment(models.Model):
             ],
         },
         default=lambda self: self.env.company.currency_id,
+        help="The currency used for the enrollment payment billing.",
     )
     allowed_pricelist_ids = fields.Many2many(
         string="Allowed Pricelists",
         comodel_name="product.pricelist",
         compute="_compute_allowed_pricelist_ids",
         store=False,
+        help="Available pricelists based on the selected currency.",
     )
     pricelist_id = fields.Many2one(
         string="Pricelist",
@@ -203,12 +248,17 @@ class SchoolEnrollment(models.Model):
                 ("readonly", False),
             ],
         },
+        help="The pricelist used to calculate enrollment billing amounts.",
     )
     partner_id = fields.Many2one(
         string="Partner",
         comodel_name="res.partner",
         related="student_id.contact_id",
         store=True,
+        help=(
+            "The student's contact partner, automatically "
+            "populated from the student record."
+        ),
     )
     payment_template_id = fields.Many2one(
         string="Payment Template",
@@ -220,11 +270,19 @@ class SchoolEnrollment(models.Model):
                 ("readonly", False),
             ],
         },
+        help=(
+            "A payment template that can be applied to "
+            "auto-populate the billing terms."
+        ),
     )
     payment_term_ids = fields.One2many(
         string="Payment Terms",
         comodel_name="school_enrollment_payment_term",
         inverse_name="enrollment_id",
+        help=(
+            "The payment billing terms that must be settled "
+            "by the student for this enrollment."
+        ),
     )
     receivable_journal_id = fields.Many2one(
         string="Receivable Journal",
@@ -235,6 +293,10 @@ class SchoolEnrollment(models.Model):
                 ("readonly", False),
             ],
         },
+        help=(
+            "The accounting journal used to record receivables "
+            "for this enrollment payment."
+        ),
     )
     receivable_account_id = fields.Many2one(
         string="Receivable Account",
@@ -245,30 +307,35 @@ class SchoolEnrollment(models.Model):
                 ("readonly", False),
             ],
         },
+        help="The receivable account used to record enrollment billing.",
     )
     pass_ok = fields.Boolean(
         string="Pass",
         compute="_compute_policy",
         store=False,
         compute_sudo=True,
+        help="Policy that determines whether the Pass action button is visible.",
     )
     fail_ok = fields.Boolean(
         string="Fail",
         compute="_compute_policy",
         store=False,
         compute_sudo=True,
+        help="Policy that determines whether the Fail action button is visible.",
     )
     drop_out_ok = fields.Boolean(
         string="Drop Out",
         compute="_compute_policy",
         store=False,
         compute_sudo=True,
+        help="Policy that determines whether the Drop Out action button is visible.",
     )
     graduate_ok = fields.Boolean(
         string="Graduate",
         compute="_compute_policy",
         store=False,
         compute_sudo=True,
+        help="Policy that determines whether the Graduate action button is visible.",
     )
 
     def _compute_policy(self):

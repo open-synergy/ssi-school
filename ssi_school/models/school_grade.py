@@ -7,6 +7,14 @@ from odoo import api, fields, models
 
 
 class SchoolGrade(models.Model):
+    """
+    Represents a class level within an education level type.
+    Defines the ordered sequence of class levels within a grade type,
+    e.g. Grade 1, Grade 2, Grade 3 for Elementary. The system automatically
+    computes and updates previous_grade_id and next_grade_id whenever grade
+    data changes (create, write, unlink) to keep the ordering chain consistent.
+    """
+
     _name = "school_grade"
     _inherit = ["mixin.master_data"]
     _description = "School Grade"
@@ -16,24 +24,37 @@ class SchoolGrade(models.Model):
         string="Sequence",
         default=10,
         required=True,
+        help=(
+            "Order of the class level within the education level type. "
+            "Lower values represent lower grades."
+        ),
     )
     type_id = fields.Many2one(
         string="Type",
         comodel_name="school_grade_type",
         required=True,
         ondelete="restrict",
+        help="The education level type that this grade belongs to.",
     )
     previous_grade_id = fields.Many2one(
         strinng="Previous Grade",
         comodel_name="school_grade",
         compute=False,
         readonly=True,
+        help=(
+            "The previous grade in the ordering sequence, "
+            "automatically computed and updated by the system."
+        ),
     )
     next_grade_id = fields.Many2one(
         string="Next Grade",
         comodel_name="school_grade",
         compute=False,
         readonly=True,
+        help=(
+            "The next grade in the ordering sequence, "
+            "automatically computed and updated by the system."
+        ),
     )
 
     def write(self, values):

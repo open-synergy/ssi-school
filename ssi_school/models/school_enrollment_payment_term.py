@@ -6,6 +6,16 @@ from odoo import api, fields, models
 
 
 class SchoolEnrollmentPaymentTerm(models.Model):
+    """
+    Represents an actual payment billing term on a specific enrollment.
+    SchoolEnrollmentPaymentTerm is a realized instance of a template term applied
+    to a specific enrollment. Each term can generate one invoice (invoice_id) via
+    action_create_invoice. The state is automatically computed: draft (enrollment
+    in draft/confirm), uninvoiced (enrollment open/done, no invoice yet), invoiced
+    (invoice created), manual (manually controlled), cancelled (enrollment cancelled).
+    Totals (amount_untaxed, amount_tax, amount_total) are computed from detail_ids.
+    """
+
     _name = "school_enrollment_payment_term"
     _description = "School Enrollment Payment Term"
     _order = "sequence, id"
@@ -51,21 +61,34 @@ class SchoolEnrollmentPaymentTerm(models.Model):
         string="Enrollment",
         comodel_name="school_enrollment",
         ondelete="cascade",
+        help="The enrollment that owns this payment term.",
     )
     partner_id = fields.Many2one(
         string="Partner",
         comodel_name="res.partner",
         related="enrollment_id.student_id.contact_id",
         store=True,
+        help=(
+            "The student's contact partner, automatically "
+            "populated from the enrollment."
+        ),
     )
     name = fields.Char(
         string="Term",
         required=True,
+        help=(
+            "Name of the payment period, "
+            "e.g. 'Registration Fee' or 'Monthly Tuition'."
+        ),
     )
     sequence = fields.Integer(
         string="Sequence",
         required=True,
         default=5,
+        help=(
+            "Order of the payment period within the enrollment. "
+            "Lower values appear first."
+        ),
     )
     currency_id = fields.Many2one(
         string="Currency",
@@ -73,48 +96,63 @@ class SchoolEnrollmentPaymentTerm(models.Model):
         related="enrollment_id.currency_id",
         store=True,
         required=False,
+        help="The billing currency, automatically taken from the enrollment.",
     )
     pricelist_id = fields.Many2one(
         string="Pricelist",
         comodel_name="product.pricelist",
         related="enrollment_id.pricelist_id",
         store=True,
+        help="The pricelist used, automatically taken from the enrollment.",
     )
     detail_ids = fields.One2many(
         string="Detail",
         comodel_name="school_enrollment_payment_term_detail",
         inverse_name="term_id",
         copy=True,
+        help="Product/fee detail lines within this payment period.",
     )
     amount_untaxed = fields.Monetary(
         string="Untaxed",
         compute="_compute_total",
         store=True,
         currency_field="currency_id",
+        help=(
+            "Total billing amount before tax, "
+            "automatically computed from the detail lines."
+        ),
     )
     amount_tax = fields.Monetary(
         string="Tax",
         compute="_compute_total",
         store=True,
         currency_field="currency_id",
+        help="Total tax amount, automatically computed from the detail lines.",
     )
     amount_total = fields.Monetary(
         string="Total",
         compute="_compute_total",
         store=True,
         currency_field="currency_id",
+        help=(
+            "Total billing amount including tax, "
+            "automatically computed from the detail lines."
+        ),
     )
     invoice_id = fields.Many2one(
         string="# Invoice",
         comodel_name="account.move",
         readonly=True,
         ondelete="restrict",
+        help="The invoice linked to this payment period.",
     )
     date_invoice = fields.Date(
         string="Estimated Invoice Date",
+        help="Estimated date for issuing the invoice for this billing period.",
     )
     date_due = fields.Date(
         string="Estimated Due Date",
+        help="Estimated due date for payment of this billing period.",
     )
     state = fields.Selection(
         string="State",
@@ -127,10 +165,22 @@ class SchoolEnrollmentPaymentTerm(models.Model):
         ],
         compute="_compute_state",
         store=True,
+        help=(
+            "Billing status: "
+            "Draft = enrollment still in draft/confirm, "
+            "Uninvoiced = enrollment open/done but no invoice yet, "
+            "Invoiced = invoice created, "
+            "Manually Controlled = managed manually, "
+            "Cancelled = enrollment cancelled."
+        ),
     )
     manually_control = fields.Boolean(
         string="Manually Controlled",
         default=False,
+        help=(
+            "If enabled, this billing term is managed manually "
+            "and does not require an invoice."
+        ),
     )
 
     def action_create_invoice(self):

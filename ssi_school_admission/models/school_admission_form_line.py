@@ -5,6 +5,12 @@ from odoo import api, fields, models
 
 
 class SchoolAdmissionFormLine(models.Model):
+    """
+    Represents a single fee line item within a school admission form,
+    linked to a product and account for billing and journal entry
+    generation.
+    """
+
     _name = "school_admission_form.line"
     _inherit = [
         "mixin.product_line_account",
@@ -35,11 +41,13 @@ class SchoolAdmissionFormLine(models.Model):
         comodel_name="school_admission_form",
         required=True,
         ondelete="cascade",
+        help="The parent admission form this fee line belongs to.",
     )
     sequence = fields.Integer(
         string="Sequence",
         required=True,
         default=5,
+        help=("Determines the display order of this line " "on the admission form."),
     )
     pricelist_id = fields.Many2one(
         related="admission_form_id.pricelist_id",
@@ -63,6 +71,9 @@ class SchoolAdmissionFormLine(models.Model):
         string="Partner",
         comodel_name="res.partner",
         related="admission_form_id.parent_id",
+        help=(
+            "The billing partner derived from the admission " "form's parent contact."
+        ),
     )
     date = fields.Date(related="admission_form_id.date")
 

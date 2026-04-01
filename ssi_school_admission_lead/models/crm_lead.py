@@ -6,6 +6,11 @@ from odoo import api, fields, models
 
 
 class CrmLead(models.Model):
+    """
+    Extends the CRM Lead model to link leads with school admission
+    forms, supporting the admission process from a CRM opportunity.
+    """
+
     _name = "crm.lead"
     _inherit = "crm.lead"
     _description = "CRM Lead"
@@ -14,6 +19,7 @@ class CrmLead(models.Model):
         string="Admission Form",
         comodel_name="school_admission_form",
         ondelete="restrict",
+        help=("The school admission form created from or linked " "to this lead."),
     )
     admission_test_id = fields.Many2one(
         string="Admission Test",
@@ -21,11 +27,18 @@ class CrmLead(models.Model):
         related="admission_form_id.admission_test_id",
         store=True,
         compute_sudo=True,
+        help=(
+            "The admission test linked to the associated "
+            "admission form, populated automatically."
+        ),
     )
     create_admission_form_ok = fields.Boolean(
         string="Can Create Admission Form",
         compute="_compute_create_admission_form_ok",
         compute_sudo=True,
+        help=(
+            "Indicates whether an admission form can still " "be created for this lead."
+        ),
     )
 
     @api.depends("admission_form_id")
