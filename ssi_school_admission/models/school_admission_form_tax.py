@@ -6,6 +6,11 @@ from odoo import fields, models
 
 
 class SchoolAdmissionFormTax(models.Model):
+    """
+    Represents a tax line computed from fee items in a school admission
+    form, used for journal entry generation and tax reporting.
+    """
+
     _name = "school_admission_form.tax"
     _description = "School Admission Form - Tax"
     _inherit = ["mixin.tax_line"]
@@ -22,6 +27,7 @@ class SchoolAdmissionFormTax(models.Model):
         string="# Admission Form",
         required=True,
         ondelete="cascade",
+        help="The parent admission form this tax line belongs to.",
     )
     move_id = fields.Many2one(related="admission_form_id.move_id")
     currency_id = fields.Many2one(related="admission_form_id.currency_id")
@@ -33,6 +39,9 @@ class SchoolAdmissionFormTax(models.Model):
         string="Partner",
         comodel_name="res.partner",
         related="admission_form_id.parent_id",
+        help=(
+            "The billing partner derived from the admission " "form's parent contact."
+        ),
     )
     date = fields.Date(related="admission_form_id.date")
     # Additional
@@ -40,4 +49,8 @@ class SchoolAdmissionFormTax(models.Model):
         string="Journal Item",
         comodel_name="account.move.line",
         copy=False,
+        help=(
+            "The journal entry line linked to this tax record "
+            "after the form is posted."
+        ),
     )

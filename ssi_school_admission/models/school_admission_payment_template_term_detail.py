@@ -6,6 +6,12 @@ from odoo import api, fields, models
 
 
 class SchoolAdmissionPaymentTemplateTermDetail(models.Model):
+    """
+    Represents a single fee line within a school admission payment
+    template term, specifying the product, quantity, price, and
+    account for one fee item.
+    """
+
     _name = "school_admission_payment_template.term.detail"
     _description = "School Admission Payment Template Term Detail"
     _order = "term_id, sequence, id"
@@ -15,38 +21,46 @@ class SchoolAdmissionPaymentTemplateTermDetail(models.Model):
         comodel_name="school_admission_payment_template.term",
         ondelete="cascade",
         required=True,
+        help="The parent payment template term this detail belongs to.",
     )
     sequence = fields.Integer(
         string="Sequence",
         required=True,
         default=5,
+        help="Determines the display order of this line within the term.",
     )
     product_id = fields.Many2one(
         string="Product",
         comodel_name="product.product",
         required=True,
         change_default=True,
+        help="The product representing the fee item for this line.",
     )
     name = fields.Char(
         string="Description",
         required=True,
+        help="The description of this fee line item.",
     )
     account_id = fields.Many2one(
         string="Account",
         comodel_name="account.account",
         required=True,
+        help="The revenue account for posting this fee item.",
     )
     uom_quantity = fields.Float(
         string="Quantity",
         required=True,
         default=1.0,
+        help="The quantity of the fee item.",
     )
     uom_id = fields.Many2one(
         string="UoM",
         comodel_name="uom.uom",
+        help="The unit of measure for the fee quantity.",
     )
     price_unit = fields.Float(
         string="Unit Price",
+        help="The unit price of the fee item.",
     )
     tax_ids = fields.Many2many(
         string="Taxes",
@@ -54,6 +68,7 @@ class SchoolAdmissionPaymentTemplateTermDetail(models.Model):
         relation="rel_sch_adm_pay_tmpl_term_detail_tax",
         column1="detail_id",
         column2="tax_id",
+        help="The taxes applied to this fee line.",
     )
 
     @api.onchange("product_id")

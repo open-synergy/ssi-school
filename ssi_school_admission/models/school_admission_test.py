@@ -11,6 +11,12 @@ from odoo.addons.ssi_decorator import ssi_decorator
 
 
 class SchoolAdmissionTest(models.Model):
+    """
+    Represents a school admission test document tracking the
+    interview or examination stage for a prospective student
+    applying to a specific school and grade.
+    """
+
     _name = "school_admission_test"
     _inherit = [
         "mixin.transaction_cancel",
@@ -75,6 +81,7 @@ class SchoolAdmissionTest(models.Model):
                 ("readonly", False),
             ],
         },
+        help="The date this admission test is conducted.",
     )
     academic_year_id = fields.Many2one(
         string="Academic Year",
@@ -86,6 +93,7 @@ class SchoolAdmissionTest(models.Model):
                 ("readonly", False),
             ],
         },
+        help=("The academic year for which this admission " "test is conducted."),
     )
     academic_term_id = fields.Many2one(
         string="Academic Term",
@@ -97,6 +105,7 @@ class SchoolAdmissionTest(models.Model):
                 ("readonly", False),
             ],
         },
+        help="The academic term associated with this admission test.",
     )
     school_id = fields.Many2one(
         string="School",
@@ -108,6 +117,7 @@ class SchoolAdmissionTest(models.Model):
                 ("readonly", False),
             ],
         },
+        help="The school at which this admission test is conducted.",
     )
     grade_type_id = fields.Many2one(
         string="Grade Type",
@@ -115,6 +125,7 @@ class SchoolAdmissionTest(models.Model):
         related="school_id.grade_type_id",
         store=True,
         compute_sudo=True,
+        help="The grade type derived from the selected school.",
     )
     grade_id = fields.Many2one(
         string="Grade",
@@ -126,6 +137,7 @@ class SchoolAdmissionTest(models.Model):
                 ("readonly", False),
             ],
         },
+        help="The grade level the applicant is being tested for.",
     )
     admission_form_id = fields.Many2one(
         string="Admission Form",
@@ -137,6 +149,7 @@ class SchoolAdmissionTest(models.Model):
                 ("readonly", False),
             ],
         },
+        help=("The admission form linked to this test, " "if initiated from one."),
     )
     student_id = fields.Many2one(
         string="Student",
@@ -148,6 +161,7 @@ class SchoolAdmissionTest(models.Model):
                 ("readonly", False),
             ],
         },
+        help="The student taking this admission test.",
     )
     passed = fields.Boolean(
         string="Passed",
@@ -157,11 +171,13 @@ class SchoolAdmissionTest(models.Model):
                 ("readonly", False),
             ],
         },
+        help="Indicates whether the student passed this admission test.",
     )
     create_school_admission_ok = fields.Boolean(
         string="Can Create School Admission",
         compute="_compute_policy",
         compute_sudo=True,
+        help=("Indicates whether a school admission can be " "created from this test."),
     )
 
     @api.constrains("admission_form_id")

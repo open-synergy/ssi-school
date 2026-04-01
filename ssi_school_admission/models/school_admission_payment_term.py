@@ -6,6 +6,12 @@ from odoo import api, fields, models
 
 
 class SchoolAdmissionPaymentTerm(models.Model):
+    """
+    Represents a payment installment term within a school admission
+    record, tracking invoice status, amounts, and due dates for
+    one payment period.
+    """
+
     _name = "school_admission_payment_term"
     _description = "School Admission Payment Term"
     _order = "sequence, id"
@@ -51,21 +57,25 @@ class SchoolAdmissionPaymentTerm(models.Model):
         string="Admission",
         comodel_name="school_admission",
         ondelete="cascade",
+        help=("The parent school admission record this payment " "term belongs to."),
     )
     partner_id = fields.Many2one(
         string="Partner",
         comodel_name="res.partner",
         related="admission_id.student_id",
         store=True,
+        help="The student partner derived from the parent admission record.",
     )
     name = fields.Char(
         string="Term",
         required=True,
+        help="The name or label for this payment installment term.",
     )
     sequence = fields.Integer(
         string="Sequence",
         required=True,
         default=5,
+        help=("Determines the display order of this term " "in the admission."),
     )
     currency_id = fields.Many2one(
         string="Currency",
@@ -73,48 +83,57 @@ class SchoolAdmissionPaymentTerm(models.Model):
         related="admission_id.currency_id",
         store=True,
         required=False,
+        help="The currency derived from the parent admission record.",
     )
     pricelist_id = fields.Many2one(
         string="Pricelist",
         comodel_name="product.pricelist",
         related="admission_id.pricelist_id",
         store=True,
+        help="The pricelist derived from the parent admission record.",
     )
     detail_ids = fields.One2many(
         string="Detail",
         comodel_name="school_admission_payment_term_detail",
         inverse_name="term_id",
         copy=True,
+        help="The individual fee items included in this payment term.",
     )
     amount_untaxed = fields.Monetary(
         string="Untaxed",
         compute="_compute_total",
         store=True,
         currency_field="currency_id",
+        help="The total amount before taxes for this term.",
     )
     amount_tax = fields.Monetary(
         string="Tax",
         compute="_compute_total",
         store=True,
         currency_field="currency_id",
+        help="The total tax amount for this term.",
     )
     amount_total = fields.Monetary(
         string="Total",
         compute="_compute_total",
         store=True,
         currency_field="currency_id",
+        help="The total amount including taxes for this term.",
     )
     invoice_id = fields.Many2one(
         string="# Invoice",
         comodel_name="account.move",
         readonly=True,
         ondelete="restrict",
+        help="The invoice generated for this payment term, if any.",
     )
     date_invoice = fields.Date(
         string="Estimated Invoice Date",
+        help="The estimated date when the invoice will be issued.",
     )
     date_due = fields.Date(
         string="Estimated Due Date",
+        help="The estimated due date for payment of this term.",
     )
     state = fields.Selection(
         string="State",
@@ -127,10 +146,14 @@ class SchoolAdmissionPaymentTerm(models.Model):
         ],
         compute="_compute_state",
         store=True,
+        help="The current state of this payment term.",
     )
     manually_control = fields.Boolean(
         string="Manually Controlled",
         default=False,
+        help=(
+            "Marks this term as manually controlled, " "skipping automatic invoicing."
+        ),
     )
 
     def action_create_invoice(self):

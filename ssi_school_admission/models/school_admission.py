@@ -10,6 +10,12 @@ from odoo.addons.ssi_decorator import ssi_decorator
 
 
 class SchoolAdmission(models.Model):
+    """
+    Represents the final school admission record for a student,
+    tracking the admission decision, payment setup, and the creation
+    of the student's enrollment profile after approval.
+    """
+
     _name = "school_admission"
     _inherit = [
         "mixin.transaction_cancel",
@@ -73,6 +79,7 @@ class SchoolAdmission(models.Model):
                 ("readonly", False),
             ],
         },
+        help="The date of this admission.",
     )
     academic_year_id = fields.Many2one(
         string="Academic Year",
@@ -84,6 +91,7 @@ class SchoolAdmission(models.Model):
                 ("readonly", False),
             ],
         },
+        help=("The academic year for which the student " "is being admitted."),
     )
     academic_term_id = fields.Many2one(
         string="Academic Term",
@@ -95,6 +103,7 @@ class SchoolAdmission(models.Model):
                 ("readonly", False),
             ],
         },
+        help="The academic term associated with this admission.",
     )
     school_id = fields.Many2one(
         string="School",
@@ -106,6 +115,7 @@ class SchoolAdmission(models.Model):
                 ("readonly", False),
             ],
         },
+        help="The school the student is being admitted to.",
     )
     grade_type_id = fields.Many2one(
         string="Grade Type",
@@ -113,6 +123,7 @@ class SchoolAdmission(models.Model):
         related="school_id.grade_type_id",
         required=False,
         readonly=True,
+        help="The grade type derived from the selected school.",
     )
     grade_id = fields.Many2one(
         string="Grade",
@@ -124,6 +135,7 @@ class SchoolAdmission(models.Model):
                 ("readonly", False),
             ],
         },
+        help="The grade level the student is being admitted to.",
     )
     student_id = fields.Many2one(
         string="Student",
@@ -135,16 +147,19 @@ class SchoolAdmission(models.Model):
                 ("readonly", False),
             ],
         },
+        help="The student being admitted to the school.",
     )
     admission_form_id = fields.Many2one(
         string="Admission Form",
         comodel_name="school_admission_form",
         readonly=True,
+        help="The admission form that initiated this admission, if any.",
     )
     admission_test_id = fields.Many2one(
         string="Admission Test",
         comodel_name="school_admission_test",
         readonly=True,
+        help=("The admission test associated with this admission, " "if any."),
     )
     currency_id = fields.Many2one(
         string="Currency",
@@ -157,12 +172,14 @@ class SchoolAdmission(models.Model):
             ],
         },
         default=lambda self: self.env.company.currency_id,
+        help=("The currency used for payment calculations " "in this admission."),
     )
     allowed_pricelist_ids = fields.Many2many(
         string="Allowed Pricelists",
         comodel_name="product.pricelist",
         compute="_compute_allowed_pricelist_ids",
         store=False,
+        help="Pricelists available based on the selected currency.",
     )
     pricelist_id = fields.Many2one(
         string="Pricelist",
@@ -174,6 +191,7 @@ class SchoolAdmission(models.Model):
                 ("readonly", False),
             ],
         },
+        help=("The pricelist applied for price calculations " "in this admission."),
     )
     payment_template_id = fields.Many2one(
         string="Payment Template",
@@ -185,11 +203,15 @@ class SchoolAdmission(models.Model):
                 ("readonly", False),
             ],
         },
+        help=(
+            "The payment template used to generate payment " "terms for this admission."
+        ),
     )
     payment_term_ids = fields.One2many(
         string="Payment Terms",
         comodel_name="school_admission_payment_term",
         inverse_name="admission_id",
+        help="The payment installment terms defined for this admission.",
     )
     receivable_journal_id = fields.Many2one(
         string="Receivable Journal",
@@ -200,6 +222,7 @@ class SchoolAdmission(models.Model):
                 ("readonly", False),
             ],
         },
+        help=("The journal used to post receivable entries " "for admission payments."),
     )
     receivable_account_id = fields.Many2one(
         string="Receivable Account",
@@ -210,11 +233,13 @@ class SchoolAdmission(models.Model):
                 ("readonly", False),
             ],
         },
+        help=("The account used to record receivables " "for admission payments."),
     )
     school_student_id = fields.Many2one(
         string="School Student",
         comodel_name="school_student",
         readonly=True,
+        help=("The student profile created after this " "admission is completed."),
     )
 
     def _compute_policy(self):

@@ -10,6 +10,13 @@ from odoo.addons.ssi_decorator import ssi_decorator
 
 
 class SchoolAdmissionForm(models.Model):
+    """
+    Represents a school admission registration form submitted
+    by a student's parent to apply for admission into a specific
+    school and grade, including fee computation and accounting
+    entry generation.
+    """
+
     _name = "school_admission_form"
     _inherit = [
         "mixin.transaction_cancel",
@@ -101,6 +108,7 @@ class SchoolAdmissionForm(models.Model):
                 ("readonly", False),
             ],
         },
+        help="The date of this admission form.",
     )
     academic_year_id = fields.Many2one(
         string="Academic Year",
@@ -112,6 +120,7 @@ class SchoolAdmissionForm(models.Model):
                 ("readonly", False),
             ],
         },
+        help=("The academic year in which the student " "applies for admission."),
     )
     academic_term_id = fields.Many2one(
         string="Academic Term",
@@ -123,6 +132,7 @@ class SchoolAdmissionForm(models.Model):
                 ("readonly", False),
             ],
         },
+        help="The academic term associated with this admission form.",
     )
     student_id = fields.Many2one(
         string="Student Name",
@@ -134,6 +144,7 @@ class SchoolAdmissionForm(models.Model):
                 ("readonly", False),
             ],
         },
+        help="The prospective student submitting this admission form.",
     )
     parent_id = fields.Many2one(
         string="Parent Name",
@@ -145,6 +156,7 @@ class SchoolAdmissionForm(models.Model):
                 ("readonly", False),
             ],
         },
+        help=("The parent or guardian of the student, " "used as the billing partner."),
     )
     pricelist_id = fields.Many2one(
         string="Pricelist",
@@ -156,6 +168,7 @@ class SchoolAdmissionForm(models.Model):
                 ("readonly", False),
             ],
         },
+        help="The pricelist applied to fee calculations in this form.",
     )
     currency_id = fields.Many2one(
         string="Currency",
@@ -163,6 +176,7 @@ class SchoolAdmissionForm(models.Model):
         related="pricelist_id.currency_id",
         store=True,
         compute_sudo=True,
+        help="The currency derived from the selected pricelist.",
     )
     school_id = fields.Many2one(
         string="School",
@@ -174,6 +188,7 @@ class SchoolAdmissionForm(models.Model):
                 ("readonly", False),
             ],
         },
+        help=("The school to which the student is " "applying for admission."),
     )
     grade_id = fields.Many2one(
         string="Grade",
@@ -185,6 +200,7 @@ class SchoolAdmissionForm(models.Model):
                 ("readonly", False),
             ],
         },
+        help="The grade level the student is applying to enter.",
     )
     fee_template_id = fields.Many2one(
         string="Fee Template",
@@ -196,6 +212,7 @@ class SchoolAdmissionForm(models.Model):
                 ("readonly", False),
             ],
         },
+        help=("The fee template used to automatically " "populate fee lines."),
     )
     line_ids = fields.One2many(
         string="Fee Details",
@@ -208,32 +225,38 @@ class SchoolAdmissionForm(models.Model):
             ],
         },
         copy=True,
+        help="The individual fee line items for this admission form.",
     )
     tax_ids = fields.One2many(
         string="Taxes",
         comodel_name="school_admission_form.tax",
         inverse_name="admission_form_id",
         readonly=True,
+        help="Tax lines computed from the fee items in this form.",
     )
     admission_ids = fields.One2many(
         string="Admissions",
         comodel_name="school_admission",
         inverse_name="admission_form_id",
+        help="Admission records linked to this form.",
     )
     admission_test_ids = fields.One2many(
         string="Admission Tests",
         comodel_name="school_admission_test",
         inverse_name="admission_form_id",
+        help="Admission test records linked to this form.",
     )
     create_admission_ok = fields.Boolean(
         string="Can Create Admission",
         compute="_compute_policy",
         compute_sudo=True,
+        help=("Indicates whether a new admission can be " "created from this form."),
     )
     create_admission_test_ok = fields.Boolean(
         string="Can Create Admission Test",
         compute="_compute_policy",
         compute_sudo=True,
+        help=("Indicates whether an admission test can be " "created from this form."),
     )
     admission_test_id = fields.Many2one(
         string="Admission Test",
@@ -241,6 +264,7 @@ class SchoolAdmissionForm(models.Model):
         compute="_compute_admission_test_id",
         inverse="_inverse_admission_test_id",
         store=False,
+        help="The admission test associated with this form.",
     )
 
     @api.depends("admission_test_ids")

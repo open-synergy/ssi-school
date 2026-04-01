@@ -6,6 +6,12 @@ from odoo import fields, models
 
 
 class SchoolAdmissionPaymentTermDetail(models.Model):
+    """
+    Represents a single fee line detail within a school admission
+    payment term, specifying the product, amount, and associated
+    journal entry line for one payment item.
+    """
+
     _name = "school_admission_payment_term_detail"
     _description = "School Admission Payment Term Detail"
     _order = "sequence, product_category_id, product_id, id"
@@ -17,6 +23,7 @@ class SchoolAdmissionPaymentTermDetail(models.Model):
         string="Payment Term",
         comodel_name="school_admission_payment_term",
         ondelete="cascade",
+        help="The parent payment term this detail line belongs to.",
     )
     product_id = fields.Many2one(required=True)
     currency_id = fields.Many2one(
@@ -25,18 +32,21 @@ class SchoolAdmissionPaymentTermDetail(models.Model):
         related="term_id.admission_id.currency_id",
         store=True,
         required=False,
+        help="The currency derived from the parent admission record.",
     )
     pricelist_id = fields.Many2one(
         string="Pricelist",
         comodel_name="product.pricelist",
         related="term_id.admission_id.pricelist_id",
         store=True,
+        help="The pricelist derived from the parent admission record.",
     )
     invoice_line_id = fields.Many2one(
         string="Invoice Line",
         comodel_name="account.move.line",
         readonly=True,
         ondelete="restrict",
+        help=("The invoice line linked to this detail " "after the term is invoiced."),
     )
 
     def _prepare_invoice_line(self):
