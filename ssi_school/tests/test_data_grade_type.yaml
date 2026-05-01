@@ -1,0 +1,91 @@
+scenarios:
+  - name: "Create Grade Type"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "New Grade Type"
+          code: "NGT"
+          sequence: 20
+      - step: "Assert created successfully"
+        action: "assert"
+        target: "grade_type"
+        asserts:
+          id:
+            type: "value"
+            operator: "is_truthy"
+          name:
+            type: "value"
+            expected: "New Grade Type"
+          sequence:
+            type: "value"
+            expected: 20
+
+  - name: "Edit Grade Type Name"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Test Grade Type"
+          code: "TGTED"
+          sequence: 10
+      - step: "Write new name"
+        action: "write"
+        target: "grade_type"
+        values:
+          name: "Updated Grade Type"
+      - step: "Assert name updated"
+        action: "assert"
+        target: "grade_type"
+        asserts:
+          name:
+            type: "value"
+            expected: "Updated Grade Type"
+
+  - name: "Edit Grade Type Sequence"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Test Grade Type Seq"
+          code: "TGTSEQ"
+          sequence: 10
+      - step: "Write new sequence"
+        action: "write"
+        target: "grade_type"
+        values:
+          sequence: 99
+      - step: "Assert sequence updated"
+        action: "assert"
+        target: "grade_type"
+        asserts:
+          sequence:
+            type: "value"
+            expected: 99
+
+  - name: "Delete Grade Type"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "To Be Deleted"
+          code: "GTDEL"
+          sequence: 50
+      - step: "Delete grade type"
+        action: "call"
+        target: "grade_type"
+        method: "unlink"
+      - step: "Search expects zero results"
+        action: "search"
+        model: "school_grade_type"
+        domain: [["code", "=", "GTDEL"]]
+        save_as: "result"
+        expect_count: 0

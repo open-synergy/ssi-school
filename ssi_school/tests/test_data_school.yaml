@@ -1,0 +1,134 @@
+scenarios:
+  - name: "Create School"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type for School Test"
+          code: "GTST"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "New School"
+          code: "SCH002"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+      - step: "Assert created"
+        action: "assert"
+        target: "school"
+        asserts:
+          id:
+            type: "value"
+            operator: "is_truthy"
+          name:
+            type: "value"
+            expected: "New School"
+          grade_type_id:
+            type: "value"
+            operator: "is_truthy"
+
+  - name: "Edit School Name"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Edit School"
+          code: "GTSED"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "Test School"
+          code: "SCHED"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+      - step: "Write new name"
+        action: "write"
+        target: "school"
+        values:
+          name: "Updated School Name"
+      - step: "Assert name updated"
+        action: "assert"
+        target: "school"
+        asserts:
+          name:
+            type: "value"
+            expected: "Updated School Name"
+
+  - name: "Edit School Grade Type"
+    steps:
+      - step: "Create first grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Original"
+          code: "GTORIG"
+          sequence: 10
+      - step: "Create second grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "new_grade_type"
+        values:
+          name: "Another Grade Type"
+          code: "AGT"
+          sequence: 20
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Grade Edit"
+          code: "SCHGE"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+      - step: "Update grade type"
+        action: "write"
+        target: "school"
+        values:
+          grade_type_id: "EVAL: registry['new_grade_type'].id"
+      - step: "Verify grade type was updated"
+        action: "search"
+        model: "school"
+        domain:
+          [
+            ["id", "=", "EVAL: registry['school'].id"],
+            ["grade_type_id", "=", "EVAL: registry['new_grade_type'].id"],
+          ]
+        save_as: "_check"
+        expect_count: 1
+
+  - name: "Delete School"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Delete School"
+          code: "GTDSCH"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School To Delete"
+          code: "SCHDEL"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+      - step: "Delete school"
+        action: "call"
+        target: "school"
+        method: "unlink"
+      - step: "Search expects zero results"
+        action: "search"
+        model: "school"
+        domain: [["code", "=", "SCHDEL"]]
+        save_as: "result"
+        expect_count: 0

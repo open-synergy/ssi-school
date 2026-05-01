@@ -1,0 +1,450 @@
+scenarios:
+  - name: "Create Student"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Student Test"
+          code: "GTSTU"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School for Student Test"
+          code: "SCHSTU"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+      - step: "Create contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "New Student Contact"
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "New Student"
+          code: "STU002"
+          contact_id: "EVAL: registry['contact'].id"
+          school_id: "EVAL: registry['school'].id"
+      - step: "Assert created"
+        action: "assert"
+        target: "student"
+        asserts:
+          id:
+            type: "value"
+            operator: "is_truthy"
+          name:
+            type: "value"
+            expected: "New Student"
+          school_id:
+            type: "value"
+            operator: "is_truthy"
+          state:
+            type: "value"
+            expected: "draft"
+
+  - name: "Edit Student Name"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Student Edit"
+          code: "GTSTED"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Student Edit"
+          code: "SCHSTED"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+      - step: "Create contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Edit Contact"
+          phone: "081111111111"
+          email: "student@test.com"
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student 1"
+          code: "STU001ED"
+          contact_id: "EVAL: registry['contact'].id"
+          school_id: "EVAL: registry['school'].id"
+      - step: "Write new name"
+        action: "write"
+        target: "student"
+        values:
+          name: "Student 1 Updated"
+      - step: "Assert name updated"
+        action: "assert"
+        target: "student"
+        asserts:
+          name:
+            type: "value"
+            expected: "Student 1 Updated"
+
+  - name: "Delete Student"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Student Del"
+          code: "GTSTDL"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Student Del"
+          code: "SCHSTDL"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+      - step: "Create contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student To Delete Contact"
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student To Delete"
+          code: "STUDEL"
+          contact_id: "EVAL: registry['contact'].id"
+          school_id: "EVAL: registry['school'].id"
+      - step: "Delete student"
+        action: "call"
+        target: "student"
+        method: "unlink"
+      - step: "Search expects zero results"
+        action: "search"
+        model: "school_student"
+        domain: [["code", "=", "STUDEL"]]
+        save_as: "result"
+        expect_count: 0
+
+  - name: "Compute Initial Grade Type From School"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Student Compute"
+          code: "GTSCO"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Student Compute"
+          code: "SCHSCO"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+      - step: "Create contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Compute Contact"
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student Compute Test"
+          code: "STUCT"
+          contact_id: "EVAL: registry['contact'].id"
+          school_id: "EVAL: registry['school'].id"
+      - step: "Assert initial_grade_type_id from school"
+        action: "assert"
+        target: "student"
+        asserts:
+          initial_grade_type_id:
+            type: "value"
+            operator: "is_truthy"
+
+  - name: "Compute Current Grade No Enrollment"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type No Enrol"
+          code: "GTNE"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School No Enrol"
+          code: "SCHNE"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+      - step: "Create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade No Enrol"
+          code: "GNE"
+          sequence: 10
+          type_id: "EVAL: registry['grade_type'].id"
+      - step: "Create contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student No Enrol Contact"
+      - step: "Create student with initial_grade_id"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student No Enrollment"
+          code: "STUNE"
+          contact_id: "EVAL: registry['contact'].id"
+          school_id: "EVAL: registry['school'].id"
+          initial_grade_id: "EVAL: registry['grade'].id"
+      - step: "Invalidate cache"
+        action: "call"
+        target: "student"
+        method: "invalidate_cache"
+      - step: "Assert current_grade_id equals initial_grade_id"
+        action: "assert"
+        target: "student"
+        asserts:
+          current_grade_id:
+            type: "value"
+            operator: "is_truthy"
+
+  - name: "Compute Active Enrollment None"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type No Active Enrol"
+          code: "GTNAE"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School No Active Enrol"
+          code: "SCHNAE"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+      - step: "Create contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student No Active Enrol Contact"
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student No Active Enrol"
+          code: "STUNAE"
+          contact_id: "EVAL: registry['contact'].id"
+          school_id: "EVAL: registry['school'].id"
+      - step: "Assert no active enrollment"
+        action: "assert"
+        target: "student"
+        asserts:
+          active_enrollment_id:
+            type: "value"
+            operator: "is_falsy"
+
+  - name: "Action Set To Enroll"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Enroll Action"
+          code: "GTEA"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Enroll Action"
+          code: "SCHEA"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+      - step: "Create contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Enroll Action Contact"
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student For Enroll Action"
+          code: "STUENR"
+          contact_id: "EVAL: registry['contact'].id"
+          school_id: "EVAL: registry['school'].id"
+      - step: "Assert initial state is draft"
+        action: "assert"
+        target: "student"
+        asserts:
+          state:
+            type: "value"
+            expected: "draft"
+      - step: "Call action_set_to_enroll"
+        action: "call"
+        target: "student"
+        method: "action_set_to_enroll"
+        asserts:
+          state:
+            type: "value"
+            expected: "enrol"
+
+  - name: "Action Set To Draft"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Draft Action"
+          code: "GTDA"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Draft Action"
+          code: "SCHDA"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+      - step: "Create contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Draft Action Contact"
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student For Draft Action"
+          code: "STUDRT"
+          contact_id: "EVAL: registry['contact'].id"
+          school_id: "EVAL: registry['school'].id"
+      - step: "Enroll then reset to draft"
+        action: "call"
+        target: "student"
+        method: "action_set_to_enroll"
+      - step: "Reset to draft"
+        action: "call"
+        target: "student"
+        method: "action_set_to_draft"
+        asserts:
+          state:
+            type: "value"
+            expected: "draft"
+
+  - name: "Action Student State Transitions"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type State Trans"
+          code: "GTST3"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School State Trans"
+          code: "SCHST"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+      - step: "Create contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student State Trans Contact"
+      - step: "Create student for on_leave"
+        action: "create"
+        model: "school_student"
+        save_as: "student_ol"
+        values:
+          name: "Student For On Leave Action"
+          code: "STUOL"
+          contact_id: "EVAL: registry['contact'].id"
+          school_id: "EVAL: registry['school'].id"
+      - step: "Set to on_leave"
+        action: "call"
+        target: "student_ol"
+        method: "action_set_to_on_leave"
+        asserts:
+          state:
+            type: "value"
+            expected: "on_leave"
+      - step: "Create student for graduate"
+        action: "create"
+        model: "school_student"
+        save_as: "student_gr"
+        values:
+          name: "Student For Graduate Action"
+          code: "STUGR"
+          contact_id: "EVAL: registry['contact'].id"
+          school_id: "EVAL: registry['school'].id"
+      - step: "Set to graduate"
+        action: "call"
+        target: "student_gr"
+        method: "action_set_to_graduate"
+        asserts:
+          state:
+            type: "value"
+            expected: "graduate"
+      - step: "Create student for dropped"
+        action: "create"
+        model: "school_student"
+        save_as: "student_dp"
+        values:
+          name: "Student For Dropped Action"
+          code: "STUDP"
+          contact_id: "EVAL: registry['contact'].id"
+          school_id: "EVAL: registry['school'].id"
+      - step: "Set to dropped"
+        action: "call"
+        target: "student_dp"
+        method: "action_set_to_dropped"
+        asserts:
+          state:
+            type: "value"
+            expected: "dropped"

@@ -1,0 +1,155 @@
+scenarios:
+  - name: "Create Teacher"
+    steps:
+      - step: "Create contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "New Teacher Contact"
+      - step: "Create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher"
+        values:
+          name: "New Teacher"
+          code: "TCH002"
+          contact_id: "EVAL: registry['contact'].id"
+      - step: "Assert created"
+        action: "assert"
+        target: "teacher"
+        asserts:
+          id:
+            type: "value"
+            operator: "is_truthy"
+          name:
+            type: "value"
+            expected: "New Teacher"
+          contact_id:
+            type: "value"
+            operator: "is_truthy"
+
+  - name: "Edit Teacher Name"
+    steps:
+      - step: "Create contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Teacher Contact Edit"
+          phone: "081234567890"
+          email: "teacher@test.com"
+      - step: "Create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher"
+        values:
+          name: "Teacher 1"
+          code: "TCH001ED"
+          contact_id: "EVAL: registry['contact'].id"
+      - step: "Write new name"
+        action: "write"
+        target: "teacher"
+        values:
+          name: "Teacher 1 Updated"
+      - step: "Assert name updated"
+        action: "assert"
+        target: "teacher"
+        asserts:
+          name:
+            type: "value"
+            expected: "Teacher 1 Updated"
+
+  - name: "Edit Teacher Contact"
+    steps:
+      - step: "Create first contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Teacher Original Contact"
+      - step: "Create another contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "new_contact"
+        values:
+          name: "Another Teacher Contact"
+      - step: "Create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher"
+        values:
+          name: "Teacher Edit Contact"
+          code: "TCHEC"
+          contact_id: "EVAL: registry['contact'].id"
+      - step: "Update contact"
+        action: "write"
+        target: "teacher"
+        values:
+          contact_id: "EVAL: registry['new_contact'].id"
+      - step: "Verify contact was updated"
+        action: "search"
+        model: "school_teacher"
+        domain:
+          [
+            ["id", "=", "EVAL: registry['teacher'].id"],
+            ["contact_id", "=", "EVAL: registry['new_contact'].id"],
+          ]
+        save_as: "_check"
+        expect_count: 1
+
+  - name: "Delete Teacher"
+    steps:
+      - step: "Create contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Teacher To Delete Contact"
+      - step: "Create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher"
+        values:
+          name: "Teacher To Delete"
+          code: "TCHDEL"
+          contact_id: "EVAL: registry['contact'].id"
+      - step: "Delete teacher"
+        action: "call"
+        target: "teacher"
+        method: "unlink"
+      - step: "Search expects zero results"
+        action: "search"
+        model: "school_teacher"
+        domain: [["code", "=", "TCHDEL"]]
+        save_as: "result"
+        expect_count: 0
+
+  - name: "Related Fields From Contact"
+    steps:
+      - step: "Create contact with phone and email"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Teacher Related Contact"
+          phone: "081234567890"
+          email: "teacher@test.com"
+      - step: "Create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher"
+        values:
+          name: "Teacher Related"
+          code: "TCHREL"
+          contact_id: "EVAL: registry['contact'].id"
+      - step: "Assert phone and email are from contact"
+        action: "assert"
+        target: "teacher"
+        asserts:
+          phone:
+            type: "value"
+            expected: "081234567890"
+          email:
+            type: "value"
+            expected: "teacher@test.com"
