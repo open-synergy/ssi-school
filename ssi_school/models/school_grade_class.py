@@ -6,7 +6,7 @@
 from odoo import api, fields, models
 
 
-class SchoolGradeClass(models.Model):
+class SchoolGradeClass(models.Model):  # pylint: disable=too-few-public-methods
     """
     Represents a homeroom class (class group) within a school.
     A grade class is a concrete class unit formed from the combination of a school

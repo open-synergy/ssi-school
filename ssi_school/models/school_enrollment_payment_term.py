@@ -185,23 +185,23 @@ class SchoolEnrollmentPaymentTerm(models.Model):
 
     def action_create_invoice(self):
         for record in self.sudo():
-            record._create_invoice()
+            record._create_invoice()  # pylint: disable=protected-access
 
     def action_delete_invoice(self):
         for record in self.sudo():
-            record._delete_invoice()
+            record._delete_invoice()  # pylint: disable=protected-access
 
     def action_disconnect_invoice(self):
         for record in self.sudo():
-            record._disconnect_invoice()
+            record._disconnect_invoice()  # pylint: disable=protected-access
 
     def action_mark_as_manual(self):
         for record in self.sudo():
-            record._mark_as_manual()
+            record._mark_as_manual()  # pylint: disable=protected-access
 
     def action_unmark_as_manual(self):
         for record in self.sudo():
-            record._unmark_as_manual()
+            record._unmark_as_manual()  # pylint: disable=protected-access
 
     def _mark_as_manual(self):
         self.ensure_one()
@@ -227,7 +227,13 @@ class SchoolEnrollmentPaymentTerm(models.Model):
         journal = enrollment.receivable_journal_id
         lines = []
         for detail in self.detail_ids:
-            lines += [(0, 0, detail._prepare_invoice_line())]
+            lines += [
+                (
+                    0,
+                    0,
+                    detail._prepare_invoice_line(),  # pylint: disable=protected-access
+                )
+            ]
         return {
             "date": fields.Date.today(),
             "ref": enrollment.name,

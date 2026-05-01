@@ -5,7 +5,9 @@
 from odoo import api, fields, models
 
 
-class SchoolEnrollmentPaymentTemplate(models.Model):
+class SchoolEnrollmentPaymentTemplate(
+    models.Model
+):  # pylint: disable=too-few-public-methods
     """
     A payment billing template for school enrollments.
     Stores standard billing structures that can be automatically applied to an

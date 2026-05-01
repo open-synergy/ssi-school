@@ -265,39 +265,39 @@ class SchoolStudent(models.Model):
 
     def action_set_to_draft(self):
         for record in self.sudo():
-            record._set_to_draft()
+            record._set_to_draft()  # pylint: disable=protected-access
 
     def action_set_to_enroll(self):
         for record in self.sudo():
-            record._set_to_enroll()
+            record._set_to_enroll()  # pylint: disable=protected-access
 
     def action_set_to_on_leave(self):
         for record in self.sudo():
-            record._set_to_on_leave()
+            record._set_to_on_leave()  # pylint: disable=protected-access
 
     def action_set_to_suspended(self):
         for record in self.sudo():
-            record._set_to_suspended()
+            record._set_to_suspended()  # pylint: disable=protected-access
 
     def action_set_to_graduate(self):
         for record in self.sudo():
-            record._set_to_graduate()
+            record._set_to_graduate()  # pylint: disable=protected-access
 
     def action_set_to_transferred(self):
         for record in self.sudo():
-            record._set_to_transferred()
+            record._set_to_transferred()  # pylint: disable=protected-access
 
     def action_set_to_dropped(self):
         for record in self.sudo():
-            record._set_to_dropped()
+            record._set_to_dropped()  # pylint: disable=protected-access
 
     def action_set_to_resigned(self):
         for record in self.sudo():
-            record._set_to_resigned()
+            record._set_to_resigned()  # pylint: disable=protected-access
 
     def action_set_to_deceased(self):
         for record in self.sudo():
-            record._set_to_deceased()
+            record._set_to_deceased()  # pylint: disable=protected-access
 
     def _set_to_draft(self):
         self.ensure_one()

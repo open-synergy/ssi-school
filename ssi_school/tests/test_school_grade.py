@@ -8,6 +8,6 @@ from odoo.tests import tagged
 
 
 @tagged("post_install", "-at_install")
-class TestSchoolGrade(YamlTransactionCase):
+class TestSchoolGrade(YamlTransactionCase):  # pylint: disable=too-few-public-methods
     def test_grade(self):
         self.run_yaml_scenario("test_data_grade.yaml")

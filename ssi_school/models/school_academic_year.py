@@ -6,7 +6,7 @@
 from odoo import api, fields, models
 
 
-class SchoolAcademicYear(models.Model):
+class SchoolAcademicYear(models.Model):  # pylint: disable=too-few-public-methods
     """
     Represents an academic year of a school.
     An academic year defines a full year of study consisting of one or more

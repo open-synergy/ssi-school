@@ -6,7 +6,7 @@
 from odoo import fields, models
 
 
-class SchoolGradeType(models.Model):
+class SchoolGradeType(models.Model):  # pylint: disable=too-few-public-methods
     """
     Represents an education level type or school category.
     Used to group grades by education level, such as Elementary (SD),

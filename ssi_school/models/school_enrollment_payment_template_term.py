@@ -5,7 +5,9 @@
 from odoo import fields, models
 
 
-class SchoolEnrollmentPaymentTemplateTerm(models.Model):
+class SchoolEnrollmentPaymentTemplateTerm(
+    models.Model
+):  # pylint: disable=too-few-public-methods
     """
     Represents a payment period (term) within an enrollment payment template.
     Each term is a billing group that will generate one invoice when applied

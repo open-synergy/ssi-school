@@ -6,7 +6,7 @@
 from odoo import fields, models
 
 
-class SchoolTeacher(models.Model):
+class SchoolTeacher(models.Model):  # pylint: disable=too-few-public-methods
     """
     Represents a teacher or instructor in a school.
     The teacher is linked to a contact (res.partner) as the source of personal
