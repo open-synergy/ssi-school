@@ -1,0 +1,639 @@
+scenarios:
+  - name: "Admission Payment Term - Create and Delete Invoice"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "receivable_journal"
+        limit: 1
+
+      - step: "Setup - get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "Admission Fee Income ADPTDEL"
+          code: "ADPTDEL4200"
+          user_type_id: "EVAL: registry['account_type'].id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "Admission Fee ADPTDEL"
+          type: "service"
+          list_price: 2000000.0
+
+      - step: "Setup - create pricelist"
+        action: "create"
+        model: "product.pricelist"
+        save_as: "pricelist"
+        values:
+          name: "Pricelist ADPTDEL"
+          currency_id: "EVAL: env.company.currency_id.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type ADPTDEL"
+          code: "GTADPTDEL"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 ADPTDEL"
+          code: "AYADPTDEL"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester ADPTDEL"
+          code: "SMADPTDEL"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "EVAL: registry['academic_year'].id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School ADPTDEL"
+          code: "SCHADPTDEL"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade ADPTDEL"
+          code: "GADPTDEL"
+          sequence: 10
+          type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "student_contact"
+        values:
+          name: "Student Contact ADPTDEL"
+
+      - step: "Setup - create payment template"
+        action: "create"
+        model: "school_admission_payment_template"
+        save_as: "payment_template"
+        values:
+          name: "Admission Payment Template ADPTDEL"
+          code: "ADPTDEL001"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          academic_term_id: "EVAL: registry['academic_term'].id"
+          term_ids:
+            - - 0
+              - 0
+              - name: "Admission Term 1 ADPTDEL"
+                sequence: 10
+                detail_ids:
+                  - - 0
+                    - 0
+                    - product_id: "EVAL: registry['product'].id"
+                      name: "Admission Fee ADPTDEL"
+                      account_id: "EVAL: registry['account'].id"
+                      uom_quantity: 1.0
+                      uom_id: "REF: uom.product_uom_unit"
+                      price_unit: 2000000.0
+
+      - step: "Create admission"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "EVAL: registry['academic_year'].id"
+          academic_term_id: "EVAL: registry['academic_term'].id"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          student_id: "EVAL: registry['student_contact'].id"
+          payment_template_id: "EVAL: registry['payment_template'].id"
+          pricelist_id: "EVAL: registry['pricelist'].id"
+          currency_id: "EVAL: env.company.currency_id.id"
+          receivable_journal_id: "EVAL: registry['receivable_journal'].id"
+
+      - step: "Confirm admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Compute payment"
+        action: "call"
+        target: "admission"
+        method: "action_compute_payment"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate admission cache after compute"
+        action: "call"
+        target: "admission"
+        method: "invalidate_cache"
+
+      - step: "Approve admission"
+        action: "call"
+        target: "admission"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Get admission payment term"
+        action: "search"
+        model: "school_admission_payment_term"
+        domain: [["admission_id", "=", "EVAL: registry['admission'].id"]]
+        save_as: "term"
+        expect_count: 1
+
+      - step: "Assert term is uninvoiced"
+        action: "assert"
+        target: "term"
+        asserts:
+          state:
+            type: "value"
+            expected: "uninvoiced"
+
+      - step: "Create invoice for term"
+        action: "call"
+        target: "term"
+        method: "action_create_invoice"
+
+      - step: "Invalidate term cache after invoice"
+        action: "call"
+        target: "term"
+        method: "invalidate_cache"
+
+      - step: "Assert invoice created"
+        action: "assert"
+        target: "term"
+        asserts:
+          invoice_id:
+            type: "value"
+            operator: "is_truthy"
+          state:
+            type: "value"
+            expected: "invoiced"
+
+      - step: "Delete invoice from term"
+        action: "call"
+        target: "term"
+        method: "action_delete_invoice"
+
+      - step: "Invalidate term cache after delete"
+        action: "call"
+        target: "term"
+        method: "invalidate_cache"
+
+      - step: "Assert invoice deleted"
+        action: "assert"
+        target: "term"
+        asserts:
+          invoice_id:
+            type: "value"
+            operator: "is_falsy"
+          state:
+            type: "value"
+            expected: "uninvoiced"
+
+  - name: "Admission Payment Term - Disconnect Invoice"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "receivable_journal"
+        limit: 1
+
+      - step: "Setup - get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "Admission Fee Income ADPTDC"
+          code: "ADPTDC4200"
+          user_type_id: "EVAL: registry['account_type'].id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "Admission Fee ADPTDC"
+          type: "service"
+          list_price: 1000000.0
+
+      - step: "Setup - create pricelist"
+        action: "create"
+        model: "product.pricelist"
+        save_as: "pricelist"
+        values:
+          name: "Pricelist ADPTDC"
+          currency_id: "EVAL: env.company.currency_id.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type ADPTDC"
+          code: "GTADPTDC"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 ADPTDC"
+          code: "AYADPTDC"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester ADPTDC"
+          code: "SMADPTDC"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "EVAL: registry['academic_year'].id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School ADPTDC"
+          code: "SCHADPTDC"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade ADPTDC"
+          code: "GADPTDC"
+          sequence: 10
+          type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "student_contact"
+        values:
+          name: "Student Contact ADPTDC"
+
+      - step: "Setup - create payment template"
+        action: "create"
+        model: "school_admission_payment_template"
+        save_as: "payment_template"
+        values:
+          name: "Admission Payment Template ADPTDC"
+          code: "ADPTDC001"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          academic_term_id: "EVAL: registry['academic_term'].id"
+          term_ids:
+            - - 0
+              - 0
+              - name: "Admission Term 1 ADPTDC"
+                sequence: 10
+                detail_ids:
+                  - - 0
+                    - 0
+                    - product_id: "EVAL: registry['product'].id"
+                      name: "Admission Fee ADPTDC"
+                      account_id: "EVAL: registry['account'].id"
+                      uom_quantity: 1.0
+                      uom_id: "REF: uom.product_uom_unit"
+                      price_unit: 1000000.0
+
+      - step: "Create admission"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "EVAL: registry['academic_year'].id"
+          academic_term_id: "EVAL: registry['academic_term'].id"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          student_id: "EVAL: registry['student_contact'].id"
+          payment_template_id: "EVAL: registry['payment_template'].id"
+          pricelist_id: "EVAL: registry['pricelist'].id"
+          currency_id: "EVAL: env.company.currency_id.id"
+          receivable_journal_id: "EVAL: registry['receivable_journal'].id"
+
+      - step: "Confirm admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Compute payment"
+        action: "call"
+        target: "admission"
+        method: "action_compute_payment"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate admission cache after compute"
+        action: "call"
+        target: "admission"
+        method: "invalidate_cache"
+
+      - step: "Approve admission"
+        action: "call"
+        target: "admission"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+
+      - step: "Get admission payment term"
+        action: "search"
+        model: "school_admission_payment_term"
+        domain: [["admission_id", "=", "EVAL: registry['admission'].id"]]
+        save_as: "term"
+        expect_count: 1
+
+      - step: "Create invoice"
+        action: "call"
+        target: "term"
+        method: "action_create_invoice"
+
+      - step: "Invalidate term cache"
+        action: "call"
+        target: "term"
+        method: "invalidate_cache"
+
+      - step: "Assert invoice exists"
+        action: "assert"
+        target: "term"
+        asserts:
+          invoice_id:
+            type: "value"
+            operator: "is_truthy"
+
+      - step: "Disconnect invoice"
+        action: "call"
+        target: "term"
+        method: "action_disconnect_invoice"
+
+      - step: "Invalidate term cache after disconnect"
+        action: "call"
+        target: "term"
+        method: "invalidate_cache"
+
+      - step: "Assert invoice disconnected"
+        action: "assert"
+        target: "term"
+        asserts:
+          invoice_id:
+            type: "value"
+            operator: "is_falsy"
+          state:
+            type: "value"
+            expected: "uninvoiced"
+
+  - name: "Admission Payment Term - Mark and Unmark as Manual"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "receivable_journal"
+        limit: 1
+
+      - step: "Setup - get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "Admission Fee Income ADPTMM"
+          code: "ADPTMM4200"
+          user_type_id: "EVAL: registry['account_type'].id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "Admission Fee ADPTMM"
+          type: "service"
+          list_price: 500000.0
+
+      - step: "Setup - create pricelist"
+        action: "create"
+        model: "product.pricelist"
+        save_as: "pricelist"
+        values:
+          name: "Pricelist ADPTMM"
+          currency_id: "EVAL: env.company.currency_id.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type ADPTMM"
+          code: "GTADPTMM"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 ADPTMM"
+          code: "AYADPTMM"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester ADPTMM"
+          code: "SMADPTMM"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "EVAL: registry['academic_year'].id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School ADPTMM"
+          code: "SCHADPTMM"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade ADPTMM"
+          code: "GADPTMM"
+          sequence: 10
+          type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "student_contact"
+        values:
+          name: "Student Contact ADPTMM"
+
+      - step: "Setup - create payment template"
+        action: "create"
+        model: "school_admission_payment_template"
+        save_as: "payment_template"
+        values:
+          name: "Admission Payment Template ADPTMM"
+          code: "ADPTMM001"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          academic_term_id: "EVAL: registry['academic_term'].id"
+          term_ids:
+            - - 0
+              - 0
+              - name: "Admission Term ADPTMM"
+                sequence: 10
+                detail_ids:
+                  - - 0
+                    - 0
+                    - product_id: "EVAL: registry['product'].id"
+                      name: "Admission Fee ADPTMM"
+                      account_id: "EVAL: registry['account'].id"
+                      uom_quantity: 1.0
+                      uom_id: "REF: uom.product_uom_unit"
+                      price_unit: 500000.0
+
+      - step: "Create admission"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "EVAL: registry['academic_year'].id"
+          academic_term_id: "EVAL: registry['academic_term'].id"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          student_id: "EVAL: registry['student_contact'].id"
+          payment_template_id: "EVAL: registry['payment_template'].id"
+          pricelist_id: "EVAL: registry['pricelist'].id"
+          currency_id: "EVAL: env.company.currency_id.id"
+          receivable_journal_id: "EVAL: registry['receivable_journal'].id"
+
+      - step: "Confirm admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Compute payment"
+        action: "call"
+        target: "admission"
+        method: "action_compute_payment"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate admission cache after compute"
+        action: "call"
+        target: "admission"
+        method: "invalidate_cache"
+
+      - step: "Approve admission"
+        action: "call"
+        target: "admission"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+
+      - step: "Get admission payment term"
+        action: "search"
+        model: "school_admission_payment_term"
+        domain: [["admission_id", "=", "EVAL: registry['admission'].id"]]
+        save_as: "term"
+        expect_count: 1
+
+      - step: "Mark term as manual"
+        action: "call"
+        target: "term"
+        method: "action_mark_as_manual"
+
+      - step: "Invalidate term cache"
+        action: "call"
+        target: "term"
+        method: "invalidate_cache"
+
+      - step: "Assert term is manually controlled"
+        action: "assert"
+        target: "term"
+        asserts:
+          state:
+            type: "value"
+            expected: "manual"
+          manually_control:
+            type: "value"
+            expected: true
+
+      - step: "Unmark term as manual"
+        action: "call"
+        target: "term"
+        method: "action_unmark_as_manual"
+
+      - step: "Invalidate term cache after unmark"
+        action: "call"
+        target: "term"
+        method: "invalidate_cache"
+
+      - step: "Assert term is back to uninvoiced"
+        action: "assert"
+        target: "term"
+        asserts:
+          state:
+            type: "value"
+            expected: "uninvoiced"
+          manually_control:
+            type: "value"
+            expected: false

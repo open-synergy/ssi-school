@@ -1,0 +1,346 @@
+scenarios:
+  - name: "Admission Form - Compute Fee from Template and Open"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal"
+        limit: 1
+
+      - step: "Setup - get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "Admission Form Fee Income AFCF"
+          code: "AFCF4200"
+          user_type_id: "EVAL: registry['account_type'].id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "Admission Fee AFCF"
+          type: "service"
+          list_price: 1500000.0
+
+      - step: "Setup - create pricelist"
+        action: "create"
+        model: "product.pricelist"
+        save_as: "pricelist"
+        values:
+          name: "Pricelist AFCF"
+          currency_id: "EVAL: env.company.currency_id.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type AFCF"
+          code: "GTAFCF"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 AFCF"
+          code: "AYAFCF"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester AFCF"
+          code: "SMAFCF"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "EVAL: registry['academic_year'].id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School AFCF"
+          code: "SCHAFCF"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade AFCF"
+          code: "GAFCF"
+          sequence: 10
+          type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "student_contact"
+        values:
+          name: "Student Contact AFCF"
+
+      - step: "Setup - create parent contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "parent_contact"
+        values:
+          name: "Parent Contact AFCF"
+
+      - step: "Setup - create fee template with lines"
+        action: "create"
+        model: "school_admission_fee_template"
+        save_as: "fee_template"
+        values:
+          name: "Fee Template AFCF"
+          code: "FTAFCF"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          journal_id: "EVAL: registry['journal'].id"
+          account_id: "EVAL: registry['account'].id"
+          line_ids:
+            - - 0
+              - 0
+              - product_id: "EVAL: registry['product'].id"
+                name: "Admission Fee Line AFCF"
+                account_id: "EVAL: registry['account'].id"
+                uom_quantity: 1.0
+                uom_id: "REF: uom.product_uom_unit"
+                price_unit: 1500000.0
+
+      - step: "Create admission form with fee template"
+        action: "create"
+        model: "school_admission_form"
+        save_as: "admission_form"
+        as_user: "base.user_admin"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "EVAL: registry['academic_year'].id"
+          academic_term_id: "EVAL: registry['academic_term'].id"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          student_id: "EVAL: registry['student_contact'].id"
+          parent_id: "EVAL: registry['parent_contact'].id"
+          pricelist_id: "EVAL: registry['pricelist'].id"
+          currency_id: "EVAL: env.company.currency_id.id"
+          fee_template_id: "EVAL: registry['fee_template'].id"
+          journal_id: "EVAL: registry['journal'].id"
+          account_id: "EVAL: registry['account'].id"
+
+      - step: "Compute fee from template"
+        action: "call"
+        target: "admission_form"
+        method: "action_compute_fee"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate admission form cache after fee compute"
+        action: "call"
+        target: "admission_form"
+        method: "invalidate_cache"
+
+      - step: "Assert fee lines created from template"
+        action: "assert"
+        target: "admission_form"
+        asserts:
+          line_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 1
+
+      - step: "Compute tax"
+        action: "call"
+        target: "admission_form"
+        method: "action_compute_tax"
+        as_user: "base.user_admin"
+
+      - step: "Confirm admission form"
+        action: "call"
+        target: "admission_form"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Invalidate admission form cache before approve"
+        action: "call"
+        target: "admission_form"
+        method: "invalidate_cache"
+
+      - step: "Approve admission form"
+        action: "call"
+        target: "admission_form"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Invalidate admission form cache after open"
+        action: "call"
+        target: "admission_form"
+        method: "invalidate_cache"
+
+      - step: "Assert accounting entry created on open"
+        action: "assert"
+        target: "admission_form"
+        asserts:
+          move_id:
+            type: "value"
+            operator: "is_truthy"
+
+  - name: "Admission Form - Create Admission Test from Form"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal"
+        limit: 1
+
+      - step: "Setup - get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "Admission Form Fee Income AFAT"
+          code: "AFAT4200"
+          user_type_id: "EVAL: registry['account_type'].id"
+
+      - step: "Setup - create pricelist"
+        action: "create"
+        model: "product.pricelist"
+        save_as: "pricelist"
+        values:
+          name: "Pricelist AFAT"
+          currency_id: "EVAL: env.company.currency_id.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type AFAT"
+          code: "GTAFAT"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 AFAT"
+          code: "AYAFAT"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester AFAT"
+          code: "SMAFAT"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "EVAL: registry['academic_year'].id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School AFAT"
+          code: "SCHAFAT"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade AFAT"
+          code: "GAFAT"
+          sequence: 10
+          type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "student_contact"
+        values:
+          name: "Student Contact AFAT"
+
+      - step: "Setup - create parent contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "parent_contact"
+        values:
+          name: "Parent Contact AFAT"
+
+      - step: "Create admission form"
+        action: "create"
+        model: "school_admission_form"
+        save_as: "admission_form"
+        as_user: "base.user_admin"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "EVAL: registry['academic_year'].id"
+          academic_term_id: "EVAL: registry['academic_term'].id"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          student_id: "EVAL: registry['student_contact'].id"
+          parent_id: "EVAL: registry['parent_contact'].id"
+          pricelist_id: "EVAL: registry['pricelist'].id"
+          currency_id: "EVAL: env.company.currency_id.id"
+          journal_id: "EVAL: registry['journal'].id"
+          account_id: "EVAL: registry['account'].id"
+
+      - step: "Create admission test from form"
+        action: "call"
+        target: "admission_form"
+        method: "action_create_admission_test"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate admission form cache"
+        action: "call"
+        target: "admission_form"
+        method: "invalidate_cache"
+
+      - step: "Assert admission test created and linked to form"
+        action: "assert"
+        target: "admission_form"
+        asserts:
+          admission_test_id:
+            type: "value"
+            operator: "is_truthy"
+
+      - step: "Call action_create_admission_test again (returns existing)"
+        action: "call"
+        target: "admission_form"
+        method: "action_create_admission_test"
+        as_user: "base.user_admin"
