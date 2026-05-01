@@ -1,0 +1,254 @@
+scenarios:
+  - name: "Create Grade Class"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type for Class Test"
+          code: "GTCT"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School for Class Test"
+          code: "SCHCT"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+      - step: "Create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade for Class Test"
+          code: "GCT"
+          sequence: 10
+          type_id: "EVAL: registry['grade_type'].id"
+      - step: "Create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class B"
+          code: "CB"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+      - step: "Assert created"
+        action: "assert"
+        target: "grade_class"
+        asserts:
+          id:
+            type: "value"
+            operator: "is_truthy"
+          name:
+            type: "value"
+            expected: "Class B"
+          school_id:
+            type: "value"
+            operator: "is_truthy"
+          grade_id:
+            type: "value"
+            operator: "is_truthy"
+
+  - name: "Edit Grade Class Name"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Class Edit"
+          code: "GTCED"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Class Edit"
+          code: "SCHED"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+      - step: "Create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade Class Edit"
+          code: "GCED"
+          sequence: 10
+          type_id: "EVAL: registry['grade_type'].id"
+      - step: "Create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class A"
+          code: "CAED"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+      - step: "Write new name"
+        action: "write"
+        target: "grade_class"
+        values:
+          name: "Class A Updated"
+      - step: "Assert name updated"
+        action: "assert"
+        target: "grade_class"
+        asserts:
+          name:
+            type: "value"
+            expected: "Class A Updated"
+
+  - name: "Edit Grade Class Grade"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Class Grade"
+          code: "GTCG"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Class Grade"
+          code: "SCHCG"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+      - step: "Create first grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade 1 Class"
+          code: "G1CG"
+          sequence: 10
+          type_id: "EVAL: registry['grade_type'].id"
+      - step: "Create second grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "new_grade"
+        values:
+          name: "Grade 2 for Class"
+          code: "G2CG"
+          sequence: 20
+          type_id: "EVAL: registry['grade_type'].id"
+      - step: "Create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class Grade Edit"
+          code: "CGRED"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+      - step: "Update grade"
+        action: "write"
+        target: "grade_class"
+        values:
+          grade_id: "EVAL: registry['new_grade'].id"
+      - step: "Verify grade was updated"
+        action: "search"
+        model: "school_grade_class"
+        domain:
+          [
+            ["id", "=", "EVAL: registry['grade_class'].id"],
+            ["grade_id", "=", "EVAL: registry['new_grade'].id"],
+          ]
+        save_as: "_check"
+        expect_count: 1
+
+  - name: "Delete Grade Class"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Del Class"
+          code: "GTDC"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Del Class"
+          code: "SCHDC"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+      - step: "Create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade Del Class"
+          code: "GDC"
+          sequence: 10
+          type_id: "EVAL: registry['grade_type'].id"
+      - step: "Create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class To Delete"
+          code: "CDEL"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+      - step: "Delete grade class"
+        action: "call"
+        target: "grade_class"
+        method: "unlink"
+      - step: "Search expects zero results"
+        action: "search"
+        model: "school_grade_class"
+        domain: [["code", "=", "CDEL"]]
+        save_as: "result"
+        expect_count: 0
+
+  - name: "Compute Grade Type From School"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Compute Class"
+          code: "GTCC"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Compute Class"
+          code: "SCHCC"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+      - step: "Create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade Compute Class"
+          code: "GCC"
+          sequence: 10
+          type_id: "EVAL: registry['grade_type'].id"
+      - step: "Create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class Compute Test"
+          code: "CCTST"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+      - step: "Assert grade_type_id computed from school"
+        action: "assert"
+        target: "grade_class"
+        asserts:
+          grade_type_id:
+            type: "value"
+            operator: "is_truthy"

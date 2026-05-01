@@ -1,0 +1,541 @@
+scenarios:
+  - name: "Enrollment Full Workflow Create Confirm Approve Invoice Done"
+    steps:
+      - step: "Setup - get receivable journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "receivable_journal"
+        limit: 1
+
+      - step: "Setup - get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "School Fee Income ENR"
+          code: "ENR4200"
+          user_type_id: "EVAL: registry['account_type'].id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Fee ENR"
+          type: "service"
+          list_price: 1000000.0
+
+      - step: "Setup - create pricelist"
+        action: "create"
+        model: "product.pricelist"
+        save_as: "pricelist"
+        values:
+          name: "Standard School Pricelist ENR"
+          currency_id: "EVAL: env.company.currency_id.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type for Enrollment Test"
+          code: "GTENR"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 Enrollment Test"
+          code: "AYENR"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term 1 (enrollment open, not last)"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester 1 Enrollment Test"
+          code: "SMENR1"
+          date_start: "2024-07-01"
+          date_end: "2024-12-31"
+          year_id: "EVAL: registry['academic_year'].id"
+          enrollment_state: "open"
+
+      - step: "Setup - create academic term 2 (last term)"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_2"
+        values:
+          name: "Semester 2 Enrollment Test"
+          code: "SMENR2"
+          date_start: "2025-01-01"
+          date_end: "2025-06-30"
+          year_id: "EVAL: registry['academic_year'].id"
+          enrollment_state: "close"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School for Enrollment Test"
+          code: "SCHENR"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade 1 for Enrollment"
+          code: "G1ENR"
+          sequence: 10
+          type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class A Enrollment"
+          code: "CLAENR"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact Enrollment"
+          phone: "081234567890"
+          email: "enrstudent@test.com"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student for Enrollment"
+          code: "STUENTEST"
+          contact_id: "EVAL: registry['contact'].id"
+          school_id: "EVAL: registry['school'].id"
+
+      - step: "Setup - create payment template with terms and details"
+        action: "create"
+        model: "school_enrollment_payment_template"
+        save_as: "payment_template"
+        values:
+          name: "Enrollment Payment Template Test"
+          code: "ENRPMT001"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          academic_term_id: "EVAL: registry['academic_term'].id"
+          term_ids:
+            - - 0
+              - 0
+              - name: "Term 1"
+                sequence: 10
+                detail_ids:
+                  - - 0
+                    - 0
+                    - product_id: "EVAL: registry['product'].id"
+                      name: "School Fee Term 1"
+                      account_id: "EVAL: registry['account'].id"
+                      uom_quantity: 1.0
+                      uom_id: "REF: uom.product_uom_unit"
+                      price_unit: 1000000.0
+            - - 0
+              - 0
+              - name: "Term 2"
+                sequence: 20
+                detail_ids:
+                  - - 0
+                    - 0
+                    - product_id: "EVAL: registry['product'].id"
+                      name: "School Fee Term 2"
+                      account_id: "EVAL: registry['account'].id"
+                      uom_quantity: 1.0
+                      uom_id: "REF: uom.product_uom_unit"
+                      price_unit: 500000.0
+
+      - step: "Create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "EVAL: registry['academic_year'].id"
+          academic_term_id: "EVAL: registry['academic_term'].id"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          grade_class_id: "EVAL: registry['grade_class'].id"
+          student_id: "EVAL: registry['student'].id"
+          payment_template_id: "EVAL: registry['payment_template'].id"
+          pricelist_id: "EVAL: registry['pricelist'].id"
+          currency_id: "EVAL: env.company.currency_id.id"
+          receivable_journal_id: "EVAL: registry['receivable_journal'].id"
+
+      - step: "Assert enrollment created in draft"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          id:
+            type: "value"
+            operator: "is_truthy"
+          state:
+            type: "value"
+            expected: "draft"
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Compute payment"
+        action: "call"
+        target: "enrollment"
+        method: "action_compute_payment"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate enrollment cache after compute"
+        action: "call"
+        target: "enrollment"
+        method: "invalidate_cache"
+
+      - step: "Assert payment terms created"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          payment_term_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 2
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Get all payment terms"
+        action: "search"
+        model: "school_enrollment_payment_term"
+        domain: [["enrollment_id", "=", "EVAL: registry['enrollment'].id"]]
+        save_as: "all_terms"
+
+      - step: "Create invoices for all terms"
+        action: "call"
+        target: "all_terms"
+        method: "action_create_invoice"
+
+      - step: "Invalidate enrollment cache after invoicing"
+        action: "call"
+        target: "enrollment"
+        method: "invalidate_cache"
+
+      - step: "Assert enrollment done"
+        action: "call"
+        target: "enrollment"
+        method: "action_done"
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+  - name: "Enrollment Workflow One Manual Term Done"
+    steps:
+      - step: "Setup - get receivable journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "receivable_journal"
+        limit: 1
+
+      - step: "Setup - get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "School Fee Income ENR2"
+          code: "ENR4201"
+          user_type_id: "EVAL: registry['account_type'].id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Fee ENR2"
+          type: "service"
+          list_price: 1000000.0
+
+      - step: "Setup - create pricelist"
+        action: "create"
+        model: "product.pricelist"
+        save_as: "pricelist"
+        values:
+          name: "Standard School Pricelist ENR2"
+          currency_id: "EVAL: env.company.currency_id.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type for Enrollment Test 2"
+          code: "GTENR2"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 Enrollment Test 2"
+          code: "AYENR2"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term 1"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester 1 Enrollment Test 2"
+          code: "SMENR21"
+          date_start: "2024-07-01"
+          date_end: "2024-12-31"
+          year_id: "EVAL: registry['academic_year'].id"
+          enrollment_state: "open"
+
+      - step: "Setup - create academic term 2"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_2"
+        values:
+          name: "Semester 2 Enrollment Test 2"
+          code: "SMENR22"
+          date_start: "2025-01-01"
+          date_end: "2025-06-30"
+          year_id: "EVAL: registry['academic_year'].id"
+          enrollment_state: "close"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School for Enrollment Test 2"
+          code: "SCHENR2"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade 1 for Enrollment 2"
+          code: "G1ENR2"
+          sequence: 10
+          type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class A Enrollment 2"
+          code: "CLAENR2"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact Enrollment 2"
+          phone: "081234567891"
+          email: "enrstudent2@test.com"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student for Enrollment 2"
+          code: "STUENTEST2"
+          contact_id: "EVAL: registry['contact'].id"
+          school_id: "EVAL: registry['school'].id"
+
+      - step: "Setup - create payment template"
+        action: "create"
+        model: "school_enrollment_payment_template"
+        save_as: "payment_template"
+        values:
+          name: "Enrollment Payment Template Test 2"
+          code: "ENRPMT002"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          academic_term_id: "EVAL: registry['academic_term'].id"
+          term_ids:
+            - - 0
+              - 0
+              - name: "Term 1"
+                sequence: 10
+                detail_ids:
+                  - - 0
+                    - 0
+                    - product_id: "EVAL: registry['product'].id"
+                      name: "School Fee Term 1"
+                      account_id: "EVAL: registry['account'].id"
+                      uom_quantity: 1.0
+                      uom_id: "REF: uom.product_uom_unit"
+                      price_unit: 1000000.0
+            - - 0
+              - 0
+              - name: "Term 2"
+                sequence: 20
+                detail_ids:
+                  - - 0
+                    - 0
+                    - product_id: "EVAL: registry['product'].id"
+                      name: "School Fee Term 2"
+                      account_id: "EVAL: registry['account'].id"
+                      uom_quantity: 1.0
+                      uom_id: "REF: uom.product_uom_unit"
+                      price_unit: 500000.0
+
+      - step: "Create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "EVAL: registry['academic_year'].id"
+          academic_term_id: "EVAL: registry['academic_term'].id"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          grade_class_id: "EVAL: registry['grade_class'].id"
+          student_id: "EVAL: registry['student'].id"
+          payment_template_id: "EVAL: registry['payment_template'].id"
+          pricelist_id: "EVAL: registry['pricelist'].id"
+          currency_id: "EVAL: env.company.currency_id.id"
+          receivable_journal_id: "EVAL: registry['receivable_journal'].id"
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Compute payment"
+        action: "call"
+        target: "enrollment"
+        method: "action_compute_payment"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate enrollment cache"
+        action: "call"
+        target: "enrollment"
+        method: "invalidate_cache"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Get first payment term (sequence 10)"
+        action: "search"
+        model: "school_enrollment_payment_term"
+        domain:
+          - ["enrollment_id", "=", "EVAL: registry['enrollment'].id"]
+          - ["sequence", "=", 10]
+        save_as: "term_1"
+        expect_count: 1
+
+      - step: "Mark first term as manual"
+        action: "call"
+        target: "term_1"
+        method: "action_mark_as_manual"
+        asserts:
+          state:
+            type: "value"
+            expected: "manual"
+
+      - step: "Get second payment term (sequence 20)"
+        action: "search"
+        model: "school_enrollment_payment_term"
+        domain:
+          - ["enrollment_id", "=", "EVAL: registry['enrollment'].id"]
+          - ["sequence", "=", 20]
+        save_as: "term_2"
+        expect_count: 1
+
+      - step: "Create invoice for second term only"
+        action: "call"
+        target: "term_2"
+        method: "action_create_invoice"
+
+      - step: "Invalidate term_2 cache"
+        action: "call"
+        target: "term_2"
+        method: "invalidate_cache"
+
+      - step: "Assert second term has invoice"
+        action: "assert"
+        target: "term_2"
+        asserts:
+          invoice_id:
+            type: "value"
+            operator: "is_truthy"
+
+      - step: "Assert first term has no invoice"
+        action: "assert"
+        target: "term_1"
+        asserts:
+          invoice_id:
+            type: "value"
+            operator: "is_falsy"
+
+      - step: "Assert enrollment done"
+        action: "call"
+        target: "enrollment"
+        method: "action_done"
+        asserts:
+          state:
+            type: "value"
+            expected: "done"

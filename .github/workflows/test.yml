@@ -53,6 +53,8 @@ jobs:
       - uses: actions/checkout@v2
         with:
           persist-credentials: false
+      - name: Install odoo-yaml-test from git
+        run: pip install git+https://github.com/andhit-r/odoo-yaml-test.git@master#egg=odoo-yaml-test
       - name: Install addons and dependencies
         env:
           PIP_INDEX_URL: https://pypi.org/simple

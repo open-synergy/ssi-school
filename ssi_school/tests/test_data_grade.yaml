@@ -1,0 +1,168 @@
+scenarios:
+  - name: "Create Grade"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type for Grade Test"
+          code: "GTGT"
+          sequence: 10
+      - step: "Create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade 3"
+          code: "G3"
+          sequence: 30
+          type_id: "EVAL: registry['grade_type'].id"
+      - step: "Assert created"
+        action: "assert"
+        target: "grade"
+        asserts:
+          id:
+            type: "value"
+            operator: "is_truthy"
+          name:
+            type: "value"
+            expected: "Grade 3"
+          type_id:
+            type: "value"
+            operator: "is_truthy"
+
+  - name: "Edit Grade Name"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Edit Grade"
+          code: "GTEG"
+          sequence: 10
+      - step: "Create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade 1"
+          code: "G1ED"
+          sequence: 10
+          type_id: "EVAL: registry['grade_type'].id"
+      - step: "Write new name"
+        action: "write"
+        target: "grade"
+        values:
+          name: "Grade 1 Updated"
+      - step: "Assert name updated"
+        action: "assert"
+        target: "grade"
+        asserts:
+          name:
+            type: "value"
+            expected: "Grade 1 Updated"
+
+  - name: "Edit Grade Sequence"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Seq"
+          code: "GTSEQ"
+          sequence: 10
+      - step: "Create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade 1 Seq"
+          code: "G1SEQ"
+          sequence: 10
+          type_id: "EVAL: registry['grade_type'].id"
+      - step: "Update sequence"
+        action: "write"
+        target: "grade"
+        values:
+          sequence: 15
+      - step: "Assert sequence updated"
+        action: "assert"
+        target: "grade"
+        asserts:
+          sequence:
+            type: "value"
+            expected: 15
+
+  - name: "Delete Grade"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Del Grade"
+          code: "GTDG"
+          sequence: 10
+      - step: "Create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade To Delete"
+          code: "GDEL"
+          sequence: 99
+          type_id: "EVAL: registry['grade_type'].id"
+      - step: "Delete grade"
+        action: "call"
+        target: "grade"
+        method: "unlink"
+      - step: "Search expects zero results"
+        action: "search"
+        model: "school_grade"
+        domain: [["code", "=", "GDEL"]]
+        save_as: "result"
+        expect_count: 0
+
+  - name: "Compute Next Previous Grade"
+    steps:
+      - step: "Create grade type for sequence test"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Sequence Test"
+          code: "GTST2"
+          sequence: 100
+      - step: "Create grade A (sequence 10)"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_a"
+        values:
+          name: "Seq Grade A"
+          code: "SGA"
+          sequence: 10
+          type_id: "EVAL: registry['grade_type'].id"
+      - step: "Create grade B (sequence 20)"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_b"
+        values:
+          name: "Seq Grade B"
+          code: "SGB"
+          sequence: 20
+          type_id: "EVAL: registry['grade_type'].id"
+      - step: "Invalidate grade caches"
+        action: "call"
+        target: "grade_a"
+        method: "invalidate_cache"
+      - step: "Assert grade_b has previous_grade_id"
+        action: "call"
+        target: "grade_b"
+        method: "invalidate_cache"
+        asserts:
+          previous_grade_id:
+            type: "value"
+            operator: "is_truthy"

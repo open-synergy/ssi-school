@@ -1,0 +1,164 @@
+scenarios:
+  - name: "Create Academic Year"
+    steps:
+      - step: "Create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "year"
+        values:
+          name: "2025/2026"
+          code: "AY2526"
+          date_start: "2025-07-01"
+          date_end: "2026-06-30"
+      - step: "Assert created"
+        action: "assert"
+        target: "year"
+        asserts:
+          id:
+            type: "value"
+            operator: "is_truthy"
+          name:
+            type: "value"
+            expected: "2025/2026"
+
+  - name: "Edit Academic Year Name"
+    steps:
+      - step: "Create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "year"
+        values:
+          name: "2024/2025"
+          code: "AY2425ED"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+      - step: "Write new name"
+        action: "write"
+        target: "year"
+        values:
+          name: "2024/2025 Revised"
+      - step: "Assert name updated"
+        action: "assert"
+        target: "year"
+        asserts:
+          name:
+            type: "value"
+            expected: "2024/2025 Revised"
+
+  - name: "Edit Academic Year Dates"
+    steps:
+      - step: "Create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "year"
+        values:
+          name: "2024/2025 Dates"
+          code: "AY2425DT"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+      - step: "Update dates"
+        action: "write"
+        target: "year"
+        values:
+          date_start: "2024-08-01"
+          date_end: "2025-07-31"
+      - step: "Assert dates updated"
+        action: "assert"
+        target: "year"
+        asserts:
+          date_start:
+            type: "value"
+            expected: 2024-08-01
+          date_end:
+            type: "value"
+            expected: 2025-07-31
+
+  - name: "Delete Academic Year"
+    steps:
+      - step: "Create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "year"
+        values:
+          name: "Year To Delete"
+          code: "AYDEL"
+          date_start: "2030-07-01"
+          date_end: "2031-06-30"
+      - step: "Delete year"
+        action: "call"
+        target: "year"
+        method: "unlink"
+      - step: "Search expects zero results"
+        action: "search"
+        model: "school_academic_year"
+        domain: [["code", "=", "AYDEL"]]
+        save_as: "result"
+        expect_count: 0
+
+  - name: "First Last Term Empty When No Terms"
+    steps:
+      - step: "Create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "year"
+        values:
+          name: "Year Without Terms"
+          code: "AYNOTERM"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+      - step: "Assert first and last term are falsy"
+        action: "assert"
+        target: "year"
+        asserts:
+          first_term_id:
+            type: "value"
+            operator: "is_falsy"
+          last_term_id:
+            type: "value"
+            operator: "is_falsy"
+
+  - name: "First Last Term Computed With Terms"
+    steps:
+      - step: "Create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "year"
+        values:
+          name: "Year With Terms"
+          code: "AYWT"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+      - step: "Create first term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "term_1"
+        values:
+          name: "Semester 1"
+          code: "SM1WT"
+          date_start: "2024-07-01"
+          date_end: "2024-12-31"
+          year_id: "EVAL: registry['year'].id"
+      - step: "Create second term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "term_2"
+        values:
+          name: "Semester 2"
+          code: "SM2WT"
+          date_start: "2025-01-01"
+          date_end: "2025-06-30"
+          year_id: "EVAL: registry['year'].id"
+      - step: "Invalidate year cache"
+        action: "call"
+        target: "year"
+        method: "invalidate_cache"
+      - step: "Assert first_term_id and last_term_id"
+        action: "assert"
+        target: "year"
+        asserts:
+          first_term_id:
+            type: "value"
+            operator: "is_truthy"
+          last_term_id:
+            type: "value"
+            operator: "is_truthy"

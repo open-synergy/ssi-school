@@ -1,0 +1,360 @@
+scenarios:
+  - name: "Create Academic Term"
+    steps:
+      - step: "Create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "year"
+        values:
+          name: "2026/2027 Create Term"
+          code: "AY2627CT"
+          date_start: "2026-07-01"
+          date_end: "2027-06-30"
+      - step: "Create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "term"
+        values:
+          name: "Semester 1 2026"
+          code: "SM1-2026"
+          date_start: "2026-07-01"
+          date_end: "2026-12-31"
+          year_id: "EVAL: registry['year'].id"
+      - step: "Assert created"
+        action: "assert"
+        target: "term"
+        asserts:
+          id:
+            type: "value"
+            operator: "is_truthy"
+          name:
+            type: "value"
+            expected: "Semester 1 2026"
+          year_id:
+            type: "value"
+            operator: "is_truthy"
+          state:
+            type: "value"
+            expected: "draft"
+
+  - name: "Edit Academic Term Name"
+    steps:
+      - step: "Create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "year"
+        values:
+          name: "2024/2025 Term Test Edit"
+          code: "AY2425TE"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+      - step: "Create term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "term"
+        values:
+          name: "Semester 1 Edit"
+          code: "SM1TE"
+          date_start: "2024-07-01"
+          date_end: "2024-12-31"
+          year_id: "EVAL: registry['year'].id"
+      - step: "Write new name"
+        action: "write"
+        target: "term"
+        values:
+          name: "Semester 1 Updated"
+      - step: "Assert name updated"
+        action: "assert"
+        target: "term"
+        asserts:
+          name:
+            type: "value"
+            expected: "Semester 1 Updated"
+
+  - name: "Edit Academic Term Dates"
+    steps:
+      - step: "Create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "year"
+        values:
+          name: "2024/2025 Term Dates"
+          code: "AY2425TD"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+      - step: "Create term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "term"
+        values:
+          name: "Semester 1 Dates"
+          code: "SM1TD"
+          date_start: "2024-07-01"
+          date_end: "2024-12-31"
+          year_id: "EVAL: registry['year'].id"
+      - step: "Update start date"
+        action: "write"
+        target: "term"
+        values:
+          date_start: "2024-08-01"
+      - step: "Assert date updated"
+        action: "assert"
+        target: "term"
+        asserts:
+          date_start:
+            type: "value"
+            expected: 2024-08-01
+
+  - name: "Delete Academic Term"
+    steps:
+      - step: "Create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "year"
+        values:
+          name: "Year For Delete Term"
+          code: "AYDT"
+          date_start: "2030-07-01"
+          date_end: "2031-06-30"
+      - step: "Create term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "term"
+        values:
+          name: "Term To Delete"
+          code: "TTD"
+          date_start: "2030-07-01"
+          date_end: "2030-12-31"
+          year_id: "EVAL: registry['year'].id"
+      - step: "Delete term"
+        action: "call"
+        target: "term"
+        method: "unlink"
+      - step: "Search expects zero results"
+        action: "search"
+        model: "school_academic_term"
+        domain: [["code", "=", "TTD"]]
+        save_as: "result"
+        expect_count: 0
+
+  - name: "Compute First Last Term Flags"
+    steps:
+      - step: "Create academic year with two terms"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "year"
+        values:
+          name: "2024/2025 Term Flags"
+          code: "AY2425TF"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+      - step: "Create term 1"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "term_1"
+        values:
+          name: "Semester 1 Flags"
+          code: "SM1TF"
+          date_start: "2024-07-01"
+          date_end: "2024-12-31"
+          year_id: "EVAL: registry['year'].id"
+      - step: "Create term 2"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "term_2"
+        values:
+          name: "Semester 2 Flags"
+          code: "SM2TF"
+          date_start: "2025-01-01"
+          date_end: "2025-06-30"
+          year_id: "EVAL: registry['year'].id"
+      - step: "Invalidate term caches"
+        action: "call"
+        target: "term_1"
+        method: "invalidate_cache"
+      - step: "Assert term_1 is first_term"
+        action: "assert"
+        target: "term_1"
+        asserts:
+          first_term:
+            type: "value"
+            operator: "is_truthy"
+          last_term:
+            type: "value"
+            operator: "is_falsy"
+      - step: "Invalidate term_2 cache"
+        action: "call"
+        target: "term_2"
+        method: "invalidate_cache"
+      - step: "Assert term_2 is last_term"
+        action: "assert"
+        target: "term_2"
+        asserts:
+          first_term:
+            type: "value"
+            operator: "is_falsy"
+          last_term:
+            type: "value"
+            operator: "is_truthy"
+
+  - name: "Action Open Academic Term"
+    steps:
+      - step: "Create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "year"
+        values:
+          name: "2027 Term Open"
+          code: "AY2027TO"
+          date_start: "2027-07-01"
+          date_end: "2028-06-30"
+      - step: "Create term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "term"
+        values:
+          name: "Term Action Open"
+          code: "TOPEN"
+          date_start: "2027-07-01"
+          date_end: "2027-12-31"
+          year_id: "EVAL: registry['year'].id"
+      - step: "Assert initial state draft"
+        action: "assert"
+        target: "term"
+        asserts:
+          state:
+            type: "value"
+            expected: "draft"
+      - step: "Call action_open"
+        action: "call"
+        target: "term"
+        method: "action_open"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+  - name: "Action Done Academic Term"
+    steps:
+      - step: "Create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "year"
+        values:
+          name: "2027 Term Done"
+          code: "AY2027TD"
+          date_start: "2027-07-01"
+          date_end: "2028-06-30"
+      - step: "Create term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "term"
+        values:
+          name: "Term Action Done"
+          code: "TDONE"
+          date_start: "2027-07-01"
+          date_end: "2027-12-31"
+          year_id: "EVAL: registry['year'].id"
+      - step: "Open term first"
+        action: "call"
+        target: "term"
+        method: "action_open"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+      - step: "Call action_done"
+        action: "call"
+        target: "term"
+        method: "action_done"
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+  - name: "Action Restart Academic Term"
+    steps:
+      - step: "Create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "year"
+        values:
+          name: "2027 Term Restart"
+          code: "AY2027TR"
+          date_start: "2027-07-01"
+          date_end: "2028-06-30"
+      - step: "Create term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "term"
+        values:
+          name: "Term Action Restart"
+          code: "TRESTART"
+          date_start: "2027-07-01"
+          date_end: "2027-12-31"
+          year_id: "EVAL: registry['year'].id"
+      - step: "Open and done first"
+        action: "call"
+        target: "term"
+        method: "action_open"
+      - step: "Set to done"
+        action: "call"
+        target: "term"
+        method: "action_done"
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+      - step: "Restart term"
+        action: "call"
+        target: "term"
+        method: "action_restart"
+        asserts:
+          state:
+            type: "value"
+            expected: "draft"
+
+  - name: "Action Open And Close Enrollment"
+    steps:
+      - step: "Create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "year"
+        values:
+          name: "2027 Term Enroll"
+          code: "AY2027TE"
+          date_start: "2027-07-01"
+          date_end: "2028-06-30"
+      - step: "Create term with enrollment close"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "term"
+        values:
+          name: "Term Enroll Open"
+          code: "TEENR"
+          date_start: "2027-07-01"
+          date_end: "2027-12-31"
+          year_id: "EVAL: registry['year'].id"
+      - step: "Assert enrollment initially closed"
+        action: "assert"
+        target: "term"
+        asserts:
+          enrollment_state:
+            type: "value"
+            expected: "close"
+      - step: "Open enrollment"
+        action: "call"
+        target: "term"
+        method: "action_open_enrollment"
+        asserts:
+          enrollment_state:
+            type: "value"
+            expected: "open"
+      - step: "Close enrollment"
+        action: "call"
+        target: "term"
+        method: "action_close_enrollment"
+        asserts:
+          enrollment_state:
+            type: "value"
+            expected: "close"
