@@ -1,0 +1,375 @@
+scenarios:
+  - name: "Admission Full Workflow: Confirm Approve Done With Payment Template"
+    steps:
+      - step: "Setup - get receivable journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "receivable_journal"
+        limit: 1
+
+      - step: "Setup - get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "Admission Fee Income ADM1"
+          code: "ADM4200"
+          user_type_id: "EVAL: registry['account_type'].id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "Admission Fee ADM1"
+          type: "service"
+          list_price: 2000000.0
+
+      - step: "Setup - create pricelist"
+        action: "create"
+        model: "product.pricelist"
+        save_as: "pricelist"
+        values:
+          name: "Standard Admission Pricelist ADM1"
+          currency_id: "EVAL: env.company.currency_id.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type for Admission Test"
+          code: "GTADM1"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 Admission Test"
+          code: "AYADM1"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester 1 Admission Test"
+          code: "SMADM1"
+          date_start: "2024-07-01"
+          date_end: "2024-12-31"
+          year_id: "EVAL: registry['academic_year'].id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School for Admission Test"
+          code: "SCHADM1"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade 1 for Admission"
+          code: "G1ADM1"
+          sequence: 10
+          type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "student_contact"
+        values:
+          name: "Student Contact Admission"
+          phone: "081234567891"
+          email: "admstudent1@test.com"
+
+      - step: "Setup - create payment template with terms and details"
+        action: "create"
+        model: "school_admission_payment_template"
+        save_as: "payment_template"
+        values:
+          name: "Admission Payment Template Test ADM1"
+          code: "ADMPMT001"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          academic_term_id: "EVAL: registry['academic_term'].id"
+          term_ids:
+            - - 0
+              - 0
+              - name: "Admission Term 1"
+                sequence: 10
+                detail_ids:
+                  - - 0
+                    - 0
+                    - product_id: "EVAL: registry['product'].id"
+                      name: "Admission Fee Term 1"
+                      account_id: "EVAL: registry['account'].id"
+                      uom_quantity: 1.0
+                      uom_id: "REF: uom.product_uom_unit"
+                      price_unit: 2000000.0
+            - - 0
+              - 0
+              - name: "Admission Term 2"
+                sequence: 20
+                detail_ids:
+                  - - 0
+                    - 0
+                    - product_id: "EVAL: registry['product'].id"
+                      name: "Admission Fee Term 2"
+                      account_id: "EVAL: registry['account'].id"
+                      uom_quantity: 1.0
+                      uom_id: "REF: uom.product_uom_unit"
+                      price_unit: 1000000.0
+
+      - step: "Create admission"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "EVAL: registry['academic_year'].id"
+          academic_term_id: "EVAL: registry['academic_term'].id"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          student_id: "EVAL: registry['student_contact'].id"
+          payment_template_id: "EVAL: registry['payment_template'].id"
+          pricelist_id: "EVAL: registry['pricelist'].id"
+          currency_id: "EVAL: env.company.currency_id.id"
+          receivable_journal_id: "EVAL: registry['receivable_journal'].id"
+
+      - step: "Assert admission created in draft"
+        action: "assert"
+        target: "admission"
+        asserts:
+          id:
+            type: "value"
+            operator: "is_truthy"
+          state:
+            type: "value"
+            expected: "draft"
+
+      - step: "Confirm admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Invalidate cache after confirm"
+        action: "call"
+        target: "admission"
+        method: "invalidate_cache"
+
+      - step: "Compute payment"
+        action: "call"
+        target: "admission"
+        method: "action_compute_payment"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate admission cache after compute"
+        action: "call"
+        target: "admission"
+        method: "invalidate_cache"
+
+      - step: "Assert payment terms created"
+        action: "assert"
+        target: "admission"
+        asserts:
+          payment_term_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 2
+
+      - step: "Approve admission"
+        action: "call"
+        target: "admission"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Invalidate admission cache after approve"
+        action: "call"
+        target: "admission"
+        method: "invalidate_cache"
+
+      - step: "Done admission"
+        action: "call"
+        target: "admission"
+        method: "action_done"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+      - step: "Invalidate admission cache after done"
+        action: "call"
+        target: "admission"
+        method: "invalidate_cache"
+
+      - step: "Assert school student created"
+        action: "assert"
+        target: "admission"
+        asserts:
+          school_student_id:
+            type: "value"
+            operator: "is_truthy"
+
+  - name: "Admission Simple Workflow: Confirm Approve Done Without Payment Template"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type for Admission Test Simple"
+          code: "GTADM2"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 Admission Test Simple"
+          code: "AYADM2"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester 1 Admission Test Simple"
+          code: "SMADM2"
+          date_start: "2024-07-01"
+          date_end: "2024-12-31"
+          year_id: "EVAL: registry['academic_year'].id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School for Admission Test Simple"
+          code: "SCHADM2"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade 1 for Admission Simple"
+          code: "G1ADM2"
+          sequence: 10
+          type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "student_contact"
+        values:
+          name: "Student Contact Admission Simple"
+          phone: "081234567892"
+          email: "admstudent2@test.com"
+
+      - step: "Create admission without payment template"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "EVAL: registry['academic_year'].id"
+          academic_term_id: "EVAL: registry['academic_term'].id"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          student_id: "EVAL: registry['student_contact'].id"
+          currency_id: "EVAL: env.company.currency_id.id"
+
+      - step: "Assert admission created in draft"
+        action: "assert"
+        target: "admission"
+        asserts:
+          id:
+            type: "value"
+            operator: "is_truthy"
+          state:
+            type: "value"
+            expected: "draft"
+
+      - step: "Confirm admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Invalidate cache after confirm"
+        action: "call"
+        target: "admission"
+        method: "invalidate_cache"
+
+      - step: "Approve admission"
+        action: "call"
+        target: "admission"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Invalidate admission cache after approve"
+        action: "call"
+        target: "admission"
+        method: "invalidate_cache"
+
+      - step: "Done admission"
+        action: "call"
+        target: "admission"
+        method: "action_done"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+      - step: "Invalidate admission cache after done"
+        action: "call"
+        target: "admission"
+        method: "invalidate_cache"
+
+      - step: "Assert school student created"
+        action: "assert"
+        target: "admission"
+        asserts:
+          school_student_id:
+            type: "value"
+            operator: "is_truthy"
