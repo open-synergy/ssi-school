@@ -12,5 +12,4 @@ odoo14-addon-ssi-m2o-configurator-mixin
 odoo14-addon-ssi-product
 odoo14-addon-queue-job
 odoo14-addon-queue-job-batch
-ddt
-git+https://github.com/andhit-r/odoo-unittest-ddt.git@master
+git+https://github.com/andhit-r/odoo-yaml-test.git@master#egg=odoo-yaml-test
