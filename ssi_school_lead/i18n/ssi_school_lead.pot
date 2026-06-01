@@ -1,0 +1,70 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* ssi_school_lead
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: ssi_school_lead
+#: model:ir.model,name:ssi_school_lead.model_crm_lead
+msgid "CRM Lead"
+msgstr ""
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_school__default_sales_team_id
+msgid "Default Sales Team"
+msgstr ""
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead__display_name
+#: model:ir.model.fields,field_description:ssi_school_lead.field_school__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead__id
+#: model:ir.model.fields,field_description:ssi_school_lead.field_school__id
+msgid "ID"
+msgstr ""
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead____last_update
+#: model:ir.model.fields,field_description:ssi_school_lead.field_school____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: ssi_school_lead
+#: model:ir.model,name:ssi_school_lead.model_school
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead__school_id
+msgid "School"
+msgstr ""
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead__student_id
+msgid "Student"
+msgstr ""
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,help:ssi_school_lead.field_school__default_sales_team_id
+msgid ""
+"The default sales team assigned to this school for automatic CRM lead "
+"routing."
+msgstr ""
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,help:ssi_school_lead.field_crm_lead__student_id
+msgid "The prospective student associated with this lead."
+msgstr ""
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,help:ssi_school_lead.field_crm_lead__school_id
+msgid "The school associated with this lead."
+msgstr ""
