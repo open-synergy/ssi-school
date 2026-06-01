@@ -1,0 +1,183 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* ssi_school_admission_lead
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: ssi_school_admission_lead
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission_lead.crm_lead_admission_kanban_view
+msgid "<strong>Admission: </strong>"
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission_lead.crm_lead_admission_kanban_view
+msgid "<strong>Test: </strong>"
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead_create_admission_form__academic_term_id
+msgid "Academic Term"
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead_create_admission_form__academic_year_id
+msgid "Academic Year"
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead__admission_form_id
+msgid "Admission Form"
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead__admission_test_id
+msgid "Admission Test"
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model,name:ssi_school_admission_lead.model_crm_lead
+msgid "CRM Lead"
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead__create_admission_form_ok
+msgid "Can Create Admission Form"
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission_lead.crm_lead_create_admission_form_view_form
+msgid "Cancel"
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission_lead.crm_lead_create_admission_form_view_form
+msgid "Create"
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission_lead.crm_lead_admission_form_view
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission_lead.crm_lead_create_admission_form_view_form
+msgid "Create Admission Form"
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead_create_admission_form__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead_create_admission_form__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead_create_admission_form__date
+msgid "Date"
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead__display_name
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead_create_admission_form__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead_create_admission_form__fee_template_id
+msgid "Fee Template"
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead_create_admission_form__grade_id
+msgid "Grade"
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead_create_admission_form__grade_type_id
+msgid "Grade Type"
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead__id
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead_create_admission_form__id
+msgid "ID"
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead__create_admission_form_ok
+msgid ""
+"Indicates whether an admission form can still be created for this lead."
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead____last_update
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead_create_admission_form____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead_create_admission_form__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead_create_admission_form__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead_create_admission_form__lead_id
+msgid "Lead"
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead_create_admission_form__parent_id
+msgid "Parent"
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead_create_admission_form__pricelist_id
+msgid "Pricelist"
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead_create_admission_form__school_id
+msgid "School"
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead_create_admission_form__student_id
+msgid "Student"
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead__admission_test_id
+msgid ""
+"The admission test linked to the associated admission form, populated "
+"automatically."
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead_create_admission_form__grade_type_id
+msgid ""
+"The education level type used by this school, e.g. Elementary, Junior High, "
+"or Senior High School."
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead__admission_form_id
+msgid "The school admission form created from or linked to this lead."
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model,name:ssi_school_admission_lead.model_crm_lead_create_admission_form
+msgid "Wizard - Create Admission Form from CRM Lead"
+msgstr ""
