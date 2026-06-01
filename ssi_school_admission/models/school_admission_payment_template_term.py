@@ -5,7 +5,9 @@
 from odoo import fields, models
 
 
-class SchoolAdmissionPaymentTemplateTerm(models.Model):
+class SchoolAdmissionPaymentTemplateTerm(
+    models.Model
+):  # pylint: disable=too-few-public-methods
     """
     Represents a single payment term in a school admission payment
     template, grouping related fee detail lines into one installment.

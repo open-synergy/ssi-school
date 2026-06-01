@@ -292,7 +292,7 @@ class SchoolAdmissionForm(models.Model):
                 }
             )
         else:
-            test = self.admission_test_id
+            test = self.admission_test_id  # pylint: disable=no-member
         return {
             "type": "ir.actions.act_window",
             "name": "Admission Test",
@@ -309,29 +309,37 @@ class SchoolAdmissionForm(models.Model):
     @api.onchange("fee_template_id")
     def _onchange_fee_template_id(self):
         if self.fee_template_id:
-            self.journal_id = self.fee_template_id.journal_id
-            self.account_id = self.fee_template_id.account_id
+            self.journal_id = (
+                self.fee_template_id.journal_id
+            )  # pylint: disable=attribute-defined-outside-init
+            self.account_id = (
+                self.fee_template_id.account_id
+            )  # pylint: disable=attribute-defined-outside-init
         else:
-            self.journal_id = False
-            self.account_id = False
+            self.journal_id = False  # pylint: disable=attribute-defined-outside-init
+            self.account_id = False  # pylint: disable=attribute-defined-outside-init
 
     def action_compute_fee(self):
         for record in self.sudo():
-            record._compute_fee_from_template()
+            record._compute_fee_from_template()  # pylint: disable=protected-access
 
     def action_compute_tax(self):
         for record in self:
-            record._recompute_standard_tax()
+            record._recompute_standard_tax()  # pylint: disable=protected-access
 
     @ssi_decorator.post_open_action()
-    def _10_create_accounting_entry(self):
+    def _10_create_accounting_entry(
+        self,
+    ):  # pylint: disable=inconsistent-return-statements
         self.ensure_one()
 
         if self.move_id:
             return True
 
         self._create_standard_move()  # Mixin
-        ml = self._create_standard_ml()  # Mixin
+        ml = (
+            self._create_standard_ml()
+        )  # Mixin  # pylint: disable=protected-access,invalid-name
         self.write(
             {
                 "move_line_id": ml.id,
@@ -339,7 +347,9 @@ class SchoolAdmissionForm(models.Model):
         )
 
         for line in self.line_ids:
-            line_ml = line._create_standard_ml()  # Mixin
+            line_ml = (
+                line._create_standard_ml()
+            )  # Mixin  # pylint: disable=protected-access
             line.write(
                 {
                     "move_line_id": line_ml.id,
@@ -362,7 +372,7 @@ class SchoolAdmissionForm(models.Model):
         if not template:
             return
         self.line_ids.unlink()
-        Line = self.env["school_admission_form.line"]
+        Line = self.env["school_admission_form.line"]  # pylint: disable=invalid-name
         for tline in template.line_ids.sorted("sequence"):
             Line.create(
                 {

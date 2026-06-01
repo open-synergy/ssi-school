@@ -5,7 +5,9 @@
 from odoo import api, fields, models
 
 
-class SchoolAdmissionPaymentTemplate(models.Model):
+class SchoolAdmissionPaymentTemplate(
+    models.Model
+):  # pylint: disable=too-few-public-methods
     """
     Master data template defining the payment schedule structure for
     school admission, used to populate payment terms on admission

@@ -5,7 +5,9 @@
 from odoo import fields, models
 
 
-class SchoolAdmissionPaymentTermDetail(models.Model):
+class SchoolAdmissionPaymentTermDetail(
+    models.Model
+):  # pylint: disable=too-few-public-methods
     """
     Represents a single fee line detail within a school admission
     payment term, specifying the product, amount, and associated
@@ -51,7 +53,9 @@ class SchoolAdmissionPaymentTermDetail(models.Model):
 
     def _prepare_invoice_line(self):
         self.ensure_one()
-        aa = self.analytic_account_id and self.analytic_account_id.id or False
+        aa = (
+            self.analytic_account_id and self.analytic_account_id.id or False
+        )  # pylint: disable=invalid-name,consider-using-ternary
         return {
             "product_id": self.product_id.id,
             "name": self.name,
