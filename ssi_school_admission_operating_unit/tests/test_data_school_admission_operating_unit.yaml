@@ -1,0 +1,325 @@
+scenarios:
+  - name: "Admission Operating Unit - School Admission with operating unit"
+    steps:
+      - step: "Get main company operating unit"
+        action: "search"
+        model: "operating.unit"
+        domain: [["company_id", "=", "REF: base.main_company"]]
+        save_as: "operating_unit"
+        limit: 1
+
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Admission OU"
+          code: "GTADMOU"
+          sequence: 10
+
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Admission OU Test"
+          code: "SCHADMOU"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade Admission OU"
+          code: "GADMOU"
+          sequence: 10
+          type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2025/2026 Admission OU"
+          code: "AYADMOU"
+          date_start: "2025-07-01"
+          date_end: "2026-06-30"
+
+      - step: "Create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester Admission OU"
+          code: "SMADMOU"
+          date_start: "2025-07-01"
+          date_end: "2025-12-31"
+          year_id: "EVAL: registry['academic_year'].id"
+          enrollment_state: "open"
+
+      - step: "Create student partner"
+        action: "create"
+        model: "res.partner"
+        save_as: "student"
+        values:
+          name: "Student Admission OU Test"
+
+      - step: "Create school admission with operating unit"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        as_user: "base.user_admin"
+        values:
+          date: "2025-07-15"
+          academic_year_id: "EVAL: registry['academic_year'].id"
+          academic_term_id: "EVAL: registry['academic_term'].id"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          student_id: "EVAL: registry['student'].id"
+          operating_unit_id: "EVAL: registry['operating_unit'].id"
+
+      - step: "Assert admission has operating unit"
+        action: "assert"
+        target: "admission"
+        asserts:
+          state:
+            type: "value"
+            expected: "draft"
+          operating_unit_id:
+            type: "value"
+            operator: "is_truthy"
+
+  - name: "Admission Operating Unit - School Admission Form with operating unit"
+    steps:
+      - step: "Get main company operating unit"
+        action: "search"
+        model: "operating.unit"
+        domain: [["company_id", "=", "REF: base.main_company"]]
+        save_as: "operating_unit"
+        limit: 1
+
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal"
+        limit: 1
+
+      - step: "Setup - get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "Admission Form OU Fee Income"
+          code: "ADMOUFI"
+          user_type_id: "EVAL: registry['account_type'].id"
+
+      - step: "Setup - create pricelist"
+        action: "create"
+        model: "product.pricelist"
+        save_as: "pricelist"
+        values:
+          name: "Pricelist Admission OU"
+          currency_id: "EVAL: env.company.currency_id.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Admission Form OU"
+          code: "GTADMFOU"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Admission Form OU"
+          code: "SCHADMFOU"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade Admission Form OU"
+          code: "GADMFOU"
+          sequence: 10
+          type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2025/2026 Admission Form OU"
+          code: "AYADMFOU"
+          date_start: "2025-07-01"
+          date_end: "2026-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester Admission Form OU"
+          code: "SMADMFOU"
+          date_start: "2025-07-01"
+          date_end: "2025-12-31"
+          year_id: "EVAL: registry['academic_year'].id"
+          enrollment_state: "open"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "student_contact"
+        values:
+          name: "Student Admission Form OU"
+
+      - step: "Setup - create parent contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "parent_contact"
+        values:
+          name: "Parent Admission Form OU"
+
+      - step: "Setup - create fee template"
+        action: "create"
+        model: "school_admission_fee_template"
+        save_as: "fee_template"
+        values:
+          name: "Fee Template Admission OU"
+          code: "FTADMOU"
+          journal_id: "EVAL: registry['journal'].id"
+          account_id: "EVAL: registry['account'].id"
+
+      - step: "Create school admission form with operating unit"
+        action: "create"
+        model: "school_admission_form"
+        save_as: "admission_form"
+        as_user: "base.user_admin"
+        values:
+          date: "2025-07-15"
+          academic_year_id: "EVAL: registry['academic_year'].id"
+          academic_term_id: "EVAL: registry['academic_term'].id"
+          student_id: "EVAL: registry['student_contact'].id"
+          parent_id: "EVAL: registry['parent_contact'].id"
+          pricelist_id: "EVAL: registry['pricelist'].id"
+          currency_id: "EVAL: env.company.currency_id.id"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          fee_template_id: "EVAL: registry['fee_template'].id"
+          journal_id: "EVAL: registry['journal'].id"
+          account_id: "EVAL: registry['account'].id"
+          operating_unit_id: "EVAL: registry['operating_unit'].id"
+
+      - step: "Assert admission form has operating unit"
+        action: "assert"
+        target: "admission_form"
+        asserts:
+          state:
+            type: "value"
+            expected: "draft"
+          operating_unit_id:
+            type: "value"
+            operator: "is_truthy"
+
+  - name: "Admission Operating Unit - School Admission Test with operating unit"
+    steps:
+      - step: "Get main company operating unit"
+        action: "search"
+        model: "operating.unit"
+        domain: [["company_id", "=", "REF: base.main_company"]]
+        save_as: "operating_unit"
+        limit: 1
+
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Admission Test OU"
+          code: "GTADMTOU"
+          sequence: 10
+
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Admission Test OU"
+          code: "SCHADMTOU"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade Admission Test OU"
+          code: "GADMTOU"
+          sequence: 10
+          type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2025/2026 Admission Test OU"
+          code: "AYADMTOU"
+          date_start: "2025-07-01"
+          date_end: "2026-06-30"
+
+      - step: "Create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester Admission Test OU"
+          code: "SMADMTOU"
+          date_start: "2025-07-01"
+          date_end: "2025-12-31"
+          year_id: "EVAL: registry['academic_year'].id"
+          enrollment_state: "open"
+
+      - step: "Create student partner"
+        action: "create"
+        model: "res.partner"
+        save_as: "student"
+        values:
+          name: "Student Admission Test OU"
+
+      - step: "Create school admission test with operating unit"
+        action: "create"
+        model: "school_admission_test"
+        save_as: "admission_test"
+        as_user: "base.user_admin"
+        values:
+          date: "2025-07-15"
+          academic_year_id: "EVAL: registry['academic_year'].id"
+          academic_term_id: "EVAL: registry['academic_term'].id"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          student_id: "EVAL: registry['student'].id"
+          operating_unit_id: "EVAL: registry['operating_unit'].id"
+
+      - step: "Assert admission test has operating unit"
+        action: "assert"
+        target: "admission_test"
+        asserts:
+          state:
+            type: "value"
+            expected: "draft"
+          operating_unit_id:
+            type: "value"
+            operator: "is_truthy"
