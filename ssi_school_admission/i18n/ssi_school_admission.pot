@@ -1,0 +1,2191 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* ssi_school_admission
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__admission_form_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_tax__admission_form_id
+msgid "# Admission Form"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__name
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__name
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__name
+msgid "# Document"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term__invoice_id
+msgid "# Invoice"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__academic_term_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__academic_term_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__academic_term_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__academic_term_id
+msgid "Academic Term"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__academic_year_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__academic_year_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__academic_year_id
+msgid "Academic Year"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template__account_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template_line__account_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__account_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__account_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_tax__account_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template_term_detail__account_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_detail__account_id
+msgid "Account"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_form_view_form
+msgid "Accounting"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:base.automation,name:ssi_school_admission.school_admission_form_open_2_done
+#: model:ir.actions.server,name:ssi_school_admission.school_admission_form_action_done
+msgid "Action Done"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__message_needaction
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template__message_needaction
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__message_needaction
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__message_needaction
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__message_needaction
+msgid "Action Needed"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:base.automation,name:ssi_school_admission.school_admission_form_done_2_open
+#: model:ir.actions.server,name:ssi_school_admission.school_admission_form_action_open
+msgid "Action Open"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template__active
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__active
+msgid "Active"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__active_approval_ids
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__active_approval_ids
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__active_approval_ids
+msgid "Active Approvals"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__active_approver_partner_ids
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__active_approver_partner_ids
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__active_approver_partner_ids
+msgid "Active Partners"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__active_approver_user_ids
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__active_approver_user_ids
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__active_approver_user_ids
+msgid "Active Users"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__activity_ids
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template__activity_ids
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__activity_ids
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__activity_ids
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__activity_ids
+msgid "Activities"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__activity_exception_decoration
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template__activity_exception_decoration
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__activity_exception_decoration
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__activity_exception_decoration
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__activity_state
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template__activity_state
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__activity_state
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__activity_state
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__activity_state
+msgid "Activity State"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__activity_type_icon
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template__activity_type_icon
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__activity_type_icon
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__activity_type_icon
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__activity_type_icon
+msgid "Activity Type Icon"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term__admission_id
+msgid "Admission"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:res.groups,name:ssi_school_admission.school_admission_fee_template_group
+msgid "Admission Fee Template"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.actions.act_window,name:ssi_school_admission.school_admission_fee_template_action
+#: model:ir.ui.menu,name:ssi_school_admission.school_admission_fee_template_menu
+msgid "Admission Fee Templates"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__admission_form_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_wizard_create_admission__admission_form_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__admission_form_id
+msgid "Admission Form"
+msgstr ""
+
+#. module: ssi_school_admission
+#: code:addons/ssi_school_admission/models/school_admission_test.py:0
+#, python-format
+msgid "Admission Form %s already has an Admission Test."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.actions.act_window,name:ssi_school_admission.school_admission_form_action
+#: model:ir.ui.menu,name:ssi_school_admission.school_admission_form_menu
+msgid "Admission Forms"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:res.groups,name:ssi_school_admission.school_admission_payment_template_group
+msgid "Admission Payment Template"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.actions.act_window,name:ssi_school_admission.school_admission_payment_template_action
+#: model:ir.ui.menu,name:ssi_school_admission.school_admission_payment_template_menu
+msgid "Admission Payment Templates"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__admission_test_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__admission_test_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test_wizard_create_admission__admission_test_id
+msgid "Admission Test"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.actions.act_window,name:ssi_school_admission.school_admission_test_action
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__admission_test_ids
+#: model:ir.ui.menu,name:ssi_school_admission.school_admission_test_menu
+msgid "Admission Tests"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form__admission_ids
+msgid "Admission records linked to this form."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form__admission_test_ids
+msgid "Admission test records linked to this form."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__admission_ids
+#: model:ir.ui.menu,name:ssi_school_admission.school_admission_menu
+msgid "Admissions"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:res.groups,name:ssi_school_admission.school_admission_all_group
+#: model:res.groups,name:ssi_school_admission.school_admission_form_all_group
+#: model:res.groups,name:ssi_school_admission.school_admission_test_all_group
+msgid "All"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__allowed_policy_template_ids
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__allowed_policy_template_ids
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__allowed_policy_template_ids
+msgid "Allowed Policy Templates"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__allowed_pricelist_ids
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template_line__allowed_pricelist_ids
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__allowed_pricelist_ids
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_wizard_create_admission__allowed_pricelist_ids
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_detail__allowed_pricelist_ids
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test_wizard_create_admission__allowed_pricelist_ids
+msgid "Allowed Pricelists"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template_line__allowed_uom_ids
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__allowed_uom_ids
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_detail__allowed_uom_ids
+msgid "Allowed UoMs"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template_line__allowed_usage_ids
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__allowed_usage_ids
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_detail__allowed_usage_ids
+msgid "Allowed Usages"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_payment_term_view_form_embedded
+msgid "Amount"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template_line__analytic_account_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__analytic_account_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__analytic_account_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_tax__analytic_account_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_detail__analytic_account_id
+msgid "Analytic Account"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__approval_template_id
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form__approval_template_id
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_test__approval_template_id
+msgid "Approval Configuration"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__approval_template_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__approval_template_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__approval_template_id
+msgid "Approval Template"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__approval_ids
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__approval_ids
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__approval_ids
+msgid "Approvals"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__approve_ok
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form__approve_ok
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_test__approve_ok
+msgid ""
+"Approve policy\n"
+"\n"
+"* If active user can see and execute 'Approve' button"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__approved
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__approved
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__approved
+msgid "Approved"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__message_attachment_count
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template__message_attachment_count
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__message_attachment_count
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__message_attachment_count
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__message_attachment_count
+msgid "Attachment Count"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_tax__base_amount
+msgid "Base Amount"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_view_form
+msgid "Billing"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:product.product,name:ssi_school_admission.demo_product_admission_2
+#: model:product.template,name:ssi_school_admission.demo_product_admission_2_product_template
+msgid "Books and Uniform Fee - (demo)"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__approve_ok
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__approve_ok
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__approve_ok
+msgid "Can Approve"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__cancel_ok
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__cancel_ok
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__cancel_ok
+msgid "Can Cancel"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__confirm_ok
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__confirm_ok
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__confirm_ok
+msgid "Can Confirm"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__create_admission_ok
+msgid "Can Create Admission"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__create_admission_test_ok
+msgid "Can Create Admission Test"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__create_school_admission_ok
+msgid "Can Create School Admission"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__done_ok
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__done_ok
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__done_ok
+msgid "Can Finished"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__manual_number_ok
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__manual_number_ok
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__manual_number_ok
+msgid "Can Input Manual Document Number"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__reject_ok
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__reject_ok
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__reject_ok
+msgid "Can Reject"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__restart_ok
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__restart_ok
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__restart_ok
+msgid "Can Restart"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__restart_approval_ok
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__restart_approval_ok
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__restart_approval_ok
+msgid "Can Restart Approval"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__open_ok
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__open_ok
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__open_ok
+msgid "Can Start"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_form_wizard_create_admission_view_form
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_test_wizard_create_admission_view_form
+msgid "Cancel"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__cancel_reason_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__cancel_reason_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__cancel_reason_id
+msgid "Cancel Reason"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__cancel_ok
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form__cancel_ok
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_test__cancel_ok
+msgid ""
+"Cancel policy\n"
+"\n"
+"* If active user can see and execute 'Cancel' button"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields.selection,name:ssi_school_admission.selection__school_admission_payment_term__state__cancelled
+msgid "Cancelled"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template__code
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__code
+msgid "Code"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__company_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__company_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__company_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_tax__company_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__company_id
+#: model:res.groups,name:ssi_school_admission.school_admission_company_group
+#: model:res.groups,name:ssi_school_admission.school_admission_form_company_group
+#: model:res.groups,name:ssi_school_admission.school_admission_test_company_group
+msgid "Company"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__company_currency_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__company_currency_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_tax__company_currency_id
+msgid "Company Currency"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__company_partner_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__company_partner_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__company_partner_id
+msgid "Company Partner"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:res.groups,name:ssi_school_admission.school_admission_company_child_group
+#: model:res.groups,name:ssi_school_admission.school_admission_form_company_child_group
+#: model:res.groups,name:ssi_school_admission.school_admission_test_company_child_group
+msgid "Company and All Child Companies"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__company_id
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form__company_id
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form_line__company_id
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form_tax__company_id
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_test__company_id
+msgid ""
+"Company that own the document\n"
+"\n"
+"* Automatically filled with user's company.\n"
+"  Default company can be changed"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_form_view_form
+msgid "Compute Fee"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_view_form
+msgid "Compute Payment"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_form_view_form
+msgid "Compute Tax"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__confirm_ok
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form__confirm_ok
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_test__confirm_ok
+msgid ""
+"Confirm policy\n"
+"\n"
+"* If active user can see and execute 'Confirm' button"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_form_view_form
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_form_wizard_create_admission_view_form
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_test_wizard_create_admission_view_form
+msgid "Create Admission"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_form_view_form
+msgid "Create Admission Test"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_payment_term_view_tree
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_view_form
+msgid "Create Invoice"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.actions.act_window,name:ssi_school_admission.school_admission_form_action_create_admission
+#: model:ir.actions.act_window,name:ssi_school_admission.school_admission_test_action_create_admission
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_form_wizard_create_admission_view_form
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_test_view_form
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_test_wizard_create_admission_view_form
+msgid "Create School Admission"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model,name:ssi_school_admission.model_school_admission_form_wizard_create_admission
+msgid "Create School Admission from Admission Form"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model,name:ssi_school_admission.model_school_admission_test_wizard_create_admission
+msgid "Create School Admission from Admission Test"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__create_uid
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template__create_uid
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template_line__create_uid
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__create_uid
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__create_uid
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_tax__create_uid
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_wizard_create_admission__create_uid
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__create_uid
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template_term__create_uid
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template_term_detail__create_uid
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term__create_uid
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_detail__create_uid
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__create_uid
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test_wizard_create_admission__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__create_date
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template__create_date
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template_line__create_date
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__create_date
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__create_date
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_tax__create_date
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_wizard_create_admission__create_date
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__create_date
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template_term__create_date
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template_term_detail__create_date
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term__create_date
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_detail__create_date
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__create_date
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test_wizard_create_admission__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__currency_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template_line__currency_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__currency_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__currency_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_tax__currency_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_wizard_create_admission__currency_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term__currency_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_detail__currency_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test_wizard_create_admission__currency_id
+msgid "Currency"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__date
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__date
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__date
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_tax__date
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__date
+msgid "Date"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_payment_term_view_tree
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_view_form
+msgid "Delete Invoice"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template_line__name
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__name
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_tax__name
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template_term_detail__name
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_detail__name
+msgid "Description"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template_term__detail_ids
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term__detail_ids
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_payment_template_view_form
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_payment_term_view_form_embedded
+msgid "Detail"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form_line__sequence
+msgid "Determines the display order of this line on the admission form."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_fee_template_line__sequence
+msgid "Determines the display order of this line within the template."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_template_term_detail__sequence
+msgid "Determines the display order of this line within the term."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_term__sequence
+msgid "Determines the display order of this term in the admission."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_template_term__sequence
+msgid "Determines the order of this term within the template."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_payment_term_view_tree
+msgid "Disconnect Invoice"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__display_name
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template__display_name
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template_line__display_name
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__display_name
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__display_name
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_tax__display_name
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_wizard_create_admission__display_name
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__display_name
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template_term__display_name
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template_term_detail__display_name
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term__display_name
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_detail__display_name
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__display_name
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test_wizard_create_admission__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__done_ok
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form__done_ok
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_test__done_ok
+msgid ""
+"Done policy\n"
+"\n"
+"* If active user can see and execute 'Done' button"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields.selection,name:ssi_school_admission.selection__school_admission_payment_term__state__draft
+msgid "Draft"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:school_admission_fee_template,name:ssi_school_admission.demo_fee_template_1
+msgid "Elementary School A - Grade 1 Admission Fee (demo)"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:school_admission_payment_template,name:ssi_school_admission.demo_payment_template_1
+msgid "Elementary School A - Grade 1 Admission Payment Template (demo)"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:school_admission_fee_template,name:ssi_school_admission.demo_fee_template_2
+msgid "Elementary School A - Grade 2 Admission Fee (demo)"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:school_admission_payment_template,name:ssi_school_admission.demo_payment_template_2
+msgid "Elementary School A - Grade 2 Admission Payment Template (demo)"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term__date_due
+msgid "Estimated Due Date"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term__date_invoice
+msgid "Estimated Invoice Date"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__line_ids
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_form_view_form
+msgid "Fee Details"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template__line_ids
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_fee_template_view_form
+msgid "Fee Lines"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__fee_template_id
+msgid "Fee Template"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__message_follower_ids
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template__message_follower_ids
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__message_follower_ids
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__message_follower_ids
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__message_follower_ids
+msgid "Followers"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__message_channel_ids
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template__message_channel_ids
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__message_channel_ids
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__message_channel_ids
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__message_channel_ids
+msgid "Followers (Channels)"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__message_partner_ids
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template__message_partner_ids
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__message_partner_ids
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__message_partner_ids
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__message_partner_ids
+msgid "Followers (Partners)"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__activity_type_icon
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_fee_template__activity_type_icon
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form__activity_type_icon
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_template__activity_type_icon
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_test__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__grade_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template__grade_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__grade_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__grade_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__grade_id
+msgid "Grade"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__grade_type_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template__grade_type_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__grade_type_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__grade_type_id
+msgid "Grade Type"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template__id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template_line__id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_tax__id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_wizard_create_admission__id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template_term__id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template_term_detail__id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term__id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_detail__id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test_wizard_create_admission__id
+msgid "ID"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__activity_exception_icon
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template__activity_exception_icon
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__activity_exception_icon
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__activity_exception_icon
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__activity_exception_icon
+msgid "Icon"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__activity_exception_icon
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_fee_template__activity_exception_icon
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form__activity_exception_icon
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_template__activity_exception_icon
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_test__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__message_needaction
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__message_unread
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_fee_template__message_needaction
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_fee_template__message_unread
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form__message_needaction
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form__message_unread
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_template__message_needaction
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_template__message_unread
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_test__message_needaction
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_test__message_unread
+msgid "If checked, new messages require your attention."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__message_has_error
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_fee_template__message_has_error
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form__message_has_error
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_template__message_has_error
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_test__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form__create_admission_ok
+msgid "Indicates whether a new admission can be created from this form."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_test__create_school_admission_ok
+msgid "Indicates whether a school admission can be created from this test."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form__create_admission_test_ok
+msgid "Indicates whether an admission test can be created from this form."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_test__passed
+msgid "Indicates whether the student passed this admission test."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_detail__invoice_line_id
+msgid "Invoice Line"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields.selection,name:ssi_school_admission.selection__school_admission_payment_term__state__invoiced
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_payment_term_view_search
+msgid "Invoiced"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__message_is_follower
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template__message_is_follower
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__message_is_follower
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__message_is_follower
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__message_is_follower
+msgid "Is Follower"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template__journal_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__journal_id
+msgid "Journal"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__move_line_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_tax__account_move_line_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_tax__move_line_id
+msgid "Journal Item"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission____last_update
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template____last_update
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template_line____last_update
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form____last_update
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line____last_update
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_tax____last_update
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_wizard_create_admission____last_update
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template____last_update
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template_term____last_update
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template_term_detail____last_update
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term____last_update
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_detail____last_update
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test____last_update
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test_wizard_create_admission____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__write_uid
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template__write_uid
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template_line__write_uid
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__write_uid
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__write_uid
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_tax__write_uid
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_wizard_create_admission__write_uid
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__write_uid
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template_term__write_uid
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template_term_detail__write_uid
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term__write_uid
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_detail__write_uid
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__write_uid
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test_wizard_create_admission__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__write_date
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template__write_date
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template_line__write_date
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__write_date
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__write_date
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_tax__write_date
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_wizard_create_admission__write_date
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__write_date
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template_term__write_date
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template_term_detail__write_date
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term__write_date
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_detail__write_date
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__write_date
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test_wizard_create_admission__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__message_main_attachment_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template__message_main_attachment_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__message_main_attachment_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__message_main_attachment_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__message_main_attachment_id
+msgid "Main Attachment"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_tax__manual
+msgid "Manual"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__manual_number_ok
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form__manual_number_ok
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_test__manual_number_ok
+msgid ""
+"Manual number assignment policy\n"
+"\n"
+"* If active user can edit document number"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term__manually_control
+#: model:ir.model.fields.selection,name:ssi_school_admission.selection__school_admission_payment_term__state__manual
+msgid "Manually Controlled"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_payment_term_view_tree
+msgid "Mark as Manual"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_term__manually_control
+msgid "Marks this term as manually controlled, skipping automatic invoicing."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_fee_template__active
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_template__active
+msgid ""
+"Master data status\n"
+"\n"
+"* Inactive data can not be selected when creating new transaction\n"
+"* Transaction with inactive master data can still be viewed\n"
+"* Set master data as inactive if master data no longger needed,\n"
+"but master data already used on transaction"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_fee_template__code
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_template__code
+msgid ""
+"Master data unique identifier.\n"
+"\n"
+"* Fill with '/' if You do not need unique identifier\n"
+"* Click 'Generate Code' button to automatically assign code.\n"
+"  Sequence template mush be set to perform this action\n"
+"  Only master data with '/' code will be assign automatic code"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__message_has_error
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template__message_has_error
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__message_has_error
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__message_has_error
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__message_ids
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template__message_ids
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__message_ids
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__message_ids
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__message_ids
+msgid "Messages"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__move_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__move_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_tax__move_id
+msgid "Move"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__move_line_id
+msgid "Move Line"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__my_activity_date_deadline
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template__my_activity_date_deadline
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__my_activity_date_deadline
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__my_activity_date_deadline
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template__name
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__name
+msgid "Name"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__need_validation
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__need_validation
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__need_validation
+msgid "Need Validation"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__activity_date_deadline
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template__activity_date_deadline
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__activity_date_deadline
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__activity_date_deadline
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__activity_summary
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template__activity_summary
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__activity_summary
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__activity_summary
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__activity_summary
+msgid "Next Activity Summary"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__activity_type_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template__activity_type_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__activity_type_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__activity_type_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__activity_type_id
+msgid "Next Activity Type"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__next_approval_ids
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__next_approval_ids
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__next_approval_ids
+msgid "Next Approvals"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__note
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template__note
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template_line__note
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__note
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__note
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__note
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_detail__note
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__note
+msgid "Note"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__message_needaction_counter
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template__message_needaction_counter
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__message_needaction_counter
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__message_needaction_counter
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__message_needaction_counter
+msgid "Number of Actions"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__message_has_error_counter
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template__message_has_error_counter
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__message_has_error_counter
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__message_has_error_counter
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__message_has_error_counter
+msgid "Number of errors"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__message_needaction_counter
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_fee_template__message_needaction_counter
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form__message_needaction_counter
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_template__message_needaction_counter
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_test__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__message_has_error_counter
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_fee_template__message_has_error_counter
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form__message_has_error_counter
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_template__message_has_error_counter
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_test__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__message_unread_counter
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_fee_template__message_unread_counter
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form__message_unread_counter
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_template__message_unread_counter
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_test__message_unread_counter
+msgid "Number of unread messages"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__parent_id
+msgid "Parent Name"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__partner_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_tax__partner_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term__partner_id
+msgid "Partner"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__passed
+msgid "Passed"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__payment_template_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_wizard_create_admission__payment_template_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test_wizard_create_admission__payment_template_id
+msgid "Payment Template"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_detail__term_id
+msgid "Payment Term"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__payment_term_ids
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__term_ids
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_payment_template_view_form
+msgid "Payment Terms"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__policy_template_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__policy_template_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__policy_template_id
+msgid "Policy Template"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template_line__price_subtotal
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__price_subtotal
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_detail__price_subtotal
+msgid "Price Subtotal"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template_line__price_unit
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__price_unit
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_detail__price_unit
+msgid "Price Unit"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__pricelist_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template_line__pricelist_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__pricelist_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__pricelist_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_wizard_create_admission__pricelist_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term__pricelist_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_detail__pricelist_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test_wizard_create_admission__pricelist_id
+msgid "Pricelist"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__allowed_pricelist_ids
+msgid "Pricelists available based on the selected currency."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template_line__product_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__product_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template_term_detail__product_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_detail__product_id
+msgid "Product"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template_line__product_category_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__product_category_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_detail__product_category_id
+msgid "Product Category"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template_line__quantity
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__quantity
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template_term_detail__uom_quantity
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_detail__quantity
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_fee_template_view_form
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_payment_template_view_form
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_payment_term_view_form_embedded
+msgid "Quantity"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__realized
+msgid "Realized"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__receivable_account_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_wizard_create_admission__receivable_account_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test_wizard_create_admission__receivable_account_id
+msgid "Receivable Account"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__receivable_journal_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_wizard_create_admission__receivable_journal_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test_wizard_create_admission__receivable_journal_id
+msgid "Receivable Journal"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:product.product,name:ssi_school_admission.demo_product_admission_1
+#: model:product.template,name:ssi_school_admission.demo_product_admission_1_product_template
+msgid "Registration Fee - (demo)"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__reject_ok
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form__reject_ok
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_test__reject_ok
+msgid ""
+"Reject policy\n"
+"\n"
+"* If active user can see and execute 'Reject' button"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__rejected
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__rejected
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__rejected
+msgid "Rejected"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__user_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__user_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__user_id
+msgid "Responsible"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__activity_user_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template__activity_user_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__activity_user_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__activity_user_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__activity_user_id
+msgid "Responsible User"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__restart_approval_ok
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form__restart_approval_ok
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_test__restart_approval_ok
+msgid ""
+"Restart approval policy\n"
+"\n"
+"* If active user can see and execute 'Restart Approval' button"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__restart_ok
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form__restart_ok
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_test__restart_ok
+msgid ""
+"Restart policy\n"
+"\n"
+"* If active user can see and execute 'Restart' button"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_view_form
+msgid "Result"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__reviewer_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__reviewer_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__reviewer_id
+msgid "Reviewer"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__school_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template__school_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__school_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__school_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__school_id
+msgid "School"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model,name:ssi_school_admission.model_school_admission
+#: model:ir.module.category,name:ssi_school_admission.school_admission_data_ownership_module_category
+#: model:ir.module.category,name:ssi_school_admission.school_admission_workflow_module_category
+msgid "School Admission"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model,name:ssi_school_admission.model_school_admission_fee_template
+msgid "School Admission Fee Template"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model,name:ssi_school_admission.model_school_admission_fee_template_line
+msgid "School Admission Fee Template - Line"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model,name:ssi_school_admission.model_school_admission_form
+#: model:ir.module.category,name:ssi_school_admission.school_admission_form_data_ownership_module_category
+#: model:ir.module.category,name:ssi_school_admission.school_admission_form_workflow_module_category
+msgid "School Admission Form"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model,name:ssi_school_admission.model_school_admission_form_line
+msgid "School Admission Form - Fee Line"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model,name:ssi_school_admission.model_school_admission_form_tax
+msgid "School Admission Form - Tax"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model,name:ssi_school_admission.model_school_admission_payment_template
+msgid "School Admission Payment Template"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model,name:ssi_school_admission.model_school_admission_payment_template_term
+msgid "School Admission Payment Template Term"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model,name:ssi_school_admission.model_school_admission_payment_template_term_detail
+msgid "School Admission Payment Template Term Detail"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model,name:ssi_school_admission.model_school_admission_payment_term
+msgid "School Admission Payment Term"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model,name:ssi_school_admission.model_school_admission_payment_term_detail
+msgid "School Admission Payment Term Detail"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model,name:ssi_school_admission.model_school_admission_test
+#: model:ir.module.category,name:ssi_school_admission.school_admission_test_data_ownership_module_category
+#: model:ir.module.category,name:ssi_school_admission.school_admission_test_workflow_module_category
+msgid "School Admission Test"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.actions.act_window,name:ssi_school_admission.school_admission_action
+msgid "School Admissions"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__school_student_id
+msgid "School Student"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_fee_template_line__product_category_id
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form_line__product_category_id
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_term_detail__product_category_id
+msgid "Select category for the current product"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template_line__sequence
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__sequence
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template_term__sequence
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template_term_detail__sequence
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term__sequence
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_detail__sequence
+msgid "Sequence"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__source_date
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__source_date
+msgid "Source Date"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__source_move_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__source_move_id
+msgid "Source Journal Entry"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__source_move_line_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__source_move_line_id
+msgid "Source Journal Item"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__source_partner_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__source_partner_id
+msgid "Source Partner"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template_line__standard_price_subtotal
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__standard_price_subtotal
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_detail__standard_price_subtotal
+msgid "Standard Price Subtotal"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template_line__standard_price_subtotal_diff
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__standard_price_subtotal_diff
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_detail__standard_price_subtotal_diff
+msgid "Standard Price Subtotal Diff."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template_line__standard_price_unit
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__standard_price_unit
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_detail__standard_price_unit
+msgid "Standard Price Unit"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template_line__standard_price_unit_diff
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__standard_price_unit_diff
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_detail__standard_price_unit_diff
+msgid "Standard Price Unit Diff."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__open_ok
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form__open_ok
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_test__open_ok
+msgid ""
+"Start policy\n"
+"\n"
+"* If active user can see and execute 'Start' button"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__state
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__state
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term__state
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__state
+msgid "State"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__activity_state
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_fee_template__activity_state
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form__activity_state
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_template__activity_state
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_test__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__student_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__student_id
+msgid "Student"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__student_id
+msgid "Student Name"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template_line__price_tax
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__price_tax
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_tax__tax_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term__amount_tax
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_detail__price_tax
+msgid "Tax"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__amount_tax
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_tax__tax_amount
+msgid "Tax Amount"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form__tax_ids
+msgid "Tax lines computed from the fee items in this form."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template_line__tax_ids
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__tax_ids
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_detail__tax_ids
+msgid "Tax(es)"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__tax_ids
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template_term_detail__tax_ids
+msgid "Taxes"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template_line__template_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template_term__template_id
+msgid "Template"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template_term_detail__term_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term__name
+msgid "Term"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template_term__name
+msgid "Term Name"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_test_view_form
+msgid "Test Result"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form__academic_term_id
+msgid "The academic term associated with this admission form."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_test__academic_term_id
+msgid "The academic term associated with this admission test."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__academic_term_id
+msgid "The academic term associated with this admission."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_template__academic_term_id
+msgid "The academic term this payment template applies to."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__academic_year_id
+msgid "The academic year for which the student is being admitted."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_test__academic_year_id
+msgid "The academic year for which this admission test is conducted."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form__academic_year_id
+msgid "The academic year in which the student applies for admission."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__receivable_account_id
+msgid "The account used to record receivables for admission payments."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_fee_template__journal_id
+msgid "The accounting journal used to post admission fees."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_fee_template_line__template_id
+msgid "The admission fee template this line belongs to."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_test__admission_form_id
+msgid "The admission form linked to this test, if initiated from one."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__admission_form_id
+msgid "The admission form that initiated this admission, if any."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__admission_test_id
+msgid "The admission test associated with this admission, if any."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form__admission_test_id
+msgid "The admission test associated with this form."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form_line__partner_id
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form_tax__partner_id
+msgid "The billing partner derived from the admission form's parent contact."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_term__currency_id
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_term_detail__currency_id
+msgid "The currency derived from the parent admission record."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form__currency_id
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form_line__currency_id
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form_tax__currency_id
+msgid "The currency derived from the selected pricelist."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__currency_id
+msgid "The currency used for payment calculations in this admission."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_term__state
+msgid "The current state of this payment term."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form__date
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form_line__date
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form_tax__date
+msgid "The date of this admission form."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__date
+msgid "The date of this admission."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_test__date
+msgid "The date this admission test is conducted."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_template_term_detail__name
+msgid "The description of this fee line item."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_term__date_invoice
+msgid "The estimated date when the invoice will be issued."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_term__date_due
+msgid "The estimated due date for payment of this term."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form__fee_template_id
+msgid "The fee template used to automatically populate fee lines."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_fee_template__grade_id
+msgid "The grade level for which this fee template applies."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_template__grade_id
+msgid "The grade level for which this payment template applies."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_test__grade_id
+msgid "The grade level the applicant is being tested for."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form__grade_id
+msgid "The grade level the student is applying to enter."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__grade_id
+msgid "The grade level the student is being admitted to."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__grade_type_id
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_fee_template__grade_type_id
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_template__grade_type_id
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_test__grade_type_id
+msgid "The grade type derived from the selected school."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_template_term__detail_ids
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_term__detail_ids
+msgid "The individual fee items included in this payment term."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_fee_template__line_ids
+msgid "The individual fee items included in this template."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form__line_ids
+msgid "The individual fee line items for this admission form."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_term__invoice_id
+msgid "The invoice generated for this payment term, if any."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_term_detail__invoice_line_id
+msgid "The invoice line linked to this detail after the term is invoiced."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form_tax__account_move_line_id
+msgid ""
+"The journal entry line linked to this tax record after the form is posted."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__receivable_journal_id
+msgid "The journal used to post receivable entries for admission payments."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form__source_move_id
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form_line__source_move_id
+msgid "The move of this entry line."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_template_term__name
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_term__name
+msgid "The name or label for this payment installment term."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form_line__admission_form_id
+msgid "The parent admission form this fee line belongs to."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form_tax__admission_form_id
+msgid "The parent admission form this tax line belongs to."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form__parent_id
+msgid "The parent or guardian of the student, used as the billing partner."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_template_term_detail__term_id
+msgid "The parent payment template term this detail belongs to."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_template_term__template_id
+msgid "The parent payment template this term belongs to."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_term_detail__term_id
+msgid "The parent payment term this detail line belongs to."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_term__admission_id
+msgid "The parent school admission record this payment term belongs to."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__payment_term_ids
+msgid "The payment installment terms defined for this admission."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__payment_template_id
+msgid ""
+"The payment template used to generate payment terms for this admission."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_template__term_ids
+msgid "The payment term items defining the schedule in this template."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__pricelist_id
+msgid "The pricelist applied for price calculations in this admission."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form__pricelist_id
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form_line__pricelist_id
+msgid "The pricelist applied to fee calculations in this form."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_term__pricelist_id
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_term_detail__pricelist_id
+msgid "The pricelist derived from the parent admission record."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_template_term_detail__product_id
+msgid "The product representing the fee item for this line."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form__student_id
+msgid "The prospective student submitting this admission form."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_template_term_detail__uom_quantity
+msgid "The quantity of the fee item."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_template_term_detail__account_id
+msgid "The revenue account for posting this fee item."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_fee_template__account_id
+msgid "The revenue account for recording admission fee income."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_test__school_id
+msgid "The school at which this admission test is conducted."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__school_id
+msgid "The school the student is being admitted to."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_fee_template__school_id
+msgid "The school this fee template applies to."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_template__school_id
+msgid "The school this payment template applies to."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form__school_id
+msgid "The school to which the student is applying for admission."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__student_id
+msgid "The student being admitted to the school."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_term__partner_id
+msgid "The student partner derived from the parent admission record."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__school_student_id
+msgid "The student profile created after this admission is completed."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_test__student_id
+msgid "The student taking this admission test."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_template_term_detail__tax_ids
+msgid "The taxes applied to this fee line."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_term__amount_untaxed
+msgid "The total amount before taxes for this term."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_term__amount_total
+msgid "The total amount including taxes for this term."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_term__amount_tax
+msgid "The total tax amount for this term."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_template_term_detail__uom_id
+msgid "The unit of measure for the fee quantity."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_template_term_detail__price_unit
+msgid "The unit price of the fee item."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_form_view_form
+msgid "This will replace existing fee details. Continue?"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_view_form
+msgid "This will replace existing payment terms. Continue?"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template_line__price_total
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__price_total
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term__amount_total
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_detail__price_total
+msgid "Total"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__amount_total
+msgid "Total Amount"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__name
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form__name
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_test__name
+msgid ""
+"Transaction/document number\n"
+"\n"
+"* Unique indentifer of transaction\n"
+"* Leave '/' to automatically generate number\n"
+"* Change '/' into any number/identifier to manually assign number.\n"
+"  Manual number assignment can be done in 'Draft' state\n"
+"  Only user with 'Can Manualy Assign Number' policy can manually assign number.\n"
+"* Transaction with number other than '/' can not be deleted."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__activity_exception_decoration
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_fee_template__activity_exception_decoration
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form__activity_exception_decoration
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_template__activity_exception_decoration
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_test__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields.selection,name:ssi_school_admission.selection__school_admission_payment_term__state__uninvoiced
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_payment_term_view_search
+msgid "Uninvoiced"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template_term_detail__price_unit
+msgid "Unit Price"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:product.product,uom_name:ssi_school_admission.demo_product_admission_1
+#: model:product.product,uom_name:ssi_school_admission.demo_product_admission_2
+#: model:product.template,uom_name:ssi_school_admission.demo_product_admission_1_product_template
+#: model:product.template,uom_name:ssi_school_admission.demo_product_admission_2_product_template
+msgid "Units"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_payment_term_view_tree
+msgid "Unmark as Manual"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__message_unread
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template__message_unread
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__message_unread
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__message_unread
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__message_unread
+msgid "Unread Messages"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__message_unread_counter
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template__message_unread_counter
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__message_unread_counter
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__message_unread_counter
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term__amount_untaxed
+msgid "Untaxed"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__amount_untaxed
+msgid "Untaxed Amount"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template_line__uom_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__uom_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template_term_detail__uom_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_detail__uom_id
+msgid "UoM"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template_line__uom_quantity
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__uom_quantity
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_detail__uom_quantity
+msgid "UoM Quantity"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template_line__usage_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__usage_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_detail__usage_id
+msgid "Usage"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:res.groups,name:ssi_school_admission.school_admission_form_user_group
+#: model:res.groups,name:ssi_school_admission.school_admission_test_user_group
+#: model:res.groups,name:ssi_school_admission.school_admission_user_group
+msgid "User"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__user_id
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form__user_id
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_test__user_id
+msgid ""
+"User that responsible for document\n"
+"\n"
+"* Create user can be different with responsible user\n"
+"* Automatically filled with user that initiate document creation.\n"
+"  Default responsible can be changed."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__reviewer_id
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form__reviewer_id
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_test__reviewer_id
+msgid ""
+"User that responsible to review document\n"
+"\n"
+"* Unless it configured to approve reviewer does not equal to approver"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__active_approver_user_ids
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form__active_approver_user_ids
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_test__active_approver_user_ids
+msgid "Users that can approve/reject document"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:res.groups,name:ssi_school_admission.school_admission_form_validator_group
+#: model:res.groups,name:ssi_school_admission.school_admission_test_validator_group
+#: model:res.groups,name:ssi_school_admission.school_admission_validator_group
+msgid "Validator"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:res.groups,name:ssi_school_admission.school_admission_form_viewer_group
+#: model:res.groups,name:ssi_school_admission.school_admission_test_viewer_group
+#: model:res.groups,name:ssi_school_admission.school_admission_viewer_group
+msgid "Viewer"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__website_message_ids
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template__website_message_ids
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__website_message_ids
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__website_message_ids
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__website_message_ids
+msgid "Website Messages"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__website_message_ids
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_fee_template__website_message_ids
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form__website_message_ids
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_template__website_message_ids
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_test__website_message_ids
+msgid "Website communication history"
+msgstr ""
