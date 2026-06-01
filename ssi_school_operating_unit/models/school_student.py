@@ -5,7 +5,7 @@
 from odoo import models
 
 
-class SchoolStudent(models.Model):
+class SchoolStudent(models.Model):  # pylint: disable=too-few-public-methods
     """
     Extends School Student with multiple operating unit support
     for operating unit-based data segregation.

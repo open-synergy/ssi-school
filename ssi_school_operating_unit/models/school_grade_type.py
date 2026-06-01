@@ -5,7 +5,7 @@
 from odoo import models
 
 
-class SchoolGradeType(models.Model):
+class SchoolGradeType(models.Model):  # pylint: disable=too-few-public-methods
     """
     Extends School Grade Type with multiple operating unit support
     for operating unit-based data segregation.

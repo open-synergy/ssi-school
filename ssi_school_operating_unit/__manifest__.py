@@ -6,7 +6,11 @@
     "name": "School - Operating Unit",
     "version": "14.0.1.0.0",
     "website": "https://simetri-sinergi.id",
-    "author": "OpenSynergy Indonesia, PT. Simetri Sinergi Indonesia",
+    "author": (
+        "OpenSynergy Indonesia, "
+        "PT. Simetri Sinergi Indonesia, "
+        "Odoo Community Association (OCA)"
+    ),
     "license": "AGPL-3",
     "installable": True,
     "application": False,
