@@ -1,0 +1,108 @@
+scenarios:
+  - name: "School Lead - Create school with default sales team"
+    steps:
+      - step: "Create sales team"
+        action: "create"
+        model: "crm.team"
+        save_as: "sales_team"
+        values:
+          name: "School Sales Team SL"
+
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type School Lead"
+          code: "GTSL"
+          sequence: 10
+
+      - step: "Create school with default sales team"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School With Sales Team SL"
+          code: "SCHSL01"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+          default_sales_team_id: "EVAL: registry['sales_team'].id"
+
+      - step: "Assert school has default sales team"
+        action: "assert"
+        target: "school"
+        asserts:
+          default_sales_team_id:
+            type: "value"
+            operator: "is_truthy"
+          name:
+            type: "value"
+            expected: "School With Sales Team SL"
+
+  - name: "School Lead - Create CRM lead with school and student"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type CRM Lead SL"
+          code: "GTCRMLSL"
+          sequence: 10
+
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School CRM Lead SL"
+          code: "SCHSL02"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Create student partner"
+        action: "create"
+        model: "res.partner"
+        save_as: "student"
+        values:
+          name: "Student CRM Lead SL"
+
+      - step: "Create CRM lead with school and student"
+        action: "create"
+        model: "crm.lead"
+        save_as: "lead"
+        as_user: "base.user_admin"
+        values:
+          name: "CRM Lead with School SL"
+          school_id: "EVAL: registry['school'].id"
+          student_id: "EVAL: registry['student'].id"
+
+      - step: "Assert lead has school and student"
+        action: "assert"
+        target: "lead"
+        asserts:
+          school_id:
+            type: "value"
+            operator: "is_truthy"
+          student_id:
+            type: "value"
+            operator: "is_truthy"
+
+  - name: "School Lead - Create CRM lead without school (optional fields)"
+    steps:
+      - step: "Create CRM lead without school"
+        action: "create"
+        model: "crm.lead"
+        save_as: "lead"
+        as_user: "base.user_admin"
+        values:
+          name: "CRM Lead Without School SL"
+
+      - step: "Assert lead created without school"
+        action: "assert"
+        target: "lead"
+        asserts:
+          school_id:
+            type: "value"
+            operator: "is_falsy"
+          student_id:
+            type: "value"
+            operator: "is_falsy"
