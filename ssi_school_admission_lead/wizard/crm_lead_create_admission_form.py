@@ -102,7 +102,7 @@ class CrmLeadCreateAdmissionForm(
             vals["journal_id"] = self.fee_template_id.journal_id.id or False
             vals["account_id"] = self.fee_template_id.account_id.id or False
         admission_form = self.env["school_admission_form"].create(vals)
-        self.lead_id.write(
+        self.lead_id.sudo().write(
             {"admission_form_id": admission_form.id}
         )  # pylint: disable=no-member
         return {
