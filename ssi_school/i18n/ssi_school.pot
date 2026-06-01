@@ -1,0 +1,2918 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* ssi_school
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__name
+msgid "# Document"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term__invoice_id
+msgid "# Invoice"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_grade,name:ssi_school.school_grade10_type
+msgid "10th Grade (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_grade,name:ssi_school.school_grade11_type
+msgid "11th Grade (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_grade,name:ssi_school.school_grade12_type
+msgid "12th Grade (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_grade,name:ssi_school.school_grade1_type
+msgid "1st Grade (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_academic_year,name:ssi_school.school_academic_year1
+msgid "2026 (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_grade,name:ssi_school.school_grade2_type
+msgid "2nd Grade (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_grade,name:ssi_school.school_grade3_type
+msgid "3rd Grade (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_grade,name:ssi_school.school_grade4_type
+msgid "4th Grade (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_grade,name:ssi_school.school_grade5_type
+msgid "5th Grade (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_grade,name:ssi_school.school_grade6_type
+msgid "6th Grade (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_grade,name:ssi_school.school_grade7_type
+msgid "7th Grade (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_grade,name:ssi_school.school_grade8_type
+msgid "8th Grade (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_grade,name:ssi_school.school_grade9_type
+msgid "9th Grade (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_student_view_form
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_teacher_view_form
+msgid ""
+"<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
+"                                <b>Address</b>\n"
+"                            </span>"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__payment_template_id
+msgid ""
+"A payment template that can be applied to auto-populate the billing terms."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__academic_term_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__academic_term_id
+#: model:res.groups,name:ssi_school.school_academic_term_group
+msgid "Academic Term"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.actions.act_window,name:ssi_school.school_academic_term_action
+#: model:ir.ui.menu,name:ssi_school.school_academic_term_menu
+msgid "Academic Terms"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__year_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__academic_year_id
+#: model:res.groups,name:ssi_school.school_academic_year_group
+msgid "Academic Year"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__academic_year_result
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_form
+msgid "Academic Year Result"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.actions.act_window,name:ssi_school.school_academic_year_action
+#: model:ir.ui.menu,name:ssi_school.school_academic_year_menu
+msgid "Academic Years"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template_term_detail__account_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__account_id
+msgid "Account"
+msgstr ""
+
+#. module: ssi_school
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_form
+msgid "Accounting"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school__message_needaction
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__message_needaction
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__message_needaction
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__message_needaction
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__message_needaction
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade__message_needaction
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__message_needaction
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__message_needaction
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__message_needaction
+#: model:ir.model.fields,field_description:ssi_school.field_school_teacher__message_needaction
+msgid "Action Needed"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school__active
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__active
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__active
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__active
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade__active
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__active
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__active
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__active
+#: model:ir.model.fields,field_description:ssi_school.field_school_teacher__active
+msgid "Active"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__active_approval_ids
+msgid "Active Approvals"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__active_enrollment_id
+msgid "Active Enrollment"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__active_approver_partner_ids
+msgid "Active Partners"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__active_approver_user_ids
+msgid "Active Users"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school__activity_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__activity_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__activity_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__activity_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__activity_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade__activity_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__activity_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__activity_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__activity_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_teacher__activity_ids
+msgid "Activities"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school__activity_exception_decoration
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__activity_exception_decoration
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__activity_exception_decoration
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__activity_exception_decoration
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__activity_exception_decoration
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade__activity_exception_decoration
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__activity_exception_decoration
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__activity_exception_decoration
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__activity_exception_decoration
+#: model:ir.model.fields,field_description:ssi_school.field_school_teacher__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school__activity_state
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__activity_state
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__activity_state
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__activity_state
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__activity_state
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade__activity_state
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__activity_state
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__activity_state
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__activity_state
+#: model:ir.model.fields,field_description:ssi_school.field_school_teacher__activity_state
+msgid "Activity State"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school__activity_type_icon
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__activity_type_icon
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__activity_type_icon
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__activity_type_icon
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__activity_type_icon
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade__activity_type_icon
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__activity_type_icon
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__activity_type_icon
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__activity_type_icon
+#: model:ir.model.fields,field_description:ssi_school.field_school_teacher__activity_type_icon
+msgid "Activity Type Icon"
+msgstr ""
+
+#. module: ssi_school
+#: model:res.groups,name:ssi_school.school_enrollment_all_group
+msgid "All"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__allowed_policy_template_ids
+msgid "Allowed Policy Templates"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__allowed_pricelist_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__allowed_pricelist_ids
+msgid "Allowed Pricelists"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__allowed_student_ids
+msgid "Allowed Students"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__allowed_uom_ids
+msgid "Allowed UoMs"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__allowed_usage_ids
+msgid "Allowed Usages"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__analytic_account_id
+msgid "Analytic Account"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_student,name:ssi_school.school_student_3
+msgid "Anisa Hakim (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__approval_template_id
+msgid "Approval Configuration"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__approval_template_id
+msgid "Approval Template"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__approval_ids
+msgid "Approvals"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__approve_ok
+msgid ""
+"Approve policy\n"
+"\n"
+"* If active user can see and execute 'Approve' button"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__approved
+msgid "Approved"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school__message_attachment_count
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__message_attachment_count
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__message_attachment_count
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__message_attachment_count
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__message_attachment_count
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade__message_attachment_count
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__message_attachment_count
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__message_attachment_count
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__message_attachment_count
+#: model:ir.model.fields,field_description:ssi_school.field_school_teacher__message_attachment_count
+msgid "Attachment Count"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_academic_term__first_term
+msgid ""
+"Automatically set to True if this semester/term is the first within the "
+"academic year."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_academic_term__last_term
+msgid ""
+"Automatically set to True if this semester/term is the last within the "
+"academic year."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__allowed_pricelist_ids
+msgid "Available pricelists based on the selected currency."
+msgstr ""
+
+#. module: ssi_school
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_form
+msgid "Billing"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_term__state
+msgid ""
+"Billing status: Draft = enrollment still in draft/confirm, Uninvoiced = "
+"enrollment open/done but no invoice yet, Invoiced = invoice created, "
+"Manually Controlled = managed manually, Cancelled = enrollment cancelled."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__approve_ok
+msgid "Can Approve"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__cancel_ok
+msgid "Can Cancel"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__confirm_ok
+msgid "Can Confirm"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__done_ok
+msgid "Can Finished"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__manual_number_ok
+msgid "Can Input Manual Document Number"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__reject_ok
+msgid "Can Reject"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__restart_ok
+msgid "Can Restart"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__restart_approval_ok
+msgid "Can Restart Approval"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__open_ok
+msgid "Can Start"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__cancel_reason_id
+msgid "Cancel Reason"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__cancel_ok
+msgid ""
+"Cancel policy\n"
+"\n"
+"* If active user can see and execute 'Cancel' button"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields.selection,name:ssi_school.selection__school_enrollment_payment_term__state__cancelled
+msgid "Cancelled"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_student,name:ssi_school.school_student_7
+msgid "Cinta Cahaya (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_student_view_form
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_teacher_view_form
+msgid "City ..."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__city_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_teacher__city_id
+msgid "City of Address"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_student__city_id
+msgid "City of the student's address, synchronized from the contact."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_teacher__city_id
+msgid "City of the teacher's address, synchronized from the contact."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.ui.menu,name:ssi_school.menu_school_classroom
+msgid "Classroom"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields.selection,name:ssi_school.selection__school_academic_term__enrollment_state__close
+msgid "Close"
+msgstr ""
+
+#. module: ssi_school
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_academic_term_view_form
+msgid "Close Enrollment"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school__code
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__code
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__code
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__code
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade__code
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__code
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__code
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__code
+#: model:ir.model.fields,field_description:ssi_school.field_school_teacher__code
+msgid "Code"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__company_id
+#: model:res.groups,name:ssi_school.school_enrollment_company_group
+msgid "Company"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__company_partner_id
+msgid "Company Partner"
+msgstr ""
+
+#. module: ssi_school
+#: model:res.groups,name:ssi_school.school_enrollment_company_child_group
+msgid "Company and All Child Companies"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__company_id
+msgid ""
+"Company that own the document\n"
+"\n"
+"* Automatically filled with user's company.\n"
+"  Default company can be changed"
+msgstr ""
+
+#. module: ssi_school
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_form
+msgid "Compute Payment"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.ui.menu,name:ssi_school.menu_school_configuration
+msgid "Configuration"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__confirm_ok
+msgid ""
+"Confirm policy\n"
+"\n"
+"* If active user can see and execute 'Confirm' button"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__contact_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_teacher__contact_id
+msgid "Contact"
+msgstr ""
+
+#. module: ssi_school
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_student_view_form
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_teacher_view_form
+msgid "Contact & Address"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_student__father_id
+msgid "Contact data of the student's father."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_student__guardian_id
+msgid "Contact data of the student's guardian if parents cannot be reached."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_student__mother_id
+msgid "Contact data of the student's mother."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__country_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_teacher__country_id
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_student_view_form
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_teacher_view_form
+msgid "Country"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_student__country_id
+msgid "Country of the student's address, synchronized from the contact."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_teacher__country_id
+msgid "Country of the teacher's address, synchronized from the contact."
+msgstr ""
+
+#. module: ssi_school
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_payment_term_view_tree
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_form
+msgid "Create Invoice"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school__create_uid
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__create_uid
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__create_uid
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__create_uid
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__create_uid
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template_term__create_uid
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template_term_detail__create_uid
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term__create_uid
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__create_uid
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade__create_uid
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__create_uid
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__create_uid
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__create_uid
+#: model:ir.model.fields,field_description:ssi_school.field_school_teacher__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school__create_date
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__create_date
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__create_date
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__create_date
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__create_date
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template_term__create_date
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template_term_detail__create_date
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term__create_date
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__create_date
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade__create_date
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__create_date
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__create_date
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__create_date
+#: model:ir.model.fields,field_description:ssi_school.field_school_teacher__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__currency_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term__currency_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__currency_id
+msgid "Currency"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__current_grade_id
+msgid "Current Grade"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__current_grade_type_id
+msgid "Current Grade Type"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_student__state
+msgid ""
+"Current status of the student, from waiting for enrollment to actively "
+"enrolled, graduated, or exited."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields.selection,name:ssi_school.selection__school_student__state__on_leave
+msgid "Cuti / Penangguhan"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__date
+msgid "Date"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__date_end
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__date_end
+msgid "Date End"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__date_start
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__date_start
+msgid "Date Start"
+msgstr ""
+
+#. module: ssi_school
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_payment_term_view_tree
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_form
+msgid "Delete Invoice"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template_term_detail__name
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__name
+msgid "Description"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template_term_detail__name
+msgid ""
+"Description or label of the fee. Automatically populated from the product "
+"name."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template_term__detail_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term__detail_ids
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_payment_template_view_form
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_payment_term_view_form
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_payment_term_view_form_embedded
+msgid "Detail"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_teacher,name:ssi_school.school_teacher_4
+msgid "Dewi Tirta (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields.selection,name:ssi_school.selection__school_student__state__dropped
+msgid "Dikeluarkan / Drop Out"
+msgstr ""
+
+#. module: ssi_school
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_payment_term_view_tree
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_form
+msgid "Disconnect Invoice"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school__display_name
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__display_name
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__display_name
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__display_name
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__display_name
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template_term__display_name
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template_term_detail__display_name
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term__display_name
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__display_name
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade__display_name
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__display_name
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__display_name
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__display_name
+#: model:ir.model.fields,field_description:ssi_school.field_school_teacher__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_grade_type__sequence
+msgid ""
+"Display order of the grade type. Lower values appear first in the list."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields.selection,name:ssi_school.selection__school_academic_term__state__done
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_academic_term_view_form
+msgid "Done"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__done_ok
+msgid ""
+"Done policy\n"
+"\n"
+"* If active user can see and execute 'Done' button"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields.selection,name:ssi_school.selection__school_enrollment_payment_term__state__draft
+msgid "Draft"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__drop_out_ok
+#: model:ir.model.fields.selection,name:ssi_school.selection__school_enrollment__academic_year_result__drop_out
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_form
+msgid "Drop Out"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_grade_type,name:ssi_school.elementary_school_grade_type
+msgid "Elementary School (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model:school,name:ssi_school.school_demo_1
+msgid "Elementary School A"
+msgstr ""
+
+#. module: ssi_school
+#: model:school,name:ssi_school.school_demo_2
+msgid "Elementary School B"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__email
+#: model:ir.model.fields,field_description:ssi_school.field_school_teacher__email
+msgid "Email"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_student__email
+msgid "Email address of the student, synchronized from the contact."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_teacher__email
+msgid "Email address of the teacher, synchronized from the contact."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields.selection,name:ssi_school.selection__school_student__state__enrol
+msgid "Enrolled"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term__enrollment_id
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_academic_term_view_form
+msgid "Enrollment"
+msgstr ""
+
+#. module: ssi_school
+#: model:res.groups,name:ssi_school.school_enrollment_payment_template_group
+msgid "Enrollment Payment Template"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.actions.act_window,name:ssi_school.school_enrollment_payment_template_action
+#: model:ir.ui.menu,name:ssi_school.school_enrollment_payment_template_menu
+msgid "Enrollment Payment Templates"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__enrollment_state
+msgid "Enrollment State"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.actions.act_window,name:ssi_school.school_enrollment_action
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__enrollment_ids
+#: model:ir.ui.menu,name:ssi_school.school_enrollment_menu
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_student_view_form
+msgid "Enrollments"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term__date_due
+msgid "Estimated Due Date"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term__date_invoice
+msgid "Estimated Invoice Date"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_term__date_invoice
+msgid "Estimated date for issuing the invoice for this billing period."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_term__date_due
+msgid "Estimated due date for payment of this billing period."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_academic_term__state
+msgid ""
+"Execution status of the semester/term: Unstarted, On Progress, or Done."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__fail_ok
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_form
+msgid "Fail"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields.selection,name:ssi_school.selection__school_enrollment__academic_year_result__failed
+msgid "Failed"
+msgstr ""
+
+#. module: ssi_school
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_student_view_form
+msgid "Family"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_student,name:ssi_school.school_student_5
+msgid "Faris Rizky (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__father_id
+msgid "Father"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__first_term_id
+msgid "First Term"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__first_term
+msgid "First Term of Academic Year?"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school__message_follower_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__message_follower_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__message_follower_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__message_follower_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__message_follower_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade__message_follower_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__message_follower_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__message_follower_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__message_follower_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_teacher__message_follower_ids
+msgid "Followers"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school__message_channel_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__message_channel_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__message_channel_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__message_channel_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__message_channel_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade__message_channel_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__message_channel_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__message_channel_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__message_channel_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_teacher__message_channel_ids
+msgid "Followers (Channels)"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school__message_partner_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__message_partner_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__message_partner_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__message_partner_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__message_partner_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade__message_partner_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__message_partner_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__message_partner_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__message_partner_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_teacher__message_partner_ids
+msgid "Followers (Partners)"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school__activity_type_icon
+#: model:ir.model.fields,help:ssi_school.field_school_academic_term__activity_type_icon
+#: model:ir.model.fields,help:ssi_school.field_school_academic_year__activity_type_icon
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__activity_type_icon
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template__activity_type_icon
+#: model:ir.model.fields,help:ssi_school.field_school_grade__activity_type_icon
+#: model:ir.model.fields,help:ssi_school.field_school_grade_class__activity_type_icon
+#: model:ir.model.fields,help:ssi_school.field_school_grade_type__activity_type_icon
+#: model:ir.model.fields,help:ssi_school.field_school_student__activity_type_icon
+#: model:ir.model.fields,help:ssi_school.field_school_teacher__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__grade_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__grade_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__grade_id
+#: model:ir.ui.menu,name:ssi_school.menu_grade_configuration
+#: model:res.groups,name:ssi_school.school_grade_group
+msgid "Grade"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__grade_class_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__grade_class_id
+#: model:res.groups,name:ssi_school.school_grade_class_group
+msgid "Grade Class"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.ui.menu,name:ssi_school.school_grade_class_menu
+msgid "Grade Classes"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school__grade_type_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__grade_type_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__grade_type_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__grade_type_id
+#: model:res.groups,name:ssi_school.school_grade_type_group
+msgid "Grade Type"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.ui.menu,name:ssi_school.school_grade_type_menu
+msgid "Grade Types"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.ui.menu,name:ssi_school.school_grade_menu
+msgid "Grades"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__graduate_ok
+#: model:ir.model.fields.selection,name:ssi_school.selection__school_enrollment__academic_year_result__graduate
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_form
+msgid "Graduate"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields.selection,name:ssi_school.selection__school_student__state__graduate
+msgid "Graduated"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__guardian_id
+msgid "Guardian"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_teacher,name:ssi_school.school_teacher_3
+msgid "Guntur Imam (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_grade_type,name:ssi_school.high_school_grade_type
+msgid "High School (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model:school,name:ssi_school.school_demo_5
+msgid "High School A"
+msgstr ""
+
+#. module: ssi_school
+#: model:school,name:ssi_school.school_demo_6
+msgid "High School B"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_grade_class,name:ssi_school.school_grade_class1
+#: model:school_grade_class,name:ssi_school.school_grade_class3
+msgid "I-A (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_grade_class,name:ssi_school.school_grade_class2
+msgid "I-B (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school__id
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__id
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__id
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__id
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__id
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template_term__id
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template_term_detail__id
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term__id
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__id
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade__id
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__id
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__id
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__id
+#: model:ir.model.fields,field_description:ssi_school.field_school_teacher__id
+msgid "ID"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_grade_class,name:ssi_school.school_grade_class4
+#: model:school_grade_class,name:ssi_school.school_grade_class6
+msgid "II-A (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_grade_class,name:ssi_school.school_grade_class5
+msgid "II-B (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_grade_class,name:ssi_school.school_grade_class7
+#: model:school_grade_class,name:ssi_school.school_grade_class9
+msgid "III-A (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_grade_class,name:ssi_school.school_grade_class8
+msgid "III-B (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_grade_class,name:ssi_school.school_grade_class10
+#: model:school_grade_class,name:ssi_school.school_grade_class12
+msgid "IV-A (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_grade_class,name:ssi_school.school_grade_class11
+msgid "IV-B (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_grade_class,name:ssi_school.school_grade_class25
+#: model:school_grade_class,name:ssi_school.school_grade_class27
+msgid "IX-A (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_grade_class,name:ssi_school.school_grade_class26
+msgid "IX-B (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school__activity_exception_icon
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__activity_exception_icon
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__activity_exception_icon
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__activity_exception_icon
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__activity_exception_icon
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade__activity_exception_icon
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__activity_exception_icon
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__activity_exception_icon
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__activity_exception_icon
+#: model:ir.model.fields,field_description:ssi_school.field_school_teacher__activity_exception_icon
+msgid "Icon"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school__activity_exception_icon
+#: model:ir.model.fields,help:ssi_school.field_school_academic_term__activity_exception_icon
+#: model:ir.model.fields,help:ssi_school.field_school_academic_year__activity_exception_icon
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__activity_exception_icon
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template__activity_exception_icon
+#: model:ir.model.fields,help:ssi_school.field_school_grade__activity_exception_icon
+#: model:ir.model.fields,help:ssi_school.field_school_grade_class__activity_exception_icon
+#: model:ir.model.fields,help:ssi_school.field_school_grade_type__activity_exception_icon
+#: model:ir.model.fields,help:ssi_school.field_school_student__activity_exception_icon
+#: model:ir.model.fields,help:ssi_school.field_school_teacher__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school__message_needaction
+#: model:ir.model.fields,help:ssi_school.field_school__message_unread
+#: model:ir.model.fields,help:ssi_school.field_school_academic_term__message_needaction
+#: model:ir.model.fields,help:ssi_school.field_school_academic_term__message_unread
+#: model:ir.model.fields,help:ssi_school.field_school_academic_year__message_needaction
+#: model:ir.model.fields,help:ssi_school.field_school_academic_year__message_unread
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__message_needaction
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__message_unread
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template__message_needaction
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template__message_unread
+#: model:ir.model.fields,help:ssi_school.field_school_grade__message_needaction
+#: model:ir.model.fields,help:ssi_school.field_school_grade__message_unread
+#: model:ir.model.fields,help:ssi_school.field_school_grade_class__message_needaction
+#: model:ir.model.fields,help:ssi_school.field_school_grade_class__message_unread
+#: model:ir.model.fields,help:ssi_school.field_school_grade_type__message_needaction
+#: model:ir.model.fields,help:ssi_school.field_school_grade_type__message_unread
+#: model:ir.model.fields,help:ssi_school.field_school_student__message_needaction
+#: model:ir.model.fields,help:ssi_school.field_school_student__message_unread
+#: model:ir.model.fields,help:ssi_school.field_school_teacher__message_needaction
+#: model:ir.model.fields,help:ssi_school.field_school_teacher__message_unread
+msgid "If checked, new messages require your attention."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school__message_has_error
+#: model:ir.model.fields,help:ssi_school.field_school_academic_term__message_has_error
+#: model:ir.model.fields,help:ssi_school.field_school_academic_year__message_has_error
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__message_has_error
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template__message_has_error
+#: model:ir.model.fields,help:ssi_school.field_school_grade__message_has_error
+#: model:ir.model.fields,help:ssi_school.field_school_grade_class__message_has_error
+#: model:ir.model.fields,help:ssi_school.field_school_grade_type__message_has_error
+#: model:ir.model.fields,help:ssi_school.field_school_student__message_has_error
+#: model:ir.model.fields,help:ssi_school.field_school_teacher__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_term__manually_control
+msgid ""
+"If enabled, this billing term is managed manually and does not require an "
+"invoice."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__image_1920
+#: model:ir.model.fields,field_description:ssi_school.field_school_teacher__image_1920
+msgid "Image"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__last_term
+msgid ""
+"Indicates whether this is the last term of the academic year, derived from "
+"the term data."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__initial_grade_id
+msgid "Initial Grade"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__initial_grade_type_id
+msgid "Initial Grade Type"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__invoice_line_id
+msgid "Invoice Line"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields.selection,name:ssi_school.selection__school_enrollment_payment_term__state__invoiced
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_payment_term_view_search
+msgid "Invoiced"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school__message_is_follower
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__message_is_follower
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__message_is_follower
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__message_is_follower
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__message_is_follower
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade__message_is_follower
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__message_is_follower
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__message_is_follower
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__message_is_follower
+#: model:ir.model.fields,field_description:ssi_school.field_school_teacher__message_is_follower
+msgid "Is Follower"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_teacher,name:ssi_school.school_teacher_1
+msgid "Jamaluddin Ismail (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_student,name:ssi_school.school_student_6
+msgid "Joko Wahyudi (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school____last_update
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_term____last_update
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_year____last_update
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment____last_update
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template____last_update
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template_term____last_update
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template_term_detail____last_update
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term____last_update
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail____last_update
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade____last_update
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_class____last_update
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_type____last_update
+#: model:ir.model.fields,field_description:ssi_school.field_school_student____last_update
+#: model:ir.model.fields,field_description:ssi_school.field_school_teacher____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__last_term_id
+msgid "Last Term"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__last_term
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__last_term
+msgid "Last Term of Academic Year?"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school__write_uid
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__write_uid
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__write_uid
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__write_uid
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__write_uid
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template_term__write_uid
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template_term_detail__write_uid
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term__write_uid
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__write_uid
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade__write_uid
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__write_uid
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__write_uid
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__write_uid
+#: model:ir.model.fields,field_description:ssi_school.field_school_teacher__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school__write_date
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__write_date
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__write_date
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__write_date
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__write_date
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template_term__write_date
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template_term_detail__write_date
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term__write_date
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__write_date
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade__write_date
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__write_date
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__write_date
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__write_date
+#: model:ir.model.fields,field_description:ssi_school.field_school_teacher__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_student,name:ssi_school.school_student_4
+msgid "Latifah Ismail (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template__term_ids
+msgid ""
+"List of payment periods in this template that will be applied to the "
+"enrollment."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_academic_year__term_ids
+msgid "List of semesters/terms belonging to this academic year."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__allowed_student_ids
+msgid ""
+"List of students eligible for selection in this enrollment, computed based "
+"on the selected grade and term."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school__message_main_attachment_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__message_main_attachment_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__message_main_attachment_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__message_main_attachment_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__message_main_attachment_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade__message_main_attachment_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__message_main_attachment_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__message_main_attachment_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__message_main_attachment_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_teacher__message_main_attachment_id
+msgid "Main Attachment"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__manual_number_ok
+msgid ""
+"Manual number assignment policy\n"
+"\n"
+"* If active user can edit document number"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term__manually_control
+#: model:ir.model.fields.selection,name:ssi_school.selection__school_enrollment_payment_term__state__manual
+msgid "Manually Controlled"
+msgstr ""
+
+#. module: ssi_school
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_payment_term_view_tree
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_form
+msgid "Mark as Manual"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school__active
+#: model:ir.model.fields,help:ssi_school.field_school_academic_term__active
+#: model:ir.model.fields,help:ssi_school.field_school_academic_year__active
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template__active
+#: model:ir.model.fields,help:ssi_school.field_school_grade__active
+#: model:ir.model.fields,help:ssi_school.field_school_grade_class__active
+#: model:ir.model.fields,help:ssi_school.field_school_grade_type__active
+#: model:ir.model.fields,help:ssi_school.field_school_student__active
+#: model:ir.model.fields,help:ssi_school.field_school_teacher__active
+msgid ""
+"Master data status\n"
+"\n"
+"* Inactive data can not be selected when creating new transaction\n"
+"* Transaction with inactive master data can still be viewed\n"
+"* Set master data as inactive if master data no longger needed,\n"
+"but master data already used on transaction"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school__code
+#: model:ir.model.fields,help:ssi_school.field_school_academic_term__code
+#: model:ir.model.fields,help:ssi_school.field_school_academic_year__code
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template__code
+#: model:ir.model.fields,help:ssi_school.field_school_grade__code
+#: model:ir.model.fields,help:ssi_school.field_school_grade_class__code
+#: model:ir.model.fields,help:ssi_school.field_school_grade_type__code
+#: model:ir.model.fields,help:ssi_school.field_school_student__code
+#: model:ir.model.fields,help:ssi_school.field_school_teacher__code
+msgid ""
+"Master data unique identifier.\n"
+"\n"
+"* Fill with '/' if You do not need unique identifier\n"
+"* Click 'Generate Code' button to automatically assign code.\n"
+"  Sequence template mush be set to perform this action\n"
+"  Only master data with '/' code will be assign automatic code"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields.selection,name:ssi_school.selection__school_student__state__resigned
+msgid "Mengundurkan Diri"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields.selection,name:ssi_school.selection__school_student__state__deceased
+msgid "Meninggal Dunia"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school__message_has_error
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__message_has_error
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__message_has_error
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__message_has_error
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__message_has_error
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade__message_has_error
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__message_has_error
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__message_has_error
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__message_has_error
+#: model:ir.model.fields,field_description:ssi_school.field_school_teacher__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school__message_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__message_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__message_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__message_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__message_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade__message_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__message_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__message_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__message_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_teacher__message_ids
+msgid "Messages"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_grade_type,name:ssi_school.middle_school_grade_type
+msgid "Middle School (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model:school,name:ssi_school.school_demo_3
+msgid "Middle School A"
+msgstr ""
+
+#. module: ssi_school
+#: model:school,name:ssi_school.school_demo_4
+msgid "Middle School B"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__mobile
+#: model:ir.model.fields,field_description:ssi_school.field_school_teacher__mobile
+msgid "Mobile"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_student__mobile
+msgid "Mobile number of the student, synchronized from the contact."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_teacher__mobile
+msgid "Mobile number of the teacher, synchronized from the contact."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__mother_id
+msgid "Mother"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields.selection,name:ssi_school.selection__school_student__state__transferred
+msgid "Mutasi Keluar"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school__my_activity_date_deadline
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__my_activity_date_deadline
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__my_activity_date_deadline
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__my_activity_date_deadline
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__my_activity_date_deadline
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade__my_activity_date_deadline
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__my_activity_date_deadline
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__my_activity_date_deadline
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__my_activity_date_deadline
+#: model:ir.model.fields,field_description:ssi_school.field_school_teacher__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school__name
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__name
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__name
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__name
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade__name
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__name
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__name
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__name
+#: model:ir.model.fields,field_description:ssi_school.field_school_teacher__name
+msgid "Name"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_term__name
+msgid ""
+"Name of the payment period, e.g. 'Registration Fee' or 'Monthly Tuition'."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template_term__name
+msgid ""
+"Name of the payment period, e.g. 'Registration Fee' or 'Tuition Semester 1'."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__need_validation
+msgid "Need Validation"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school__activity_date_deadline
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__activity_date_deadline
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__activity_date_deadline
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__activity_date_deadline
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__activity_date_deadline
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade__activity_date_deadline
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__activity_date_deadline
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__activity_date_deadline
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__activity_date_deadline
+#: model:ir.model.fields,field_description:ssi_school.field_school_teacher__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school__activity_summary
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__activity_summary
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__activity_summary
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__activity_summary
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__activity_summary
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade__activity_summary
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__activity_summary
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__activity_summary
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__activity_summary
+#: model:ir.model.fields,field_description:ssi_school.field_school_teacher__activity_summary
+msgid "Next Activity Summary"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school__activity_type_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__activity_type_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__activity_type_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__activity_type_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__activity_type_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade__activity_type_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__activity_type_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__activity_type_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__activity_type_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_teacher__activity_type_id
+msgid "Next Activity Type"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__next_approval_ids
+msgid "Next Approvals"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade__next_grade_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__next_grade_id
+msgid "Next Grade"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_teacher,name:ssi_school.school_teacher_2
+msgid "Nila Asih (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school__note
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__note
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__note
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__note
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__note
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__note
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade__note
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__note
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__note
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__note
+#: model:ir.model.fields,field_description:ssi_school.field_school_teacher__note
+msgid "Note"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school__message_needaction_counter
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__message_needaction_counter
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__message_needaction_counter
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__message_needaction_counter
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__message_needaction_counter
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade__message_needaction_counter
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__message_needaction_counter
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__message_needaction_counter
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__message_needaction_counter
+#: model:ir.model.fields,field_description:ssi_school.field_school_teacher__message_needaction_counter
+msgid "Number of Actions"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school__message_has_error_counter
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__message_has_error_counter
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__message_has_error_counter
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__message_has_error_counter
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__message_has_error_counter
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade__message_has_error_counter
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__message_has_error_counter
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__message_has_error_counter
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__message_has_error_counter
+#: model:ir.model.fields,field_description:ssi_school.field_school_teacher__message_has_error_counter
+msgid "Number of errors"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school__message_needaction_counter
+#: model:ir.model.fields,help:ssi_school.field_school_academic_term__message_needaction_counter
+#: model:ir.model.fields,help:ssi_school.field_school_academic_year__message_needaction_counter
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__message_needaction_counter
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template__message_needaction_counter
+#: model:ir.model.fields,help:ssi_school.field_school_grade__message_needaction_counter
+#: model:ir.model.fields,help:ssi_school.field_school_grade_class__message_needaction_counter
+#: model:ir.model.fields,help:ssi_school.field_school_grade_type__message_needaction_counter
+#: model:ir.model.fields,help:ssi_school.field_school_student__message_needaction_counter
+#: model:ir.model.fields,help:ssi_school.field_school_teacher__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school__message_has_error_counter
+#: model:ir.model.fields,help:ssi_school.field_school_academic_term__message_has_error_counter
+#: model:ir.model.fields,help:ssi_school.field_school_academic_year__message_has_error_counter
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__message_has_error_counter
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template__message_has_error_counter
+#: model:ir.model.fields,help:ssi_school.field_school_grade__message_has_error_counter
+#: model:ir.model.fields,help:ssi_school.field_school_grade_class__message_has_error_counter
+#: model:ir.model.fields,help:ssi_school.field_school_grade_type__message_has_error_counter
+#: model:ir.model.fields,help:ssi_school.field_school_student__message_has_error_counter
+#: model:ir.model.fields,help:ssi_school.field_school_teacher__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school__message_unread_counter
+#: model:ir.model.fields,help:ssi_school.field_school_academic_term__message_unread_counter
+#: model:ir.model.fields,help:ssi_school.field_school_academic_year__message_unread_counter
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__message_unread_counter
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template__message_unread_counter
+#: model:ir.model.fields,help:ssi_school.field_school_grade__message_unread_counter
+#: model:ir.model.fields,help:ssi_school.field_school_grade_class__message_unread_counter
+#: model:ir.model.fields,help:ssi_school.field_school_grade_type__message_unread_counter
+#: model:ir.model.fields,help:ssi_school.field_school_student__message_unread_counter
+#: model:ir.model.fields,help:ssi_school.field_school_teacher__message_unread_counter
+msgid "Number of unread messages"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields.selection,name:ssi_school.selection__school_academic_term__state__open
+msgid "On progress"
+msgstr ""
+
+#. module: ssi_school
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_academic_term_view_form
+msgid "Open Enrollment"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields.selection,name:ssi_school.selection__school_academic_term__enrollment_state__open
+msgid "Open for Enrollment"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_grade__sequence
+msgid ""
+"Order of the class level within the education level type. Lower values "
+"represent lower grades."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template_term_detail__sequence
+msgid ""
+"Order of the line within the payment period. Lower values appear first."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_term__sequence
+msgid ""
+"Order of the payment period within the enrollment. Lower values appear "
+"first."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template_term__sequence
+msgid ""
+"Order of the payment period within the template. Lower values appear first."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__partner_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term__partner_id
+msgid "Partner"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__pass_ok
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_form
+msgid "Pass"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields.selection,name:ssi_school.selection__school_enrollment__academic_year_result__passed
+msgid "Passed"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__payment_template_id
+msgid "Payment Template"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__term_id
+msgid "Payment Term"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__payment_term_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__term_ids
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_payment_template_view_form
+msgid "Payment Terms"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.ui.menu,name:ssi_school.menu_period_configuration
+msgid "Period"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__phone
+#: model:ir.model.fields,field_description:ssi_school.field_school_teacher__phone
+msgid "Phone"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_student__phone
+msgid "Phone number of the student, synchronized from the contact."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_teacher__phone
+msgid "Phone number of the teacher, synchronized from the contact."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__policy_template_id
+msgid "Policy Template"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__drop_out_ok
+msgid "Policy that determines whether the Drop Out action button is visible."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__fail_ok
+msgid "Policy that determines whether the Fail action button is visible."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__graduate_ok
+msgid "Policy that determines whether the Graduate action button is visible."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__pass_ok
+msgid "Policy that determines whether the Pass action button is visible."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_student__zip
+msgid "Postal code of the student's address, synchronized from the contact."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_teacher__zip
+msgid "Postal code of the teacher's address, synchronized from the contact."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade__previous_grade_id
+msgid "Previous Grade"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__price_subtotal
+msgid "Price Subtotal"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__price_unit
+msgid "Price Unit"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__pricelist_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term__pricelist_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__pricelist_id
+msgid "Pricelist"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template_term_detail__product_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__product_id
+msgid "Product"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__product_category_id
+msgid "Product Category"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template_term__detail_ids
+msgid "Product/fee detail lines included in this payment period."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_term__detail_ids
+msgid "Product/fee detail lines within this payment period."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__promote_to_grade_id
+msgid "Promote To Grade"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_student__state_id
+msgid ""
+"Province/state of the student's address, synchronized from the contact."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_teacher__state_id
+msgid ""
+"Province/state of the teacher's address, synchronized from the contact."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template_term_detail__uom_quantity
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__quantity
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_payment_template_view_form
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_payment_term_view_form
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_payment_term_view_form_embedded
+msgid "Quantity"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template_term_detail__uom_quantity
+msgid "Quantity or number of units to be billed."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__receivable_account_id
+msgid "Receivable Account"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__receivable_journal_id
+msgid "Receivable Journal"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__reject_ok
+msgid ""
+"Reject policy\n"
+"\n"
+"* If active user can see and execute 'Reject' button"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__rejected
+msgid "Rejected"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.ui.menu,name:ssi_school.menu_school_report
+msgid "Report"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__user_id
+msgid "Responsible"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school__activity_user_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__activity_user_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__activity_user_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__activity_user_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__activity_user_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade__activity_user_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__activity_user_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__activity_user_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__activity_user_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_teacher__activity_user_id
+msgid "Responsible User"
+msgstr ""
+
+#. module: ssi_school
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_academic_term_view_form
+msgid "Restart"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__restart_approval_ok
+msgid ""
+"Restart approval policy\n"
+"\n"
+"* If active user can see and execute 'Restart Approval' button"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__restart_ok
+msgid ""
+"Restart policy\n"
+"\n"
+"* If active user can see and execute 'Restart' button"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__reviewer_id
+msgid "Reviewer"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model,name:ssi_school.model_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__school_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__school_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__school_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__school_id
+#: model:ir.module.category,name:ssi_school.school_module_category
+#: model:ir.ui.menu,name:ssi_school.menu_school_root
+#: model:res.groups,name:ssi_school.school_group
+msgid "School"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.module.category,name:ssi_school.school_configurator_module_category
+msgid "School - Configurator"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.module.category,name:ssi_school.school_data_ownership_module_category
+msgid "School - Data Ownership"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.module.category,name:ssi_school.school_report_module_category
+msgid "School - Report"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.module.category,name:ssi_school.school_wizard_module_category
+msgid "School - Wizard"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.module.category,name:ssi_school.school_workflow_module_category
+msgid "School - Workflow"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model,name:ssi_school.model_school_academic_term
+msgid "School Academic Term"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model,name:ssi_school.model_school_academic_year
+msgid "School Academic Year"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model,name:ssi_school.model_school_enrollment
+#: model:ir.module.category,name:ssi_school.school_enrollment_data_ownership_module_category
+#: model:ir.module.category,name:ssi_school.school_enrollment_workflow_module_category
+msgid "School Enrollment"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model,name:ssi_school.model_school_enrollment_payment_template
+msgid "School Enrollment Payment Template"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model,name:ssi_school.model_school_enrollment_payment_template_term
+msgid "School Enrollment Payment Template Term"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model,name:ssi_school.model_school_enrollment_payment_template_term_detail
+msgid "School Enrollment Payment Template Term Detail"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model,name:ssi_school.model_school_enrollment_payment_term
+msgid "School Enrollment Payment Term"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model,name:ssi_school.model_school_enrollment_payment_term_detail
+msgid "School Enrollment Payment Term Detail"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model,name:ssi_school.model_school_grade
+msgid "School Grade"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model,name:ssi_school.model_school_grade_class
+msgid "School Grade Class"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.actions.act_window,name:ssi_school.school_grade_class_action
+msgid "School Grade Classes"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model,name:ssi_school.model_school_grade_type
+msgid "School Grade Type"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.actions.act_window,name:ssi_school.school_grade_type_action
+msgid "School Grade Types"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.actions.act_window,name:ssi_school.school_grade_action
+msgid "School Grades"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.actions.act_window,name:ssi_school.school_action
+#: model:ir.ui.menu,name:ssi_school.school_menu
+msgid "Schools"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_student__street2
+msgid "Second line of the student's address, synchronized from the contact."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_teacher__street2
+msgid "Second line of the teacher's address, synchronized from the contact."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_term_detail__product_category_id
+msgid "Select category for the current product"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_academic_term,name:ssi_school.school_academic_term1
+msgid "Semester I 2026 (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_academic_term,name:ssi_school.school_academic_term2
+msgid "Semester II 2026 (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template_term__sequence
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template_term_detail__sequence
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term__sequence
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__sequence
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade__sequence
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__sequence
+msgid "Sequence"
+msgstr ""
+
+#. module: ssi_school
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_form
+msgid "Set result to Drop Out?"
+msgstr ""
+
+#. module: ssi_school
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_form
+msgid "Set result to Fail?"
+msgstr ""
+
+#. module: ssi_school
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_form
+msgid "Set result to Graduate?"
+msgstr ""
+
+#. module: ssi_school
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_form
+msgid "Set result to Pass?"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields.selection,name:ssi_school.selection__school_student__state__suspended
+msgid "Skorsing"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_student,name:ssi_school.school_student_2
+msgid "Sri Wahyuni Umar (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__standard_price_subtotal
+msgid "Standard Price Subtotal"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__standard_price_subtotal_diff
+msgid "Standard Price Subtotal Diff."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__standard_price_unit
+msgid "Standard Price Unit"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__standard_price_unit_diff
+msgid "Standard Price Unit Diff."
+msgstr ""
+
+#. module: ssi_school
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_academic_term_view_form
+msgid "Start"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__open_ok
+msgid ""
+"Start policy\n"
+"\n"
+"* If active user can see and execute 'Start' button"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__state
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__state
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term__state
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__state
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__state_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_teacher__state_id
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_student_view_form
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_teacher_view_form
+msgid "State"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school__activity_state
+#: model:ir.model.fields,help:ssi_school.field_school_academic_term__activity_state
+#: model:ir.model.fields,help:ssi_school.field_school_academic_year__activity_state
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__activity_state
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template__activity_state
+#: model:ir.model.fields,help:ssi_school.field_school_grade__activity_state
+#: model:ir.model.fields,help:ssi_school.field_school_grade_class__activity_state
+#: model:ir.model.fields,help:ssi_school.field_school_grade_type__activity_state
+#: model:ir.model.fields,help:ssi_school.field_school_student__activity_state
+#: model:ir.model.fields,help:ssi_school.field_school_teacher__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__street
+#: model:ir.model.fields,field_description:ssi_school.field_school_teacher__street
+msgid "Street"
+msgstr ""
+
+#. module: ssi_school
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_student_view_form
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_teacher_view_form
+msgid "Street 2..."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_student__street
+msgid "Street address of the student, synchronized from the contact."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_teacher__street
+msgid "Street address of the teacher, synchronized from the contact."
+msgstr ""
+
+#. module: ssi_school
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_student_view_form
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_teacher_view_form
+msgid "Street..."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__street2
+#: model:ir.model.fields,field_description:ssi_school.field_school_teacher__street2
+msgid "Street2"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model,name:ssi_school.model_school_student
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__student_id
+#: model:res.groups,name:ssi_school.school_student_group
+msgid "Student"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_academic_term__enrollment_state
+msgid "Student admission status: Closed or Open for Enrollment."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_student__image_1920
+msgid "Student photo, taken from the linked contact record."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.actions.act_window,name:ssi_school.school_student_action
+#: model:ir.ui.menu,name:ssi_school.school_student_menu
+msgid "Students"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.ui.menu,name:ssi_school.menu_subject_configuration
+msgid "Subject & Scoring"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term__amount_tax
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__price_tax
+msgid "Tax"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__tax_ids
+msgid "Tax(es)"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template_term_detail__tax_ids
+msgid "Taxes"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template_term_detail__tax_ids
+msgid "Taxes applied to this billing line."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model,name:ssi_school.model_school_teacher
+#: model:res.groups,name:ssi_school.school_teacher_group
+msgid "Teacher"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_teacher__image_1920
+msgid "Teacher photo, taken from the linked contact record."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.actions.act_window,name:ssi_school.school_teacher_action
+#: model:ir.ui.menu,name:ssi_school.school_teacher_menu
+msgid "Teachers"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template_term__template_id
+msgid "Template"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template_term_detail__term_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term__name
+msgid "Term"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template_term__name
+msgid "Term Name"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__term_ids
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_academic_year_view_form
+msgid "Terms"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__academic_term_id
+msgid ""
+"The academic term in which the student is enrolled. Must belong to the "
+"selected academic year."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template__academic_term_id
+msgid ""
+"The academic term this template is based on. Leave empty if applicable to "
+"all terms."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_academic_term__year_id
+msgid "The academic year that this semester/term belongs to."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__academic_year_id
+msgid "The academic year this enrollment is based on."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__receivable_journal_id
+msgid ""
+"The accounting journal used to record receivables for this enrollment "
+"payment."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_term__currency_id
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_term_detail__currency_id
+msgid "The billing currency, automatically taken from the enrollment."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_grade_class__grade_id
+msgid ""
+"The class level for this homeroom, e.g. Grade 1 or Grade 2. Will be reset if"
+" the school is changed."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__grade_id
+msgid "The class level the student will attend in this enrollment."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_student__enrollment_ids
+msgid "The complete enrollment history of this student."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_student__contact_id
+msgid "The contact (partner) representing the personal data of this student."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_teacher__contact_id
+msgid "The contact (partner) representing the personal data of this teacher."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__currency_id
+msgid "The currency used for the enrollment payment billing."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_student__active_enrollment_id
+msgid "The currently active enrollment (status open) of this student."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__date
+msgid "The date the enrollment document was created."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__school_id
+msgid "The destination school for this enrollment."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_grade__type_id
+msgid "The education level type that this grade belongs to."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school__grade_type_id
+msgid ""
+"The education level type used by this school, e.g. Elementary, Junior High, "
+"or Senior High School."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__grade_type_id
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template__grade_type_id
+msgid ""
+"The education level type, automatically populated from the selected school."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_academic_year__date_end
+msgid "The end date of this academic year."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_term_detail__term_id
+msgid "The enrollment payment term that owns this fee line."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_term__enrollment_id
+msgid "The enrollment that owns this payment term."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_academic_term__date_start
+msgid "The first date of this semester/term."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_academic_year__first_term_id
+msgid "The first term of the academic year, automatically computed."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_grade_class__grade_type_id
+msgid "The grade type from the selected school, populated automatically."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_student__current_grade_type_id
+msgid ""
+"The grade type of the student's current grade, derived from the active "
+"grade."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template_term_detail__account_id
+msgid ""
+"The income account for recording this billing line. Automatically populated "
+"from the product's income account."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_student__initial_grade_type_id
+msgid ""
+"The initial grade type from the school, automatically populated from school "
+"data."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_term_detail__invoice_line_id
+msgid ""
+"The invoice line linked to this detail, automatically populated when the "
+"invoice is generated."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_term__invoice_id
+msgid "The invoice linked to this payment period."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_academic_term__date_end
+msgid "The last date of this semester/term."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_academic_year__last_term_id
+msgid "The last term of the academic year, automatically computed."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_student__next_grade_id
+msgid ""
+"The next grade for the student, automatically computed based on grade "
+"ordering and last enrollment result."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_grade__next_grade_id
+msgid ""
+"The next grade in the ordering sequence, automatically computed and updated "
+"by the system."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template_term__template_id
+msgid "The parent template that owns this payment period."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__payment_term_ids
+msgid ""
+"The payment billing terms that must be settled by the student for this "
+"enrollment."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_grade__previous_grade_id
+msgid ""
+"The previous grade in the ordering sequence, automatically computed and "
+"updated by the system."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__pricelist_id
+msgid "The pricelist used to calculate enrollment billing amounts."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_term__pricelist_id
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_term_detail__pricelist_id
+msgid "The pricelist used, automatically taken from the enrollment."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template_term_detail__product_id
+msgid "The product or fee type to be billed."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__receivable_account_id
+msgid "The receivable account used to record enrollment billing."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template__school_id
+msgid ""
+"The school using this template. Leave empty if applicable to all schools."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_grade_class__school_id
+msgid "The school where this homeroom class is located."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_student__school_id
+msgid "The school where this student is enrolled."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template__grade_id
+msgid ""
+"The specific grade level targeted by this template. Will be reset if the "
+"school is changed."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__grade_class_id
+msgid "The specific homeroom class the student is placed in."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_academic_year__date_start
+msgid "The start date of this academic year."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__student_id
+msgid "The student being enrolled."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__academic_year_result
+msgid ""
+"The student's academic result at the end of the enrollment period: Passed, "
+"Failed, Drop Out, or Graduate."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_student__grade_class_id
+msgid ""
+"The student's active homeroom class, derived from the active enrollment."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_student__initial_grade_id
+msgid ""
+"The student's class when first entering school before having any enrollment "
+"history."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_term__partner_id
+msgid ""
+"The student's contact partner, automatically populated from the enrollment."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__partner_id
+msgid ""
+"The student's contact partner, automatically populated from the student "
+"record."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_student__current_grade_id
+msgid ""
+"The student's current grade, automatically computed based on completed "
+"(done) enrollment history."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__promote_to_grade_id
+msgid ""
+"The target grade for promotion if the student passes at the end of the "
+"academic year."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template_term_detail__term_id
+msgid "The template payment period that owns this fee line."
+msgstr ""
+
+#. module: ssi_school
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_form
+msgid "This will replace existing payment terms. Continue?"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term__amount_total
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__price_total
+msgid "Total"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_term__amount_untaxed
+msgid ""
+"Total billing amount before tax, automatically computed from the detail "
+"lines."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_term__amount_total
+msgid ""
+"Total billing amount including tax, automatically computed from the detail "
+"lines."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_term__amount_tax
+msgid "Total tax amount, automatically computed from the detail lines."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__name
+msgid ""
+"Transaction/document number\n"
+"\n"
+"* Unique indentifer of transaction\n"
+"* Leave '/' to automatically generate number\n"
+"* Change '/' into any number/identifier to manually assign number.\n"
+"  Manual number assignment can be done in 'Draft' state\n"
+"  Only user with 'Can Manualy Assign Number' policy can manually assign number.\n"
+"* Transaction with number other than '/' can not be deleted."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade__type_id
+msgid "Type"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school__activity_exception_decoration
+#: model:ir.model.fields,help:ssi_school.field_school_academic_term__activity_exception_decoration
+#: model:ir.model.fields,help:ssi_school.field_school_academic_year__activity_exception_decoration
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__activity_exception_decoration
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template__activity_exception_decoration
+#: model:ir.model.fields,help:ssi_school.field_school_grade__activity_exception_decoration
+#: model:ir.model.fields,help:ssi_school.field_school_grade_class__activity_exception_decoration
+#: model:ir.model.fields,help:ssi_school.field_school_grade_type__activity_exception_decoration
+#: model:ir.model.fields,help:ssi_school.field_school_student__activity_exception_decoration
+#: model:ir.model.fields,help:ssi_school.field_school_teacher__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields.selection,name:ssi_school.selection__school_enrollment_payment_term__state__uninvoiced
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_payment_term_view_search
+msgid "Uninvoiced"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template_term_detail__price_unit
+msgid "Unit Price"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template_term_detail__uom_id
+msgid ""
+"Unit of measure for the billing quantity. Automatically populated from the "
+"product's unit."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template_term_detail__price_unit
+msgid "Unit price per unit of the product/fee to be billed."
+msgstr ""
+
+#. module: ssi_school
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_payment_term_view_tree
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_form
+msgid "Unmark as Manual"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school__message_unread
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__message_unread
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__message_unread
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__message_unread
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__message_unread
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade__message_unread
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__message_unread
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__message_unread
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__message_unread
+#: model:ir.model.fields,field_description:ssi_school.field_school_teacher__message_unread
+msgid "Unread Messages"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school__message_unread_counter
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__message_unread_counter
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__message_unread_counter
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__message_unread_counter
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__message_unread_counter
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade__message_unread_counter
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__message_unread_counter
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__message_unread_counter
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__message_unread_counter
+#: model:ir.model.fields,field_description:ssi_school.field_school_teacher__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields.selection,name:ssi_school.selection__school_academic_term__state__draft
+msgid "Unstarted"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term__amount_untaxed
+msgid "Untaxed"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template_term_detail__uom_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__uom_id
+msgid "UoM"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__uom_quantity
+msgid "UoM Quantity"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__usage_id
+msgid "Usage"
+msgstr ""
+
+#. module: ssi_school
+#: model:res.groups,name:ssi_school.school_enrollment_user_group
+msgid "User"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__user_id
+msgid ""
+"User that responsible for document\n"
+"\n"
+"* Create user can be different with responsible user\n"
+"* Automatically filled with user that initiate document creation.\n"
+"  Default responsible can be changed."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__reviewer_id
+msgid ""
+"User that responsible to review document\n"
+"\n"
+"* Unless it configured to approve reviewer does not equal to approver"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__active_approver_user_ids
+msgid "Users that can approve/reject document"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_grade_class,name:ssi_school.school_grade_class13
+#: model:school_grade_class,name:ssi_school.school_grade_class15
+msgid "V-A (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_grade_class,name:ssi_school.school_grade_class14
+msgid "V-B (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_grade_class,name:ssi_school.school_grade_class16
+#: model:school_grade_class,name:ssi_school.school_grade_class18
+msgid "VI-A (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_grade_class,name:ssi_school.school_grade_class17
+msgid "VI-B (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_grade_class,name:ssi_school.school_grade_class19
+#: model:school_grade_class,name:ssi_school.school_grade_class21
+msgid "VII-A (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_grade_class,name:ssi_school.school_grade_class20
+msgid "VII-B (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_grade_class,name:ssi_school.school_grade_class22
+#: model:school_grade_class,name:ssi_school.school_grade_class24
+msgid "VIII-A (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_grade_class,name:ssi_school.school_grade_class23
+msgid "VIII-B (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model:res.groups,name:ssi_school.school_enrollment_validator_group
+msgid "Validator"
+msgstr ""
+
+#. module: ssi_school
+#: model:res.groups,name:ssi_school.school_enrollment_viewer_group
+msgid "Viewer"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields.selection,name:ssi_school.selection__school_student__state__draft
+msgid "Waiting for Enrollment"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school__website_message_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__website_message_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__website_message_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__website_message_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__website_message_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade__website_message_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__website_message_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__website_message_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__website_message_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_teacher__website_message_ids
+msgid "Website Messages"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school__website_message_ids
+#: model:ir.model.fields,help:ssi_school.field_school_academic_term__website_message_ids
+#: model:ir.model.fields,help:ssi_school.field_school_academic_year__website_message_ids
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__website_message_ids
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template__website_message_ids
+#: model:ir.model.fields,help:ssi_school.field_school_grade__website_message_ids
+#: model:ir.model.fields,help:ssi_school.field_school_grade_class__website_message_ids
+#: model:ir.model.fields,help:ssi_school.field_school_grade_type__website_message_ids
+#: model:ir.model.fields,help:ssi_school.field_school_student__website_message_ids
+#: model:ir.model.fields,help:ssi_school.field_school_teacher__website_message_ids
+msgid "Website communication history"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_grade_class,name:ssi_school.school_grade_class28
+#: model:school_grade_class,name:ssi_school.school_grade_class30
+msgid "X-A (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_grade_class,name:ssi_school.school_grade_class29
+msgid "X-B (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_grade_class,name:ssi_school.school_grade_class31
+#: model:school_grade_class,name:ssi_school.school_grade_class33
+msgid "XI-A (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_grade_class,name:ssi_school.school_grade_class32
+msgid "XI-B (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_grade_class,name:ssi_school.school_grade_class34
+#: model:school_grade_class,name:ssi_school.school_grade_class36
+msgid "XII-A (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_grade_class,name:ssi_school.school_grade_class35
+msgid "XII-B (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_student,name:ssi_school.school_student_1
+msgid "Yuda Mohammad (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_student_view_form
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_teacher_view_form
+msgid "ZIP"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__zip
+#: model:ir.model.fields,field_description:ssi_school.field_school_teacher__zip
+msgid "Zip"
+msgstr ""
