@@ -58,7 +58,7 @@ class SchoolAdmissionFormCreateAdmission(models.TransientModel):
 
     @api.depends("currency_id")
     def _compute_allowed_pricelist_ids(self):
-        Pricelist = self.env["product.pricelist"]
+        Pricelist = self.env["product.pricelist"]  # pylint: disable=invalid-name
         for record in self:
             result = []
             if record.currency_id:
@@ -73,7 +73,7 @@ class SchoolAdmissionFormCreateAdmission(models.TransientModel):
     def action_create_admission(self):
         self.ensure_one()
         form = self.admission_form_id
-        SchoolAdmission = self.env["school_admission"]
+        SchoolAdmission = self.env["school_admission"]  # pylint: disable=invalid-name
         existing = SchoolAdmission.search(
             [("admission_form_id", "=", form.id)], limit=1
         )

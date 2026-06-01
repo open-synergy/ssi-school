@@ -5,7 +5,7 @@
 from odoo import models
 
 
-class SchoolAcademicTerm(models.Model):
+class SchoolAcademicTerm(models.Model):  # pylint: disable=too-few-public-methods
     """
     Extends School Academic Term with multiple operating unit support
     for operating unit-based data segregation.

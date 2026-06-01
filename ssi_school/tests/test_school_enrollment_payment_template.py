@@ -45,7 +45,7 @@ class TestSchoolEnrollmentPaymentTemplate(YamlTransactionCase):
         form.school_id = school
         form.grade_id = grade
         form.school_id = new_school
-        self.assertFalse(form.grade_id._origin)
+        self.assertFalse(form.grade_id._origin)  # pylint: disable=protected-access
 
     def test_onchange_product_fills_name(self):
         """Memilih product harus mengisi name dari product.name."""

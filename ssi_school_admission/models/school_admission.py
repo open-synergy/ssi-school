@@ -242,15 +242,15 @@ class SchoolAdmission(models.Model):
         help=("The student profile created after this " "admission is completed."),
     )
 
-    def _compute_policy(self):
+    def _compute_policy(self):  # pylint: disable=missing-return
         _super = super()
-        _super._compute_policy()
+        _super._compute_policy()  # pylint: disable=protected-access
 
     @api.depends(
         "currency_id",
     )
     def _compute_allowed_pricelist_ids(self):
-        Pricelist = self.env["product.pricelist"]
+        Pricelist = self.env["product.pricelist"]  # pylint: disable=invalid-name
         for record in self:
             result = []
             if record.currency_id:
@@ -278,7 +278,7 @@ class SchoolAdmission(models.Model):
 
     def action_compute_payment(self):
         for record in self.sudo():
-            record._compute_payment_from_template()
+            record._compute_payment_from_template()  # pylint: disable=protected-access
 
     def _compute_payment_from_template(self):
         self.ensure_one()
@@ -286,8 +286,10 @@ class SchoolAdmission(models.Model):
         if not template:
             return
         self.payment_term_ids.unlink()
-        Term = self.env["school_admission_payment_term"]
-        Detail = self.env["school_admission_payment_term_detail"]
+        Term = self.env["school_admission_payment_term"]  # pylint: disable=invalid-name
+        Detail = self.env[
+            "school_admission_payment_term_detail"
+        ]  # pylint: disable=invalid-name
         for tterm in template.term_ids.sorted("sequence"):
             term = Term.create(
                 {
@@ -315,7 +317,9 @@ class SchoolAdmission(models.Model):
         self.ensure_one()
         if self.school_student_id:
             return
-        initial_grade = self.grade_id.previous_grade_id or False
+        initial_grade = (
+            self.grade_id.previous_grade_id or False
+        )  # pylint: disable=no-member
         student = self.env["school_student"].create(
             {
                 "code": "/",
@@ -329,7 +333,9 @@ class SchoolAdmission(models.Model):
 
     @api.model
     def _get_policy_field(self):
-        res = super(SchoolAdmission, self)._get_policy_field()
+        res = super(
+            SchoolAdmission, self
+        )._get_policy_field()  # pylint: disable=super-with-arguments
         policy_field = [
             "confirm_ok",
             "approve_ok",

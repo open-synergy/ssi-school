@@ -8,6 +8,8 @@ from odoo.tests import tagged
 
 
 @tagged("post_install", "-at_install")
-class TestSchoolAdmissionWorkflow(YamlTransactionCase):
+class TestSchoolAdmissionWorkflow(
+    YamlTransactionCase
+):  # pylint: disable=too-few-public-methods
     def test_admission_workflow(self):
         self.run_yaml_scenario("test_data_admission.yaml")

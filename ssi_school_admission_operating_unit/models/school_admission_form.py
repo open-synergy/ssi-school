@@ -5,7 +5,7 @@
 from odoo import models
 
 
-class SchoolAdmissionForm(models.Model):
+class SchoolAdmissionForm(models.Model):  # pylint: disable=too-few-public-methods
     """
     Extends School Admission Form with single operating unit support
     for operating unit-based access and data segregation.

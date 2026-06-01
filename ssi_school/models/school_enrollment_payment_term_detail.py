@@ -5,7 +5,9 @@
 from odoo import fields, models
 
 
-class SchoolEnrollmentPaymentTermDetail(models.Model):
+class SchoolEnrollmentPaymentTermDetail(
+    models.Model
+):  # pylint: disable=too-few-public-methods
     """
     Represents a product/fee line detail on an actual enrollment payment term.
     Inherits mixin.product_line_account which provides standard product line fields
@@ -57,7 +59,9 @@ class SchoolEnrollmentPaymentTermDetail(models.Model):
 
     def _prepare_invoice_line(self):
         self.ensure_one()
-        aa = self.analytic_account_id and self.analytic_account_id.id or False
+        aa = (  # pylint: disable=invalid-name,consider-using-ternary
+            self.analytic_account_id and self.analytic_account_id.id or False
+        )
         return {
             "product_id": self.product_id.id,
             "name": self.name,

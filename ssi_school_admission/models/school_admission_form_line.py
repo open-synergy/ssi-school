@@ -88,4 +88,4 @@ class SchoolAdmissionFormLine(models.Model):
         "product_id",
     )
     def onchange_line_usage_id(self):
-        self.usage_id = False
+        self.usage_id = False  # pylint: disable=attribute-defined-outside-init

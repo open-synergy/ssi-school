@@ -1,0 +1,396 @@
+scenarios:
+  - name: "Student State - On Leave"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Student On Leave"
+          code: "GTSOL"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Student On Leave"
+          code: "SCHSOL"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade Student On Leave"
+          code: "GSOL"
+          sequence: 10
+          type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact On Leave"
+
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student On Leave"
+          code: "STUOL"
+          contact_id: "EVAL: registry['contact'].id"
+          school_id: "EVAL: registry['school'].id"
+          initial_grade_id: "EVAL: registry['grade'].id"
+
+      - step: "Set student to on leave"
+        action: "call"
+        target: "student"
+        method: "action_set_to_on_leave"
+
+      - step: "Invalidate student cache"
+        action: "call"
+        target: "student"
+        method: "invalidate_cache"
+
+      - step: "Assert student state is on_leave"
+        action: "assert"
+        target: "student"
+        asserts:
+          state:
+            type: "value"
+            expected: "on_leave"
+
+  - name: "Student State - Suspended"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Student Suspended"
+          code: "GTSSP"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Student Suspended"
+          code: "SCHSSP"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade Student Suspended"
+          code: "GSSP"
+          sequence: 10
+          type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact Suspended"
+
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student Suspended"
+          code: "STUSSP"
+          contact_id: "EVAL: registry['contact'].id"
+          school_id: "EVAL: registry['school'].id"
+          initial_grade_id: "EVAL: registry['grade'].id"
+
+      - step: "Set student to suspended"
+        action: "call"
+        target: "student"
+        method: "action_set_to_suspended"
+
+      - step: "Invalidate student cache"
+        action: "call"
+        target: "student"
+        method: "invalidate_cache"
+
+      - step: "Assert student state is suspended"
+        action: "assert"
+        target: "student"
+        asserts:
+          state:
+            type: "value"
+            expected: "suspended"
+
+  - name: "Student State - Transferred"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Student Transferred"
+          code: "GTSTR"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Student Transferred"
+          code: "SCHSTR"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade Student Transferred"
+          code: "GSTR"
+          sequence: 10
+          type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact Transferred"
+
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student Transferred"
+          code: "STUSTR"
+          contact_id: "EVAL: registry['contact'].id"
+          school_id: "EVAL: registry['school'].id"
+          initial_grade_id: "EVAL: registry['grade'].id"
+
+      - step: "Set student to transferred"
+        action: "call"
+        target: "student"
+        method: "action_set_to_transferred"
+
+      - step: "Invalidate student cache"
+        action: "call"
+        target: "student"
+        method: "invalidate_cache"
+
+      - step: "Assert student state is transferred"
+        action: "assert"
+        target: "student"
+        asserts:
+          state:
+            type: "value"
+            expected: "transferred"
+
+  - name: "Student State - Dropped"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Student Dropped"
+          code: "GTSDP"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Student Dropped"
+          code: "SCHSDP"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade Student Dropped"
+          code: "GSDP"
+          sequence: 10
+          type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact Dropped"
+
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student Dropped"
+          code: "STUSDP"
+          contact_id: "EVAL: registry['contact'].id"
+          school_id: "EVAL: registry['school'].id"
+          initial_grade_id: "EVAL: registry['grade'].id"
+
+      - step: "Set student to dropped"
+        action: "call"
+        target: "student"
+        method: "action_set_to_dropped"
+
+      - step: "Invalidate student cache"
+        action: "call"
+        target: "student"
+        method: "invalidate_cache"
+
+      - step: "Assert student state is dropped"
+        action: "assert"
+        target: "student"
+        asserts:
+          state:
+            type: "value"
+            expected: "dropped"
+
+  - name: "Student State - Resigned"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Student Resigned"
+          code: "GTSRS"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Student Resigned"
+          code: "SCHSRS"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade Student Resigned"
+          code: "GSRS"
+          sequence: 10
+          type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact Resigned"
+
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student Resigned"
+          code: "STUSRS"
+          contact_id: "EVAL: registry['contact'].id"
+          school_id: "EVAL: registry['school'].id"
+          initial_grade_id: "EVAL: registry['grade'].id"
+
+      - step: "Set student to resigned"
+        action: "call"
+        target: "student"
+        method: "action_set_to_resigned"
+
+      - step: "Invalidate student cache"
+        action: "call"
+        target: "student"
+        method: "invalidate_cache"
+
+      - step: "Assert student state is resigned"
+        action: "assert"
+        target: "student"
+        asserts:
+          state:
+            type: "value"
+            expected: "resigned"
+
+  - name: "Student State - Deceased"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Student Deceased"
+          code: "GTSDC"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Student Deceased"
+          code: "SCHSDC"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade Student Deceased"
+          code: "GSDC"
+          sequence: 10
+          type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact Deceased"
+
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student Deceased"
+          code: "STUSDC"
+          contact_id: "EVAL: registry['contact'].id"
+          school_id: "EVAL: registry['school'].id"
+          initial_grade_id: "EVAL: registry['grade'].id"
+
+      - step: "Set student to deceased"
+        action: "call"
+        target: "student"
+        method: "action_set_to_deceased"
+
+      - step: "Invalidate student cache"
+        action: "call"
+        target: "student"
+        method: "invalidate_cache"
+
+      - step: "Assert student state is deceased"
+        action: "assert"
+        target: "student"
+        asserts:
+          state:
+            type: "value"
+            expected: "deceased"

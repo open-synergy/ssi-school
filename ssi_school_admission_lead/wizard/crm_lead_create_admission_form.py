@@ -7,7 +7,9 @@ from datetime import date as datetime_date
 from odoo import api, fields, models
 
 
-class CrmLeadCreateAdmissionForm(models.TransientModel):
+class CrmLeadCreateAdmissionForm(
+    models.TransientModel
+):  # pylint: disable=too-few-public-methods
     _name = "crm.lead.create_admission_form"
     _description = "Wizard - Create Admission Form from CRM Lead"
 
@@ -100,12 +102,14 @@ class CrmLeadCreateAdmissionForm(models.TransientModel):
             vals["journal_id"] = self.fee_template_id.journal_id.id or False
             vals["account_id"] = self.fee_template_id.account_id.id or False
         admission_form = self.env["school_admission_form"].create(vals)
-        self.lead_id.write({"admission_form_id": admission_form.id})
+        self.lead_id.sudo().write(
+            {"admission_form_id": admission_form.id}
+        )  # pylint: disable=no-member
         return {
             "type": "ir.actions.act_window",
             "name": "Admission Form",
             "res_model": "school_admission_form",
-            "res_id": admission_form.id,
+            "res_id": admission_form.id,  # pylint: disable=no-member
             "view_mode": "form",
             "target": "current",
         }

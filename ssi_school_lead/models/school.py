@@ -5,7 +5,7 @@
 from odoo import fields, models
 
 
-class School(models.Model):
+class School(models.Model):  # pylint: disable=too-few-public-methods
     """
     Extends the School model to associate a default sales team
     for CRM lead routing and assignment automation.

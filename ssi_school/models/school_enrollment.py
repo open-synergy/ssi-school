@@ -338,15 +338,15 @@ class SchoolEnrollment(models.Model):
         help="Policy that determines whether the Graduate action button is visible.",
     )
 
-    def _compute_policy(self):
+    def _compute_policy(self):  # pylint: disable=missing-return
         _super = super()
-        _super._compute_policy()
+        _super._compute_policy()  # pylint: disable=protected-access
 
     @api.depends(
         "currency_id",
     )
     def _compute_allowed_pricelist_ids(self):
-        Pricelist = self.env["product.pricelist"]
+        Pricelist = self.env["product.pricelist"]  # pylint: disable=invalid-name
         for record in self:
             result = []
             if record.currency_id:
@@ -405,11 +405,11 @@ class SchoolEnrollment(models.Model):
 
     def action_set_result_to_passed(self):
         for record in self.sudo():
-            record._set_result_to_passed()
+            record._set_result_to_passed()  # pylint: disable=protected-access
 
     def action_compute_payment(self):
         for record in self.sudo():
-            record._compute_payment_from_template()
+            record._compute_payment_from_template()  # pylint: disable=protected-access
 
     def _compute_payment_from_template(self):
         self.ensure_one()
@@ -417,8 +417,12 @@ class SchoolEnrollment(models.Model):
         if not template:
             return
         self.payment_term_ids.unlink()
-        Term = self.env["school_enrollment_payment_term"]
-        Detail = self.env["school_enrollment_payment_term_detail"]
+        Term = self.env[  # pylint: disable=invalid-name
+            "school_enrollment_payment_term"
+        ]
+        Detail = self.env[  # pylint: disable=invalid-name
+            "school_enrollment_payment_term_detail"
+        ]
         for tterm in template.term_ids.sorted("sequence"):
             term = Term.create(
                 {
@@ -443,17 +447,17 @@ class SchoolEnrollment(models.Model):
 
     def action_set_result_to_failed(self):
         for record in self.sudo():
-            record._set_result_to_failed()
+            record._set_result_to_failed()  # pylint: disable=protected-access
 
     def action_set_result_to_drop_out(self):
         self.ensure_one()
         for record in self.sudo():
-            record._set_result_to_drop_out()
+            record._set_result_to_drop_out()  # pylint: disable=protected-access
 
     def action_set_result_to_graduate(self):
         self.ensure_one()
         for record in self.sudo():
-            record._set_result_to_graduate()
+            record._set_result_to_graduate()  # pylint: disable=protected-access
 
     def _set_result_to_graduate(self):
         self.ensure_one()
@@ -463,7 +467,7 @@ class SchoolEnrollment(models.Model):
                 "academic_year_result": "graduate",
             }
         )
-        self.student_id.action_set_to_graduate()
+        self.student_id.action_set_to_graduate()  # pylint: disable=no-member
 
     def _set_result_to_drop_out(self):
         self.ensure_one()
@@ -473,7 +477,7 @@ class SchoolEnrollment(models.Model):
                 "academic_year_result": "drop_out",
             }
         )
-        self.student_id.action_set_to_dropped()
+        self.student_id.action_set_to_dropped()  # pylint: disable=no-member
 
     def _set_result_to_failed(self):
         self.ensure_one()
@@ -483,37 +487,40 @@ class SchoolEnrollment(models.Model):
                 "academic_year_result": "failed",
             }
         )
-        self.student_id.action_set_to_draft()
+        self.student_id.action_set_to_draft()  # pylint: disable=no-member
 
     def _set_result_to_passed(self):
         self.ensure_one()
         self.with_context(bypass_policy_check=True).action_done()
+        next_grade_id = self.grade_id.next_grade_id.id  # pylint: disable=no-member
         self.write(
             {
                 "academic_year_result": "passed",
-                "promote_to_grade_id": self.grade_id.next_grade_id.id,
+                "promote_to_grade_id": next_grade_id,
             }
         )
-        self.student_id.action_set_to_draft()
+        self.student_id.action_set_to_draft()  # pylint: disable=no-member
 
     @ssi_decorator.post_open_action()
     def _10_enroll_student(self):
         self.ensure_one()
-        self.student_id.action_set_to_enroll()
+        self.student_id.action_set_to_enroll()  # pylint: disable=no-member
 
     @ssi_decorator.post_done_action()
     def _30_unenroll_or_graduate_student(self):
         self.ensure_one()
-        self.student_id.action_set_to_draft()
+        self.student_id.action_set_to_draft()  # pylint: disable=no-member
 
     @ssi_decorator.post_cancel_action()
     def _10_unenroll_student(self):
         self.ensure_one()
-        self.student_id.action_set_to_draft()
+        self.student_id.action_set_to_draft()  # pylint: disable=no-member
 
     @api.model
     def _get_policy_field(self):
-        res = super(SchoolEnrollment, self)._get_policy_field()
+        res = super(  # pylint: disable=super-with-arguments
+            SchoolEnrollment, self
+        )._get_policy_field()
         policy_field = [
             "confirm_ok",
             "approve_ok",

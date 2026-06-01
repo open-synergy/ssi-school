@@ -6,7 +6,7 @@
 from odoo import fields, models
 
 
-class School(models.Model):
+class School(models.Model):  # pylint: disable=too-few-public-methods
     """
     Represents a school entity.
     A school is associated with one grade type that defines the class level

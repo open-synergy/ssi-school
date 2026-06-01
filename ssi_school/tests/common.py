@@ -3,7 +3,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 
-class CommonTestMixin:
+class CommonTestMixin:  # pylint: disable=too-few-public-methods
     """Mixin yang menyediakan fixture bersama (product, account, pricelist)
     yang dapat digunakan ulang di berbagai kelas unit test.
 
@@ -17,7 +17,7 @@ class CommonTestMixin:
     """
 
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(cls):  # pylint: disable=invalid-name
         super().setUpClass()
 
         cls.account_type_income = cls.env.ref("account.data_account_type_revenue")

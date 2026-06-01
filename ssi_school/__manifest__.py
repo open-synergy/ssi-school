@@ -5,7 +5,9 @@
     "name": "School",
     "version": "14.0.4.4.0",
     "website": "https://simetri-sinergi.id",
-    "author": "PT. Simetri Sinergi Indonesia, OpenSynergy Indonesia",
+    # pylint: disable=line-too-long
+    "author": "PT. Simetri Sinergi Indonesia, OpenSynergy Indonesia, Odoo Community Association (OCA)",  # noqa: B950
+    # pylint: enable=line-too-long
     "license": "AGPL-3",
     "installable": True,
     "application": True,

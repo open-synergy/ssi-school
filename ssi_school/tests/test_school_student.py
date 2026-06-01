@@ -47,4 +47,6 @@ class TestSchoolStudent(YamlTransactionCase):
         form.school_id = school
         form.initial_grade_id = grade
         form.school_id = new_school
-        self.assertFalse(form.initial_grade_id._origin)
+        self.assertFalse(
+            form.initial_grade_id._origin  # pylint: disable=protected-access
+        )

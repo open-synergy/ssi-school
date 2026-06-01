@@ -5,7 +5,9 @@
 from odoo import fields, models
 
 
-class SchoolAdmissionFeeTemplateLine(models.Model):
+class SchoolAdmissionFeeTemplateLine(
+    models.Model
+):  # pylint: disable=too-few-public-methods
     """
     Represents a single fee line item in a school admission fee template,
     defining the product, account, and amount for one admission fee item.

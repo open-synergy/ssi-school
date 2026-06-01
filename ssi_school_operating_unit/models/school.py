@@ -5,7 +5,7 @@
 from odoo import models
 
 
-class School(models.Model):
+class School(models.Model):  # pylint: disable=too-few-public-methods
     """
     Extends the School model with multiple operating unit support,
     enabling operating unit-based data access control.

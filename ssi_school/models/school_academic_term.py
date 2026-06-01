@@ -105,23 +105,23 @@ class SchoolAcademicTerm(models.Model):
 
     def action_open(self):
         for record in self.sudo():
-            record._open()
+            record._open()  # pylint: disable=protected-access
 
     def action_done(self):
         for record in self.sudo():
-            record._done()
+            record._done()  # pylint: disable=protected-access
 
     def action_restart(self):
         for record in self.sudo():
-            record._restart()
+            record._restart()  # pylint: disable=protected-access
 
     def action_open_enrollment(self):
         for record in self.sudo():
-            record._open_enrollment()
+            record._open_enrollment()  # pylint: disable=protected-access
 
     def action_close_enrollment(self):
         for record in self.sudo():
-            record._close_enrollment()
+            record._close_enrollment()  # pylint: disable=protected-access
 
     def _open(self):
         self.ensure_one()

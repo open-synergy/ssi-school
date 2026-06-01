@@ -10,7 +10,7 @@ from odoo.exceptions import ValidationError
 from odoo.addons.ssi_decorator import ssi_decorator
 
 
-class SchoolAdmissionTest(models.Model):
+class SchoolAdmissionTest(models.Model):  # pylint: disable=too-few-public-methods
     """
     Represents a school admission test document tracking the
     interview or examination stage for a prospective student

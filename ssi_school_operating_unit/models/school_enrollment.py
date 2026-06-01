@@ -5,7 +5,7 @@
 from odoo import models
 
 
-class SchoolEnrollment(models.Model):
+class SchoolEnrollment(models.Model):  # pylint: disable=too-few-public-methods
     """
     Extends School Enrollment with single operating unit support,
     restricting each enrollment record to one operating unit.

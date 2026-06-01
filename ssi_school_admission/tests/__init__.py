@@ -4,4 +4,8 @@
 
 from . import (  # noqa: F401
     test_school_admission,
+    test_school_admission_form,
+    test_school_admission_payment_term,
+    test_school_admission_test,
+    test_school_admission_wizards,
 )

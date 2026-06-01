@@ -5,7 +5,9 @@
 from odoo import api, fields, models
 
 
-class SchoolAdmissionFeeTemplate(models.Model):
+class SchoolAdmissionFeeTemplate(
+    models.Model
+):  # pylint: disable=too-few-public-methods
     """
     Master data template defining standard admission fee structures
     for a specific school and grade, used to prepopulate fee lines

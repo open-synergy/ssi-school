@@ -1,0 +1,169 @@
+scenarios:
+  - name: "CRM Lead - Create Admission Form via Wizard"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal"
+        limit: 1
+
+      - step: "Setup - get account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "Admission Lead Fee Income ALFI"
+          code: "ALFI4200"
+          user_type_id: "EVAL: registry['account_type'].id"
+
+      - step: "Setup - create fee template"
+        action: "create"
+        model: "school_admission_fee_template"
+        save_as: "fee_template"
+        values:
+          name: "Fee Template CRM Lead Admission"
+          code: "FTCRMAL"
+          journal_id: "EVAL: registry['journal'].id"
+          account_id: "EVAL: registry['account'].id"
+
+      - step: "Setup - create pricelist"
+        action: "create"
+        model: "product.pricelist"
+        save_as: "pricelist"
+        values:
+          name: "Pricelist CRM Lead Admission"
+          currency_id: "EVAL: env.company.currency_id.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type CRM Lead Admission"
+          code: "GTCRMAL"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 CRM Lead Admission"
+          code: "AYCRMAL"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester CRM Lead Admission"
+          code: "SMCRMAL"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "EVAL: registry['academic_year'].id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School CRM Lead Admission"
+          code: "SCHCRMAL"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade CRM Lead Admission"
+          code: "GCRMAL"
+          sequence: 10
+          type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "student_contact"
+        values:
+          name: "Student CRM Lead Admission"
+
+      - step: "Setup - create parent contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "parent_contact"
+        values:
+          name: "Parent CRM Lead Admission"
+
+      - step: "Create CRM lead"
+        action: "create"
+        model: "crm.lead"
+        save_as: "lead"
+        values:
+          name: "Lead CRM Lead Admission"
+          school_id: "EVAL: registry['school'].id"
+          student_id: "EVAL: registry['student_contact'].id"
+
+      - step: "Assert lead has no admission form yet"
+        action: "assert"
+        target: "lead"
+        asserts:
+          admission_form_id:
+            type: "value"
+            operator: "is_falsy"
+          create_admission_form_ok:
+            type: "value"
+            expected: true
+
+      - step: "Create wizard to create admission form from lead"
+        action: "create"
+        model: "crm.lead.create_admission_form"
+        save_as: "wizard"
+        values:
+          lead_id: "EVAL: registry['lead'].id"
+          date: "2024-07-01"
+          academic_year_id: "EVAL: registry['academic_year'].id"
+          academic_term_id: "EVAL: registry['academic_term'].id"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          student_id: "EVAL: registry['student_contact'].id"
+          parent_id: "EVAL: registry['parent_contact'].id"
+          pricelist_id: "EVAL: registry['pricelist'].id"
+          fee_template_id: "EVAL: registry['fee_template'].id"
+
+      - step: "Confirm wizard to create admission form"
+        action: "call"
+        target: "wizard"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate lead cache"
+        action: "call"
+        target: "lead"
+        method: "invalidate_cache"
+
+      - step: "Assert admission form created and linked to lead"
+        action: "assert"
+        target: "lead"
+        asserts:
+          admission_form_id:
+            type: "value"
+            operator: "is_truthy"
+          create_admission_form_ok:
+            type: "value"
+            expected: false
+
+      - step: "Call action_create_admission_form on lead (form already exists)"
+        action: "call"
+        target: "lead"
+        method: "action_create_admission_form"
+        as_user: "base.user_admin"

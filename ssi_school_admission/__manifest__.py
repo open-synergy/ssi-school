@@ -5,7 +5,11 @@
     "name": "School Admission",
     "version": "14.0.2.2.0",
     "website": "https://simetri-sinergi.id",
-    "author": "PT. Simetri Sinergi Indonesia, OpenSynergy Indonesia",
+    "author": (
+        "PT. Simetri Sinergi Indonesia, "
+        "OpenSynergy Indonesia, "
+        "Odoo Community Association (OCA)"
+    ),
     "license": "AGPL-3",
     "installable": True,
     "depends": [

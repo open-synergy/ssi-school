@@ -5,7 +5,7 @@
 from odoo import fields, models
 
 
-class SchoolAdmissionFormTax(models.Model):
+class SchoolAdmissionFormTax(models.Model):  # pylint: disable=too-few-public-methods
     """
     Represents a tax line computed from fee items in a school admission
     form, used for journal entry generation and tax reporting.

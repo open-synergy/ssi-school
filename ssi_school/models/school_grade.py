@@ -58,7 +58,7 @@ class SchoolGrade(models.Model):
     )
 
     def write(self, values):
-        _super = super(SchoolGrade, self)
+        _super = super(SchoolGrade, self)  # pylint: disable=super-with-arguments
         _super.write(values)
         if values.get("type_id", False) or values.get("sequence", False):
             self._recompute_next_previous()
@@ -66,14 +66,14 @@ class SchoolGrade(models.Model):
 
     @api.model
     def create(self, values):
-        _super = super(SchoolGrade, self)
+        _super = super(SchoolGrade, self)  # pylint: disable=super-with-arguments
         result = _super.create(values)
         if values.get("type_id", False) or values.get("sequence", False):
             self._recompute_next_previous()
         return result
 
     def unlink(self):
-        _super = super(SchoolGrade, self)
+        _super = super(SchoolGrade, self)  # pylint: disable=super-with-arguments
         _super.unlink()
         self._recompute_next_previous()
         return True
@@ -88,11 +88,11 @@ class SchoolGrade(models.Model):
                     previous_grade = False
                 else:
                     previous_grade = grades[grade_index - 1]
-            except BaseException:
+            except BaseException:  # pylint: disable=broad-except
                 previous_grade = False
             try:
                 next_grade = grades[grade_index + 1]
-            except BaseException:
+            except BaseException:  # pylint: disable=broad-except
                 next_grade = False
             record.write(
                 {
