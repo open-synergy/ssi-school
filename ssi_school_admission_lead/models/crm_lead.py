@@ -5,7 +5,7 @@
 from odoo import api, fields, models
 
 
-class CrmLead(models.Model):
+class CrmLead(models.Model):  # pylint: disable=too-few-public-methods
     """
     Extends the CRM Lead model to link leads with school admission
     forms, supporting the admission process from a CRM opportunity.
