@@ -107,6 +107,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__academic_term_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__academic_term_id
 #: model:res.groups,name:ssi_school.school_academic_term_group
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_payment_template_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_search
 msgid "Academic Term"
 msgstr ""
 
@@ -120,6 +122,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__year_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__academic_year_id
 #: model:res.groups,name:ssi_school.school_academic_year_group
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_academic_term_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_search
 msgid "Academic Year"
 msgstr ""
 
@@ -247,6 +251,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_student__activity_type_icon
 #: model:ir.model.fields,field_description:ssi_school.field_school_teacher__activity_type_icon
 msgid "Activity Type Icon"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.ui.menu,name:ssi_school.menu_admission_configuration
+msgid "Admission"
 msgstr ""
 
 #. module: ssi_school
@@ -455,6 +464,12 @@ msgid "City of the teacher's address, synchronized from the contact."
 msgstr ""
 
 #. module: ssi_school
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_student_view_search
+msgid "Class"
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.ui.menu,name:ssi_school.menu_school_classroom
 msgid "Classroom"
 msgstr ""
@@ -621,6 +636,7 @@ msgstr ""
 
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_student__current_grade_id
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_student_view_search
 msgid "Current Grade"
 msgstr ""
 
@@ -729,6 +745,7 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields.selection,name:ssi_school.selection__school_academic_term__state__done
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_academic_term_view_form
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_academic_term_view_search
 msgid "Done"
 msgstr ""
 
@@ -750,6 +767,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:ssi_school.selection__school_enrollment__academic_year_result__drop_out
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_form
 msgid "Drop Out"
+msgstr ""
+
+#. module: ssi_school
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_student_view_search
+msgid "Dropped"
 msgstr ""
 
 #. module: ssi_school
@@ -785,6 +807,7 @@ msgstr ""
 
 #. module: ssi_school
 #: model:ir.model.fields.selection,name:ssi_school.selection__school_student__state__enrol
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_student_view_search
 msgid "Enrolled"
 msgstr ""
 
@@ -792,6 +815,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term__enrollment_id
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_academic_term_view_form
 msgid "Enrollment"
+msgstr ""
+
+#. module: ssi_school
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_academic_term_view_search
+msgid "Enrollment Open"
 msgstr ""
 
 #. module: ssi_school
@@ -808,6 +836,11 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__enrollment_state
 msgid "Enrollment State"
+msgstr ""
+
+#. module: ssi_school
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_academic_term_view_search
+msgid "Enrollment Status"
 msgstr ""
 
 #. module: ssi_school
@@ -872,6 +905,7 @@ msgstr ""
 
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__first_term_id
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_academic_term_view_search
 msgid "First Term"
 msgstr ""
 
@@ -942,6 +976,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__grade_id
 #: model:ir.ui.menu,name:ssi_school.menu_grade_configuration
 #: model:res.groups,name:ssi_school.school_grade_group
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_payment_template_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_grade_class_view_search
 msgid "Grade"
 msgstr ""
 
@@ -963,6 +1000,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__grade_type_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__grade_type_id
 #: model:res.groups,name:ssi_school.school_grade_type_group
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_grade_class_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_grade_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_student_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_view_search
 msgid "Grade Type"
 msgstr ""
 
@@ -985,7 +1027,21 @@ msgstr ""
 
 #. module: ssi_school
 #: model:ir.model.fields.selection,name:ssi_school.selection__school_student__state__graduate
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_student_view_search
 msgid "Graduated"
+msgstr ""
+
+#. module: ssi_school
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_academic_term_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_academic_year_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_payment_template_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_grade_class_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_grade_type_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_grade_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_student_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_view_search
+msgid "Group By"
 msgstr ""
 
 #. module: ssi_school
@@ -1166,6 +1222,11 @@ msgid "Image"
 msgstr ""
 
 #. module: ssi_school
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_academic_term_view_search
+msgid "In Progress"
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment__last_term
 msgid ""
 "Indicates whether this is the last term of the academic year, derived from "
@@ -1237,6 +1298,7 @@ msgstr ""
 
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__last_term_id
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_academic_term_view_search
 msgid "Last Term"
 msgstr ""
 
@@ -1481,6 +1543,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__name
 #: model:ir.model.fields,field_description:ssi_school.field_school_student__name
 #: model:ir.model.fields,field_description:ssi_school.field_school_teacher__name
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_academic_year_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_grade_type_view_search
 msgid "Name"
 msgstr ""
 
@@ -1860,6 +1924,11 @@ msgid "Receivable Journal"
 msgstr ""
 
 #. module: ssi_school
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_student_view_search
+msgid "Registered"
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment__reject_ok
 msgid ""
 "Reject policy\n"
@@ -1931,6 +2000,10 @@ msgstr ""
 #: model:ir.module.category,name:ssi_school.school_module_category
 #: model:ir.ui.menu,name:ssi_school.menu_school_root
 #: model:res.groups,name:ssi_school.school_group
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_payment_template_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_grade_class_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_student_view_search
 msgid "School"
 msgstr ""
 
@@ -2145,6 +2218,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_student_view_form
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_teacher_view_form
 msgid "State"
+msgstr ""
+
+#. module: ssi_school
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_academic_term_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_student_view_search
+msgid "Status"
 msgstr ""
 
 #. module: ssi_school
@@ -2648,6 +2727,11 @@ msgid ""
 "  Manual number assignment can be done in 'Draft' state\n"
 "  Only user with 'Can Manualy Assign Number' policy can manually assign number.\n"
 "* Transaction with number other than '/' can not be deleted."
+msgstr ""
+
+#. module: ssi_school
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_student_view_search
+msgid "Transferred"
 msgstr ""
 
 #. module: ssi_school
