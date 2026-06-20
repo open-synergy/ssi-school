@@ -13,6 +13,36 @@
     <field name="mode">primary</field>
     <field name="arch" type="xml">
         <data>
+            <xpath expr="//search" position="inside">
+                <field name="student_id" />
+                <field name="parent_id" />
+                <field name="school_id" />
+                <field name="academic_year_id" />
+                <field name="academic_term_id" />
+                <field name="grade_id" />
+                <group expand="0" string="Group By">
+                    <filter
+                            name="group_by_school_id"
+                            string="School"
+                            context="{'group_by': 'school_id'}"
+                        />
+                    <filter
+                            name="group_by_academic_year_id"
+                            string="Academic Year"
+                            context="{'group_by': 'academic_year_id'}"
+                        />
+                    <filter
+                            name="group_by_academic_term_id"
+                            string="Academic Term"
+                            context="{'group_by': 'academic_term_id'}"
+                        />
+                    <filter
+                            name="group_by_grade_id"
+                            string="Grade"
+                            context="{'group_by': 'grade_id'}"
+                        />
+                </group>
+            </xpath>
         </data>
     </field>
 </record>
