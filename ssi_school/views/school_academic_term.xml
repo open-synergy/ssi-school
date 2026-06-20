@@ -12,7 +12,55 @@
         />
     <field name="mode">primary</field>
     <field name="arch" type="xml">
-        <data />
+        <data>
+            <xpath expr="//search" position="inside">
+                <field name="year_id" />
+                <separator />
+                <filter
+                        name="filter_state_open"
+                        string="In Progress"
+                        domain="[('state', '=', 'open')]"
+                    />
+                <filter
+                        name="filter_state_done"
+                        string="Done"
+                        domain="[('state', '=', 'done')]"
+                    />
+                <separator />
+                <filter
+                        name="filter_enrollment_open"
+                        string="Enrollment Open"
+                        domain="[('enrollment_state', '=', 'open')]"
+                    />
+                <filter
+                        name="filter_first_term"
+                        string="First Term"
+                        domain="[('first_term', '=', True)]"
+                    />
+                <filter
+                        name="filter_last_term"
+                        string="Last Term"
+                        domain="[('last_term', '=', True)]"
+                    />
+                <group expand="0" string="Group By">
+                    <filter
+                            name="group_by_year_id"
+                            string="Academic Year"
+                            context="{'group_by': 'year_id'}"
+                        />
+                    <filter
+                            name="group_by_state"
+                            string="Status"
+                            context="{'group_by': 'state'}"
+                        />
+                    <filter
+                            name="group_by_enrollment_state"
+                            string="Enrollment Status"
+                            context="{'group_by': 'enrollment_state'}"
+                        />
+                </group>
+            </xpath>
+        </data>
     </field>
 </record>
 

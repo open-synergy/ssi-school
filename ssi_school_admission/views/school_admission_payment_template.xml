@@ -13,7 +13,30 @@
         />
     <field name="mode">primary</field>
     <field name="arch" type="xml">
-        <data />
+        <data>
+            <xpath expr="//search" position="inside">
+                <field name="academic_term_id" />
+                <field name="school_id" />
+                <field name="grade_id" />
+                <group expand="0" string="Group By">
+                    <filter
+                            name="group_by_school_id"
+                            string="School"
+                            context="{'group_by': 'school_id'}"
+                        />
+                    <filter
+                            name="group_by_academic_term_id"
+                            string="Academic Term"
+                            context="{'group_by': 'academic_term_id'}"
+                        />
+                    <filter
+                            name="group_by_grade_id"
+                            string="Grade"
+                            context="{'group_by': 'grade_id'}"
+                        />
+                </group>
+            </xpath>
+        </data>
     </field>
 </record>
 
@@ -156,11 +179,11 @@
 
 <menuitem
         id="school_admission_payment_template_menu"
-        name="Admission Payment Templates"
-        parent="ssi_school.menu_school_configuration"
+        name="Payment Templates"
+        parent="ssi_school.menu_admission_configuration"
         action="school_admission_payment_template_action"
         groups="school_admission_payment_template_group"
-        sequence="145"
+        sequence="20"
     />
 
 </odoo>

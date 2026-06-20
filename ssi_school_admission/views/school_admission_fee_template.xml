@@ -13,7 +13,24 @@
         />
     <field name="mode">primary</field>
     <field name="arch" type="xml">
-        <data />
+        <data>
+            <xpath expr="//search" position="inside">
+                <field name="school_id" />
+                <field name="grade_id" />
+                <group expand="0" string="Group By">
+                    <filter
+                            name="group_by_school_id"
+                            string="School"
+                            context="{'group_by': 'school_id'}"
+                        />
+                    <filter
+                            name="group_by_grade_id"
+                            string="Grade"
+                            context="{'group_by': 'grade_id'}"
+                        />
+                </group>
+            </xpath>
+        </data>
     </field>
 </record>
 
@@ -82,11 +99,11 @@
 
 <menuitem
         id="school_admission_fee_template_menu"
-        name="Admission Fee Templates"
-        parent="ssi_school.menu_school_configuration"
+        name="Fee Templates"
+        parent="ssi_school.menu_admission_configuration"
         action="school_admission_fee_template_action"
         groups="school_admission_fee_template_group"
-        sequence="15"
+        sequence="10"
     />
 
 </odoo>
