@@ -12,7 +12,67 @@
         />
     <field name="mode">primary</field>
     <field name="arch" type="xml">
-        <data />
+        <data>
+            <xpath expr="//search" position="inside">
+                <field name="contact_id" />
+                <field name="school_id" />
+                <field name="current_grade_id" />
+                <field name="grade_class_id" />
+                <separator />
+                <filter
+                        name="filter_draft"
+                        string="Registered"
+                        domain="[('state', '=', 'draft')]"
+                    />
+                <filter
+                        name="filter_enrol"
+                        string="Enrolled"
+                        domain="[('state', '=', 'enrol')]"
+                    />
+                <filter
+                        name="filter_graduate"
+                        string="Graduated"
+                        domain="[('state', '=', 'graduate')]"
+                    />
+                <filter
+                        name="filter_dropped"
+                        string="Dropped"
+                        domain="[('state', '=', 'dropped')]"
+                    />
+                <filter
+                        name="filter_transferred"
+                        string="Transferred"
+                        domain="[('state', '=', 'transferred')]"
+                    />
+                <group expand="0" string="Group By">
+                    <filter
+                            name="group_by_school_id"
+                            string="School"
+                            context="{'group_by': 'school_id'}"
+                        />
+                    <filter
+                            name="group_by_current_grade_type_id"
+                            string="Grade Type"
+                            context="{'group_by': 'current_grade_type_id'}"
+                        />
+                    <filter
+                            name="group_by_current_grade_id"
+                            string="Current Grade"
+                            context="{'group_by': 'current_grade_id'}"
+                        />
+                    <filter
+                            name="group_by_grade_class_id"
+                            string="Class"
+                            context="{'group_by': 'grade_class_id'}"
+                        />
+                    <filter
+                            name="group_by_state"
+                            string="Status"
+                            context="{'group_by': 'state'}"
+                        />
+                </group>
+            </xpath>
+        </data>
     </field>
 </record>
 

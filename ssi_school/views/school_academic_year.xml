@@ -12,7 +12,17 @@
         />
     <field name="mode">primary</field>
     <field name="arch" type="xml">
-        <data />
+        <data>
+            <xpath expr="//search" position="inside">
+                <group expand="0" string="Group By">
+                    <filter
+                            name="group_by_name"
+                            string="Name"
+                            context="{'group_by': 'name'}"
+                        />
+                </group>
+            </xpath>
+        </data>
     </field>
 </record>
 

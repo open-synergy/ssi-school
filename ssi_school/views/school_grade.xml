@@ -12,7 +12,18 @@
         />
     <field name="mode">primary</field>
     <field name="arch" type="xml">
-        <data />
+        <data>
+            <xpath expr="//search" position="inside">
+                <field name="type_id" />
+                <group expand="0" string="Group By">
+                    <filter
+                            name="group_by_type_id"
+                            string="Grade Type"
+                            context="{'group_by': 'type_id'}"
+                        />
+                </group>
+            </xpath>
+        </data>
     </field>
 </record>
 
