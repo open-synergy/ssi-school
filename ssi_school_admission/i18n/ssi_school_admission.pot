@@ -36,6 +36,10 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__academic_term_id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__academic_term_id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__academic_term_id
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_form_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_payment_template_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_test_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_view_search
 msgid "Academic Term"
 msgstr ""
 
@@ -43,6 +47,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__academic_year_id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__academic_year_id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__academic_year_id
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_form_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_test_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_view_search
 msgid "Academic Year"
 msgstr ""
 
@@ -158,7 +165,6 @@ msgstr ""
 
 #. module: ssi_school_admission
 #: model:ir.actions.act_window,name:ssi_school_admission.school_admission_fee_template_action
-#: model:ir.ui.menu,name:ssi_school_admission.school_admission_fee_template_menu
 msgid "Admission Fee Templates"
 msgstr ""
 
@@ -188,7 +194,6 @@ msgstr ""
 
 #. module: ssi_school_admission
 #: model:ir.actions.act_window,name:ssi_school_admission.school_admission_payment_template_action
-#: model:ir.ui.menu,name:ssi_school_admission.school_admission_payment_template_menu
 msgid "Admission Payment Templates"
 msgstr ""
 
@@ -749,6 +754,11 @@ msgid "Fee Template"
 msgstr ""
 
 #. module: ssi_school_admission
+#: model:ir.ui.menu,name:ssi_school_admission.school_admission_fee_template_menu
+msgid "Fee Templates"
+msgstr ""
+
+#. module: ssi_school_admission
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__message_follower_ids
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template__message_follower_ids
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__message_follower_ids
@@ -790,6 +800,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__grade_id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__grade_id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__grade_id
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_fee_template_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_form_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_payment_template_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_test_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_view_search
 msgid "Grade"
 msgstr ""
 
@@ -798,7 +813,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template__grade_type_id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__grade_type_id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__grade_type_id
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_view_search
 msgid "Grade Type"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_fee_template_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_form_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_payment_template_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_test_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_view_search
+msgid "Group By"
 msgstr ""
 
 #. module: ssi_school_admission
@@ -1118,6 +1143,11 @@ msgid "Next Approvals"
 msgstr ""
 
 #. module: ssi_school_admission
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_test_view_search
+msgid "Not Passed"
+msgstr ""
+
+#. module: ssi_school_admission
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__note
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template__note
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template_line__note
@@ -1188,6 +1218,7 @@ msgstr ""
 
 #. module: ssi_school_admission
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__passed
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_test_view_search
 msgid "Passed"
 msgstr ""
 
@@ -1196,6 +1227,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_wizard_create_admission__payment_template_id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test_wizard_create_admission__payment_template_id
 msgid "Payment Template"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.ui.menu,name:ssi_school_admission.school_admission_payment_template_menu
+msgid "Payment Templates"
 msgstr ""
 
 #. module: ssi_school_admission
@@ -1370,6 +1406,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__school_id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__school_id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__school_id
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_fee_template_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_form_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_payment_template_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_test_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_view_search
 msgid "School"
 msgstr ""
 
