@@ -179,11 +179,11 @@
 
 <menuitem
         id="school_enrollment_payment_template_menu"
-        name="Enrollment Payment Templates"
-        parent="menu_school_configuration"
+        name="Payment Templates"
+        parent="menu_enrollment_configuration"
         action="school_enrollment_payment_template_action"
         groups="school_enrollment_payment_template_group"
-        sequence="140"
+        sequence="10"
     />
 
 </odoo>

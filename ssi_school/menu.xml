@@ -58,5 +58,12 @@
         sequence="10"
     />
 
+<menuitem
+        id="menu_enrollment_configuration"
+        name="Enrollment"
+        parent="menu_school_configuration"
+        sequence="140"
+    />
+
 
 </odoo>

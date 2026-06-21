@@ -136,10 +136,10 @@
 
 <menuitem
         id="school_admission_test_menu"
-        name="Admission Tests"
-        parent="ssi_school.menu_school_root"
+        name="Tests"
+        parent="ssi_school_admission.menu_school_admission"
         action="school_admission_test_action"
         groups="school_admission_test_user_group"
-        sequence="30"
+        sequence="20"
     />
 </odoo>

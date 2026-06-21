@@ -227,10 +227,10 @@
 
 <menuitem
         id="school_admission_form_menu"
-        name="Admission Forms"
-        parent="ssi_school.menu_school_root"
+        name="Forms"
+        parent="ssi_school_admission.menu_school_admission"
         action="school_admission_form_action"
         groups="school_admission_form_user_group"
-        sequence="20"
+        sequence="10"
     />
 </odoo>
