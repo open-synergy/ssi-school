@@ -257,3 +257,24 @@ class SchoolEnrollmentPaymentTerm(models.Model):
         self.detail_ids.write({"invoice_line_id": False})
         self.write({"invoice_id": False})
         invoice.unlink()
+
+    @api.model
+    def create(self, vals):
+        result = super().create(vals)
+        if result.enrollment_id:
+            enrollment = result.enrollment_id
+            enrollment._recompute_product_summaries()  # pylint: disable=protected-access
+        return result
+
+    def write(self, vals):
+        result = super().write(vals)
+        self.mapped(
+            "enrollment_id"
+        )._recompute_product_summaries()  # pylint: disable=protected-access
+        return result
+
+    def unlink(self):
+        enrollments = self.mapped("enrollment_id")
+        result = super().unlink()
+        enrollments._recompute_product_summaries()  # pylint: disable=protected-access
+        return result

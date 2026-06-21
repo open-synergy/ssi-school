@@ -2,7 +2,7 @@
 # Copyright 2023 PT. Simetri Sinergi Indonesia
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class SchoolEnrollmentPaymentTermDetail(
@@ -72,3 +72,24 @@ class SchoolEnrollmentPaymentTermDetail(
             "tax_ids": [(6, 0, self.tax_ids.ids)],
             "analytic_account_id": aa or False,
         }
+
+    @api.model
+    def create(self, vals):
+        result = super().create(vals)
+        enrollment = result.term_id.enrollment_id
+        if enrollment:
+            enrollment._recompute_product_summaries()  # pylint: disable=protected-access
+        return result
+
+    def write(self, vals):
+        result = super().write(vals)
+        self.mapped(
+            "term_id.enrollment_id"
+        )._recompute_product_summaries()  # pylint: disable=protected-access
+        return result
+
+    def unlink(self):
+        enrollments = self.mapped("term_id.enrollment_id")
+        result = super().unlink()
+        enrollments._recompute_product_summaries()  # pylint: disable=protected-access
+        return result

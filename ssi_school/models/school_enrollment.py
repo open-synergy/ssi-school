@@ -284,6 +284,16 @@ class SchoolEnrollment(models.Model):
             "by the student for this enrollment."
         ),
     )
+    product_summary_ids = fields.One2many(
+        string="Payment Summary",
+        comodel_name="school_enrollment.product_summary",
+        inverse_name="enrollment_id",
+        help=(
+            "Automatically maintained summary of all payment term details "
+            "grouped by product. Recomputed on every change to payment terms "
+            "or their detail lines."
+        ),
+    )
     receivable_journal_id = fields.Many2one(
         string="Receivable Journal",
         comodel_name="account.journal",
@@ -337,6 +347,34 @@ class SchoolEnrollment(models.Model):
         compute_sudo=True,
         help="Policy that determines whether the Graduate action button is visible.",
     )
+
+    def _recompute_product_summaries(self):
+        for record in self.sudo():
+            summary_data = {}
+            for term in record.payment_term_ids:
+                for detail in term.detail_ids:
+                    pid = detail.product_id.id
+                    if not pid:
+                        continue
+                    if pid not in summary_data:
+                        summary_data[pid] = {
+                            "enrollment_id": record.id,
+                            "product_id": pid,
+                            "uom_quantity": 0.0,
+                            "amount_untaxed": 0.0,
+                            "amount_tax": 0.0,
+                            "amount_total": 0.0,
+                        }
+                    summary_data[pid]["uom_quantity"] += detail.uom_quantity
+                    summary_data[pid]["amount_untaxed"] += detail.price_subtotal
+                    summary_data[pid]["amount_tax"] += detail.price_tax
+                    summary_data[pid]["amount_total"] += detail.price_total
+            record.product_summary_ids.unlink()
+            Summary = self.env[
+                "school_enrollment.product_summary"
+            ]  # pylint: disable=invalid-name
+            for data in summary_data.values():
+                Summary.create(data)
 
     def _compute_policy(self):  # pylint: disable=missing-return
         _super = super()

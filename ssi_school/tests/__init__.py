@@ -17,4 +17,5 @@ from . import (  # noqa: F401
     test_school_enrollment,
     test_school_enrollment_results,
     test_school_enrollment_payment_term_management,
+    test_school_enrollment_product_summary,
 )
