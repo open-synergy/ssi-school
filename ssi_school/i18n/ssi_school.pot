@@ -813,6 +813,7 @@ msgstr ""
 
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term__enrollment_id
+#: model:ir.ui.menu,name:ssi_school.menu_enrollment_configuration
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_academic_term_view_form
 msgid "Enrollment"
 msgstr ""
@@ -829,7 +830,6 @@ msgstr ""
 
 #. module: ssi_school
 #: model:ir.actions.act_window,name:ssi_school.school_enrollment_payment_template_action
-#: model:ir.ui.menu,name:ssi_school.school_enrollment_payment_template_menu
 msgid "Enrollment Payment Templates"
 msgstr ""
 
@@ -1769,6 +1769,11 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__payment_template_id
 msgid "Payment Template"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.ui.menu,name:ssi_school.school_enrollment_payment_template_menu
+msgid "Payment Templates"
 msgstr ""
 
 #. module: ssi_school
