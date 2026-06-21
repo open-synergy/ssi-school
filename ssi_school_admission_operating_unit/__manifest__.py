@@ -17,6 +17,7 @@
     "depends": [
         "ssi_school_admission",
         "ssi_operating_unit_mixin",
+        "ssi_financial_accounting_operating_unit",
     ],
     "data": [
         "security/res_groups/school_admission.xml",
