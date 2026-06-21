@@ -2,12 +2,10 @@
 # Copyright 2024 PT. Simetri Sinergi Indonesia
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
-class SchoolAdmissionPaymentTermDetail(
-    models.Model
-):  # pylint: disable=too-few-public-methods
+class SchoolAdmissionPaymentTermDetail(models.Model):
     """
     Represents a single fee line detail within a school admission
     payment term, specifying the product, amount, and associated
@@ -50,6 +48,29 @@ class SchoolAdmissionPaymentTermDetail(
         ondelete="restrict",
         help=("The invoice line linked to this detail " "after the term is invoiced."),
     )
+
+    _SUMMARY_FIELDS = {"product_id", "price_subtotal", "price_tax", "price_total"}
+
+    @api.model
+    def create(self, vals):
+        record = super().create(vals)
+        admission = record.term_id.admission_id
+        if admission:
+            admission._recompute_product_summary()  # pylint: disable=protected-access
+        return record
+
+    def write(self, vals):
+        result = super().write(vals)
+        if self._SUMMARY_FIELDS & set(vals.keys()):
+            admissions = self.mapped("term_id.admission_id")
+            admissions._recompute_product_summary()  # pylint: disable=protected-access
+        return result
+
+    def unlink(self):
+        admissions = self.mapped("term_id.admission_id")
+        result = super().unlink()
+        admissions._recompute_product_summary()  # pylint: disable=protected-access
+        return result
 
     def _prepare_invoice_line(self):
         self.ensure_one()

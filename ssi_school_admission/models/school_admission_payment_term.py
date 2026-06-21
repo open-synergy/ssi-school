@@ -156,6 +156,12 @@ class SchoolAdmissionPaymentTerm(models.Model):
         ),
     )
 
+    def unlink(self):
+        admissions = self.mapped("admission_id")
+        result = super().unlink()
+        admissions._recompute_product_summary()  # pylint: disable=protected-access
+        return result
+
     def action_create_invoice(self):
         for record in self.sudo():
             record._create_invoice()  # pylint: disable=protected-access
