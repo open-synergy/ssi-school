@@ -19,6 +19,11 @@ msgid "# Document"
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_product_summary__enrollment_id
+msgid "# Enrollment"
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term__invoice_id
 msgid "# Invoice"
 msgstr ""
@@ -342,6 +347,13 @@ msgid "Attachment Count"
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__product_summary_ids
+msgid ""
+"Automatically maintained summary of all payment term details grouped by "
+"product. Recomputed on every change to payment terms or their detail lines."
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_academic_term__first_term
 msgid ""
 "Automatically set to True if this semester/term is the first within the "
@@ -601,6 +613,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template_term_detail__create_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term__create_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__create_uid
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_product_summary__create_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade__create_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__create_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__create_uid
@@ -619,6 +632,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template_term_detail__create_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term__create_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__create_date
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_product_summary__create_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade__create_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__create_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__create_date
@@ -631,6 +645,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__currency_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term__currency_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__currency_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_product_summary__currency_id
 msgid "Currency"
 msgstr ""
 
@@ -728,6 +743,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template_term_detail__display_name
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term__display_name
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__display_name
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_product_summary__display_name
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade__display_name
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__display_name
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__display_name
@@ -1090,6 +1106,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template_term_detail__id
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term__id
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__id
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_product_summary__id
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade__id
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__id
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__id
@@ -1288,6 +1305,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template_term_detail____last_update
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term____last_update
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail____last_update
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_product_summary____last_update
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade____last_update
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_class____last_update
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type____last_update
@@ -1318,6 +1336,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template_term_detail__write_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term__write_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__write_uid
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_product_summary__write_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade__write_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__write_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__write_uid
@@ -1336,6 +1355,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template_term_detail__write_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term__write_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__write_date
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_product_summary__write_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade__write_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__write_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__write_date
@@ -1767,6 +1787,12 @@ msgid "Passed"
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__product_summary_ids
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_form
+msgid "Payment Summary"
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__payment_template_id
 msgid "Payment Template"
 msgstr ""
@@ -1869,6 +1895,7 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template_term_detail__product_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__product_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_product_summary__product_id
 msgid "Product"
 msgstr ""
 
@@ -2052,6 +2079,11 @@ msgstr ""
 #: model:ir.module.category,name:ssi_school.school_enrollment_data_ownership_module_category
 #: model:ir.module.category,name:ssi_school.school_enrollment_workflow_module_category
 msgid "School Enrollment"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model,name:ssi_school.model_school_enrollment_product_summary
+msgid "School Enrollment - Product Summary"
 msgstr ""
 
 #. module: ssi_school
@@ -2312,8 +2344,30 @@ msgid "Subject & Scoring"
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_product_summary__uom_quantity
+msgid "Sum of quantities for this product across all payment term details."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_product_summary__amount_tax
+msgid "Sum of tax amounts for this product across all payment terms."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_product_summary__amount_total
+msgid ""
+"Sum of totals (including tax) for this product across all payment terms."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_product_summary__amount_untaxed
+msgid "Sum of untaxed subtotals for this product across all payment terms."
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term__amount_tax
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__price_tax
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_product_summary__amount_tax
 msgid "Tax"
 msgstr ""
 
@@ -2409,6 +2463,11 @@ msgid "The billing currency, automatically taken from the enrollment."
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_product_summary__currency_id
+msgid "The billing currency, taken from the enrollment."
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_grade_class__grade_id
 msgid ""
 "The class level for this homeroom, e.g. Grade 1 or Grade 2. Will be reset if"
@@ -2487,6 +2546,11 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_term__enrollment_id
 msgid "The enrollment that owns this payment term."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_product_summary__enrollment_id
+msgid "The enrollment that owns this product summary line."
 msgstr ""
 
 #. module: ssi_school
@@ -2597,6 +2661,11 @@ msgid "The product or fee type to be billed."
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_product_summary__product_id
+msgid "The product/fee type being summarised across all payment terms."
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment__receivable_account_id
 msgid "The receivable account used to record enrollment billing."
 msgstr ""
@@ -2699,7 +2768,13 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term__amount_total
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__price_total
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_product_summary__amount_total
 msgid "Total"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_product_summary__uom_quantity
+msgid "Total Qty"
 msgstr ""
 
 #. module: ssi_school
@@ -2823,6 +2898,11 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term__amount_untaxed
 msgid "Untaxed"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_product_summary__amount_untaxed
+msgid "Untaxed Amount"
 msgstr ""
 
 #. module: ssi_school
