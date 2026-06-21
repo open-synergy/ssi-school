@@ -38,6 +38,7 @@
         "security/ir_model_access/school_enrollment.xml",
         "security/ir_model_access/school_enrollment_payment_term.xml",
         "security/ir_model_access/school_enrollment_payment_term_detail.xml",
+        "security/ir_model_access/school_enrollment_product_summary.xml",
         "security/ir_model_access/school_enrollment_payment_template.xml",
         "security/ir_rule/school_enrollment.xml",
         "ir_sequence/school_enrollment.xml",

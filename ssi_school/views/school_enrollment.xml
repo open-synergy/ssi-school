@@ -244,6 +244,18 @@
                         <field name="receivable_account_id" />
                     </group>
                 </page>
+                <page name="payment_summary" string="Payment Summary">
+                    <field name="product_summary_ids" nolabel="1" colspan="4">
+                        <tree create="false" edit="false" delete="false">
+                            <field name="product_id" />
+                            <field name="uom_quantity" />
+                            <field name="currency_id" invisible="1" />
+                            <field name="amount_untaxed" />
+                            <field name="amount_tax" />
+                            <field name="amount_total" />
+                        </tree>
+                    </field>
+                </page>
             </xpath>
             <xpath expr="//group[@name='policy_2']" position="inside">
                 <field name="pass_ok" />

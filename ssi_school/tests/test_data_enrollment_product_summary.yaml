@@ -1,0 +1,716 @@
+scenarios:
+  - name: "Product Summary - satu produk satu term tercompute saat detail ditambah"
+    steps:
+      - step: "Setup - get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "School Fee Income PS1"
+          code: "PS14200"
+          user_type_id: "EVAL: registry['account_type'].id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Fee PS1"
+          type: "service"
+          list_price: 1000000.0
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type PS1"
+          code: "GTPS1"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 PS1"
+          code: "AYPS1"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester PS1"
+          code: "SMPS1"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "EVAL: registry['academic_year'].id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School PS1"
+          code: "SCHPS1"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade PS1"
+          code: "GPS1"
+          sequence: 10
+          type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class PS1"
+          code: "CLAPS1"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact PS1"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student PS1"
+          code: "STUPS1"
+          contact_id: "EVAL: registry['contact'].id"
+          school_id: "EVAL: registry['school'].id"
+
+      - step: "Create enrollment tanpa payment term"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "EVAL: registry['academic_year'].id"
+          academic_term_id: "EVAL: registry['academic_term'].id"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          grade_class_id: "EVAL: registry['grade_class'].id"
+          student_id: "EVAL: registry['student'].id"
+          currency_id: "EVAL: env.company.currency_id.id"
+
+      - step: "Assert product_summary_ids kosong di awal"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          product_summary_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 0
+
+      - step: "Tambah payment term pada enrollment"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term"
+        values:
+          enrollment_id: "EVAL: registry['enrollment'].id"
+          name: "Term 1 PS1"
+          sequence: 10
+
+      - step: "Tambah detail pada payment term"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        save_as: "detail"
+        values:
+          term_id: "EVAL: registry['term'].id"
+          product_id: "EVAL: registry['product'].id"
+          name: "School Fee PS1"
+          account_id: "EVAL: registry['account'].id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+
+      - step: "Invalidate enrollment cache"
+        action: "call"
+        target: "enrollment"
+        method: "invalidate_cache"
+
+      - step: "Assert product_summary_ids berisi 1 record"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          product_summary_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 1
+
+      - step: "Cari summary record"
+        action: "search"
+        model: "school_enrollment.product_summary"
+        domain: [["enrollment_id", "=", "EVAL: registry['enrollment'].id"]]
+        save_as: "summary"
+        expect_count: 1
+
+      - step: "Assert nilai amount_untaxed pada summary"
+        action: "assert"
+        target: "summary"
+        asserts:
+          uom_quantity:
+            type: "value"
+            expected: 1.0
+          amount_untaxed:
+            type: "value"
+            expected: 1000000.0
+          amount_total:
+            type: "value"
+            expected: 1000000.0
+
+  - name: "Product Summary - dua term produk sama diaggregate jadi satu summary"
+    steps:
+      - step: "Setup - get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "School Fee Income PS2"
+          code: "PS24200"
+          user_type_id: "EVAL: registry['account_type'].id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Fee PS2"
+          type: "service"
+          list_price: 500000.0
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type PS2"
+          code: "GTPS2"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 PS2"
+          code: "AYPS2"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester PS2"
+          code: "SMPS2"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "EVAL: registry['academic_year'].id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School PS2"
+          code: "SCHPS2"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade PS2"
+          code: "GPS2"
+          sequence: 10
+          type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class PS2"
+          code: "CLAPS2"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact PS2"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student PS2"
+          code: "STUPS2"
+          contact_id: "EVAL: registry['contact'].id"
+          school_id: "EVAL: registry['school'].id"
+
+      - step: "Create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "EVAL: registry['academic_year'].id"
+          academic_term_id: "EVAL: registry['academic_term'].id"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          grade_class_id: "EVAL: registry['grade_class'].id"
+          student_id: "EVAL: registry['student'].id"
+          currency_id: "EVAL: env.company.currency_id.id"
+
+      - step: "Tambah term 1 dengan detail"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term1"
+        values:
+          enrollment_id: "EVAL: registry['enrollment'].id"
+          name: "Term 1 PS2"
+          sequence: 10
+
+      - step: "Tambah detail term 1"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        values:
+          term_id: "EVAL: registry['term1'].id"
+          product_id: "EVAL: registry['product'].id"
+          name: "Fee Term 1 PS2"
+          account_id: "EVAL: registry['account'].id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 500000.0
+
+      - step: "Tambah term 2 dengan detail produk yang sama"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term2"
+        values:
+          enrollment_id: "EVAL: registry['enrollment'].id"
+          name: "Term 2 PS2"
+          sequence: 20
+
+      - step: "Tambah detail term 2 dengan produk sama"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        values:
+          term_id: "EVAL: registry['term2'].id"
+          product_id: "EVAL: registry['product'].id"
+          name: "Fee Term 2 PS2"
+          account_id: "EVAL: registry['account'].id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 500000.0
+
+      - step: "Invalidate enrollment cache"
+        action: "call"
+        target: "enrollment"
+        method: "invalidate_cache"
+
+      - step: "Assert product_summary_ids hanya 1 record meski 2 term"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          product_summary_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 1
+
+      - step: "Cari summary record"
+        action: "search"
+        model: "school_enrollment.product_summary"
+        domain: [["enrollment_id", "=", "EVAL: registry['enrollment'].id"]]
+        save_as: "summary"
+        expect_count: 1
+
+      - step: "Assert total quantity dan amount diaggregate dari dua term"
+        action: "assert"
+        target: "summary"
+        asserts:
+          uom_quantity:
+            type: "value"
+            expected: 2.0
+          amount_untaxed:
+            type: "value"
+            expected: 1000000.0
+          amount_total:
+            type: "value"
+            expected: 1000000.0
+
+  - name: "Product Summary - summary dihapus saat detail diunlink"
+    steps:
+      - step: "Setup - get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "School Fee Income PS3"
+          code: "PS34200"
+          user_type_id: "EVAL: registry['account_type'].id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Fee PS3"
+          type: "service"
+          list_price: 750000.0
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type PS3"
+          code: "GTPS3"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 PS3"
+          code: "AYPS3"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester PS3"
+          code: "SMPS3"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "EVAL: registry['academic_year'].id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School PS3"
+          code: "SCHPS3"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade PS3"
+          code: "GPS3"
+          sequence: 10
+          type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class PS3"
+          code: "CLAPS3"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact PS3"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student PS3"
+          code: "STUPS3"
+          contact_id: "EVAL: registry['contact'].id"
+          school_id: "EVAL: registry['school'].id"
+
+      - step: "Create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "EVAL: registry['academic_year'].id"
+          academic_term_id: "EVAL: registry['academic_term'].id"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          grade_class_id: "EVAL: registry['grade_class'].id"
+          student_id: "EVAL: registry['student'].id"
+          currency_id: "EVAL: env.company.currency_id.id"
+
+      - step: "Tambah term"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term"
+        values:
+          enrollment_id: "EVAL: registry['enrollment'].id"
+          name: "Term 1 PS3"
+          sequence: 10
+
+      - step: "Tambah detail"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        save_as: "detail"
+        values:
+          term_id: "EVAL: registry['term'].id"
+          product_id: "EVAL: registry['product'].id"
+          name: "Fee PS3"
+          account_id: "EVAL: registry['account'].id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 750000.0
+
+      - step: "Invalidate enrollment cache"
+        action: "call"
+        target: "enrollment"
+        method: "invalidate_cache"
+
+      - step: "Assert summary ada sebelum detail dihapus"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          product_summary_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 1
+
+      - step: "Hapus detail"
+        action: "call"
+        target: "detail"
+        method: "unlink"
+
+      - step: "Invalidate enrollment cache setelah hapus detail"
+        action: "call"
+        target: "enrollment"
+        method: "invalidate_cache"
+
+      - step: "Assert summary kosong setelah detail dihapus"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          product_summary_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 0
+
+  - name: "Product Summary - summary dihapus saat term diunlink"
+    steps:
+      - step: "Setup - get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "School Fee Income PS4"
+          code: "PS44200"
+          user_type_id: "EVAL: registry['account_type'].id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Fee PS4"
+          type: "service"
+          list_price: 250000.0
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type PS4"
+          code: "GTPS4"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 PS4"
+          code: "AYPS4"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester PS4"
+          code: "SMPS4"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "EVAL: registry['academic_year'].id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School PS4"
+          code: "SCHPS4"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade PS4"
+          code: "GPS4"
+          sequence: 10
+          type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class PS4"
+          code: "CLAPS4"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact PS4"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student PS4"
+          code: "STUPS4"
+          contact_id: "EVAL: registry['contact'].id"
+          school_id: "EVAL: registry['school'].id"
+
+      - step: "Create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "EVAL: registry['academic_year'].id"
+          academic_term_id: "EVAL: registry['academic_term'].id"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          grade_class_id: "EVAL: registry['grade_class'].id"
+          student_id: "EVAL: registry['student'].id"
+          currency_id: "EVAL: env.company.currency_id.id"
+
+      - step: "Tambah term dengan detail"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term"
+        values:
+          enrollment_id: "EVAL: registry['enrollment'].id"
+          name: "Term 1 PS4"
+          sequence: 10
+
+      - step: "Tambah detail pada term"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        values:
+          term_id: "EVAL: registry['term'].id"
+          product_id: "EVAL: registry['product'].id"
+          name: "Fee PS4"
+          account_id: "EVAL: registry['account'].id"
+          uom_quantity: 2.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 250000.0
+
+      - step: "Invalidate enrollment cache"
+        action: "call"
+        target: "enrollment"
+        method: "invalidate_cache"
+
+      - step: "Assert summary ada sebelum term dihapus"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          product_summary_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 1
+
+      - step: "Hapus term (cascade hapus detail)"
+        action: "call"
+        target: "term"
+        method: "unlink"
+
+      - step: "Invalidate enrollment cache setelah hapus term"
+        action: "call"
+        target: "enrollment"
+        method: "invalidate_cache"
+
+      - step: "Assert summary kosong setelah term dihapus"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          product_summary_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 0
