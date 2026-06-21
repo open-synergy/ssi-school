@@ -155,6 +155,7 @@ msgstr ""
 
 #. module: ssi_school_admission
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term__admission_id
+#: model:ir.ui.menu,name:ssi_school_admission.menu_school_admission
 msgid "Admission"
 msgstr ""
 
@@ -183,7 +184,6 @@ msgstr ""
 
 #. module: ssi_school_admission
 #: model:ir.actions.act_window,name:ssi_school_admission.school_admission_form_action
-#: model:ir.ui.menu,name:ssi_school_admission.school_admission_form_menu
 msgid "Admission Forms"
 msgstr ""
 
@@ -207,7 +207,6 @@ msgstr ""
 #. module: ssi_school_admission
 #: model:ir.actions.act_window,name:ssi_school_admission.school_admission_test_action
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__admission_test_ids
-#: model:ir.ui.menu,name:ssi_school_admission.school_admission_test_menu
 msgid "Admission Tests"
 msgstr ""
 
@@ -792,6 +791,11 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_template__activity_type_icon
 #: model:ir.model.fields,help:ssi_school_admission.field_school_admission_test__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.ui.menu,name:ssi_school_admission.school_admission_form_menu
+msgid "Forms"
 msgstr ""
 
 #. module: ssi_school_admission
@@ -1654,6 +1658,11 @@ msgstr ""
 #. module: ssi_school_admission
 #: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_test_view_form
 msgid "Test Result"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.ui.menu,name:ssi_school_admission.school_admission_test_menu
+msgid "Tests"
 msgstr ""
 
 #. module: ssi_school_admission
