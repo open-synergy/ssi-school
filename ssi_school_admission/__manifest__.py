@@ -49,6 +49,7 @@
         "data/base_automation_data.xml",
         "wizards/school_admission_form_create_admission.xml",
         "wizards/school_admission_test_create_admission.xml",
+        "menu.xml",
         "views/school_admission_fee_template.xml",
         "views/school_admission_form.xml",
         "views/school_admission_test.xml",

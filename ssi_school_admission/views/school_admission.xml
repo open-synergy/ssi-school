@@ -184,10 +184,10 @@
 <menuitem
         id="school_admission_menu"
         name="Admissions"
-        parent="ssi_school.menu_school_root"
+        parent="ssi_school_admission.menu_school_admission"
         action="school_admission_action"
         groups="school_admission_user_group"
-        sequence="50"
+        sequence="30"
     />
 
 </odoo>
