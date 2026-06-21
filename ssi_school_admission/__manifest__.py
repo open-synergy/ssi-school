@@ -56,6 +56,7 @@
         "ir_module_category/school_admission.xml",
         "res_group/school_admission.xml",
         "ir_model_access/school_admission.xml",
+        "ir_model_access/school_admission_product_summary.xml",
         "ir_model_access/school_admission_payment_template.xml",
         "ir_model_access/school_admission_payment_term.xml",
         "ir_rule/school_admission.xml",

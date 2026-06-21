@@ -213,6 +213,12 @@ class SchoolAdmission(models.Model):
         inverse_name="admission_id",
         help="The payment installment terms defined for this admission.",
     )
+    product_summary_ids = fields.One2many(
+        string="Product Summary",
+        comodel_name="school_admission_product_summary",
+        inverse_name="admission_id",
+        help="Aggregated payment amounts per product across all payment terms.",
+    )
     receivable_journal_id = fields.Many2one(
         string="Receivable Journal",
         comodel_name="account.journal",
@@ -309,6 +315,38 @@ class SchoolAdmission(models.Model):
                         "uom_id": tdetail.uom_id.id if tdetail.uom_id else False,
                         "price_unit": tdetail.price_unit,
                         "tax_ids": [(6, 0, tdetail.tax_ids.ids)],
+                    }
+                )
+        self._recompute_product_summary()
+
+    def _recompute_product_summary(self):
+        for record in self:
+            record.product_summary_ids.unlink()
+            product_data = {}
+            for term in record.payment_term_ids:
+                for detail in term.detail_ids:
+                    pid = detail.product_id.id
+                    if not pid:
+                        continue
+                    if pid not in product_data:
+                        product_data[pid] = {
+                            "product_id": pid,
+                            "amount_untaxed": 0.0,
+                            "amount_tax": 0.0,
+                            "amount_total": 0.0,
+                        }
+                    product_data[pid]["amount_untaxed"] += detail.price_subtotal
+                    product_data[pid]["amount_tax"] += detail.price_tax
+                    product_data[pid]["amount_total"] += detail.price_total
+            Summary = self.env[
+                "school_admission_product_summary"
+            ]  # pylint: disable=invalid-name
+            for seq, data in enumerate(product_data.values(), start=1):
+                Summary.create(
+                    {
+                        "admission_id": record.id,
+                        "sequence": seq * 5,
+                        **data,
                     }
                 )
 

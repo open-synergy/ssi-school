@@ -164,6 +164,23 @@
                         </group>
                     </group>
                 </page>
+                <page name="product_summary" string="Product Summary">
+                    <field
+                            name="product_summary_ids"
+                            colspan="4"
+                            nolabel="1"
+                            readonly="1"
+                        >
+                        <tree>
+                            <field name="sequence" invisible="1" />
+                            <field name="product_id" />
+                            <field name="currency_id" invisible="1" />
+                            <field name="amount_untaxed" />
+                            <field name="amount_tax" />
+                            <field name="amount_total" />
+                        </tree>
+                    </field>
+                </page>
                 <page name="result" string="Result">
                     <group name="result_group" colspan="4" col="2">
                         <field name="school_student_id" />
