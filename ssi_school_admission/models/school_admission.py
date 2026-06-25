@@ -245,7 +245,7 @@ class SchoolAdmission(models.Model):
         string="School Student",
         comodel_name="school_student",
         readonly=True,
-        help=("The student profile created after this " "admission is completed."),
+        help=("The student profile created when this " "admission is opened."),
     )
 
     def _compute_policy(self):  # pylint: disable=missing-return
@@ -350,7 +350,7 @@ class SchoolAdmission(models.Model):
                     }
                 )
 
-    @ssi_decorator.post_done_action()
+    @ssi_decorator.post_open_action()
     def _10_create_school_student(self):
         self.ensure_one()
         if self.school_student_id:
