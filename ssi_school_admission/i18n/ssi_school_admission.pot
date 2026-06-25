@@ -2062,7 +2062,7 @@ msgstr ""
 
 #. module: ssi_school_admission
 #: model:ir.model.fields,help:ssi_school_admission.field_school_admission__school_student_id
-msgid "The student profile created after this admission is completed."
+msgid "The student profile created when this admission is opened."
 msgstr ""
 
 #. module: ssi_school_admission
