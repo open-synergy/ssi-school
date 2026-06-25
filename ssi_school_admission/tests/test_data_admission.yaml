@@ -213,6 +213,14 @@ scenarios:
         target: "admission"
         method: "invalidate_cache"
 
+      - step: "Assert school student created on open"
+        action: "assert"
+        target: "admission"
+        asserts:
+          school_student_id:
+            type: "value"
+            operator: "is_truthy"
+
       - step: "Done admission"
         action: "call"
         target: "admission"
@@ -227,14 +235,6 @@ scenarios:
         action: "call"
         target: "admission"
         method: "invalidate_cache"
-
-      - step: "Assert school student created"
-        action: "assert"
-        target: "admission"
-        asserts:
-          school_student_id:
-            type: "value"
-            operator: "is_truthy"
 
   - name: "Admission Simple Workflow: Confirm Approve Done Without Payment Template"
     steps:
@@ -351,6 +351,14 @@ scenarios:
         target: "admission"
         method: "invalidate_cache"
 
+      - step: "Assert school student created on open"
+        action: "assert"
+        target: "admission"
+        asserts:
+          school_student_id:
+            type: "value"
+            operator: "is_truthy"
+
       - step: "Done admission"
         action: "call"
         target: "admission"
@@ -365,11 +373,3 @@ scenarios:
         action: "call"
         target: "admission"
         method: "invalidate_cache"
-
-      - step: "Assert school student created"
-        action: "assert"
-        target: "admission"
-        asserts:
-          school_student_id:
-            type: "value"
-            operator: "is_truthy"
