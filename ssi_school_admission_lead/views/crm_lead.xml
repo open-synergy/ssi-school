@@ -17,13 +17,6 @@
                 <field name="admission_form_id" />
                 <field name="admission_test_id" />
                 <field name="create_admission_form_ok" invisible="1" />
-                <button
-                        name="action_create_admission_form"
-                        type="object"
-                        string="Create Admission Form"
-                        class="btn-primary"
-                        attrs="{'invisible': [('create_admission_form_ok', '=', False)]}"
-                    />
             </xpath>
             <xpath
                     expr="//group[@name='lead_partner']//field[@name='student_id']"
@@ -31,13 +24,24 @@
                 >
                 <field name="admission_form_id" />
                 <field name="admission_test_id" />
-                <field name="create_admission_form_ok" invisible="1" />
+            </xpath>
+            <xpath
+                    expr="//header/button[@name='action_create_admission']"
+                    position="before"
+                >
                 <button
                         name="action_create_admission_form"
                         type="object"
                         string="Create Admission Form"
                         class="btn-primary"
                         attrs="{'invisible': [('create_admission_form_ok', '=', False)]}"
+                    />
+                <button
+                        name="action_open_admission_test"
+                        type="object"
+                        string="Admission Test"
+                        class="btn-secondary"
+                        attrs="{'invisible': [('admission_test_id', '=', False)]}"
                     />
             </xpath>
         </data>
