@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2024 OpenSynergy Indonesia
+     Copyright 2024 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+
+<record id="crm_lead_create_admission_view_form" model="ir.ui.view">
+    <field name="name">crm.lead.create_admission - form</field>
+    <field name="model">crm.lead.create_admission</field>
+    <field name="arch" type="xml">
+        <form string="Create Admission">
+            <group name="main" colspan="4" col="2">
+                <group name="left" colspan="1" col="2">
+                    <field name="lead_id" />
+                    <field name="date" />
+                    <field name="academic_year_id" />
+                    <field
+                            name="academic_term_id"
+                            domain="[('year_id', '=', academic_year_id)]"
+                        />
+                </group>
+                <group name="right" colspan="1" col="2">
+                    <field name="school_id" />
+                    <field name="grade_type_id" invisible="1" />
+                    <field name="grade_id" domain="[('type_id', '=', grade_type_id)]" />
+                    <field name="student_id" />
+                </group>
+            </group>
+            <footer>
+                <button
+                        name="action_confirm"
+                        type="object"
+                        string="Create"
+                        class="btn-primary"
+                    />
+                <button string="Cancel" class="btn-secondary" special="cancel" />
+            </footer>
+        </form>
+    </field>
+</record>
+
+</odoo>

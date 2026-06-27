@@ -16,6 +16,15 @@
                 >
                 <field name="school_id" />
                 <field name="student_id" />
+                <field name="admission_id" />
+                <field name="create_admission_ok" invisible="1" />
+                <button
+                        name="action_create_admission"
+                        type="object"
+                        string="Create Admission"
+                        class="btn-primary"
+                        attrs="{'invisible': [('create_admission_ok', '=', False)]}"
+                    />
             </xpath>
             <xpath
                     expr="//group[@name='lead_partner']//field[@name='partner_id']"
@@ -23,6 +32,15 @@
                 >
                 <field name="school_id" />
                 <field name="student_id" />
+                <field name="admission_id" />
+                <field name="create_admission_ok" invisible="1" />
+                <button
+                        name="action_create_admission"
+                        type="object"
+                        string="Create Admission"
+                        class="btn-primary"
+                        attrs="{'invisible': [('create_admission_ok', '=', False)]}"
+                    />
             </xpath>
         </data>
     </field>
