@@ -69,3 +69,14 @@ class CrmLead(models.Model):  # pylint: disable=too-few-public-methods
                 "default_student_id": self.student_id.id if self.student_id else False,
             },
         }
+
+    def action_open_admission_test(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "name": "Admission Test",
+            "res_model": "school_admission_test",
+            "res_id": self.admission_test_id.id,
+            "view_mode": "form",
+            "target": "current",
+        }
