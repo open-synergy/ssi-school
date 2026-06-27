@@ -40,6 +40,7 @@ msgstr ""
 
 #. module: ssi_school_admission_lead
 #: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead__admission_test_id
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission_lead.crm_lead_admission_form_view
 msgid "Admission Test"
 msgstr ""
 
