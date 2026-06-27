@@ -14,8 +14,59 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead_create_admission__academic_term_id
+msgid "Academic Term"
+msgstr ""
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead_create_admission__academic_year_id
+msgid "Academic Year"
+msgstr ""
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead__admission_id
+msgid "Admission"
+msgstr ""
+
+#. module: ssi_school_lead
 #: model:ir.model,name:ssi_school_lead.model_crm_lead
 msgid "CRM Lead"
+msgstr ""
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead__create_admission_ok
+msgid "Can Create Admission"
+msgstr ""
+
+#. module: ssi_school_lead
+#: model_terms:ir.ui.view,arch_db:ssi_school_lead.crm_lead_create_admission_view_form
+msgid "Cancel"
+msgstr ""
+
+#. module: ssi_school_lead
+#: model_terms:ir.ui.view,arch_db:ssi_school_lead.crm_lead_create_admission_view_form
+msgid "Create"
+msgstr ""
+
+#. module: ssi_school_lead
+#: model_terms:ir.ui.view,arch_db:ssi_school_lead.crm_lead_create_admission_view_form
+#: model_terms:ir.ui.view,arch_db:ssi_school_lead.crm_lead_school_form_view
+msgid "Create Admission"
+msgstr ""
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead_create_admission__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead_create_admission__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead_create_admission__date
+msgid "Date"
 msgstr ""
 
 #. module: ssi_school_lead
@@ -25,31 +76,91 @@ msgstr ""
 
 #. module: ssi_school_lead
 #: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead__display_name
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead_create_admission__display_name
 #: model:ir.model.fields,field_description:ssi_school_lead.field_school__display_name
 msgid "Display Name"
 msgstr ""
 
 #. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead_create_admission__grade_id
+msgid "Grade"
+msgstr ""
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead_create_admission__grade_type_id
+msgid "Grade Type"
+msgstr ""
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,help:ssi_school_lead.field_crm_lead_create_admission__grade_type_id
+msgid "Grade type derived from the selected school."
+msgstr ""
+
+#. module: ssi_school_lead
 #: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead__id
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead_create_admission__id
 #: model:ir.model.fields,field_description:ssi_school_lead.field_school__id
 msgid "ID"
 msgstr ""
 
 #. module: ssi_school_lead
+#: model:ir.model.fields,help:ssi_school_lead.field_crm_lead__create_admission_ok
+msgid "Indicates whether an admission can still be created for this lead."
+msgstr ""
+
+#. module: ssi_school_lead
 #: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead____last_update
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead_create_admission____last_update
 #: model:ir.model.fields,field_description:ssi_school_lead.field_school____last_update
 msgid "Last Modified on"
 msgstr ""
 
 #. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead_create_admission__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead_create_admission__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead_create_admission__lead_id
+msgid "Lead"
+msgstr ""
+
+#. module: ssi_school_lead
 #: model:ir.model,name:ssi_school_lead.model_school
 #: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead__school_id
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead_create_admission__school_id
 msgid "School"
 msgstr ""
 
 #. module: ssi_school_lead
 #: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead__student_id
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead_create_admission__student_id
 msgid "Student"
+msgstr ""
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,help:ssi_school_lead.field_crm_lead_create_admission__lead_id
+msgid "The CRM lead this admission is created from."
+msgstr ""
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,help:ssi_school_lead.field_crm_lead_create_admission__academic_term_id
+msgid "The academic term for the admission."
+msgstr ""
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,help:ssi_school_lead.field_crm_lead_create_admission__academic_year_id
+msgid "The academic year for the admission."
+msgstr ""
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,help:ssi_school_lead.field_crm_lead_create_admission__date
+msgid "The date of the admission."
 msgstr ""
 
 #. module: ssi_school_lead
@@ -60,11 +171,36 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_lead
+#: model:ir.model.fields,help:ssi_school_lead.field_crm_lead_create_admission__grade_id
+msgid "The grade level the student is being admitted to."
+msgstr ""
+
+#. module: ssi_school_lead
 #: model:ir.model.fields,help:ssi_school_lead.field_crm_lead__student_id
 msgid "The prospective student associated with this lead."
 msgstr ""
 
 #. module: ssi_school_lead
+#: model:ir.model.fields,help:ssi_school_lead.field_crm_lead__admission_id
+msgid "The school admission record created from this lead."
+msgstr ""
+
+#. module: ssi_school_lead
 #: model:ir.model.fields,help:ssi_school_lead.field_crm_lead__school_id
 msgid "The school associated with this lead."
+msgstr ""
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,help:ssi_school_lead.field_crm_lead_create_admission__school_id
+msgid "The school the student is being admitted to."
+msgstr ""
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,help:ssi_school_lead.field_crm_lead_create_admission__student_id
+msgid "The student being admitted."
+msgstr ""
+
+#. module: ssi_school_lead
+#: model:ir.model,name:ssi_school_lead.model_crm_lead_create_admission
+msgid "Wizard - Create Admission from CRM Lead"
 msgstr ""
