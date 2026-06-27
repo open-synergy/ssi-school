@@ -15,8 +15,11 @@
     "depends": [
         "ssi_lead",
         "ssi_school",
+        "ssi_school_admission",
     ],
     "data": [
+        "security/ir.model.access.csv",
+        "views/crm_lead_create_admission_view.xml",
         "views/crm_lead_views.xml",
         "views/school_views.xml",
     ],
