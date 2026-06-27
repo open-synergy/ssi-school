@@ -2,9 +2,9 @@
    :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
    :alt: License: AGPL-3
 
-=====================================
+======================================
 School Admission Lead - Operating Unit
-=====================================
+======================================
 
 Glue module that propagates the operating unit from a CRM lead to the
 school admission form created via the lead's action buttons.
