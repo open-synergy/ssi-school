@@ -19,6 +19,7 @@
     "application": False,
     "depends": [
         "ssi_lead_operating_unit",
+        "ssi_school_lead",
         "ssi_school_admission_lead",
         "ssi_school_admission_operating_unit",
     ],
