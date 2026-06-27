@@ -14,26 +14,42 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: ssi_school_admission_operating_unit
+#: model:ir.model,name:ssi_school_admission_operating_unit.model_school_admission_form_wizard_create_admission
+msgid "Create School Admission from Admission Form"
+msgstr ""
+
+#. module: ssi_school_admission_operating_unit
+#: model:ir.model,name:ssi_school_admission_operating_unit.model_school_admission_test_wizard_create_admission
+msgid "Create School Admission from Admission Test"
+msgstr ""
+
+#. module: ssi_school_admission_operating_unit
 #: model:ir.model.fields,field_description:ssi_school_admission_operating_unit.field_school_admission__display_name
 #: model:ir.model.fields,field_description:ssi_school_admission_operating_unit.field_school_admission_form__display_name
+#: model:ir.model.fields,field_description:ssi_school_admission_operating_unit.field_school_admission_form_wizard_create_admission__display_name
 #: model:ir.model.fields,field_description:ssi_school_admission_operating_unit.field_school_admission_payment_term__display_name
 #: model:ir.model.fields,field_description:ssi_school_admission_operating_unit.field_school_admission_test__display_name
+#: model:ir.model.fields,field_description:ssi_school_admission_operating_unit.field_school_admission_test_wizard_create_admission__display_name
 msgid "Display Name"
 msgstr ""
 
 #. module: ssi_school_admission_operating_unit
 #: model:ir.model.fields,field_description:ssi_school_admission_operating_unit.field_school_admission__id
 #: model:ir.model.fields,field_description:ssi_school_admission_operating_unit.field_school_admission_form__id
+#: model:ir.model.fields,field_description:ssi_school_admission_operating_unit.field_school_admission_form_wizard_create_admission__id
 #: model:ir.model.fields,field_description:ssi_school_admission_operating_unit.field_school_admission_payment_term__id
 #: model:ir.model.fields,field_description:ssi_school_admission_operating_unit.field_school_admission_test__id
+#: model:ir.model.fields,field_description:ssi_school_admission_operating_unit.field_school_admission_test_wizard_create_admission__id
 msgid "ID"
 msgstr ""
 
 #. module: ssi_school_admission_operating_unit
 #: model:ir.model.fields,field_description:ssi_school_admission_operating_unit.field_school_admission____last_update
 #: model:ir.model.fields,field_description:ssi_school_admission_operating_unit.field_school_admission_form____last_update
+#: model:ir.model.fields,field_description:ssi_school_admission_operating_unit.field_school_admission_form_wizard_create_admission____last_update
 #: model:ir.model.fields,field_description:ssi_school_admission_operating_unit.field_school_admission_payment_term____last_update
 #: model:ir.model.fields,field_description:ssi_school_admission_operating_unit.field_school_admission_test____last_update
+#: model:ir.model.fields,field_description:ssi_school_admission_operating_unit.field_school_admission_test_wizard_create_admission____last_update
 msgid "Last Modified on"
 msgstr ""
 
