@@ -682,6 +682,7 @@ msgid "Disconnect Invoice"
 msgstr ""
 
 #. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_academic_term__display_name
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__display_name
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template__display_name
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template_line__display_name
@@ -846,6 +847,7 @@ msgid "Group By"
 msgstr ""
 
 #. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_academic_term__id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template__id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template_line__id
@@ -926,6 +928,13 @@ msgid "Indicates whether the student passed this admission test."
 msgstr ""
 
 #. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_academic_term__is_open_admission
+msgid ""
+"Indicates whether this academic term is open for school admission. When "
+"enabled, this term will appear in the admission wizard."
+msgstr ""
+
+#. module: ssi_school_admission
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_detail__invoice_line_id
 msgid "Invoice Line"
 msgstr ""
@@ -959,6 +968,7 @@ msgid "Journal Item"
 msgstr ""
 
 #. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_academic_term____last_update
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission____last_update
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template____last_update
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template_line____last_update
@@ -1228,6 +1238,12 @@ msgid "Number of unread messages"
 msgstr ""
 
 #. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_academic_term__is_open_admission
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_academic_term_view_search_admission
+msgid "Open for Admission"
+msgstr ""
+
+#. module: ssi_school_admission
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__parent_id
 msgid "Parent Name"
 msgstr ""
@@ -1442,6 +1458,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_test_view_search
 #: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_view_search
 msgid "School"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model,name:ssi_school_admission.model_school_academic_term
+msgid "School Academic Term"
 msgstr ""
 
 #. module: ssi_school_admission
