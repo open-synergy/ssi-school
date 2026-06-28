@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2024 OpenSynergy Indonesia
+     Copyright 2024 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+
+<record id="school_academic_term_view_tree_admission" model="ir.ui.view">
+    <field name="name">school_academic_term - tree - admission</field>
+    <field name="model">school_academic_term</field>
+    <field name="inherit_id" ref="ssi_school.school_academic_term_view_tree" />
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='state']" position="before">
+                <field name="is_open_admission" />
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_academic_term_view_form_admission" model="ir.ui.view">
+    <field name="name">school_academic_term - form - admission</field>
+    <field name="model">school_academic_term</field>
+    <field name="inherit_id" ref="ssi_school.school_academic_term_view_form" />
+    <field name="arch" type="xml">
+        <data>
+            <xpath
+                    expr="//page[@name='enrollment']//field[@name='enrollment_state']"
+                    position="after"
+                >
+                <field name="is_open_admission" />
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_academic_term_view_search_admission" model="ir.ui.view">
+    <field name="name">school_academic_term - search - admission</field>
+    <field name="model">school_academic_term</field>
+    <field name="inherit_id" ref="ssi_school.school_academic_term_view_search" />
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//filter[@name='filter_enrollment_open']" position="after">
+                <filter
+                        name="filter_open_admission"
+                        string="Open for Admission"
+                        domain="[('is_open_admission', '=', True)]"
+                    />
+            </xpath>
+        </data>
+    </field>
+</record>
+
+</odoo>

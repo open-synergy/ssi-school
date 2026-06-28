@@ -64,6 +64,7 @@
         "sequence_template/school_admission.xml",
         "policy_template/school_admission.xml",
         "approval_template/school_admission.xml",
+        "views/school_academic_term.xml",
         "views/school_admission_payment_template.xml",
         "views/school_admission_payment_term.xml",
         "views/school_admission.xml",

@@ -1,0 +1,118 @@
+scenarios:
+  - name: "Set is_open_admission Flag on Academic Term"
+    steps:
+      - step: "Create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "year"
+        values:
+          name: "2028 Term Admission Flag"
+          code: "AY2028AF"
+          date_start: "2028-07-01"
+          date_end: "2029-06-30"
+
+      - step: "Create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "term"
+        values:
+          name: "Term Admission Flag"
+          code: "TAF"
+          date_start: "2028-07-01"
+          date_end: "2028-12-31"
+          year_id: "EVAL: registry['year'].id"
+
+      - step: "Assert is_open_admission defaults to false"
+        action: "assert"
+        target: "term"
+        asserts:
+          is_open_admission:
+            type: "value"
+            expected: false
+
+      - step: "Set is_open_admission to true"
+        action: "write"
+        target: "term"
+        values:
+          is_open_admission: true
+
+      - step: "Assert is_open_admission is true"
+        action: "assert"
+        target: "term"
+        asserts:
+          is_open_admission:
+            type: "value"
+            expected: true
+
+      - step: "Set is_open_admission back to false"
+        action: "write"
+        target: "term"
+        values:
+          is_open_admission: false
+
+      - step: "Assert is_open_admission is false again"
+        action: "assert"
+        target: "term"
+        asserts:
+          is_open_admission:
+            type: "value"
+            expected: false
+
+  - name: "Filter Academic Terms by is_open_admission"
+    steps:
+      - step: "Create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "year"
+        values:
+          name: "2029 Filter Admission"
+          code: "AY2029FA"
+          date_start: "2029-07-01"
+          date_end: "2030-06-30"
+
+      - step: "Create term with is_open_admission true"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "term_open"
+        values:
+          name: "Term Open Admission"
+          code: "TOPAD"
+          date_start: "2029-07-01"
+          date_end: "2029-12-31"
+          year_id: "EVAL: registry['year'].id"
+          is_open_admission: true
+
+      - step: "Create term with is_open_admission false"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "term_closed"
+        values:
+          name: "Term Closed Admission"
+          code: "TCLAD"
+          date_start: "2030-01-01"
+          date_end: "2030-06-30"
+          year_id: "EVAL: registry['year'].id"
+          is_open_admission: false
+
+      - step: "Search for open admission terms"
+        action: "search"
+        model: "school_academic_term"
+        domain: [["code", "in", ["TOPAD", "TCLAD"]], ["is_open_admission", "=", true]]
+        save_as: "open_terms"
+        expect_count: 1
+
+      - step: "Assert term_open has is_open_admission true"
+        action: "assert"
+        target: "term_open"
+        asserts:
+          is_open_admission:
+            type: "value"
+            expected: true
+
+      - step: "Assert term_closed has is_open_admission false"
+        action: "assert"
+        target: "term_closed"
+        asserts:
+          is_open_admission:
+            type: "value"
+            expected: false
