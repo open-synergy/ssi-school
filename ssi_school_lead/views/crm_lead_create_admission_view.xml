@@ -16,7 +16,7 @@
                     <field name="academic_year_id" />
                     <field
                             name="academic_term_id"
-                            domain="[('year_id', '=', academic_year_id)]"
+                            domain="[('year_id', '=', academic_year_id), ('is_open_admission', '=', True)]"
                         />
                 </group>
                 <group name="right" colspan="1" col="2">
@@ -24,6 +24,7 @@
                     <field name="grade_type_id" invisible="1" />
                     <field name="grade_id" domain="[('type_id', '=', grade_type_id)]" />
                     <field name="student_id" />
+                    <field name="payment_template_id" />
                 </group>
             </group>
             <footer>
