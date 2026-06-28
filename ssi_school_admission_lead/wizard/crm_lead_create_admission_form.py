@@ -105,7 +105,8 @@ class CrmLeadCreateAdmissionForm(models.TransientModel):
 
     @api.onchange("academic_year_id")
     def _onchange_academic_year_id(self):
-        self.academic_term_id = False
+        if self.academic_term_id.year_id != self.academic_year_id:
+            self.academic_term_id = False
 
     @api.onchange("school_id")
     def _onchange_school_id(self):
