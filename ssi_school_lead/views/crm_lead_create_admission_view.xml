@@ -24,7 +24,10 @@
                     <field name="grade_type_id" invisible="1" />
                     <field name="grade_id" domain="[('type_id', '=', grade_type_id)]" />
                     <field name="student_id" />
-                    <field name="payment_template_id" />
+                    <field
+                            name="payment_template_id"
+                            domain="[('school_id', '=', school_id), ('grade_id', '=', grade_id), ('academic_term_id', '=', academic_term_id)]"
+                        />
                 </group>
             </group>
             <footer>
