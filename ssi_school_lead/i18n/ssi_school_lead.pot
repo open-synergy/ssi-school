@@ -131,6 +131,11 @@ msgid "Lead"
 msgstr ""
 
 #. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead_create_admission__payment_template_id
+msgid "Payment Template"
+msgstr ""
+
+#. module: ssi_school_lead
 #: model:ir.model,name:ssi_school_lead.model_school
 #: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead__school_id
 #: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead_create_admission__school_id
@@ -150,7 +155,9 @@ msgstr ""
 
 #. module: ssi_school_lead
 #: model:ir.model.fields,help:ssi_school_lead.field_crm_lead_create_admission__academic_term_id
-msgid "The academic term for the admission."
+msgid ""
+"The academic term for the admission. Only terms open for admission are "
+"shown."
 msgstr ""
 
 #. module: ssi_school_lead
@@ -173,6 +180,13 @@ msgstr ""
 #. module: ssi_school_lead
 #: model:ir.model.fields,help:ssi_school_lead.field_crm_lead_create_admission__grade_id
 msgid "The grade level the student is being admitted to."
+msgstr ""
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,help:ssi_school_lead.field_crm_lead_create_admission__payment_template_id
+msgid ""
+"The payment template to apply to the admission. Auto-populated based on "
+"school, grade, and academic term."
 msgstr ""
 
 #. module: ssi_school_lead
