@@ -107,6 +107,11 @@ msgid "Grade Type"
 msgstr ""
 
 #. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead_create_admission_form__grade_type_id
+msgid "Grade type derived from the selected school."
+msgstr ""
+
+#. module: ssi_school_admission_lead
 #: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead__id
 #: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead_create_admission_form__id
 msgid "ID"
@@ -160,6 +165,23 @@ msgid "Student"
 msgstr ""
 
 #. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead_create_admission_form__lead_id
+msgid "The CRM lead this admission form is created from."
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead_create_admission_form__academic_term_id
+msgid ""
+"The academic term for the admission form. Only terms open for admission are "
+"shown."
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead_create_admission_form__academic_year_id
+msgid "The academic year for the admission form."
+msgstr ""
+
+#. module: ssi_school_admission_lead
 #: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead__admission_test_id
 msgid ""
 "The admission test linked to the associated admission form, populated "
@@ -167,15 +189,45 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_admission_lead
-#: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead_create_admission_form__grade_type_id
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead_create_admission_form__date
+msgid "The date of the admission form."
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead_create_admission_form__fee_template_id
 msgid ""
-"The education level type used by this school, e.g. Elementary, Junior High, "
-"or Senior High School."
+"The fee template to apply to the admission form. Auto-populated based on "
+"school and grade."
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead_create_admission_form__grade_id
+msgid "The grade level the student is applying for."
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead_create_admission_form__parent_id
+msgid "The parent or guardian of the student."
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead_create_admission_form__pricelist_id
+msgid "The pricelist applied to the admission fees."
 msgstr ""
 
 #. module: ssi_school_admission_lead
 #: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead__admission_form_id
 msgid "The school admission form created from or linked to this lead."
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead_create_admission_form__school_id
+msgid "The school the student is applying to."
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead_create_admission_form__student_id
+msgid "The student submitting the admission form."
 msgstr ""
 
 #. module: ssi_school_admission_lead
