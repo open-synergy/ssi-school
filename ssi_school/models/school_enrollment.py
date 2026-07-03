@@ -462,11 +462,21 @@ class SchoolEnrollment(models.Model):
             "school_enrollment_payment_term_detail"
         ]
         for tterm in template.term_ids.sorted("sequence"):
+            date_invoice = False
+            date_due = False
+            if tterm.date_invoice_duration_id:
+                date_invoice = tterm.date_invoice_duration_id.get_duration(self.date)
+            if tterm.date_due_duration_id:
+                date_due = tterm.date_due_duration_id.get_duration(
+                    date_invoice or self.date
+                )
             term = Term.create(
                 {
                     "enrollment_id": self.id,
                     "name": tterm.name,
                     "sequence": tterm.sequence,
+                    "date_invoice": date_invoice,
+                    "date_due": date_due,
                 }
             )
             for tdetail in tterm.detail_ids.sorted("sequence"):

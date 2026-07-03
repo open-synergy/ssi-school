@@ -21,6 +21,7 @@
         "ssi_product_line_account_mixin",
         "base_address_city",
         "ssi_financial_accounting",
+        "base_duration",
     ],
     "data": [
         "security/ir_module_category_data.xml",
