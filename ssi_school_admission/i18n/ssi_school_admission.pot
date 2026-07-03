@@ -722,6 +722,27 @@ msgid "Draft"
 msgstr ""
 
 #. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template_term__date_due_duration_id
+msgid "Due Date Duration"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_template_term__date_invoice_duration_id
+msgid ""
+"Duration applied to the admission date to compute the estimated invoice date"
+" of this term. Leave empty to skip auto-computing the estimated invoice "
+"date."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_template_term__date_due_duration_id
+msgid ""
+"Duration applied to this term's estimated invoice date to compute its "
+"estimated due date. Leave empty to skip auto-computing the estimated due "
+"date."
+msgstr ""
+
+#. module: ssi_school_admission
 #: model:school_admission_fee_template,name:ssi_school_admission.demo_fee_template_1
 msgid "Elementary School A - Grade 1 Admission Fee (demo)"
 msgstr ""
@@ -932,6 +953,11 @@ msgstr ""
 msgid ""
 "Indicates whether this academic term is open for school admission. When "
 "enabled, this term will appear in the admission wizard."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template_term__date_invoice_duration_id
+msgid "Invoice Date Duration"
 msgstr ""
 
 #. module: ssi_school_admission
