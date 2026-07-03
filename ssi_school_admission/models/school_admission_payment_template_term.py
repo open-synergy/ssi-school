@@ -42,3 +42,21 @@ class SchoolAdmissionPaymentTemplateTerm(
         copy=True,
         help="The individual fee items included in this payment term.",
     )
+    date_invoice_duration_id = fields.Many2one(
+        string="Invoice Date Duration",
+        comodel_name="base.duration",
+        help=(
+            "Duration applied to the admission date to compute the "
+            "estimated invoice date of this term. Leave empty to skip "
+            "auto-computing the estimated invoice date."
+        ),
+    )
+    date_due_duration_id = fields.Many2one(
+        string="Due Date Duration",
+        comodel_name="base.duration",
+        help=(
+            "Duration applied to this term's estimated invoice date to "
+            "compute its estimated due date. Leave empty to skip "
+            "auto-computing the estimated due date."
+        ),
+    )
