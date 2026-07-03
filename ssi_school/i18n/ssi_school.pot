@@ -791,6 +791,27 @@ msgid "Dropped"
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template_term__date_due_duration_id
+msgid "Due Date Duration"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template_term__date_invoice_duration_id
+msgid ""
+"Duration applied to the enrollment date to compute the estimated invoice "
+"date of this term. Leave empty to skip auto-computing the estimated invoice "
+"date."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template_term__date_due_duration_id
+msgid ""
+"Duration applied to this term's estimated invoice date to compute its "
+"estimated due date. Leave empty to skip auto-computing the estimated due "
+"date."
+msgstr ""
+
+#. module: ssi_school
 #: model:school_grade_type,name:ssi_school.elementary_school_grade_type
 msgid "Elementary School (demo)"
 msgstr ""
@@ -1258,6 +1279,11 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_student__initial_grade_type_id
 msgid "Initial Grade Type"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template_term__date_invoice_duration_id
+msgid "Invoice Date Duration"
 msgstr ""
 
 #. module: ssi_school
