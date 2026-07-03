@@ -24,6 +24,7 @@
         "ssi_transaction_total_mixin",
         "ssi_product_line_account_mixin",
         "base_automation",
+        "base_duration",
     ],
     "data": [
         "ir_module_category/school_admission_form.xml",

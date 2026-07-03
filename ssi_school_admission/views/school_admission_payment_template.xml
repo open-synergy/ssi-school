@@ -85,6 +85,8 @@
                                     </group>
                                     <group name="term_header_right" colspan="1" col="2">
                                         <field name="sequence" />
+                                        <field name="date_invoice_duration_id" />
+                                        <field name="date_due_duration_id" />
                                     </group>
                                 </group>
                                 <notebook>
