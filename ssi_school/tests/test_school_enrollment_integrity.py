@@ -3,7 +3,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo.exceptions import ValidationError
-from odoo.tests import TransactionCase, tagged
+from odoo.tests import SavepointCase, tagged
 
 # These scenarios assert that invalid data is REJECTED (ValidationError), which
 # the odoo-yaml-test YAML DSL cannot express (any exception raised by a step
@@ -12,7 +12,7 @@ from odoo.tests import TransactionCase, tagged
 
 
 @tagged("post_install", "-at_install")
-class TestSchoolEnrollmentIntegrity(TransactionCase):
+class TestSchoolEnrollmentIntegrity(SavepointCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
