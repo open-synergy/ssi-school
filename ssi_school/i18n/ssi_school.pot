@@ -14,6 +14,105 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: ssi_school
+#: code:addons/ssi_school/models/school_student.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Change student state\n"
+"Database ID: %s\n"
+"Problem: State cannot change from '%s' to '%s'\n"
+"Solution: Follow the allowed student state transition sequence\n"
+msgstr ""
+
+#. module: ssi_school
+#: code:addons/ssi_school/models/school_enrollment.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Open enrollment\n"
+"Database ID: %s\n"
+"Problem: Academic Term '%s' is not open for enrollment\n"
+"Solution: Open the enrollment window on the academic term before opening this enrollment\n"
+msgstr ""
+
+#. module: ssi_school
+#: code:addons/ssi_school/models/school_enrollment.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Open enrollment\n"
+"Database ID: %s\n"
+"Problem: Grade Class '%s' is at full capacity (%s/%s students)\n"
+"Solution: Choose a different Grade Class or increase its capacity\n"
+msgstr ""
+
+#. module: ssi_school
+#: code:addons/ssi_school/models/school_enrollment.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Open enrollment\n"
+"Database ID: %s\n"
+"Problem: Student '%s' already has an active enrollment for term '%s'\n"
+"Solution: Cancel or close the existing enrollment before opening a new one\n"
+msgstr ""
+
+#. module: ssi_school
+#: code:addons/ssi_school/models/school_academic_term.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Set academic term dates\n"
+"Database ID: %s\n"
+"Problem: Date End must be after Date Start\n"
+"Solution: Set Date End to a date later than Date Start\n"
+msgstr ""
+
+#. module: ssi_school
+#: code:addons/ssi_school/models/school_academic_term.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Set academic term dates\n"
+"Database ID: %s\n"
+"Problem: Term dates fall outside the range of academic year '%s' (%s - %s)\n"
+"Solution: Set term dates within the academic year's date range\n"
+msgstr ""
+
+#. module: ssi_school
+#: code:addons/ssi_school/models/school_academic_year.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Set academic year dates\n"
+"Database ID: %s\n"
+"Problem: Date End must be after Date Start\n"
+"Solution: Set Date End to a date later than Date Start\n"
+msgstr ""
+
+#. module: ssi_school
+#: code:addons/ssi_school/models/school_enrollment.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Set enrollment academic term\n"
+"Database ID: %s\n"
+"Problem: Academic Term '%s' does not belong to Academic Year '%s'\n"
+"Solution: Select an Academic Term that belongs to the selected Academic Year\n"
+msgstr ""
+
+#. module: ssi_school
+#: code:addons/ssi_school/models/school_enrollment.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Set enrollment grade class\n"
+"Database ID: %s\n"
+"Problem: Grade Class '%s' does not match the selected Grade/School\n"
+"Solution: Select a Grade Class that belongs to the selected Grade and School\n"
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__name
 msgid "# Document"
 msgstr ""
@@ -368,6 +467,11 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__available_seat
+msgid "Available Seat"
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment__allowed_pricelist_ids
 msgid "Available pricelists based on the selected currency."
 msgstr ""
@@ -446,6 +550,11 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields.selection,name:ssi_school.selection__school_enrollment_payment_term__state__cancelled
 msgid "Cancelled"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__capacity
+msgid "Capacity"
 msgstr ""
 
 #. module: ssi_school
@@ -668,11 +777,6 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school
-#: model:ir.model.fields.selection,name:ssi_school.selection__school_student__state__on_leave
-msgid "Cuti / Penangguhan"
-msgstr ""
-
-#. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__date
 msgid "Date"
 msgstr ""
@@ -687,6 +791,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__date_start
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__date_start
 msgid "Date Start"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields.selection,name:ssi_school.selection__school_student__state__deceased
+msgid "Deceased"
 msgstr ""
 
 #. module: ssi_school
@@ -720,11 +829,6 @@ msgstr ""
 #. module: ssi_school
 #: model:school_teacher,name:ssi_school.school_teacher_4
 msgid "Dewi Tirta (demo)"
-msgstr ""
-
-#. module: ssi_school
-#: model:ir.model.fields.selection,name:ssi_school.selection__school_student__state__dropped
-msgid "Dikeluarkan / Drop Out"
 msgstr ""
 
 #. module: ssi_school
@@ -788,6 +892,11 @@ msgstr ""
 #. module: ssi_school
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_student_view_search
 msgid "Dropped"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields.selection,name:ssi_school.selection__school_student__state__dropped
+msgid "Dropped Out / Expelled"
 msgstr ""
 
 #. module: ssi_school
@@ -1487,13 +1596,10 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school
-#: model:ir.model.fields.selection,name:ssi_school.selection__school_student__state__resigned
-msgid "Mengundurkan Diri"
-msgstr ""
-
-#. module: ssi_school
-#: model:ir.model.fields.selection,name:ssi_school.selection__school_student__state__deceased
-msgid "Meninggal Dunia"
+#: model:ir.model.fields,help:ssi_school.field_school_grade_class__capacity
+msgid ""
+"Maximum number of students this class can hold. Leave at 0 for unlimited "
+"capacity (no enrollment cap is enforced)."
 msgstr ""
 
 #. module: ssi_school
@@ -1558,11 +1664,6 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_student__mother_id
 msgid "Mother"
-msgstr ""
-
-#. module: ssi_school
-#: model:ir.model.fields.selection,name:ssi_school.selection__school_student__state__transferred
-msgid "Mutasi Keluar"
 msgstr ""
 
 #. module: ssi_school
@@ -1741,6 +1842,13 @@ msgid "Number of messages with delivery error"
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_grade_class__student_count
+msgid ""
+"Number of students currently actively enrolled (enrollment state Open) in "
+"this class."
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school__message_unread_counter
 #: model:ir.model.fields,help:ssi_school.field_school_academic_term__message_unread_counter
 #: model:ir.model.fields,help:ssi_school.field_school_academic_year__message_unread_counter
@@ -1752,6 +1860,11 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school.field_school_student__message_unread_counter
 #: model:ir.model.fields,help:ssi_school.field_school_teacher__message_unread_counter
 msgid "Number of unread messages"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields.selection,name:ssi_school.selection__school_student__state__on_leave
+msgid "On Leave"
 msgstr ""
 
 #. module: ssi_school
@@ -2000,8 +2113,20 @@ msgid "Rejected"
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_grade_class__available_seat
+msgid ""
+"Remaining seats in this class (Capacity minus Student Count). Not meaningful"
+" when Capacity is 0 (unlimited)."
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.ui.menu,name:ssi_school.menu_school_report
 msgid "Report"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields.selection,name:ssi_school.selection__school_student__state__resigned
+msgid "Resigned"
 msgstr ""
 
 #. module: ssi_school
@@ -2229,11 +2354,6 @@ msgid "Set result to Pass?"
 msgstr ""
 
 #. module: ssi_school
-#: model:ir.model.fields.selection,name:ssi_school.selection__school_student__state__suspended
-msgid "Skorsing"
-msgstr ""
-
-#. module: ssi_school
 #: model:school_student,name:ssi_school.school_student_2
 msgid "Sri Wahyuni Umar (demo)"
 msgstr ""
@@ -2349,6 +2469,11 @@ msgid "Student"
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__student_count
+msgid "Student Count"
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_academic_term__enrollment_state
 msgid "Student admission status: Closed or Open for Enrollment."
 msgstr ""
@@ -2388,6 +2513,11 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment_product_summary__amount_untaxed
 msgid "Sum of untaxed subtotals for this product across all payment terms."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields.selection,name:ssi_school.selection__school_student__state__suspended
+msgid "Suspended"
 msgstr ""
 
 #. module: ssi_school
@@ -2838,6 +2968,11 @@ msgstr ""
 #. module: ssi_school
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_student_view_search
 msgid "Transferred"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields.selection,name:ssi_school.selection__school_student__state__transferred
+msgid "Transferred Out"
 msgstr ""
 
 #. module: ssi_school
