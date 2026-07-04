@@ -92,8 +92,6 @@
                 <field name="grade_type_id" invisible="1" />
                 <field name="grade_id" domain="[('type_id','=',grade_type_id)]" />
                 <field name="student_id" />
-                <field name="admission_form_id" />
-                <field name="admission_test_id" />
             </xpath>
             <xpath expr="//group[@name='header_right']" position="inside">
                 <field name="date" />
@@ -109,6 +107,12 @@
                     />
             </xpath>
             <xpath expr="//page[1]" position="before">
+                <page name="admission_source" string="Admission Source">
+                    <group name="admission_source_group" colspan="4" col="2">
+                        <field name="admission_form_id" />
+                        <field name="admission_test_id" />
+                    </group>
+                </page>
                 <page name="billing" string="Billing">
                     <group name="billing_template" colspan="4" col="2">
                         <group name="billing_template_left" colspan="1" col="2">
