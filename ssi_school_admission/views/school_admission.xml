@@ -89,7 +89,7 @@
                         />
                 </div>
                 <field name="school_id" />
-                <field name="grade_type_id" />
+                <field name="grade_type_id" invisible="1" />
                 <field name="grade_id" domain="[('type_id','=',grade_type_id)]" />
                 <field name="student_id" />
                 <field name="admission_form_id" />
