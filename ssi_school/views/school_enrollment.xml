@@ -120,11 +120,15 @@
                     />
             </xpath>
             <xpath expr="//field[@name='user_id']" position="after">
-                <field name="academic_year_id" />
-                <field
-                        name="academic_term_id"
-                        domain="[('year_id','=',academic_year_id),('enrollment_state','=','open')]"
-                    />
+                <label for="academic_term_id" string="Year/Term" />
+                <div class="o_row">
+                    <field name="academic_year_id" class="oe_inline" />
+                    <field
+                            name="academic_term_id"
+                            domain="[('year_id','=',academic_year_id),('enrollment_state','=','open')]"
+                            class="oe_inline"
+                        />
+                </div>
                 <field name="last_term" />
                 <field name="school_id" />
                 <field name="grade_type_id" />
