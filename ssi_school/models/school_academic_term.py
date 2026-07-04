@@ -3,7 +3,8 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class SchoolAcademicTerm(models.Model):
@@ -102,6 +103,39 @@ class SchoolAcademicTerm(models.Model):
             if record == record.year_id.last_term_id:
                 result = True
             record.last_term = result
+
+    @api.constrains("date_start", "date_end", "year_id")
+    def _check_date_coherence(self):
+        for record in self:
+            if not (record.date_start and record.date_end and record.year_id):
+                continue
+            if record.date_end <= record.date_start:
+                error_message = (
+                    _(
+                        """
+Context: Set academic term dates
+Database ID: %s
+Problem: Date End must be after Date Start
+Solution: Set Date End to a date later than Date Start
+"""
+                    )
+                    % (record.id,)
+                )
+                raise ValidationError(error_message)
+            year = record.year_id
+            if record.date_start < year.date_start or record.date_end > year.date_end:
+                error_message = (
+                    _(
+                        """
+Context: Set academic term dates
+Database ID: %s
+Problem: Term dates fall outside the range of academic year '%s' (%s - %s)
+Solution: Set term dates within the academic year's date range
+"""
+                    )
+                    % (record.id, year.name, year.date_start, year.date_end)
+                )
+                raise ValidationError(error_message)
 
     def action_open(self):
         for record in self.sudo():

@@ -237,6 +237,123 @@ scenarios:
             type: "value"
             operator: "is_truthy"
 
+  - name: "Compute Next Grade Fallback Scoped To School Grade Type"
+    steps:
+      - step: "Create elementary grade type (sorts before junior high)"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "type_elementary"
+        values:
+          name: "Elementary Fallback Test"
+          code: "ELFB"
+          sequence: 10
+      - step: "Create junior high grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "type_junior"
+        values:
+          name: "Junior High Fallback Test"
+          code: "JHFB"
+          sequence: 20
+      - step: "Create elementary grade (global first grade)"
+        action: "create"
+        model: "school_grade"
+        save_as: "el_grade"
+        values:
+          name: "Elementary Grade Fallback"
+          code: "ELGFB"
+          sequence: 10
+          type_id: "EVAL: registry['type_elementary'].id"
+      - step: "Create junior high grade (first grade of its own type)"
+        action: "create"
+        model: "school_grade"
+        save_as: "jh_grade"
+        values:
+          name: "Junior High Grade Fallback"
+          code: "JHGFB"
+          sequence: 10
+          type_id: "EVAL: registry['type_junior'].id"
+      - step: "Create junior high school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "Junior High School Fallback"
+          code: "SCHJHFB"
+          grade_type_id: "EVAL: registry['type_junior'].id"
+      - step: "Create contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Fallback Contact"
+      - step: "Create student without initial_grade_id or enrollment"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student Fallback Test"
+          code: "STUFB"
+          contact_id: "EVAL: registry['contact'].id"
+          school_id: "EVAL: registry['school'].id"
+      - step: "Invalidate student cache"
+        action: "call"
+        target: "student"
+        method: "invalidate_cache"
+      - step: "Assert next_grade_id is the junior high grade, not the elementary one"
+        action: "search"
+        model: "school_grade"
+        domain:
+          - ["id", "=", "EVAL: registry['student'].next_grade_id.id"]
+          - ["id", "=", "EVAL: registry['jh_grade'].id"]
+        save_as: "check_fallback"
+        expect_count: 1
+
+  - name: "Compute Next Grade Fallback Without Any Grade"
+    steps:
+      - step: "Create empty grade type (no grades yet)"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "type_empty"
+        values:
+          name: "Empty Grade Type Fallback"
+          code: "EGTFB"
+          sequence: 30
+      - step: "Create school using the empty grade type"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Empty Grade Type Fallback"
+          code: "SCHEGTFB"
+          grade_type_id: "EVAL: registry['type_empty'].id"
+      - step: "Create contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Empty Fallback Contact"
+      - step: "Create student without initial_grade_id or enrollment"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student Empty Fallback Test"
+          code: "STUEFB"
+          contact_id: "EVAL: registry['contact'].id"
+          school_id: "EVAL: registry['school'].id"
+      - step: "Invalidate student cache"
+        action: "call"
+        target: "student"
+        method: "invalidate_cache"
+      - step: "Assert next_grade_id is falsy (no error)"
+        action: "assert"
+        target: "student"
+        asserts:
+          next_grade_id:
+            type: "value"
+            operator: "is_falsy"
+
   - name: "Compute Active Enrollment None"
     steps:
       - step: "Create grade type"

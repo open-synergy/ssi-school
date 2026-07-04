@@ -42,9 +42,49 @@ class SchoolGradeClass(models.Model):  # pylint: disable=too-few-public-methods
             "Will be reset if the school is changed."
         ),
     )
+    capacity = fields.Integer(
+        string="Capacity",
+        default=0,
+        help=(
+            "Maximum number of students this class can hold. "
+            "Leave at 0 for unlimited capacity (no enrollment cap is enforced)."
+        ),
+    )
+    student_count = fields.Integer(
+        string="Student Count",
+        compute="_compute_student_count",
+        help=(
+            "Number of students currently actively enrolled (enrollment state "
+            "Open) in this class."
+        ),
+    )
+    available_seat = fields.Integer(
+        string="Available Seat",
+        compute="_compute_student_count",
+        help=(
+            "Remaining seats in this class (Capacity minus Student Count). "
+            "Not meaningful when Capacity is 0 (unlimited)."
+        ),
+    )
 
     @api.onchange(
         "school_id",
     )
     def onchange_grade_id(self):
         self.grade_id = False
+
+    # Deliberately non-store: student_count/available_seat aggregate
+    # school_enrollment records on another model, so there is no field chain
+    # to declare as a dependency. They recompute on every fresh read (e.g. a
+    # freshly opened form); actual capacity enforcement lives in
+    # school_enrollment._check_grade_class_capacity, which always runs a live
+    # search_count and is unaffected by this field's caching.
+    @api.depends("capacity")
+    def _compute_student_count(self):
+        enrollment_model = self.env["school_enrollment"]
+        for record in self:
+            count = enrollment_model.search_count(
+                [("grade_class_id", "=", record.id), ("state", "=", "open")]
+            )
+            record.student_count = count
+            record.available_seat = record.capacity - count

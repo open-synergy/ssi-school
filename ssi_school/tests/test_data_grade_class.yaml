@@ -252,3 +252,51 @@ scenarios:
           grade_type_id:
             type: "value"
             operator: "is_truthy"
+
+  - name: "Compute Student Count And Available Seat Without Enrollment"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Capacity Test"
+          code: "GTCAP"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Capacity Test"
+          code: "SCHCAP"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+      - step: "Create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade Capacity Test"
+          code: "GCAP"
+          sequence: 10
+          type_id: "EVAL: registry['grade_type'].id"
+      - step: "Create grade class with capacity 5"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class Capacity Test"
+          code: "CCAP"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          capacity: 5
+      - step: "Assert student_count is zero and available_seat equals capacity"
+        action: "assert"
+        target: "grade_class"
+        asserts:
+          student_count:
+            type: "value"
+            expected: 0
+          available_seat:
+            type: "value"
+            expected: 5

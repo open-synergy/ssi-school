@@ -3,7 +3,8 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class SchoolStudent(models.Model):
@@ -190,20 +191,80 @@ class SchoolStudent(models.Model):
         selection=[
             ("draft", "Waiting for Enrollment"),
             ("enrol", "Enrolled"),
-            ("on_leave", "Cuti / Penangguhan"),
-            ("suspended", "Skorsing"),
+            ("on_leave", "On Leave"),
+            ("suspended", "Suspended"),
             ("graduate", "Graduated"),
-            ("transferred", "Mutasi Keluar"),
-            ("dropped", "Dikeluarkan / Drop Out"),
-            ("resigned", "Mengundurkan Diri"),
-            ("deceased", "Meninggal Dunia"),
+            ("transferred", "Transferred Out"),
+            ("dropped", "Dropped Out / Expelled"),
+            ("resigned", "Resigned"),
+            ("deceased", "Deceased"),
         ],
         default="draft",
+        tracking=True,
         help=(
             "Current status of the student, from waiting for enrollment "
             "to actively enrolled, graduated, or exited."
         ),
     )
+
+    # Maps each state to the set of states it may legally transition into
+    # (including itself, so no-op writes are always allowed).
+    #
+    # "draft" (registration, not yet enrolled) and "enrol" (actively enrolled)
+    # are the two normal churn states and may move to any other state directly
+    # (mirrors existing accepted usage, e.g. withdrawing before ever attending).
+    # Once a student reaches a terminal/exit state (graduate, transferred,
+    # dropped, resigned, deceased), it must go through "draft" first before it
+    # can be set back to "enrol" — this is the guard's real purpose: it blocks
+    # nonsensical direct jumps like deceased -> enrol or graduate -> enrol.
+    # "deceased" has no way out at all.
+    _ALL_STATES = {
+        "draft",
+        "enrol",
+        "on_leave",
+        "suspended",
+        "graduate",
+        "transferred",
+        "dropped",
+        "resigned",
+        "deceased",
+    }
+    _STATE_TRANSITIONS = {
+        "draft": _ALL_STATES,
+        "enrol": _ALL_STATES,
+        "on_leave": {"on_leave", "enrol", "draft"},
+        "suspended": {"suspended", "enrol", "draft", "dropped"},
+        "graduate": {"graduate", "draft"},
+        "transferred": {"transferred", "draft"},
+        "dropped": {"dropped", "draft"},
+        "resigned": {"resigned", "draft"},
+        "deceased": {"deceased"},
+    }
+
+    def write(self, values):
+        if values.get("state"):
+            new_state = values["state"]
+            state_labels = dict(self._fields["state"].selection)
+            for record in self:
+                allowed = self._STATE_TRANSITIONS.get(record.state, set())
+                if new_state not in allowed:
+                    error_message = (
+                        _(
+                            """
+Context: Change student state
+Database ID: %s
+Problem: State cannot change from '%s' to '%s'
+Solution: Follow the allowed student state transition sequence
+"""
+                        )
+                        % (
+                            record.id,
+                            state_labels.get(record.state, record.state),
+                            state_labels.get(new_state, new_state),
+                        )
+                    )
+                    raise ValidationError(error_message)
+        return super().write(values)
 
     @api.depends("enrollment_ids", "enrollment_ids.state")
     def _compute_active_enrollment_id(self):
@@ -232,12 +293,22 @@ class SchoolStudent(models.Model):
         "initial_grade_id",
         "enrollment_ids",
         "enrollment_ids.state",
+        "school_id",
     )
     def _compute_next_grade_id(self):
         for record in self:
             result = False
             if not record.initial_grade_id and not record.enrollment_ids:
-                result = self.env["school_grade"].search([])[0]
+                grade_type = record.school_id.grade_type_id
+                result = (
+                    self.env["school_grade"].search(
+                        [("type_id", "=", grade_type.id)],
+                        order="sequence asc, id",
+                        limit=1,
+                    )
+                    if grade_type
+                    else self.env["school_grade"]
+                )
             elif record.initial_grade_id and not record.enrollment_ids:
                 result = record.initial_grade_id.next_grade_id
             elif record.enrollment_ids:
