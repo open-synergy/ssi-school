@@ -166,3 +166,95 @@ scenarios:
           previous_grade_id:
             type: "value"
             operator: "is_truthy"
+
+  - name: "Grade Chain Scoped Per Grade Type"
+    steps:
+      - step: "Create elementary grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "type_elementary"
+        values:
+          name: "Elementary Scope Test"
+          code: "ELSC"
+          sequence: 10
+      - step: "Create junior high grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "type_junior"
+        values:
+          name: "Junior High Scope Test"
+          code: "JHSC"
+          sequence: 20
+      - step: "Create elementary grade 1"
+        action: "create"
+        model: "school_grade"
+        save_as: "el_grade_1"
+        values:
+          name: "Elementary Grade 1"
+          code: "ELG1"
+          sequence: 10
+          type_id: "EVAL: registry['type_elementary'].id"
+      - step: "Create elementary grade 2 (last of elementary)"
+        action: "create"
+        model: "school_grade"
+        save_as: "el_grade_2"
+        values:
+          name: "Elementary Grade 2"
+          code: "ELG2"
+          sequence: 20
+          type_id: "EVAL: registry['type_elementary'].id"
+      - step: "Create junior high grade 1 (first of junior high)"
+        action: "create"
+        model: "school_grade"
+        save_as: "jh_grade_1"
+        values:
+          name: "Junior High Grade 1"
+          code: "JHG1"
+          sequence: 10
+          type_id: "EVAL: registry['type_junior'].id"
+      - step: "Invalidate cache on elementary grade 1"
+        action: "call"
+        target: "el_grade_1"
+        method: "invalidate_cache"
+      - step: "Invalidate cache on elementary grade 2"
+        action: "call"
+        target: "el_grade_2"
+        method: "invalidate_cache"
+      - step: "Invalidate cache on junior high grade 1"
+        action: "call"
+        target: "jh_grade_1"
+        method: "invalidate_cache"
+      - step:
+          "Assert last elementary grade has no next grade (does not cross into junior
+          high)"
+        action: "assert"
+        target: "el_grade_2"
+        asserts:
+          next_grade_id:
+            type: "value"
+            operator: "is_falsy"
+      - step:
+          "Assert first junior high grade has no previous grade (does not cross into
+          elementary)"
+        action: "assert"
+        target: "jh_grade_1"
+        asserts:
+          previous_grade_id:
+            type: "value"
+            operator: "is_falsy"
+      - step: "Assert elementary grade 1 next grade is elementary grade 2"
+        action: "search"
+        model: "school_grade"
+        domain:
+          - ["id", "=", "EVAL: registry['el_grade_1'].next_grade_id.id"]
+          - ["id", "=", "EVAL: registry['el_grade_2'].id"]
+        save_as: "check_el_next"
+        expect_count: 1
+      - step: "Assert elementary grade 2 previous grade is elementary grade 1"
+        action: "search"
+        model: "school_grade"
+        domain:
+          - ["id", "=", "EVAL: registry['el_grade_2'].previous_grade_id.id"]
+          - ["id", "=", "EVAL: registry['el_grade_1'].id"]
+        save_as: "check_el_prev"
+        expect_count: 1

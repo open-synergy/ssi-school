@@ -3,7 +3,8 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class SchoolAcademicYear(models.Model):  # pylint: disable=too-few-public-methods
@@ -66,3 +67,24 @@ class SchoolAcademicYear(models.Model):  # pylint: disable=too-few-public-method
                 last_term = record.term_ids[-1]
             record.first_term_id = first_term
             record.last_term_id = last_term
+
+    @api.constrains("date_start", "date_end")
+    def _check_date_coherence(self):
+        for record in self:
+            if (
+                record.date_start
+                and record.date_end
+                and record.date_end <= record.date_start
+            ):
+                error_message = (
+                    _(
+                        """
+Context: Set academic year dates
+Database ID: %s
+Problem: Date End must be after Date Start
+Solution: Set Date End to a date later than Date Start
+"""
+                    )
+                    % (record.id,)
+                )
+                raise ValidationError(error_message)

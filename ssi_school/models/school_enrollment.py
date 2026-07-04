@@ -4,7 +4,8 @@
 
 from datetime import date as datetime_date
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 
 from odoo.addons.ssi_decorator import ssi_decorator
 
@@ -440,6 +441,135 @@ class SchoolEnrollment(models.Model):
     )
     def onchange_grade_class_id(self):
         self.grade_class_id = False
+
+    @api.constrains("academic_term_id", "academic_year_id")
+    def _check_term_year_match(self):
+        for record in self:
+            if (
+                record.academic_term_id
+                and record.academic_year_id
+                and record.academic_term_id.year_id != record.academic_year_id
+            ):
+                error_message = (
+                    _(
+                        """
+Context: Set enrollment academic term
+Database ID: %s
+Problem: Academic Term '%s' does not belong to Academic Year '%s'
+Solution: Select an Academic Term that belongs to the selected Academic Year
+"""
+                    )
+                    % (
+                        record.id,
+                        record.academic_term_id.name,
+                        record.academic_year_id.name,
+                    )
+                )
+                raise ValidationError(error_message)
+
+    @api.constrains("grade_class_id", "grade_id", "school_id")
+    def _check_grade_class_match(self):
+        for record in self:
+            if not record.grade_class_id:
+                continue
+            if (
+                record.grade_class_id.grade_id != record.grade_id
+                or record.grade_class_id.school_id != record.school_id
+            ):
+                error_message = (
+                    _(
+                        """
+Context: Set enrollment grade class
+Database ID: %s
+Problem: Grade Class '%s' does not match the selected Grade/School
+Solution: Select a Grade Class that belongs to the selected Grade and School
+"""
+                    )
+                    % (record.id, record.grade_class_id.name)
+                )
+                raise ValidationError(error_message)
+
+    @api.constrains("state")
+    def _check_enrollment_window(self):
+        for record in self:
+            if (
+                record.state == "open"
+                and record.academic_term_id.enrollment_state != "open"
+            ):
+                error_message = (
+                    _(
+                        """
+Context: Open enrollment
+Database ID: %s
+Problem: Academic Term '%s' is not open for enrollment
+Solution: Open the enrollment window on the academic term before opening this enrollment
+"""
+                    )
+                    % (record.id, record.academic_term_id.name)
+                )
+                raise ValidationError(error_message)
+
+    @api.constrains("state", "student_id", "academic_term_id")
+    def _check_duplicate_active_enrollment(self):
+        for record in self:
+            if (
+                record.state != "open"
+                or not record.student_id
+                or not record.academic_term_id
+            ):
+                continue
+            duplicate = self.search(
+                [
+                    ("id", "!=", record.id),
+                    ("student_id", "=", record.student_id.id),
+                    ("academic_term_id", "=", record.academic_term_id.id),
+                    ("state", "=", "open"),
+                ]
+            )
+            if duplicate:
+                error_message = (
+                    _(
+                        """
+Context: Open enrollment
+Database ID: %s
+Problem: Student '%s' already has an active enrollment for term '%s'
+Solution: Cancel or close the existing enrollment before opening a new one
+"""
+                    )
+                    % (record.id, record.student_id.name, record.academic_term_id.name)
+                )
+                raise ValidationError(error_message)
+
+    @api.constrains("state", "grade_class_id")
+    def _check_grade_class_capacity(self):
+        for record in self:
+            grade_class = record.grade_class_id
+            if record.state != "open" or not grade_class or not grade_class.capacity:
+                continue
+            open_count = self.search_count(
+                [
+                    ("grade_class_id", "=", grade_class.id),
+                    ("state", "=", "open"),
+                ]
+            )
+            if open_count > grade_class.capacity:
+                error_message = (
+                    _(
+                        """
+Context: Open enrollment
+Database ID: %s
+Problem: Grade Class '%s' is at full capacity (%s/%s students)
+Solution: Choose a different Grade Class or increase its capacity
+"""
+                    )
+                    % (
+                        record.id,
+                        grade_class.name,
+                        open_count,
+                        grade_class.capacity,
+                    )
+                )
+                raise ValidationError(error_message)
 
     def action_set_result_to_passed(self):
         for record in self.sudo():

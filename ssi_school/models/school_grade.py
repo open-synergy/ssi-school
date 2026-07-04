@@ -37,7 +37,7 @@ class SchoolGrade(models.Model):
         help="The education level type that this grade belongs to.",
     )
     previous_grade_id = fields.Many2one(
-        strinng="Previous Grade",
+        string="Previous Grade",
         comodel_name="school_grade",
         compute=False,
         readonly=True,
@@ -81,22 +81,22 @@ class SchoolGrade(models.Model):
     @api.model
     def _recompute_next_previous(self):
         grades = self.env["school_grade"].search([])
-        for record in grades:
-            grade_index = grades.ids.index(record.id)
-            try:
+        for grade_type in grades.mapped("type_id"):
+            type_grades = grades.filtered(lambda g, t=grade_type: g.type_id == t)
+            for grade_index, record in enumerate(type_grades):
                 if grade_index - 1 < 0:
                     previous_grade = False
                 else:
-                    previous_grade = grades[grade_index - 1]
-            except BaseException:  # pylint: disable=broad-except
-                previous_grade = False
-            try:
-                next_grade = grades[grade_index + 1]
-            except BaseException:  # pylint: disable=broad-except
-                next_grade = False
-            record.write(
-                {
-                    "previous_grade_id": previous_grade and previous_grade.id or False,
-                    "next_grade_id": next_grade and next_grade.id or False,
-                }
-            )
+                    previous_grade = type_grades[grade_index - 1]
+                try:
+                    next_grade = type_grades[grade_index + 1]
+                except IndexError:
+                    next_grade = False
+                record.write(
+                    {
+                        "previous_grade_id": previous_grade
+                        and previous_grade.id
+                        or False,
+                        "next_grade_id": next_grade and next_grade.id or False,
+                    }
+                )
