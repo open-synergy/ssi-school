@@ -129,9 +129,9 @@
                             class="oe_inline"
                         />
                 </div>
-                <field name="last_term" />
+                <field name="last_term" invisible="1" />
                 <field name="school_id" />
-                <field name="grade_type_id" />
+                <field name="grade_type_id" invisible="1" />
                 <field name="grade_id" domain="[('type_id','=',grade_type_id)]" />
                 <field
                         name="allowed_student_ids"
