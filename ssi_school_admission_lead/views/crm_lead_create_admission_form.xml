@@ -13,11 +13,15 @@
                 <group name="left" colspan="1" col="2">
                     <field name="lead_id" />
                     <field name="date" />
-                    <field name="academic_year_id" />
-                    <field
-                            name="academic_term_id"
-                            domain="[('year_id', '=', academic_year_id), ('is_open_admission', '=', True)]"
-                        />
+                    <label for="academic_term_id" string="Year/Term" />
+                    <div class="o_row">
+                        <field name="academic_year_id" class="oe_inline" />
+                        <field
+                                name="academic_term_id"
+                                domain="[('year_id', '=', academic_year_id), ('is_open_admission', '=', True)]"
+                                class="oe_inline"
+                            />
+                    </div>
                     <field name="pricelist_id" />
                 </group>
                 <group name="right" colspan="1" col="2">
