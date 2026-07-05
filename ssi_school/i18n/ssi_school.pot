@@ -25,6 +25,19 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school
+#: code:addons/ssi_school/models/school_homeroom.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Generate Homeroom enrollments\n"
+"Database ID: %s\n"
+"Problem: Enrollment(s) %s are no longer in draft state, but their\n"
+"student is not in Candidate Students\n"
+"Solution: Add the student(s) back to Candidate Students, or\n"
+"cancel/adjust the enrollment(s) manually before generating\n"
+msgstr ""
+
+#. module: ssi_school
 #: code:addons/ssi_school/models/school_enrollment.py:0
 #, python-format
 msgid ""
@@ -522,7 +535,6 @@ msgstr ""
 
 #. module: ssi_school
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_form
-#: model_terms:ir.ui.view,arch_db:ssi_school.school_homeroom_view_form
 msgid "Billing"
 msgstr ""
 
@@ -553,9 +565,19 @@ msgid "Can Confirm"
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__fill_random_ok
+msgid "Can Fill Random"
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__done_ok
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__done_ok
 msgid "Can Finished"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__generate_enrollments_ok
+msgid "Can Generate Enrollments"
 msgstr ""
 
 #. module: ssi_school
@@ -830,7 +852,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term__currency_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__currency_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_product_summary__currency_id
-#: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__currency_id
 msgid "Currency"
 msgstr ""
 
@@ -873,6 +894,12 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields.selection,name:ssi_school.selection__school_student__state__deceased
 msgid "Deceased"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__is_default
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_payment_template_view_search
+msgid "Default"
 msgstr ""
 
 #. module: ssi_school
@@ -1491,6 +1518,13 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template__is_default
+msgid ""
+"If enabled, this template is used automatically when a Homeroom generates "
+"enrollments matching its Academic Term/School/Grade scope."
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_student__image_1920
 #: model:ir.model.fields,field_description:ssi_school.field_school_teacher__image_1920
 msgid "Image"
@@ -2098,7 +2132,6 @@ msgstr ""
 
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__payment_template_id
-#: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__payment_template_id
 msgid "Payment Template"
 msgstr ""
 
@@ -2117,13 +2150,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__term_ids
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_payment_template_view_form
 msgid "Payment Terms"
-msgstr ""
-
-#. module: ssi_school
-#: model:ir.model.fields,help:ssi_school.field_school_homeroom__payment_template_id
-msgid ""
-"Payment template applied to each generated enrollment via "
-"action_compute_payment."
 msgstr ""
 
 #. module: ssi_school
@@ -2161,6 +2187,17 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment__fail_ok
 msgid "Policy that determines whether the Fail action button is visible."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_homeroom__fill_random_ok
+msgid "Policy that determines whether the Fill Random button is visible."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_homeroom__generate_enrollments_ok
+msgid ""
+"Policy that determines whether the Generate Enrollments button is visible."
 msgstr ""
 
 #. module: ssi_school
@@ -2202,7 +2239,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__pricelist_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term__pricelist_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__pricelist_id
-#: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__pricelist_id
 msgid "Pricelist"
 msgstr ""
 
@@ -2261,13 +2297,11 @@ msgstr ""
 
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__receivable_account_id
-#: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__receivable_account_id
 msgid "Receivable Account"
 msgstr ""
 
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__receivable_journal_id
-#: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__receivable_journal_id
 msgid "Receivable Journal"
 msgstr ""
 
@@ -2845,11 +2879,6 @@ msgid "The academic year this enrollment is based on."
 msgstr ""
 
 #. module: ssi_school
-#: model:ir.model.fields,help:ssi_school.field_school_homeroom__receivable_journal_id
-msgid "The accounting journal propagated to generated enrollments."
-msgstr ""
-
-#. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment__receivable_journal_id
 msgid ""
 "The accounting journal used to record receivables for this enrollment "
@@ -2902,11 +2931,6 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment__currency_id
 msgid "The currency used for the enrollment payment billing."
-msgstr ""
-
-#. module: ssi_school
-#: model:ir.model.fields,help:ssi_school.field_school_homeroom__currency_id
-msgid "The currency used for the generated enrollments' billing."
 msgstr ""
 
 #. module: ssi_school
@@ -3073,11 +3097,6 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school
-#: model:ir.model.fields,help:ssi_school.field_school_homeroom__pricelist_id
-msgid "The pricelist applied to the generated enrollments."
-msgstr ""
-
-#. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment__pricelist_id
 msgid "The pricelist used to calculate enrollment billing amounts."
 msgstr ""
@@ -3096,11 +3115,6 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment_product_summary__product_id
 msgid "The product/fee type being summarised across all payment terms."
-msgstr ""
-
-#. module: ssi_school
-#: model:ir.model.fields,help:ssi_school.field_school_homeroom__receivable_account_id
-msgid "The receivable account propagated to generated enrollments."
 msgstr ""
 
 #. module: ssi_school
@@ -3206,7 +3220,8 @@ msgstr ""
 #. module: ssi_school
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_homeroom_view_form
 msgid ""
-"This will enqueue a job per candidate student to create draft enrollments. "
+"This will enqueue a job per candidate student to create draft enrollments, "
+"and remove any draft enrollment whose student is no longer a candidate. "
 "Continue?"
 msgstr ""
 
