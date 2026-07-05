@@ -18,6 +18,11 @@
                 <field name="academic_term_id" />
                 <field name="school_id" />
                 <field name="grade_id" />
+                <filter
+                        name="filter_is_default"
+                        string="Default"
+                        domain="[('is_default','=',True)]"
+                    />
                 <group expand="0" string="Group By">
                     <filter
                             name="group_by_school_id"
@@ -51,6 +56,7 @@
                 <field name="academic_term_id" />
                 <field name="school_id" />
                 <field name="grade_id" />
+                <field name="is_default" />
             </xpath>
         </data>
     </field>
@@ -68,6 +74,7 @@
                 <field name="school_id" />
                 <field name="grade_id" domain="[('type_id','=',grade_type_id)]" />
                 <field name="grade_type_id" invisible="1" />
+                <field name="is_default" />
             </xpath>
             <xpath expr="//page[1]" position="before">
                 <page name="payment_terms" string="Payment Terms">

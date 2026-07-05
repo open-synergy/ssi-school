@@ -250,68 +250,6 @@ class SchoolHomeroom(models.Model):
         compute="_compute_candidate_count",
         help="Number of students currently selected as candidates.",
     )
-    currency_id = fields.Many2one(
-        string="Currency",
-        comodel_name="res.currency",
-        required=False,
-        readonly=True,
-        states={
-            "draft": [
-                ("readonly", False),
-            ],
-        },
-        default=lambda self: self.env.company.currency_id,
-        help="The currency used for the generated enrollments' billing.",
-    )
-    pricelist_id = fields.Many2one(
-        string="Pricelist",
-        comodel_name="product.pricelist",
-        required=False,
-        readonly=True,
-        states={
-            "draft": [
-                ("readonly", False),
-            ],
-        },
-        help="The pricelist applied to the generated enrollments.",
-    )
-    payment_template_id = fields.Many2one(
-        string="Payment Template",
-        comodel_name="school_enrollment_payment_template",
-        required=False,
-        readonly=True,
-        states={
-            "draft": [
-                ("readonly", False),
-            ],
-        },
-        help=(
-            "Payment template applied to each generated enrollment via "
-            "action_compute_payment."
-        ),
-    )
-    receivable_journal_id = fields.Many2one(
-        string="Receivable Journal",
-        comodel_name="account.journal",
-        readonly=True,
-        states={
-            "draft": [
-                ("readonly", False),
-            ],
-        },
-        help="The accounting journal propagated to generated enrollments.",
-    )
-    receivable_account_id = fields.Many2one(
-        string="Receivable Account",
-        comodel_name="account.account",
-        readonly=True,
-        states={
-            "draft": [
-                ("readonly", False),
-            ],
-        },
-        help="The receivable account propagated to generated enrollments.",
-    )
 
     @api.depends(
         "capacity",
@@ -448,11 +386,53 @@ Solution: Select a Grade Class that belongs to the selected Grade and School
 
     def action_generate_enrollments(self):
         for record in self.sudo():
-            record._enqueue_generate()
+            record._reconcile_enrollments()
 
-    def _enqueue_generate(self):
+    def _reconcile_enrollments(self):
         self.ensure_one()
-        students = self.candidate_student_ids - self.enrollment_ids.student_id
+        existing_enrollments = self._get_existing_enrollments()
+        self._check_stale_non_draft_enrollments(existing_enrollments)
+        self._remove_stale_draft_enrollments(existing_enrollments)
+        self._enqueue_generate(existing_enrollments.exists())
+
+    def _get_existing_enrollments(self):
+        self.ensure_one()
+        return self.env["school_enrollment"].search([("homeroom_id", "=", self.id)])
+
+    def _check_stale_non_draft_enrollments(self, existing_enrollments):
+        self.ensure_one()
+        stale = existing_enrollments.filtered(
+            lambda e: e.state != "draft"
+            and e.student_id not in self.candidate_student_ids
+        )
+        if stale:
+            error_message = (
+                _(
+                    """
+Context: Generate Homeroom enrollments
+Database ID: %s
+Problem: Enrollment(s) %s are no longer in draft state, but their
+student is not in Candidate Students
+Solution: Add the student(s) back to Candidate Students, or
+cancel/adjust the enrollment(s) manually before generating
+"""
+                )
+                % (self.id, ", ".join(stale.mapped("name")))
+            )
+            raise ValidationError(error_message)
+
+    def _remove_stale_draft_enrollments(self, existing_enrollments):
+        self.ensure_one()
+        stale = existing_enrollments.filtered(
+            lambda e: e.state == "draft"
+            and e.student_id not in self.candidate_student_ids
+        )
+        if stale:
+            stale.unlink()
+
+    def _enqueue_generate(self, existing_enrollments):
+        self.ensure_one()
+        students = self.candidate_student_ids - existing_enrollments.student_id
         for student in students:
             self.with_delay(
                 description="Generate enrollment %s" % student.display_name
@@ -475,6 +455,16 @@ Solution: Select a Grade Class that belongs to the selected Grade and School
             enrollment.action_compute_payment()
         return enrollment
 
+    def _get_default_payment_template(self):
+        self.ensure_one()
+        domain = [
+            ("academic_term_id", "in", [self.academic_term_id.id, False]),
+            ("school_id", "in", [self.school_id.id, False]),
+            ("grade_id", "in", [self.grade_id.id, False]),
+            ("is_default", "=", True),
+        ]
+        return self.env["school_enrollment_payment_template"].search(domain, limit=1)
+
     def _prepare_enrollment_vals(self, student_id):
         self.ensure_one()
         return {
@@ -486,11 +476,7 @@ Solution: Select a Grade Class that belongs to the selected Grade and School
             "grade_class_id": self.grade_class_id.id,
             "student_id": student_id,
             "homeroom_id": self.id,
-            "currency_id": self.currency_id.id,
-            "pricelist_id": self.pricelist_id.id,
-            "payment_template_id": self.payment_template_id.id,
-            "receivable_journal_id": self.receivable_journal_id.id,
-            "receivable_account_id": self.receivable_account_id.id,
+            "payment_template_id": self._get_default_payment_template().id,
         }
 
     @api.model

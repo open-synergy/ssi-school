@@ -108,21 +108,6 @@
                 <field name="seat_available" />
             </xpath>
             <xpath expr="//page[1]" position="before">
-                <page name="billing" string="Billing">
-                    <group name="billing_group" colspan="4" col="2">
-                        <field
-                                name="payment_template_id"
-                                domain="[('academic_term_id','in',[academic_term_id,False]),('school_id','in',[school_id,False]),('grade_id','in',[grade_id,False])]"
-                            />
-                        <field name="currency_id" />
-                        <field
-                                name="pricelist_id"
-                                domain="[('currency_id','=',currency_id)]"
-                            />
-                        <field name="receivable_journal_id" />
-                        <field name="receivable_account_id" />
-                    </group>
-                </page>
                 <page name="generate" string="Generate Enrollments">
                     <field name="allowed_student_ids" invisible="1" />
                     <field
@@ -144,7 +129,7 @@
                                 name="action_generate_enrollments"
                                 type="object"
                                 string="Generate Enrollments"
-                                confirm="This will enqueue a job per candidate student to create draft enrollments. Continue?"
+                                confirm="This will enqueue a job per candidate student to create draft enrollments, and remove any draft enrollment whose student is no longer a candidate. Continue?"
                                 class="btn-primary ml-2"
                                 attrs="{'invisible':[('state','!=','open')]}"
                             />
