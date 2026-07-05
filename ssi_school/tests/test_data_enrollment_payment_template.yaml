@@ -112,6 +112,108 @@ scenarios:
             check: "count"
             expected_count: 1
 
+  - name: "Create Payment Template With Receivable Journal And Account"
+    steps:
+      - step: "Get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal"
+        limit: 1
+      - step: "Get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+      - step: "Create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "Test Receivable Account PMT"
+          code: "TESTRAPMT"
+          user_type_id: "EVAL: registry['account_type'].id"
+      - step: "Create payment template with journal and account"
+        action: "create"
+        model: "school_enrollment_payment_template"
+        save_as: "template"
+        values:
+          name: "Template Receivable Fields"
+          code: "PMTRECV"
+          journal_id: "EVAL: registry['journal'].id"
+          receivable_account_id: "EVAL: registry['account'].id"
+      - step: "Assert receivable fields stored"
+        action: "assert"
+        target: "template"
+        asserts:
+          journal_id:
+            type: "value"
+            operator: "is_truthy"
+          receivable_account_id:
+            type: "value"
+            operator: "is_truthy"
+
+  - name: "Edit Payment Template Receivable Journal"
+    steps:
+      - step: "Get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal"
+        limit: 1
+      - step: "Create payment template"
+        action: "create"
+        model: "school_enrollment_payment_template"
+        save_as: "template"
+        values:
+          name: "Template Journal Edit"
+          code: "PMTJED"
+      - step: "Set receivable journal"
+        action: "write"
+        target: "template"
+        values:
+          journal_id: "EVAL: registry['journal'].id"
+      - step: "Assert journal updated"
+        action: "assert"
+        target: "template"
+        asserts:
+          journal_id:
+            type: "value"
+            operator: "is_truthy"
+
+  - name: "Edit Payment Template Receivable Account"
+    steps:
+      - step: "Get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+      - step: "Create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "Test Receivable Account PMT Edit"
+          code: "TESTRAPMTED"
+          user_type_id: "EVAL: registry['account_type'].id"
+      - step: "Create payment template"
+        action: "create"
+        model: "school_enrollment_payment_template"
+        save_as: "template"
+        values:
+          name: "Template Account Edit"
+          code: "PMTAED"
+      - step: "Set receivable account"
+        action: "write"
+        target: "template"
+        values:
+          receivable_account_id: "EVAL: registry['account'].id"
+      - step: "Assert account updated"
+        action: "assert"
+        target: "template"
+        asserts:
+          receivable_account_id:
+            type: "value"
+            operator: "is_truthy"
+
   - name: "Edit Payment Template Name"
     steps:
       - step: "Create payment template"

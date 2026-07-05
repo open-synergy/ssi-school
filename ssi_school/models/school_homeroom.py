@@ -484,6 +484,7 @@ cancel/adjust the enrollment(s) manually before generating
 
     def _prepare_enrollment_vals(self, student_id):
         self.ensure_one()
+        template = self._get_default_payment_template()
         return {
             "date": self.date,
             "academic_year_id": self.academic_year_id.id,
@@ -493,7 +494,9 @@ cancel/adjust the enrollment(s) manually before generating
             "grade_class_id": self.grade_class_id.id,
             "student_id": student_id,
             "homeroom_id": self.id,
-            "payment_template_id": self._get_default_payment_template().id,
+            "payment_template_id": template.id,
+            "receivable_journal_id": template.journal_id.id,
+            "receivable_account_id": template.receivable_account_id.id,
         }
 
     @api.model

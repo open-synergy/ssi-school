@@ -66,6 +66,24 @@ class SchoolEnrollmentPaymentTemplate(
             "Term/School/Grade scope."
         ),
     )
+    journal_id = fields.Many2one(
+        string="Receivable Journal",
+        comodel_name="account.journal",
+        required=False,
+        help=(
+            "Default receivable journal copied into the enrollment "
+            "when this template is selected."
+        ),
+    )
+    receivable_account_id = fields.Many2one(
+        string="Receivable Account",
+        comodel_name="account.account",
+        required=False,
+        help=(
+            "Default receivable account copied into the enrollment "
+            "when this template is selected."
+        ),
+    )
     term_ids = fields.One2many(
         string="Payment Terms",
         comodel_name="school_enrollment_payment_template.term",
