@@ -1,0 +1,622 @@
+scenarios:
+  - name: "Homeroom Fill Random And Generate Enrollments"
+    steps:
+      - step: "Setup - get receivable journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "receivable_journal"
+        limit: 1
+
+      - step: "Setup - get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "School Fee Income HRGEN"
+          code: "HRGEN4200"
+          user_type_id: "EVAL: registry['account_type'].id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Fee HRGEN"
+          type: "service"
+          list_price: 1000000.0
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Homeroom Generate"
+          code: "GTHG1"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 Homeroom Generate 1"
+          code: "AYHG1"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term (first term, enrollment open)"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester 1 Homeroom Generate 1"
+          code: "SMHG1"
+          date_start: "2024-07-01"
+          date_end: "2024-12-31"
+          year_id: "EVAL: registry['academic_year'].id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Homeroom Generate 1"
+          code: "SCHHG1"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade 1 Homeroom Generate 1"
+          code: "G1HG1"
+          sequence: 10
+          type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class A Homeroom Generate 1"
+          code: "CLAHG1"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          capacity: 30
+
+      - step: "Setup - create payment template with a term and detail"
+        action: "create"
+        model: "school_enrollment_payment_template"
+        save_as: "payment_template"
+        values:
+          name: "Homeroom Generate Payment Template 1"
+          code: "HGPMT1"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          academic_term_id: "EVAL: registry['academic_term'].id"
+          term_ids:
+            - - 0
+              - 0
+              - name: "Term 1"
+                sequence: 10
+                detail_ids:
+                  - - 0
+                    - 0
+                    - product_id: "EVAL: registry['product'].id"
+                      name: "School Fee Term 1"
+                      account_id: "EVAL: registry['account'].id"
+                      uom_quantity: 1.0
+                      uom_id: "REF: uom.product_uom_unit"
+                      price_unit: 1000000.0
+
+      - step: "Setup - create 4 eligible students (next_grade_id = grade)"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_1"
+        values:
+          name: "Contact Homeroom Generate 1"
+
+      - step: "Setup - create student 1"
+        action: "create"
+        model: "school_student"
+        save_as: "student_1"
+        values:
+          name: "Student Homeroom Generate 1"
+          code: "STUHG1"
+          contact_id: "EVAL: registry['contact_1'].id"
+          school_id: "EVAL: registry['school'].id"
+
+      - step: "Setup - create contact 2"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_2"
+        values:
+          name: "Contact Homeroom Generate 2"
+
+      - step: "Setup - create student 2"
+        action: "create"
+        model: "school_student"
+        save_as: "student_2"
+        values:
+          name: "Student Homeroom Generate 2"
+          code: "STUHG2"
+          contact_id: "EVAL: registry['contact_2'].id"
+          school_id: "EVAL: registry['school'].id"
+
+      - step: "Setup - create contact 3"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_3"
+        values:
+          name: "Contact Homeroom Generate 3"
+
+      - step: "Setup - create student 3"
+        action: "create"
+        model: "school_student"
+        save_as: "student_3"
+        values:
+          name: "Student Homeroom Generate 3"
+          code: "STUHG3"
+          contact_id: "EVAL: registry['contact_3'].id"
+          school_id: "EVAL: registry['school'].id"
+
+      - step: "Setup - create contact 4"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_4"
+        values:
+          name: "Contact Homeroom Generate 4"
+
+      - step: "Setup - create student 4"
+        action: "create"
+        model: "school_student"
+        save_as: "student_4"
+        values:
+          name: "Student Homeroom Generate 4"
+          code: "STUHG4"
+          contact_id: "EVAL: registry['contact_4'].id"
+          school_id: "EVAL: registry['school'].id"
+
+      - step: "Create homeroom"
+        action: "create"
+        model: "school_homeroom"
+        save_as: "homeroom"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "EVAL: registry['academic_year'].id"
+          academic_term_id: "EVAL: registry['academic_term'].id"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          grade_class_id: "EVAL: registry['grade_class'].id"
+          capacity: 30
+          payment_template_id: "EVAL: registry['payment_template'].id"
+          currency_id: "EVAL: env.company.currency_id.id"
+          receivable_journal_id: "EVAL: registry['receivable_journal'].id"
+
+      - step: "Confirm homeroom"
+        action: "call"
+        target: "homeroom"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate homeroom cache before approve"
+        action: "call"
+        target: "homeroom"
+        method: "invalidate_cache"
+
+      - step: "Approve homeroom"
+        action: "call"
+        target: "homeroom"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Assert allowed_student_ids has the 4 eligible students"
+        action: "assert"
+        target: "homeroom"
+        asserts:
+          allowed_student_ids:
+            type: "m2m"
+            check: "count"
+            expected_count: 4
+
+      - step: "Fill random candidates (slot 30 > pool 4)"
+        action: "call"
+        target: "homeroom"
+        method: "action_fill_random"
+
+      - step: "Assert all 4 eligible students filled as candidates"
+        action: "assert"
+        target: "homeroom"
+        asserts:
+          candidate_count:
+            type: "value"
+            expected: 4
+
+      - step: "Generate enrollments synchronously"
+        action: "call"
+        target: "homeroom"
+        method: "_enqueue_generate"
+        context:
+          queue_job__no_delay: true
+
+      - step: "Search generated enrollments for this homeroom"
+        action: "search"
+        model: "school_enrollment"
+        domain: [["homeroom_id", "=", "EVAL: registry['homeroom'].id"]]
+        save_as: "generated_enrollments"
+        expect_count: 4
+
+      - step: "Assert none of the generated enrollments left draft state"
+        action: "search"
+        model: "school_enrollment"
+        domain:
+          - ["homeroom_id", "=", "EVAL: registry['homeroom'].id"]
+          - ["state", "!=", "draft"]
+        save_as: "non_draft_generated_enrollments"
+        expect_count: 0
+
+      - step: "Get first generated enrollment"
+        action: "search"
+        model: "school_enrollment"
+        domain:
+          - ["homeroom_id", "=", "EVAL: registry['homeroom'].id"]
+          - ["student_id", "=", "EVAL: registry['student_1'].id"]
+        save_as: "enrollment_student_1"
+        expect_count: 1
+
+      - step: "Assert first enrollment matches homeroom and has payment terms"
+        action: "assert"
+        target: "enrollment_student_1"
+        asserts:
+          state:
+            type: "value"
+            expected: "draft"
+          payment_term_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 1
+
+      - step: "Generate enrollments again (idempotent check)"
+        action: "call"
+        target: "homeroom"
+        method: "_enqueue_generate"
+        context:
+          queue_job__no_delay: true
+
+      - step: "Search enrollments again expecting still 4 (no duplicates)"
+        action: "search"
+        model: "school_enrollment"
+        domain: [["homeroom_id", "=", "EVAL: registry['homeroom'].id"]]
+        save_as: "generated_enrollments_after_retry"
+        expect_count: 4
+
+  - name: "Homeroom Non First Term Eligibility"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Homeroom Generate 2"
+          code: "GTHG2"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 Homeroom Generate 2"
+          code: "AYHG2"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create earlier term so the next one is not first_term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_0"
+        values:
+          name: "Semester 1 Homeroom Generate 2"
+          code: "SMHG20"
+          date_start: "2024-07-01"
+          date_end: "2024-12-31"
+          year_id: "EVAL: registry['academic_year'].id"
+          enrollment_state: "close"
+
+      - step: "Setup - create academic term (non-first term, enrollment open)"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester 2 Homeroom Generate 2"
+          code: "SMHG2"
+          date_start: "2025-01-01"
+          date_end: "2025-06-30"
+          year_id: "EVAL: registry['academic_year'].id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Homeroom Generate 2"
+          code: "SCHHG2"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade 1 Homeroom Generate 2"
+          code: "G1HG2"
+          sequence: 10
+          type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create other grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "other_grade"
+        values:
+          name: "Grade 0 Homeroom Generate 2"
+          code: "G0HG2"
+          sequence: 5
+          type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class A Homeroom Generate 2"
+          code: "CLAHG2"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          capacity: 30
+
+      - step: "Setup - create contact for eligible student"
+        action: "create"
+        model: "res.partner"
+        save_as: "eligible_contact"
+        values:
+          name: "Eligible Contact Homeroom Generate 2"
+
+      - step: "Setup - create eligible student (current_grade_id = grade)"
+        action: "create"
+        model: "school_student"
+        save_as: "eligible_student"
+        values:
+          name: "Eligible Student Homeroom Generate 2"
+          code: "STUHG2E"
+          contact_id: "EVAL: registry['eligible_contact'].id"
+          school_id: "EVAL: registry['school'].id"
+          initial_grade_id: "EVAL: registry['grade'].id"
+
+      - step: "Setup - create contact for non eligible student"
+        action: "create"
+        model: "res.partner"
+        save_as: "non_eligible_contact"
+        values:
+          name: "Non Eligible Contact Homeroom Generate 2"
+
+      - step:
+          "Setup - create non eligible student (next_grade_id = grade, current != grade)"
+        action: "create"
+        model: "school_student"
+        save_as: "non_eligible_student"
+        values:
+          name: "Non Eligible Student Homeroom Generate 2"
+          code: "STUHG2N"
+          contact_id: "EVAL: registry['non_eligible_contact'].id"
+          school_id: "EVAL: registry['school'].id"
+          initial_grade_id: "EVAL: registry['other_grade'].id"
+
+      - step: "Create homeroom"
+        action: "create"
+        model: "school_homeroom"
+        save_as: "homeroom"
+        values:
+          date: "2025-01-01"
+          academic_year_id: "EVAL: registry['academic_year'].id"
+          academic_term_id: "EVAL: registry['academic_term'].id"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          grade_class_id: "EVAL: registry['grade_class'].id"
+          capacity: 2
+
+      - step: "Assert exactly one allowed student"
+        action: "assert"
+        target: "homeroom"
+        asserts:
+          allowed_student_ids:
+            type: "m2m"
+            check: "count"
+            expected_count: 1
+
+      - step: "Search allowed students to confirm eligible student is present"
+        action: "search"
+        model: "school_student"
+        domain:
+          - ["id", "=", "EVAL: registry['eligible_student'].id"]
+          - ["id", "in", "EVAL: registry['homeroom'].allowed_student_ids.ids"]
+        save_as: "found_eligible"
+        expect_count: 1
+
+      - step: "Search allowed students to confirm non-eligible student is absent"
+        action: "search"
+        model: "school_student"
+        domain:
+          - ["id", "=", "EVAL: registry['non_eligible_student'].id"]
+          - ["id", "in", "EVAL: registry['homeroom'].allowed_student_ids.ids"]
+        save_as: "found_non_eligible"
+        expect_count: 0
+
+  - name: "Homeroom Fill Random Respects Remaining Capacity"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Homeroom Generate 3"
+          code: "GTHG3"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 Homeroom Generate 3"
+          code: "AYHG3"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term (first term, enrollment open)"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester 1 Homeroom Generate 3"
+          code: "SMHG3"
+          date_start: "2024-07-01"
+          date_end: "2024-12-31"
+          year_id: "EVAL: registry['academic_year'].id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Homeroom Generate 3"
+          code: "SCHHG3"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade 1 Homeroom Generate 3"
+          code: "G1HG3"
+          sequence: 10
+          type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class A Homeroom Generate 3"
+          code: "CLAHG3"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          capacity: 2
+
+      - step: "Setup - create contact 1"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_1"
+        values:
+          name: "Contact Homeroom Generate 3-1"
+
+      - step: "Setup - create student 1"
+        action: "create"
+        model: "school_student"
+        save_as: "student_1"
+        values:
+          name: "Student Homeroom Generate 3-1"
+          code: "STUHG31"
+          contact_id: "EVAL: registry['contact_1'].id"
+          school_id: "EVAL: registry['school'].id"
+
+      - step: "Setup - create contact 2"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_2"
+        values:
+          name: "Contact Homeroom Generate 3-2"
+
+      - step: "Setup - create student 2"
+        action: "create"
+        model: "school_student"
+        save_as: "student_2"
+        values:
+          name: "Student Homeroom Generate 3-2"
+          code: "STUHG32"
+          contact_id: "EVAL: registry['contact_2'].id"
+          school_id: "EVAL: registry['school'].id"
+
+      - step: "Setup - create contact 3"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_3"
+        values:
+          name: "Contact Homeroom Generate 3-3"
+
+      - step: "Setup - create student 3"
+        action: "create"
+        model: "school_student"
+        save_as: "student_3"
+        values:
+          name: "Student Homeroom Generate 3-3"
+          code: "STUHG33"
+          contact_id: "EVAL: registry['contact_3'].id"
+          school_id: "EVAL: registry['school'].id"
+
+      - step: "Setup - create contact 4"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_4"
+        values:
+          name: "Contact Homeroom Generate 3-4"
+
+      - step: "Setup - create student 4"
+        action: "create"
+        model: "school_student"
+        save_as: "student_4"
+        values:
+          name: "Student Homeroom Generate 3-4"
+          code: "STUHG34"
+          contact_id: "EVAL: registry['contact_4'].id"
+          school_id: "EVAL: registry['school'].id"
+
+      - step: "Create homeroom with capacity 2 (pool has 4 eligible students)"
+        action: "create"
+        model: "school_homeroom"
+        save_as: "homeroom"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "EVAL: registry['academic_year'].id"
+          academic_term_id: "EVAL: registry['academic_term'].id"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          grade_class_id: "EVAL: registry['grade_class'].id"
+          capacity: 2
+
+      - step: "Fill random"
+        action: "call"
+        target: "homeroom"
+        method: "action_fill_random"
+
+      - step: "Assert exactly 2 candidates filled (capped by capacity)"
+        action: "assert"
+        target: "homeroom"
+        asserts:
+          candidate_count:
+            type: "value"
+            expected: 2

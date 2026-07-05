@@ -22,4 +22,5 @@ from . import (  # noqa: F401
     test_school_enrollment_integrity,
     test_school_homeroom,
     test_school_homeroom_integrity,
+    test_school_homeroom_generate,
 )

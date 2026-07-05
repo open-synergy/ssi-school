@@ -2,6 +2,7 @@
 # Copyright 2026 PT. Simetri Sinergi Indonesia
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
+import random
 from datetime import date as datetime_date
 
 from odoo import _, api, fields, models
@@ -215,6 +216,102 @@ class SchoolHomeroom(models.Model):
         compute_sudo=True,
         help="Remaining seats, computed as Capacity minus Enrolled Count.",
     )
+    allowed_student_ids = fields.Many2many(
+        string="Allowed Students",
+        comodel_name="school_student",
+        compute="_compute_allowed_student_ids",
+        store=False,
+        compute_sudo=True,
+        help=(
+            "List of students eligible to be added as candidates for this "
+            "Homeroom, computed from the selected school, grade, and term."
+        ),
+    )
+    candidate_student_ids = fields.Many2many(
+        string="Candidate Students",
+        comodel_name="school_student",
+        relation="rel_homeroom_candidate_student",
+        readonly=True,
+        states={
+            "draft": [
+                ("readonly", False),
+            ],
+            "open": [
+                ("readonly", False),
+            ],
+        },
+        help=(
+            "Students selected to have a draft enrollment generated under "
+            "this Homeroom. Fill manually or via the Fill Random action."
+        ),
+    )
+    candidate_count = fields.Integer(
+        string="Candidate Count",
+        compute="_compute_candidate_count",
+        help="Number of students currently selected as candidates.",
+    )
+    currency_id = fields.Many2one(
+        string="Currency",
+        comodel_name="res.currency",
+        required=False,
+        readonly=True,
+        states={
+            "draft": [
+                ("readonly", False),
+            ],
+        },
+        default=lambda self: self.env.company.currency_id,
+        help="The currency used for the generated enrollments' billing.",
+    )
+    pricelist_id = fields.Many2one(
+        string="Pricelist",
+        comodel_name="product.pricelist",
+        required=False,
+        readonly=True,
+        states={
+            "draft": [
+                ("readonly", False),
+            ],
+        },
+        help="The pricelist applied to the generated enrollments.",
+    )
+    payment_template_id = fields.Many2one(
+        string="Payment Template",
+        comodel_name="school_enrollment_payment_template",
+        required=False,
+        readonly=True,
+        states={
+            "draft": [
+                ("readonly", False),
+            ],
+        },
+        help=(
+            "Payment template applied to each generated enrollment via "
+            "action_compute_payment."
+        ),
+    )
+    receivable_journal_id = fields.Many2one(
+        string="Receivable Journal",
+        comodel_name="account.journal",
+        readonly=True,
+        states={
+            "draft": [
+                ("readonly", False),
+            ],
+        },
+        help="The accounting journal propagated to generated enrollments.",
+    )
+    receivable_account_id = fields.Many2one(
+        string="Receivable Account",
+        comodel_name="account.account",
+        readonly=True,
+        states={
+            "draft": [
+                ("readonly", False),
+            ],
+        },
+        help="The receivable account propagated to generated enrollments.",
+    )
 
     @api.depends(
         "capacity",
@@ -225,6 +322,27 @@ class SchoolHomeroom(models.Model):
             enrolled_count = len(record.enrollment_ids)
             record.enrolled_count = enrolled_count
             record.seat_available = record.capacity - enrolled_count
+
+    @api.depends("academic_term_id", "grade_id", "school_id")
+    def _compute_allowed_student_ids(self):
+        for record in self:
+            result = False
+            if record.academic_term_id and record.grade_id and record.school_id:
+                criteria = [
+                    ("state", "=", "draft"),
+                    ("school_id", "=", record.school_id.id),
+                ]
+                if record.academic_term_id.first_term:
+                    criteria += [("next_grade_id", "=", record.grade_id.id)]
+                else:
+                    criteria += [("current_grade_id", "=", record.grade_id.id)]
+                result = self.env["school_student"].search(criteria).ids
+            record.allowed_student_ids = result
+
+    @api.depends("candidate_student_ids")
+    def _compute_candidate_count(self):
+        for record in self:
+            record.candidate_count = len(record.candidate_student_ids)
 
     @api.onchange(
         "academic_year_id",
@@ -305,6 +423,75 @@ Solution: Select a Grade Class that belongs to the selected Grade and School
             self.grade_class_id.grade_id == self.grade_id
             and self.grade_class_id.school_id == self.school_id
         )
+
+    def action_fill_random(self):
+        for record in self.sudo():
+            record._fill_random_candidate()
+
+    def _fill_random_candidate(self):
+        self.ensure_one()
+        slot = max(
+            self.capacity - (len(self.candidate_student_ids) + self.enrolled_count),
+            0,
+        )
+        if not slot:
+            return
+        pool = (
+            self.allowed_student_ids
+            - self.candidate_student_ids
+            - self.enrollment_ids.student_id
+        )
+        if not pool:
+            return
+        picked_ids = random.sample(pool.ids, min(slot, len(pool)))
+        self.candidate_student_ids = [(4, sid) for sid in picked_ids]
+
+    def action_generate_enrollments(self):
+        for record in self.sudo():
+            record._enqueue_generate()
+
+    def _enqueue_generate(self):
+        self.ensure_one()
+        students = self.candidate_student_ids - self.enrollment_ids.student_id
+        for student in students:
+            self.with_delay(
+                description="Generate enrollment %s" % student.display_name
+            )._generate_single_enrollment(student.id)
+
+    def _generate_single_enrollment(self, student_id):
+        self.ensure_one()
+        existing = self.env["school_enrollment"].search(
+            [
+                ("homeroom_id", "=", self.id),
+                ("student_id", "=", student_id),
+            ]
+        )
+        if existing:
+            return existing
+        enrollment = self.env["school_enrollment"].create(
+            self._prepare_enrollment_vals(student_id)
+        )
+        if enrollment.payment_template_id:
+            enrollment.action_compute_payment()
+        return enrollment
+
+    def _prepare_enrollment_vals(self, student_id):
+        self.ensure_one()
+        return {
+            "date": self.date,
+            "academic_year_id": self.academic_year_id.id,
+            "academic_term_id": self.academic_term_id.id,
+            "school_id": self.school_id.id,
+            "grade_id": self.grade_id.id,
+            "grade_class_id": self.grade_class_id.id,
+            "student_id": student_id,
+            "homeroom_id": self.id,
+            "currency_id": self.currency_id.id,
+            "pricelist_id": self.pricelist_id.id,
+            "payment_template_id": self.payment_template_id.id,
+            "receivable_journal_id": self.receivable_journal_id.id,
+            "receivable_account_id": self.receivable_account_id.id,
+        }
 
     @api.model
     def _get_policy_field(self):

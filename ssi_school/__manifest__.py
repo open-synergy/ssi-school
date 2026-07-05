@@ -22,6 +22,7 @@
         "base_address_city",
         "ssi_financial_accounting",
         "base_duration",
+        "queue_job",
     ],
     "data": [
         "security/ir_module_category_data.xml",
