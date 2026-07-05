@@ -250,6 +250,23 @@ class SchoolHomeroom(models.Model):
         compute="_compute_candidate_count",
         help="Number of students currently selected as candidates.",
     )
+    fill_random_ok = fields.Boolean(
+        string="Can Fill Random",
+        compute="_compute_policy",
+        store=False,
+        compute_sudo=True,
+        help="Policy that determines whether the Fill Random button is visible.",
+    )
+    generate_enrollments_ok = fields.Boolean(
+        string="Can Generate Enrollments",
+        compute="_compute_policy",
+        store=False,
+        compute_sudo=True,
+        help=(
+            "Policy that determines whether the Generate Enrollments "
+            "button is visible."
+        ),
+    )
 
     @api.depends(
         "capacity",
@@ -491,6 +508,8 @@ cancel/adjust the enrollment(s) manually before generating
             "restart_ok",
             "restart_approval_ok",
             "manual_number_ok",
+            "fill_random_ok",
+            "generate_enrollments_ok",
         ]
         res += policy_field
         return res

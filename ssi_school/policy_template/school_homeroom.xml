@@ -144,4 +144,43 @@ if env.user.id in document.active_approver_user_ids.ids:
     <field name="group_ids" eval="[(6,0,[ref('school_homeroom_validator_group')])]" />
     <field name="restrict_additional" eval="0" />
 </record>
+
+<!-- Fill Random -->
+<record id="policy_template_school_homeroom_fill_random" model="policy.template_detail">
+    <field name="template_id" ref="policy_template_school_homeroom" />
+    <field
+            name="field_id"
+            search="[('model_id.model','=','school_homeroom'),('name','=','fill_random_ok')]"
+        />
+    <field name="restrict_state" eval="1" />
+    <field
+            name="state_ids"
+            search="[('field_id.model_id.model','=','school_homeroom'),('value','in',['draft','open'])]"
+        />
+    <field name="restrict_user" eval="1" />
+    <field name="computation_method">use_group</field>
+    <field name="group_ids" eval="[(6,0,[ref('school_homeroom_user_group')])]" />
+    <field name="restrict_additional" eval="0" />
+</record>
+
+<!-- Generate Enrollments -->
+<record
+        id="policy_template_school_homeroom_generate_enrollments"
+        model="policy.template_detail"
+    >
+    <field name="template_id" ref="policy_template_school_homeroom" />
+    <field
+            name="field_id"
+            search="[('model_id.model','=','school_homeroom'),('name','=','generate_enrollments_ok')]"
+        />
+    <field name="restrict_state" eval="1" />
+    <field
+            name="state_ids"
+            search="[('field_id.model_id.model','=','school_homeroom'),('value','=','open')]"
+        />
+    <field name="restrict_user" eval="1" />
+    <field name="computation_method">use_group</field>
+    <field name="group_ids" eval="[(6,0,[ref('school_homeroom_user_group')])]" />
+    <field name="restrict_additional" eval="0" />
+</record>
 </odoo>

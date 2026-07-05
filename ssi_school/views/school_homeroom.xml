@@ -123,7 +123,7 @@
                                 type="object"
                                 string="Fill Random"
                                 class="btn-secondary"
-                                attrs="{'invisible':[('state','not in',['draft','open'])]}"
+                                attrs="{'invisible':[('fill_random_ok','=',False)]}"
                             />
                         <button
                                 name="action_generate_enrollments"
@@ -131,7 +131,7 @@
                                 string="Generate Enrollments"
                                 confirm="This will enqueue a job per candidate student to create draft enrollments, and remove any draft enrollment whose student is no longer a candidate. Continue?"
                                 class="btn-primary ml-2"
-                                attrs="{'invisible':[('state','!=','open')]}"
+                                attrs="{'invisible':[('generate_enrollments_ok','=',False)]}"
                             />
                     </div>
                 </page>
@@ -144,6 +144,10 @@
                         </tree>
                     </field>
                 </page>
+            </xpath>
+            <xpath expr="//group[@name='policy_2']" position="inside">
+                <field name="fill_random_ok" />
+                <field name="generate_enrollments_ok" />
             </xpath>
         </data>
     </field>
