@@ -57,6 +57,15 @@ class SchoolEnrollmentPaymentTemplate(
             "Will be reset if the school is changed."
         ),
     )
+    is_default = fields.Boolean(
+        string="Default",
+        default=False,
+        help=(
+            "If enabled, this template is used automatically when a "
+            "Homeroom generates enrollments matching its Academic "
+            "Term/School/Grade scope."
+        ),
+    )
     term_ids = fields.One2many(
         string="Payment Terms",
         comodel_name="school_enrollment_payment_template.term",

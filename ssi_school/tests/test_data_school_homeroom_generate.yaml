@@ -1,13 +1,6 @@
 scenarios:
   - name: "Homeroom Fill Random And Generate Enrollments"
     steps:
-      - step: "Setup - get receivable journal"
-        action: "search"
-        model: "account.journal"
-        domain: [["type", "=", "sale"]]
-        save_as: "receivable_journal"
-        limit: 1
-
       - step: "Setup - get account type ref"
         action: "ref"
         xml_id: "account.data_account_type_revenue"
@@ -102,6 +95,7 @@ scenarios:
           school_id: "EVAL: registry['school'].id"
           grade_id: "EVAL: registry['grade'].id"
           academic_term_id: "EVAL: registry['academic_term'].id"
+          is_default: true
           term_ids:
             - - 0
               - 0
@@ -197,9 +191,6 @@ scenarios:
           grade_id: "EVAL: registry['grade'].id"
           grade_class_id: "EVAL: registry['grade_class'].id"
           capacity: 30
-          payment_template_id: "EVAL: registry['payment_template'].id"
-          currency_id: "EVAL: env.company.currency_id.id"
-          receivable_journal_id: "EVAL: registry['receivable_journal'].id"
 
       - step: "Confirm homeroom"
         action: "call"
@@ -247,7 +238,7 @@ scenarios:
       - step: "Generate enrollments synchronously"
         action: "call"
         target: "homeroom"
-        method: "_enqueue_generate"
+        method: "action_generate_enrollments"
         context:
           queue_job__no_delay: true
 
@@ -291,7 +282,7 @@ scenarios:
       - step: "Generate enrollments again (idempotent check)"
         action: "call"
         target: "homeroom"
-        method: "_enqueue_generate"
+        method: "action_generate_enrollments"
         context:
           queue_job__no_delay: true
 
@@ -620,3 +611,190 @@ scenarios:
           candidate_count:
             type: "value"
             expected: 2
+
+  - name: "Homeroom Regenerate Reconciles Draft Enrollments With Candidates"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Homeroom Generate 4"
+          code: "GTHG4"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 Homeroom Generate 4"
+          code: "AYHG4"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term (first term, enrollment open)"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester 1 Homeroom Generate 4"
+          code: "SMHG4"
+          date_start: "2024-07-01"
+          date_end: "2024-12-31"
+          year_id: "EVAL: registry['academic_year'].id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Homeroom Generate 4"
+          code: "SCHHG4"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade 1 Homeroom Generate 4"
+          code: "G1HG4"
+          sequence: 10
+          type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class A Homeroom Generate 4"
+          code: "CLAHG4"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          capacity: 5
+
+      - step: "Setup - create contact 1"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_1"
+        values:
+          name: "Contact Homeroom Generate 4-1"
+
+      - step: "Setup - create student 1"
+        action: "create"
+        model: "school_student"
+        save_as: "student_1"
+        values:
+          name: "Student Homeroom Generate 4-1"
+          code: "STUHG41"
+          contact_id: "EVAL: registry['contact_1'].id"
+          school_id: "EVAL: registry['school'].id"
+
+      - step: "Setup - create contact 2"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_2"
+        values:
+          name: "Contact Homeroom Generate 4-2"
+
+      - step: "Setup - create student 2"
+        action: "create"
+        model: "school_student"
+        save_as: "student_2"
+        values:
+          name: "Student Homeroom Generate 4-2"
+          code: "STUHG42"
+          contact_id: "EVAL: registry['contact_2'].id"
+          school_id: "EVAL: registry['school'].id"
+
+      - step: "Create homeroom"
+        action: "create"
+        model: "school_homeroom"
+        save_as: "homeroom"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "EVAL: registry['academic_year'].id"
+          academic_term_id: "EVAL: registry['academic_term'].id"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          grade_class_id: "EVAL: registry['grade_class'].id"
+          capacity: 5
+
+      - step: "Confirm homeroom"
+        action: "call"
+        target: "homeroom"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate homeroom cache before approve"
+        action: "call"
+        target: "homeroom"
+        method: "invalidate_cache"
+
+      - step: "Approve homeroom"
+        action: "call"
+        target: "homeroom"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Select both students as candidates"
+        action: "write"
+        target: "homeroom"
+        values:
+          candidate_student_ids:
+            - - 6
+              - 0
+              - - "EVAL: registry['student_1'].id"
+                - "EVAL: registry['student_2'].id"
+
+      - step: "Generate enrollments for both candidates"
+        action: "call"
+        target: "homeroom"
+        method: "action_generate_enrollments"
+        context:
+          queue_job__no_delay: true
+
+      - step: "Search generated enrollments (expect 2)"
+        action: "search"
+        model: "school_enrollment"
+        domain: [["homeroom_id", "=", "EVAL: registry['homeroom'].id"]]
+        save_as: "enrollments_before_reconcile"
+        expect_count: 2
+
+      - step: "Unselect student 2, keeping only student 1 as candidate"
+        action: "write"
+        target: "homeroom"
+        values:
+          candidate_student_ids:
+            - - 6
+              - 0
+              - - "EVAL: registry['student_1'].id"
+
+      - step: "Regenerate to reconcile enrollments with candidates"
+        action: "call"
+        target: "homeroom"
+        method: "action_generate_enrollments"
+        context:
+          queue_job__no_delay: true
+
+      - step: "Search enrollment for student 2 (expect removed)"
+        action: "search"
+        model: "school_enrollment"
+        domain:
+          - ["homeroom_id", "=", "EVAL: registry['homeroom'].id"]
+          - ["student_id", "=", "EVAL: registry['student_2'].id"]
+        save_as: "enrollment_student_2_after_reconcile"
+        expect_count: 0
+
+      - step: "Search all enrollments after reconcile (expect only student 1's)"
+        action: "search"
+        model: "school_enrollment"
+        domain: [["homeroom_id", "=", "EVAL: registry['homeroom'].id"]]
+        save_as: "enrollments_after_reconcile"
+        expect_count: 1
