@@ -7,5 +7,7 @@ School - Operating Unit
    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 Operating Unit support for SSI School module.
-Adds operating unit access control for transactional (school_enrollment)
+Adds operating unit access control for transactional (school_enrollment, school_homeroom)
 and master data models (school, grade types, grades, classes, academic periods, students, teachers).
+The operating unit selected on a Homeroom batch is automatically propagated to every
+enrollment generated from it.

@@ -11,6 +11,7 @@ from . import (  # noqa: F401
     school_grade,
     school_grade_class,
     school_grade_type,
+    school_homeroom,
     school_student,
     school_teacher,
 )
