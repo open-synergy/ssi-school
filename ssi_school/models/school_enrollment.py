@@ -457,6 +457,22 @@ class SchoolEnrollment(models.Model):
     def onchange_grade_class_id(self):
         self.grade_class_id = False
 
+    @api.onchange(
+        "payment_template_id",
+    )
+    def onchange_receivable_journal_id(self):
+        self.receivable_journal_id = False
+        if self.payment_template_id:
+            self.receivable_journal_id = self.payment_template_id.journal_id
+
+    @api.onchange(
+        "payment_template_id",
+    )
+    def onchange_receivable_account_id(self):
+        self.receivable_account_id = False
+        if self.payment_template_id:
+            self.receivable_account_id = self.payment_template_id.receivable_account_id
+
     @api.constrains("academic_term_id", "academic_year_id")
     def _check_term_year_match(self):
         for record in self:
