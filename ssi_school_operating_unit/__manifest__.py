@@ -23,6 +23,9 @@
         # Security - transactional (school_enrollment)
         "security/res_groups/school_enrollment.xml",
         "security/ir_rule/school_enrollment.xml",
+        # Security - transactional (school_homeroom)
+        "security/res_groups/school_homeroom.xml",
+        "security/ir_rule/school_homeroom.xml",
         # Security - master data (global OU rules)
         "security/ir_rule/school.xml",
         "security/ir_rule/school_grade_type.xml",
@@ -34,6 +37,7 @@
         "security/ir_rule/school_teacher.xml",
         # Views
         "views/school_enrollment.xml",
+        "views/school_homeroom.xml",
         "views/school.xml",
         "views/school_grade_type.xml",
         "views/school_grade.xml",
