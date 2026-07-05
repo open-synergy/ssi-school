@@ -234,3 +234,8 @@ msgstr ""
 #: model:ir.model,name:ssi_school_admission_lead.model_crm_lead_create_admission_form
 msgid "Wizard - Create Admission Form from CRM Lead"
 msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission_lead.crm_lead_create_admission_form_view_form
+msgid "Year/Term"
+msgstr ""
