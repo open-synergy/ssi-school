@@ -199,6 +199,11 @@ msgid "Admission Payment Templates"
 msgstr ""
 
 #. module: ssi_school_admission
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_view_form
+msgid "Admission Source"
+msgstr ""
+
+#. module: ssi_school_admission
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__admission_test_id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__admission_test_id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test_wizard_create_admission__admission_test_id
@@ -2350,4 +2355,11 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_template__website_message_ids
 #: model:ir.model.fields,help:ssi_school_admission.field_school_admission_test__website_message_ids
 msgid "Website communication history"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_form_view_form
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_test_view_form
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_view_form
+msgid "Year/Term"
 msgstr ""
