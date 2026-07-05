@@ -20,6 +20,7 @@
                 <field name="academic_term_id" />
                 <field name="grade_id" />
                 <field name="grade_class_id" />
+                <field name="homeroom_id" />
                 <group expand="0" string="Group By">
                     <filter
                             name="group_by_school_id"
@@ -120,14 +121,18 @@
                     />
             </xpath>
             <xpath expr="//field[@name='user_id']" position="after">
-                <field name="academic_year_id" />
-                <field
-                        name="academic_term_id"
-                        domain="[('year_id','=',academic_year_id),('enrollment_state','=','open')]"
-                    />
-                <field name="last_term" />
+                <label for="academic_term_id" string="Year/Term" />
+                <div class="o_row">
+                    <field name="academic_year_id" class="oe_inline" />
+                    <field
+                            name="academic_term_id"
+                            domain="[('year_id','=',academic_year_id),('enrollment_state','=','open')]"
+                            class="oe_inline"
+                        />
+                </div>
+                <field name="last_term" invisible="1" />
                 <field name="school_id" />
-                <field name="grade_type_id" />
+                <field name="grade_type_id" invisible="1" />
                 <field name="grade_id" domain="[('type_id','=',grade_type_id)]" />
                 <field
                         name="allowed_student_ids"
@@ -139,6 +144,7 @@
                         name="grade_class_id"
                         domain="[('grade_id','=',grade_id),('school_id','=',school_id)]"
                     />
+                <field name="homeroom_id" />
             </xpath>
             <xpath expr="//group[@name='header_right']" position="inside">
                 <field name="date" />

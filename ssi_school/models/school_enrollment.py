@@ -163,6 +163,21 @@ class SchoolEnrollment(models.Model):
         },
         help="The specific homeroom class the student is placed in.",
     )
+    homeroom_id = fields.Many2one(
+        string="Homeroom",
+        comodel_name="school_homeroom",
+        required=False,
+        readonly=True,
+        states={
+            "draft": [
+                ("readonly", False),
+            ],
+        },
+        help=(
+            "The Homeroom batch this enrollment was generated from or "
+            "linked to, if any."
+        ),
+    )
     last_term = fields.Boolean(
         string="Last Term of Academic Year?",
         related="academic_term_id.last_term",
