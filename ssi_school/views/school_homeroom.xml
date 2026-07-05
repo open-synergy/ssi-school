@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 OpenSynergy Indonesia
+     Copyright 2026 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+<record id="school_homeroom_view_search" model="ir.ui.view">
+    <field name="name">school_homeroom - search</field>
+    <field name="model">school_homeroom</field>
+    <field
+            name="inherit_id"
+            ref="ssi_transaction_mixin.mixin_transaction_view_search"
+        />
+    <field name="mode">primary</field>
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//search" position="inside">
+                <field name="school_id" />
+                <field name="academic_year_id" />
+                <field name="academic_term_id" />
+                <field name="grade_id" />
+                <field name="grade_class_id" />
+                <field name="teacher_id" />
+                <group expand="0" string="Group By">
+                    <filter
+                            name="group_by_school_id"
+                            string="School"
+                            context="{'group_by': 'school_id'}"
+                        />
+                    <filter
+                            name="group_by_academic_year_id"
+                            string="Academic Year"
+                            context="{'group_by': 'academic_year_id'}"
+                        />
+                    <filter
+                            name="group_by_academic_term_id"
+                            string="Academic Term"
+                            context="{'group_by': 'academic_term_id'}"
+                        />
+                    <filter
+                            name="group_by_grade_id"
+                            string="Grade"
+                            context="{'group_by': 'grade_id'}"
+                        />
+                    <filter
+                            name="group_by_grade_class_id"
+                            string="Grade Class"
+                            context="{'group_by': 'grade_class_id'}"
+                        />
+                </group>
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_homeroom_view_tree" model="ir.ui.view">
+    <field name="name">school_homeroom - tree</field>
+    <field name="model">school_homeroom</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="ssi_transaction_mixin.mixin_transaction_view_tree" />
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name="date" />
+                <field name="school_id" />
+                <field name="academic_year_id" />
+                <field name="academic_term_id" />
+                <field name="grade_id" />
+                <field name="grade_class_id" />
+                <field name="teacher_id" />
+                <field name="capacity" />
+                <field name="enrolled_count" />
+                <field name="seat_available" />
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_homeroom_view_form" model="ir.ui.view">
+    <field name="name">school_homeroom - form</field>
+    <field name="model">school_homeroom</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="ssi_transaction_mixin.mixin_transaction_view_form" />
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='user_id']" position="after">
+                <label for="academic_term_id" string="Year/Term" />
+                <div class="o_row">
+                    <field name="academic_year_id" class="oe_inline" />
+                    <field
+                            name="academic_term_id"
+                            domain="[('year_id','=',academic_year_id)]"
+                            class="oe_inline"
+                        />
+                </div>
+                <field name="school_id" />
+                <field name="grade_type_id" invisible="1" />
+                <field name="grade_id" domain="[('type_id','=',grade_type_id)]" />
+                <field
+                        name="grade_class_id"
+                        domain="[('grade_id','=',grade_id),('school_id','=',school_id)]"
+                    />
+                <field name="teacher_id" />
+            </xpath>
+            <xpath expr="//group[@name='header_right']" position="inside">
+                <field name="date" />
+                <field name="capacity" />
+                <field name="enrolled_count" />
+                <field name="seat_available" />
+            </xpath>
+            <xpath expr="//page[1]" position="before">
+                <page name="enrollment" string="Enrollments">
+                    <field name="enrollment_ids" nolabel="1" colspan="4">
+                        <tree create="false" edit="false" delete="false">
+                            <field name="name" />
+                            <field name="student_id" />
+                            <field name="state" />
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_homeroom_action" model="ir.actions.act_window">
+    <field name="name">Homerooms</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">school_homeroom</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<menuitem
+        id="school_homeroom_menu"
+        name="Homerooms"
+        parent="ssi_school.menu_school_root"
+        action="school_homeroom_action"
+        groups="school_homeroom_viewer_group"
+        sequence="145"
+    />
+
+</odoo>

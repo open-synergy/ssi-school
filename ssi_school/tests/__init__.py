@@ -20,4 +20,6 @@ from . import (  # noqa: F401
     test_school_enrollment_product_summary,
     test_school_enrollment_payment_date_pattern,
     test_school_enrollment_integrity,
+    test_school_homeroom,
+    test_school_homeroom_integrity,
 )

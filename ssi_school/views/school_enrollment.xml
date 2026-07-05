@@ -20,6 +20,7 @@
                 <field name="academic_term_id" />
                 <field name="grade_id" />
                 <field name="grade_class_id" />
+                <field name="homeroom_id" />
                 <group expand="0" string="Group By">
                     <filter
                             name="group_by_school_id"
@@ -143,6 +144,7 @@
                         name="grade_class_id"
                         domain="[('grade_id','=',grade_id),('school_id','=',school_id)]"
                     />
+                <field name="homeroom_id" />
             </xpath>
             <xpath expr="//group[@name='header_right']" position="inside">
                 <field name="date" />
