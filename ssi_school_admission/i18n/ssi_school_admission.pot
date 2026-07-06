@@ -342,11 +342,6 @@ msgid "Base Amount"
 msgstr ""
 
 #. module: ssi_school_admission
-#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_view_form
-msgid "Billing"
-msgstr ""
-
-#. module: ssi_school_admission
 #: model:product.product,name:ssi_school_admission.demo_product_admission_2
 #: model:product.template,name:ssi_school_admission.demo_product_admission_2_product_template
 msgid "Books and Uniform Fee - (demo)"
@@ -775,6 +770,11 @@ msgstr ""
 #. module: ssi_school_admission
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term__date_invoice
 msgid "Estimated Invoice Date"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_view_form
+msgid "Fee"
 msgstr ""
 
 #. module: ssi_school_admission
@@ -1372,7 +1372,6 @@ msgstr ""
 
 #. module: ssi_school_admission
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__product_summary_ids
-#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_view_form
 msgid "Product Summary"
 msgstr ""
 
