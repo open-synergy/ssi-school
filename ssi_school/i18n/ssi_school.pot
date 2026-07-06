@@ -903,6 +903,20 @@ msgid "Default"
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template__receivable_account_id
+msgid ""
+"Default receivable account copied into the enrollment when this template is "
+"selected."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template__journal_id
+msgid ""
+"Default receivable journal copied into the enrollment when this template is "
+"selected."
+msgstr ""
+
+#. module: ssi_school
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_payment_term_view_tree
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_form
 msgid "Delete Invoice"
@@ -2297,11 +2311,13 @@ msgstr ""
 
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__receivable_account_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__receivable_account_id
 msgid "Receivable Account"
 msgstr ""
 
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__receivable_journal_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__journal_id
 msgid "Receivable Journal"
 msgstr ""
 
