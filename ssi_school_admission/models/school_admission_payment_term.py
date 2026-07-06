@@ -156,6 +156,20 @@ class SchoolAdmissionPaymentTerm(models.Model):
         ),
     )
 
+    @api.model
+    def create(self, vals):
+        result = super().create(vals)
+        if result.admission_id:
+            result.admission_id._recompute_product_summary()  # pylint: disable=protected-access
+        return result
+
+    def write(self, vals):
+        result = super().write(vals)
+        self.mapped(
+            "admission_id"
+        )._recompute_product_summary()  # pylint: disable=protected-access
+        return result
+
     def unlink(self):
         admissions = self.mapped("admission_id")
         result = super().unlink()
