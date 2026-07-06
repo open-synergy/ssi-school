@@ -140,4 +140,10 @@ class CrmLeadCreateAdmission(models.TransientModel):
             "payment_template_id": self.payment_template_id.id
             if self.payment_template_id
             else False,
+            "receivable_journal_id": self.payment_template_id.receivable_journal_id.id
+            if self.payment_template_id
+            else False,
+            "receivable_account_id": self.payment_template_id.receivable_account_id.id
+            if self.payment_template_id
+            else False,
         }

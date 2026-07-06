@@ -142,3 +142,83 @@ class TestSchoolLead(YamlTransactionCase):
 
         form.school_id = school_b
         self.assertFalse(form.payment_template_id.id)
+
+    def test_create_admission_propagates_receivable(self):
+        """Admission created from lead inherits receivable journal/account from template."""
+        year = self.env["school_academic_year"].create(
+            {
+                "name": "Year OC3",
+                "code": "AYOC3",
+                "date_start": "2024-07-01",
+                "date_end": "2025-06-30",
+            }
+        )
+        term = self.env["school_academic_term"].create(
+            {
+                "name": "Term OC3",
+                "code": "SMOC3",
+                "date_start": "2024-07-01",
+                "date_end": "2025-06-30",
+                "year_id": year.id,
+                "is_open_admission": True,
+            }
+        )
+        grade_type = self.env["school_grade_type"].create(
+            {"name": "Grade Type OC3", "code": "GTOC3", "sequence": 10}
+        )
+        school = self.env["school"].create(
+            {"name": "School OC3", "code": "SCHOC3", "grade_type_id": grade_type.id}
+        )
+        grade = self.env["school_grade"].create(
+            {
+                "name": "Grade OC3",
+                "code": "GOC3",
+                "sequence": 10,
+                "type_id": grade_type.id,
+            }
+        )
+        journal = self.env["account.journal"].search([("type", "=", "sale")], limit=1)
+        account = self.env["account.account"].create(
+            {
+                "name": "Admission Receivable OC3",
+                "code": "ADMRECOC3",
+                "user_type_id": self.env.ref("account.data_account_type_receivable").id,
+                "reconcile": True,
+            }
+        )
+        template = self.env["school_admission_payment_template"].create(
+            {
+                "name": "PT OC3",
+                "code": "PTOC3",
+                "school_id": school.id,
+                "grade_id": grade.id,
+                "academic_term_id": term.id,
+                "receivable_journal_id": journal.id,
+                "receivable_account_id": account.id,
+            }
+        )
+        student = self.env["res.partner"].create({"name": "Student OC3"})
+        lead = (
+            self.env["crm.lead"]
+            .with_user(self.env.ref("base.user_admin"))
+            .create({"name": "Lead OC3"})
+        )
+
+        form = Form(
+            self.env["crm.lead.create_admission"].with_context(
+                default_lead_id=lead.id,
+                default_student_id=student.id,
+            )
+        )
+        form.academic_year_id = year
+        form.school_id = school
+        form.grade_id = grade
+        form.academic_term_id = term
+        self.assertEqual(form.payment_template_id.id, template.id)
+        wizard = form.save()
+        wizard.action_confirm()
+
+        admission = lead.admission_id
+        self.assertTrue(admission)
+        self.assertEqual(admission.receivable_journal_id, journal)
+        self.assertEqual(admission.receivable_account_id, account)
