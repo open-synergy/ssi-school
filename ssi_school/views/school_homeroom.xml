@@ -112,7 +112,6 @@
                     <field name="allowed_student_ids" invisible="1" />
                     <field
                             name="candidate_student_ids"
-                            widget="many2many_tags"
                             domain="[('id','in',allowed_student_ids)]"
                             attrs="{'readonly':[('state','not in',['draft','open'])]}"
                         />

@@ -134,11 +134,7 @@
                 <field name="school_id" />
                 <field name="grade_type_id" invisible="1" />
                 <field name="grade_id" domain="[('type_id','=',grade_type_id)]" />
-                <field
-                        name="allowed_student_ids"
-                        widget="many2many_tags"
-                        invisible="1"
-                    />
+                <field name="allowed_student_ids" invisible="1" />
                 <field name="student_id" domain="[('id','=',allowed_student_ids)]" />
                 <field
                         name="grade_class_id"
