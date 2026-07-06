@@ -643,6 +643,20 @@ msgid "Date"
 msgstr ""
 
 #. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_template__receivable_account_id
+msgid ""
+"Default receivable account copied into the admission when this template is "
+"selected."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_template__receivable_journal_id
+msgid ""
+"Default receivable journal copied into the admission when this template is "
+"selected."
+msgstr ""
+
+#. module: ssi_school_admission
 #: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_payment_term_view_tree
 #: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_view_form
 msgid "Delete Invoice"
@@ -1458,6 +1472,7 @@ msgstr ""
 #. module: ssi_school_admission
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__receivable_account_id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_wizard_create_admission__receivable_account_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__receivable_account_id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test_wizard_create_admission__receivable_account_id
 msgid "Receivable Account"
 msgstr ""
@@ -1465,6 +1480,7 @@ msgstr ""
 #. module: ssi_school_admission
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__receivable_journal_id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_wizard_create_admission__receivable_journal_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__receivable_journal_id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test_wizard_create_admission__receivable_journal_id
 msgid "Receivable Journal"
 msgstr ""
