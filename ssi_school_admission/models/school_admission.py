@@ -282,6 +282,22 @@ class SchoolAdmission(models.Model):
     def onchange_grade_id(self):
         self.grade_id = False
 
+    @api.onchange(
+        "payment_template_id",
+    )
+    def onchange_receivable_journal_id(self):
+        self.receivable_journal_id = False
+        if self.payment_template_id:
+            self.receivable_journal_id = self.payment_template_id.receivable_journal_id
+
+    @api.onchange(
+        "payment_template_id",
+    )
+    def onchange_receivable_account_id(self):
+        self.receivable_account_id = False
+        if self.payment_template_id:
+            self.receivable_account_id = self.payment_template_id.receivable_account_id
+
     def action_compute_payment(self):
         for record in self.sudo():
             record._compute_payment_from_template()  # pylint: disable=protected-access

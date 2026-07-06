@@ -108,6 +108,8 @@ scenarios:
           school_id: "EVAL: registry['school'].id"
           grade_id: "EVAL: registry['grade'].id"
           academic_term_id: "EVAL: registry['academic_term'].id"
+          receivable_journal_id: "EVAL: registry['receivable_journal'].id"
+          receivable_account_id: "EVAL: registry['account'].id"
           term_ids:
             - - 0
               - 0
@@ -135,6 +137,17 @@ scenarios:
                       uom_quantity: 1.0
                       uom_id: "REF: uom.product_uom_unit"
                       price_unit: 1000000.0
+
+      - step: "Assert payment template receivable defaults stored"
+        action: "assert"
+        target: "payment_template"
+        asserts:
+          receivable_journal_id:
+            type: "value"
+            operator: "is_truthy"
+          receivable_account_id:
+            type: "value"
+            operator: "is_truthy"
 
       - step: "Create admission"
         action: "create"

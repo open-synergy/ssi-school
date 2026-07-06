@@ -43,6 +43,24 @@ class SchoolAdmissionPaymentTemplate(
         required=False,
         help="The grade level for which this payment template applies.",
     )
+    receivable_journal_id = fields.Many2one(
+        string="Receivable Journal",
+        comodel_name="account.journal",
+        required=False,
+        help=(
+            "Default receivable journal copied into the admission "
+            "when this template is selected."
+        ),
+    )
+    receivable_account_id = fields.Many2one(
+        string="Receivable Account",
+        comodel_name="account.account",
+        required=False,
+        help=(
+            "Default receivable account copied into the admission "
+            "when this template is selected."
+        ),
+    )
     term_ids = fields.One2many(
         string="Payment Terms",
         comodel_name="school_admission_payment_template.term",

@@ -68,6 +68,8 @@
                 <field name="school_id" />
                 <field name="grade_id" domain="[('type_id','=',grade_type_id)]" />
                 <field name="grade_type_id" invisible="1" />
+                <field name="receivable_journal_id" />
+                <field name="receivable_account_id" />
             </xpath>
             <xpath expr="//page[1]" position="before">
                 <page name="payment_terms" string="Payment Terms">
