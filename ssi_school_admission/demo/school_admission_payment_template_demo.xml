@@ -11,6 +11,8 @@
         <field name="academic_term_id" ref="ssi_school.school_academic_term1" />
         <field name="school_id" ref="ssi_school.school_demo_1" />
         <field name="grade_id" ref="ssi_school.school_grade1_type" />
+        <field name="receivable_journal_id" ref="demo_journal_sale" />
+        <field name="receivable_account_id" ref="demo_account_receivable" />
         <field
             name="term_ids"
             eval="[
@@ -65,6 +67,8 @@
         <field name="academic_term_id" ref="ssi_school.school_academic_term1" />
         <field name="school_id" ref="ssi_school.school_demo_1" />
         <field name="grade_id" ref="ssi_school.school_grade2_type" />
+        <field name="receivable_journal_id" ref="demo_journal_sale" />
+        <field name="receivable_account_id" ref="demo_account_receivable" />
         <field
             name="term_ids"
             eval="[
