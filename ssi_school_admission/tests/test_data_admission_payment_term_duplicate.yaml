@@ -1,0 +1,284 @@
+scenarios:
+  - name: "Admission Payment Term - Duplicate via Wizard"
+    steps:
+      - step: "Setup - get receivable journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "receivable_journal"
+        limit: 1
+
+      - step: "Setup - get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "Admission Fee Income ADPTDUP1"
+          code: "ADPTDUP14200"
+          user_type_id: "EVAL: registry['account_type'].id"
+
+      - step: "Setup - create first product"
+        action: "create"
+        model: "product.product"
+        save_as: "product1"
+        values:
+          name: "Admission Fee 1 ADPTDUP1"
+          type: "service"
+          list_price: 500000.0
+
+      - step: "Setup - create second product"
+        action: "create"
+        model: "product.product"
+        save_as: "product2"
+        values:
+          name: "Admission Fee 2 ADPTDUP1"
+          type: "service"
+          list_price: 700000.0
+
+      - step: "Setup - create pricelist"
+        action: "create"
+        model: "product.pricelist"
+        save_as: "pricelist"
+        values:
+          name: "Pricelist ADPTDUP1"
+          currency_id: "EVAL: env.company.currency_id.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type ADPTDUP1"
+          code: "GTADPTDUP1"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 ADPTDUP1"
+          code: "AYADPTDUP1"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester ADPTDUP1"
+          code: "SMADPTDUP1"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "EVAL: registry['academic_year'].id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School ADPTDUP1"
+          code: "SCHADPTDUP1"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade ADPTDUP1"
+          code: "GADPTDUP1"
+          sequence: 10
+          type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "student_contact"
+        values:
+          name: "Student Contact ADPTDUP1"
+
+      - step: "Setup - create admission"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "EVAL: registry['academic_year'].id"
+          academic_term_id: "EVAL: registry['academic_term'].id"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          student_id: "EVAL: registry['student_contact'].id"
+          pricelist_id: "EVAL: registry['pricelist'].id"
+          currency_id: "EVAL: env.company.currency_id.id"
+          receivable_journal_id: "EVAL: registry['receivable_journal'].id"
+
+      - step: "Setup - create source payment term with two detail lines"
+        action: "create"
+        model: "school_admission_payment_term"
+        save_as: "term"
+        values:
+          admission_id: "EVAL: registry['admission'].id"
+          name: "Term Source ADPTDUP1"
+          sequence: 10
+          date_invoice: "2024-08-01"
+          date_due: "2024-08-15"
+          detail_ids:
+            - - 0
+              - 0
+              - product_id: "EVAL: registry['product1'].id"
+                name: "Fee 1 ADPTDUP1"
+                account_id: "EVAL: registry['account'].id"
+                uom_quantity: 1.0
+                uom_id: "REF: uom.product_uom_unit"
+                price_unit: 500000.0
+            - - 0
+              - 0
+              - product_id: "EVAL: registry['product2'].id"
+                name: "Fee 2 ADPTDUP1"
+                account_id: "EVAL: registry['account'].id"
+                uom_quantity: 1.0
+                uom_id: "REF: uom.product_uom_unit"
+                price_unit: 700000.0
+
+      - step: "Smoke test - open duplicate wizard action from source term"
+        action: "call"
+        target: "term"
+        method: "action_open_duplicate_wizard"
+
+      - step: "Create invoice on source term"
+        action: "call"
+        target: "term"
+        method: "action_create_invoice"
+
+      - step: "Invalidate term cache after invoice creation"
+        action: "call"
+        target: "term"
+        method: "invalidate_cache"
+
+      - step: "Assert source term has an invoice"
+        action: "assert"
+        target: "term"
+        asserts:
+          invoice_id:
+            type: "value"
+            operator: "is_truthy"
+
+      - step: "Create duplicate wizard with new header values"
+        action: "create"
+        model: "school_admission_payment_term.wizard_duplicate"
+        save_as: "wizard"
+        values:
+          term_id: "EVAL: registry['term'].id"
+          name: "Term Copy ADPTDUP1"
+          sequence: 20
+          date_invoice: "2024-09-01"
+          date_due: "2024-09-15"
+
+      - step: "Confirm duplicate"
+        action: "call"
+        target: "wizard"
+        method: "action_duplicate"
+
+      - step: "Search the newly duplicated term"
+        action: "search"
+        model: "school_admission_payment_term"
+        domain:
+          - ["admission_id", "=", "EVAL: registry['admission'].id"]
+          - ["id", "!=", "EVAL: registry['term'].id"]
+        save_as: "new_term"
+        expect_count: 1
+
+      - step: "Assert new term header comes from the wizard"
+        action: "assert"
+        target: "new_term"
+        asserts:
+          name:
+            type: "value"
+            expected: "Term Copy ADPTDUP1"
+          sequence:
+            type: "value"
+            expected: 20
+          date_invoice:
+            type: "value"
+            expected: 2024-09-01
+          date_due:
+            type: "value"
+            expected: 2024-09-15
+          invoice_id:
+            type: "value"
+            operator: "is_falsy"
+          detail_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 2
+
+      - step: "Search duplicated detail line for first product"
+        action: "search"
+        model: "school_admission_payment_term_detail"
+        domain:
+          - ["term_id", "=", "EVAL: registry['new_term'].id"]
+          - ["product_id", "=", "EVAL: registry['product1'].id"]
+        save_as: "detail1"
+        expect_count: 1
+
+      - step: "Assert first duplicated detail matches source and has no invoice line"
+        action: "assert"
+        target: "detail1"
+        asserts:
+          name:
+            type: "value"
+            expected: "Fee 1 ADPTDUP1"
+          price_unit:
+            type: "value"
+            expected: 500000.0
+          uom_quantity:
+            type: "value"
+            expected: 1.0
+          invoice_line_id:
+            type: "value"
+            operator: "is_falsy"
+
+      - step: "Search duplicated detail line for second product"
+        action: "search"
+        model: "school_admission_payment_term_detail"
+        domain:
+          - ["term_id", "=", "EVAL: registry['new_term'].id"]
+          - ["product_id", "=", "EVAL: registry['product2'].id"]
+        save_as: "detail2"
+        expect_count: 1
+
+      - step: "Assert second duplicated detail matches source and has no invoice line"
+        action: "assert"
+        target: "detail2"
+        asserts:
+          name:
+            type: "value"
+            expected: "Fee 2 ADPTDUP1"
+          price_unit:
+            type: "value"
+            expected: 700000.0
+          uom_quantity:
+            type: "value"
+            expected: 1.0
+          invoice_line_id:
+            type: "value"
+            operator: "is_falsy"
+
+      - step: "Assert source term is untouched"
+        action: "assert"
+        target: "term"
+        asserts:
+          name:
+            type: "value"
+            expected: "Term Source ADPTDUP1"
+          sequence:
+            type: "value"
+            expected: 10

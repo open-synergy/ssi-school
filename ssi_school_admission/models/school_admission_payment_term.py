@@ -155,6 +155,15 @@ class SchoolAdmissionPaymentTerm(models.Model):
             "Marks this term as manually controlled, " "skipping automatic invoicing."
         ),
     )
+    admission_state = fields.Selection(
+        string="Admission State",
+        related="admission_id.state",
+        store=True,
+        help=(
+            "Status of the owning admission, used to control "
+            "term-level actions such as duplication."
+        ),
+    )
 
     @api.model
     def create(self, vals):
@@ -195,6 +204,19 @@ class SchoolAdmissionPaymentTerm(models.Model):
     def action_unmark_as_manual(self):
         for record in self.sudo():
             record._unmark_as_manual()  # pylint: disable=protected-access
+
+    def action_open_duplicate_wizard(self):
+        for record in self.sudo():
+            result = record._open_duplicate_wizard()
+        return result
+
+    def _open_duplicate_wizard(self):
+        self.ensure_one()
+        waction = self.env.ref(
+            "ssi_school_admission.school_admission_payment_term_action_duplicate"
+        ).read()[0]
+        waction.update({"context": {"active_id": self.id}})
+        return waction
 
     def _mark_as_manual(self):
         self.ensure_one()
