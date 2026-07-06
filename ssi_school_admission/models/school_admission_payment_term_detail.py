@@ -49,8 +49,6 @@ class SchoolAdmissionPaymentTermDetail(models.Model):
         help=("The invoice line linked to this detail " "after the term is invoiced."),
     )
 
-    _SUMMARY_FIELDS = {"product_id", "price_subtotal", "price_tax", "price_total"}
-
     @api.model
     def create(self, vals):
         record = super().create(vals)
@@ -61,9 +59,9 @@ class SchoolAdmissionPaymentTermDetail(models.Model):
 
     def write(self, vals):
         result = super().write(vals)
-        if self._SUMMARY_FIELDS & set(vals.keys()):
-            admissions = self.mapped("term_id.admission_id")
-            admissions._recompute_product_summary()  # pylint: disable=protected-access
+        self.mapped(
+            "term_id.admission_id"
+        )._recompute_product_summary()  # pylint: disable=protected-access
         return result
 
     def unlink(self):

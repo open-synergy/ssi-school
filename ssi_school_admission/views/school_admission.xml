@@ -107,13 +107,7 @@
                     />
             </xpath>
             <xpath expr="//page[1]" position="before">
-                <page name="admission_source" string="Admission Source">
-                    <group name="admission_source_group" colspan="4" col="2">
-                        <field name="admission_form_id" />
-                        <field name="admission_test_id" />
-                    </group>
-                </page>
-                <page name="billing" string="Billing">
+                <page name="billing" string="Fee">
                     <group name="billing_template" colspan="4" col="2">
                         <group name="billing_template_left" colspan="1" col="2">
                             <field
@@ -165,14 +159,6 @@
                                 />
                         </tree>
                     </field>
-                    <group name="billing_account" colspan="4" col="2">
-                        <group name="billing_account_left" colspan="1" col="2">
-                            <field name="receivable_journal_id" />
-                            <field name="receivable_account_id" />
-                        </group>
-                    </group>
-                </page>
-                <page name="product_summary" string="Product Summary">
                     <field
                             name="product_summary_ids"
                             colspan="4"
@@ -188,6 +174,18 @@
                             <field name="amount_total" />
                         </tree>
                     </field>
+                    <group name="billing_account" colspan="4" col="2">
+                        <group name="billing_account_left" colspan="1" col="2">
+                            <field name="receivable_journal_id" />
+                            <field name="receivable_account_id" />
+                        </group>
+                    </group>
+                </page>
+                <page name="admission_source" string="Admission Source">
+                    <group name="admission_source_group" colspan="4" col="2">
+                        <field name="admission_form_id" />
+                        <field name="admission_test_id" />
+                    </group>
                 </page>
                 <page name="result" string="Result">
                     <group name="result_group" colspan="4" col="2">
