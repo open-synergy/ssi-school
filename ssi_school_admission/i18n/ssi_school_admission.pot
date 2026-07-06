@@ -32,6 +32,12 @@ msgid "# Invoice"
 msgstr ""
 
 #. module: ssi_school_admission
+#: code:addons/ssi_school_admission/wizards/school_admission_payment_term_duplicate.py:0
+#, python-format
+msgid "%s (copy)"
+msgstr ""
+
+#. module: ssi_school_admission
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__academic_term_id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__academic_term_id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__academic_term_id
@@ -201,6 +207,11 @@ msgstr ""
 #. module: ssi_school_admission
 #: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_view_form
 msgid "Admission Source"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term__admission_state
+msgid "Admission State"
 msgstr ""
 
 #. module: ssi_school_admission
@@ -427,6 +438,7 @@ msgstr ""
 
 #. module: ssi_school_admission
 #: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_form_wizard_create_admission_view_form
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_payment_term_wizard_duplicate_view_form
 #: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_test_wizard_create_admission_view_form
 msgid "Cancel"
 msgstr ""
@@ -580,6 +592,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template_term_detail__create_uid
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term__create_uid
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_detail__create_uid
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_wizard_duplicate__create_uid
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_product_summary__create_uid
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__create_uid
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test_wizard_create_admission__create_uid
@@ -599,6 +612,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template_term_detail__create_date
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term__create_date
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_detail__create_date
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_wizard_duplicate__create_date
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_product_summary__create_date
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__create_date
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test_wizard_create_admission__create_date
@@ -695,6 +709,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template_term_detail__display_name
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term__display_name
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_detail__display_name
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_wizard_duplicate__display_name
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_product_summary__display_name
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__display_name
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test_wizard_create_admission__display_name
@@ -724,6 +739,27 @@ msgstr ""
 #. module: ssi_school_admission
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template_term__date_due_duration_id
 msgid "Due Date Duration"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_payment_term_wizard_duplicate_view_form
+msgid "Duplicate"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.actions.act_window,name:ssi_school_admission.school_admission_payment_term_action_duplicate
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_payment_term_wizard_duplicate_view_form
+msgid "Duplicate Payment Term"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model,name:ssi_school_admission.model_school_admission_payment_term_wizard_duplicate
+msgid "Duplicate School Admission Payment Term"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_payment_term_view_tree
+msgid "Duplicate Term"
 msgstr ""
 
 #. module: ssi_school_admission
@@ -764,12 +800,24 @@ msgstr ""
 
 #. module: ssi_school_admission
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term__date_due
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_wizard_duplicate__date_due
 msgid "Estimated Due Date"
 msgstr ""
 
 #. module: ssi_school_admission
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term__date_invoice
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_wizard_duplicate__date_invoice
 msgid "Estimated Invoice Date"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_term_wizard_duplicate__date_invoice
+msgid "Estimated date for issuing the invoice for the new payment term."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_term_wizard_duplicate__date_due
+msgid "Estimated due date for payment of the new payment term."
 msgstr ""
 
 #. module: ssi_school_admission
@@ -886,6 +934,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template_term_detail__id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term__id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_detail__id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_wizard_duplicate__id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_product_summary__id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test_wizard_create_admission__id
@@ -1012,6 +1061,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template_term_detail____last_update
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term____last_update
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_detail____last_update
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_wizard_duplicate____last_update
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_product_summary____last_update
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test____last_update
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test_wizard_create_admission____last_update
@@ -1031,6 +1081,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template_term_detail__write_uid
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term__write_uid
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_detail__write_uid
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_wizard_duplicate__write_uid
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_product_summary__write_uid
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__write_uid
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test_wizard_create_admission__write_uid
@@ -1050,6 +1101,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template_term_detail__write_date
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term__write_date
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_detail__write_date
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_wizard_duplicate__write_date
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_product_summary__write_date
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__write_date
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test_wizard_create_admission__write_date
@@ -1166,6 +1218,11 @@ msgid "Name"
 msgstr ""
 
 #. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_term_wizard_duplicate__name
+msgid "Name of the new payment term to be created."
+msgstr ""
+
+#. module: ssi_school_admission
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__need_validation
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__need_validation
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__need_validation
@@ -1272,6 +1329,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_academic_term__is_open_admission
 #: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_academic_term_view_search_admission
 msgid "Open for Admission"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_term_wizard_duplicate__sequence
+msgid ""
+"Order of the new payment term within the admission. Lower values appear "
+"first."
 msgstr ""
 
 #. module: ssi_school_admission
@@ -1590,6 +1654,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template_term_detail__sequence
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term__sequence
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_detail__sequence
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_wizard_duplicate__sequence
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_product_summary__sequence
 msgid "Sequence"
 msgstr ""
@@ -1616,6 +1681,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__source_partner_id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__source_partner_id
 msgid "Source Partner"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_wizard_duplicate__term_id
+msgid "Source Term"
 msgstr ""
 
 #. module: ssi_school_admission
@@ -1675,6 +1745,13 @@ msgid ""
 "Overdue: Due date is already passed\n"
 "Today: Activity date is today\n"
 "Planned: Future activities."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_term__admission_state
+msgid ""
+"Status of the owning admission, used to control term-level actions such as "
+"duplication."
 msgstr ""
 
 #. module: ssi_school_admission
@@ -1741,6 +1818,7 @@ msgstr ""
 
 #. module: ssi_school_admission
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template_term__name
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_wizard_duplicate__name
 msgid "Term Name"
 msgstr ""
 
@@ -2027,6 +2105,11 @@ msgstr ""
 #. module: ssi_school_admission
 #: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_template__term_ids
 msgid "The payment term items defining the schedule in this template."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_term_wizard_duplicate__term_id
+msgid "The payment term whose detail lines will be copied to the new term."
 msgstr ""
 
 #. module: ssi_school_admission
