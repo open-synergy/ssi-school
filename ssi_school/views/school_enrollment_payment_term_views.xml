@@ -40,6 +40,7 @@
             <field name="date_invoice" />
             <field name="date_due" />
             <field name="currency_id" invisible="1" />
+            <field name="enrollment_state" invisible="1" />
             <field name="amount_untaxed" />
             <field name="amount_tax" />
             <field name="amount_total" />
@@ -79,6 +80,13 @@
                     type="object"
                     icon="fa-check-square-o"
                     states="manual"
+                />
+            <button
+                    name="action_open_duplicate_wizard"
+                    title="Duplicate Term"
+                    type="object"
+                    icon="fa-files-o"
+                    attrs="{'invisible':[('enrollment_state','!=','draft')]}"
                 />
         </tree>
     </field>

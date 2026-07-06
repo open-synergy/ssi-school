@@ -182,6 +182,15 @@ class SchoolEnrollmentPaymentTerm(models.Model):
             "and does not require an invoice."
         ),
     )
+    enrollment_state = fields.Selection(
+        string="Enrollment State",
+        related="enrollment_id.state",
+        store=True,
+        help=(
+            "Status of the owning enrollment, used to control "
+            "term-level actions such as duplication."
+        ),
+    )
 
     def action_create_invoice(self):
         for record in self.sudo():
@@ -202,6 +211,19 @@ class SchoolEnrollmentPaymentTerm(models.Model):
     def action_unmark_as_manual(self):
         for record in self.sudo():
             record._unmark_as_manual()  # pylint: disable=protected-access
+
+    def action_open_duplicate_wizard(self):
+        for record in self.sudo():
+            result = record._open_duplicate_wizard()
+        return result
+
+    def _open_duplicate_wizard(self):
+        self.ensure_one()
+        waction = self.env.ref(
+            "ssi_school.school_enrollment_payment_term_action_duplicate"
+        ).read()[0]
+        waction.update({"context": {"active_id": self.id}})
+        return waction
 
     def _mark_as_manual(self):
         self.ensure_one()
