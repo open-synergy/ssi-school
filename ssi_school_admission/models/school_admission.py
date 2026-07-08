@@ -247,6 +247,16 @@ class SchoolAdmission(models.Model):
         readonly=True,
         help=("The student profile created when this " "admission is opened."),
     )
+    copy_payment_term_ok = fields.Boolean(
+        string="Can Copy Payment Term",
+        compute="_compute_policy",
+        store=False,
+        compute_sudo=True,
+        help=(
+            "Policy that determines whether payment terms may be "
+            "copied into this admission."
+        ),
+    )
 
     def _compute_policy(self):  # pylint: disable=missing-return
         _super = super()
@@ -409,6 +419,7 @@ class SchoolAdmission(models.Model):
             "restart_ok",
             "restart_approval_ok",
             "manual_number_ok",
+            "copy_payment_term_ok",
         ]
         res += policy_field
         return res

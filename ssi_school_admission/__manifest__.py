@@ -61,6 +61,7 @@
         "ir_model_access/school_admission_payment_template.xml",
         "ir_model_access/school_admission_payment_term.xml",
         "ir_model_access/school_admission_payment_term_wizard_duplicate.xml",
+        "ir_model_access/school_admission_wizard_copy_payment_term.xml",
         "ir_rule/school_admission.xml",
         "ir_sequence/school_admission.xml",
         "sequence_template/school_admission.xml",
@@ -71,6 +72,7 @@
         "views/school_admission_payment_term.xml",
         "views/school_admission.xml",
         "wizards/school_admission_payment_term_duplicate.xml",
+        "wizards/school_admission_copy_payment_term.xml",
     ],
     "demo": [
         "demo/account_account_demo.xml",
