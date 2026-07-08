@@ -105,28 +105,78 @@
                         <field name="partner_id" />
                     </group>
                     <group name="term_header_right" colspan="1" col="2">
-                        <field name="name" />
-                        <field name="sequence" />
-                        <field name="date_invoice" />
-                        <field name="date_due" />
+                        <field
+                                name="name"
+                                attrs="{'readonly': [('locked','=',True)]}"
+                            />
+                        <field
+                                name="sequence"
+                                attrs="{'readonly': [('locked','=',True)]}"
+                            />
+                        <field
+                                name="date_invoice"
+                                attrs="{'readonly': [('locked','=',True)]}"
+                            />
+                        <field
+                                name="date_due"
+                                attrs="{'readonly': [('locked','=',True)]}"
+                            />
                         <field name="currency_id" invisible="1" />
+                        <field name="locked" invisible="1" />
+                        <field name="enrollment_state" invisible="1" />
+                        <field name="addendum_ok" invisible="1" />
                     </group>
                 </group>
                 <notebook>
                     <page name="term_detail" string="Detail">
-                        <field name="detail_ids" colspan="2" nolabel="1">
+                        <field
+                                name="detail_ids"
+                                colspan="2"
+                                nolabel="1"
+                                attrs="{'readonly': [('enrollment_state','!=','draft'),('addendum_ok','=',False)]}"
+                            >
                             <tree>
                                 <field name="sequence" widget="handle" />
-                                <field name="product_id" />
-                                <field name="name" />
-                                <field name="account_id" />
+                                <field
+                                        name="allowed_product_ids"
+                                        widget="many2many_tags"
+                                        invisible="1"
+                                    />
+                                <field
+                                        name="product_id"
+                                        domain="[('id','in',allowed_product_ids)]"
+                                        attrs="{'readonly': [('locked','=',True)]}"
+                                    />
+                                <field
+                                        name="name"
+                                        attrs="{'readonly': [('locked','=',True)]}"
+                                    />
+                                <field
+                                        name="account_id"
+                                        attrs="{'readonly': [('locked','=',True)]}"
+                                    />
                                 <field name="currency_id" invisible="1" />
                                 <field name="pricelist_id" invisible="1" />
-                                <field name="price_unit" />
-                                <field name="uom_quantity" string="Quantity" />
-                                <field name="uom_id" />
+                                <field name="locked" invisible="1" />
+                                <field
+                                        name="price_unit"
+                                        attrs="{'readonly': [('locked','=',True)]}"
+                                    />
+                                <field
+                                        name="uom_quantity"
+                                        string="Quantity"
+                                        attrs="{'readonly': [('locked','=',True)]}"
+                                    />
+                                <field
+                                        name="uom_id"
+                                        attrs="{'readonly': [('locked','=',True)]}"
+                                    />
                                 <field name="price_subtotal" />
-                                <field name="tax_ids" widget="many2many_tags" />
+                                <field
+                                        name="tax_ids"
+                                        widget="many2many_tags"
+                                        attrs="{'readonly': [('locked','=',True)]}"
+                                    />
                                 <field name="price_tax" />
                                 <field name="price_total" />
                             </tree>
@@ -135,11 +185,33 @@
                                 <sheet>
                                     <group name="detail_group" colspan="4" col="2">
                                         <group name="detail_left" colspan="1" col="2">
-                                            <field name="product_id" />
-                                            <field name="name" />
-                                            <field name="usage_id" />
-                                            <field name="account_id" />
-                                            <field name="analytic_account_id" />
+                                            <field
+                                                    name="allowed_product_ids"
+                                                    widget="many2many_tags"
+                                                    invisible="1"
+                                                />
+                                            <field name="locked" invisible="1" />
+                                            <field
+                                                    name="product_id"
+                                                    domain="[('id','in',allowed_product_ids)]"
+                                                    attrs="{'readonly': [('locked','=',True)]}"
+                                                />
+                                            <field
+                                                    name="name"
+                                                    attrs="{'readonly': [('locked','=',True)]}"
+                                                />
+                                            <field
+                                                    name="usage_id"
+                                                    attrs="{'readonly': [('locked','=',True)]}"
+                                                />
+                                            <field
+                                                    name="account_id"
+                                                    attrs="{'readonly': [('locked','=',True)]}"
+                                                />
+                                            <field
+                                                    name="analytic_account_id"
+                                                    attrs="{'readonly': [('locked','=',True)]}"
+                                                />
                                         </group>
                                         <group name="detail_right" colspan="1" col="2">
                                             <label
@@ -150,10 +222,11 @@
                                                 <field
                                                         name="uom_quantity"
                                                         class="oe_inline"
+                                                        attrs="{'readonly': [('locked','=',True)]}"
                                                     />
                                                 <field
                                                         name="uom_id"
-                                                        attrs="{'required':[('product_id','!=',False)]}"
+                                                        attrs="{'required':[('product_id','!=',False)],'readonly': [('locked','=',True)]}"
                                                         class="oe_inline"
                                                     />
                                             </div>
@@ -167,11 +240,15 @@
                                                     invisible="1"
                                                     force_save="1"
                                                 />
-                                            <field name="price_unit" />
+                                            <field
+                                                    name="price_unit"
+                                                    attrs="{'readonly': [('locked','=',True)]}"
+                                                />
                                             <field name="price_subtotal" />
                                             <field
                                                     name="tax_ids"
                                                     widget="many2many_tags"
+                                                    attrs="{'readonly': [('locked','=',True)]}"
                                                 />
                                             <field name="price_tax" />
                                             <field name="price_total" />
@@ -222,7 +299,15 @@
                         <field name="detail_ids" colspan="2" nolabel="1">
                             <tree>
                                 <field name="sequence" widget="handle" />
-                                <field name="product_id" />
+                                <field
+                                        name="allowed_product_ids"
+                                        widget="many2many_tags"
+                                        invisible="1"
+                                    />
+                                <field
+                                        name="product_id"
+                                        domain="[('id','in',allowed_product_ids)]"
+                                    />
                                 <field name="name" />
                                 <field name="account_id" />
                                 <field name="currency_id" invisible="1" />
@@ -240,7 +325,15 @@
                                 <sheet>
                                     <group name="detail_group" colspan="4" col="2">
                                         <group name="detail_left" colspan="1" col="2">
-                                            <field name="product_id" />
+                                            <field
+                                                    name="allowed_product_ids"
+                                                    widget="many2many_tags"
+                                                    invisible="1"
+                                                />
+                                            <field
+                                                    name="product_id"
+                                                    domain="[('id','in',allowed_product_ids)]"
+                                                />
                                             <field name="name" />
                                             <field name="usage_id" />
                                             <field name="account_id" />

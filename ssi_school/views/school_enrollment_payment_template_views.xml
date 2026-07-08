@@ -110,7 +110,15 @@
                                                         name="sequence"
                                                         widget="handle"
                                                     />
-                                                <field name="product_id" />
+                                                <field
+                                                        name="allowed_product_ids"
+                                                        widget="many2many_tags"
+                                                        invisible="1"
+                                                    />
+                                                <field
+                                                        name="product_id"
+                                                        domain="[('id','in',allowed_product_ids)]"
+                                                    />
                                                 <field name="name" />
                                                 <field name="account_id" />
                                                 <field
@@ -137,7 +145,15 @@
                                                                 colspan="1"
                                                                 col="2"
                                                             >
-                                                            <field name="product_id" />
+                                                            <field
+                                                                    name="allowed_product_ids"
+                                                                    widget="many2many_tags"
+                                                                    invisible="1"
+                                                                />
+                                                            <field
+                                                                    name="product_id"
+                                                                    domain="[('id','in',allowed_product_ids)]"
+                                                                />
                                                             <field name="name" />
                                                             <field name="account_id" />
                                                         </group>
@@ -175,6 +191,27 @@
                             </sheet>
                         </form>
                     </field>
+                </page>
+                <page name="product_config" string="Product Configuration">
+                    <group name="product_config_1" colspan="4" col="2">
+                        <field name="product_selection_method" />
+                        <field
+                                name="product_ids"
+                                widget="many2many_tags"
+                                attrs="{'invisible':[('product_selection_method','!=','manual')]}"
+                            />
+                        <field
+                                name="product_domain"
+                                widget="domain"
+                                options="{'model': 'product.product', 'in_dialog': True}"
+                                attrs="{'invisible':[('product_selection_method','!=','domain')]}"
+                            />
+                        <field
+                                name="product_python_code"
+                                widget="ace"
+                                attrs="{'invisible':[('product_selection_method','!=','code')]}"
+                            />
+                    </group>
                 </page>
             </xpath>
         </data>
