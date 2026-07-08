@@ -25,6 +25,31 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school
+#: code:addons/ssi_school/wizards/school_enrollment_copy_payment_term.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Copy payment terms between enrollments\n"
+"Database ID: %s\n"
+"Problem: No target enrollment selected\n"
+"Solution: Select at least one draft enrollment from the list view before running this wizard\n"
+msgstr ""
+
+#. module: ssi_school
+#: code:addons/ssi_school/wizards/school_enrollment_copy_payment_term.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Copy payment terms from enrollment '%s'\n"
+"Database ID: %s\n"
+"Problem: The following target enrollment(s) cannot receive payment terms:\n"
+"%s\n"
+"Solution: Deselect the listed enrollment(s), or make sure they are draft, allowed by\n"
+"the copy payment term policy, and share the same academic term/school/grade as the\n"
+"source\n"
+msgstr ""
+
+#. module: ssi_school
 #: code:addons/ssi_school/models/school_homeroom.py:0
 #, python-format
 msgid ""
@@ -167,6 +192,18 @@ msgstr ""
 #: code:addons/ssi_school/wizards/school_enrollment_payment_term_duplicate.py:0
 #, python-format
 msgid "%s (copy)"
+msgstr ""
+
+#. module: ssi_school
+#: code:addons/ssi_school/wizards/school_enrollment_copy_payment_term.py:0
+#, python-format
+msgid "- %s: academic term/school/grade does not match the source"
+msgstr ""
+
+#. module: ssi_school
+#: code:addons/ssi_school/wizards/school_enrollment_copy_payment_term.py:0
+#, python-format
+msgid "- %s: not allowed to receive payment terms (check state/policy)"
 msgstr ""
 
 #. module: ssi_school
@@ -412,6 +449,11 @@ msgid "Activity Type Icon"
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields.selection,name:ssi_school.selection__school_enrollment_wizard_copy_payment_term__mode__add
+msgid "Add"
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.ui.menu,name:ssi_school.menu_admission_configuration
 msgid "Admission"
 msgstr ""
@@ -571,6 +613,11 @@ msgid "Can Confirm"
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__copy_payment_term_ok
+msgid "Can Copy Payment Term"
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__fill_random_ok
 msgid "Can Fill Random"
 msgstr ""
@@ -618,6 +665,7 @@ msgstr ""
 
 #. module: ssi_school
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_payment_term_wizard_duplicate_view_form
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_wizard_copy_payment_term_view_form
 msgid "Cancel"
 msgstr ""
 
@@ -795,6 +843,17 @@ msgid "Contact data of the student's mother."
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.actions.act_window,name:ssi_school.school_enrollment_wizard_copy_payment_term_action
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_wizard_copy_payment_term_view_form
+msgid "Copy Payment Terms"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model,name:ssi_school.model_school_enrollment_wizard_copy_payment_term
+msgid "Copy Payment Terms Between Enrollments"
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_student__country_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_teacher__country_id
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_student_view_form
@@ -830,6 +889,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__create_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_wizard_duplicate__create_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_product_summary__create_uid
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_wizard_copy_payment_term__create_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade__create_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__create_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__create_uid
@@ -851,6 +911,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__create_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_wizard_duplicate__create_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_product_summary__create_date
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_wizard_copy_payment_term__create_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade__create_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__create_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__create_date
@@ -980,6 +1041,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__display_name
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_wizard_duplicate__display_name
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_product_summary__display_name
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_wizard_copy_payment_term__display_name
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade__display_name
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__display_name
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__display_name
@@ -1014,6 +1076,13 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields.selection,name:ssi_school.selection__school_enrollment_payment_term__state__draft
 msgid "Draft"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_wizard_copy_payment_term__target_enrollment_ids
+msgid ""
+"Draft enrollments selected from the list view that will receive the copied "
+"payment terms."
 msgstr ""
 
 #. module: ssi_school
@@ -1450,6 +1519,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__id
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_wizard_duplicate__id
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_product_summary__id
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_wizard_copy_payment_term__id
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade__id
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__id
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__id
@@ -1669,6 +1739,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail____last_update
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_wizard_duplicate____last_update
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_product_summary____last_update
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_wizard_copy_payment_term____last_update
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade____last_update
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_class____last_update
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type____last_update
@@ -1702,6 +1773,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__write_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_wizard_duplicate__write_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_product_summary__write_uid
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_wizard_copy_payment_term__write_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade__write_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__write_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__write_uid
@@ -1723,6 +1795,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__write_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_wizard_duplicate__write_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_product_summary__write_date
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_wizard_copy_payment_term__write_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade__write_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__write_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__write_date
@@ -1903,6 +1976,11 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_teacher__mobile
 msgid "Mobile number of the teacher, synchronized from the contact."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_wizard_copy_payment_term__mode
+msgid "Mode"
 msgstr ""
 
 #. module: ssi_school
@@ -2259,6 +2337,13 @@ msgid "Policy Template"
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__copy_payment_term_ok
+msgid ""
+"Policy that determines whether payment terms may be copied into this "
+"enrollment."
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment__drop_out_ok
 msgid "Policy that determines whether the Drop Out action button is visible."
 msgstr ""
@@ -2416,6 +2501,18 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_homeroom__seat_available
 msgid "Remaining seats, computed as Capacity minus Enrolled Count."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields.selection,name:ssi_school.selection__school_enrollment_wizard_copy_payment_term__mode__replace
+msgid "Replace"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_wizard_copy_payment_term__mode
+msgid ""
+"Replace: delete existing payment terms on each target before copying. Add: "
+"append source terms to each target's existing terms."
 msgstr ""
 
 #. module: ssi_school
@@ -2673,6 +2770,11 @@ msgid "Set result to Pass?"
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_wizard_copy_payment_term__source_enrollment_id
+msgid "Source Enrollment"
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_wizard_duplicate__term_id
 msgid "Source Term"
 msgstr ""
@@ -2859,6 +2961,11 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields.selection,name:ssi_school.selection__school_student__state__suspended
 msgid "Suspended"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_wizard_copy_payment_term__target_enrollment_ids
+msgid "Target Enrollments"
 msgstr ""
 
 #. module: ssi_school
@@ -3086,6 +3193,11 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment_product_summary__enrollment_id
 msgid "The enrollment that owns this product summary line."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_wizard_copy_payment_term__source_enrollment_id
+msgid "The enrollment whose payment terms (and detail lines) will be copied."
 msgstr ""
 
 #. module: ssi_school
