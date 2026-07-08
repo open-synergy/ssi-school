@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 OpenSynergy Indonesia
+     Copyright 2026 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+
+<record id="school_enrollment_wizard_copy_payment_term_view_form" model="ir.ui.view">
+    <field name="name">school_enrollment.wizard_copy_payment_term - form</field>
+    <field name="model">school_enrollment.wizard_copy_payment_term</field>
+    <field name="arch" type="xml">
+        <form string="Copy Payment Terms">
+            <group name="main" colspan="4" col="2">
+                <field
+                        name="target_enrollment_ids"
+                        widget="many2many_tags"
+                        colspan="2"
+                    />
+                <field name="source_enrollment_id" />
+                <field name="mode" widget="radio" />
+            </group>
+            <footer>
+                <button
+                        name="action_copy_payment_term"
+                        type="object"
+                        string="Copy Payment Terms"
+                        class="btn-primary"
+                    />
+                <button string="Cancel" class="btn-default" special="cancel" />
+            </footer>
+        </form>
+    </field>
+</record>
+
+<record
+        id="school_enrollment_wizard_copy_payment_term_action"
+        model="ir.actions.act_window"
+    >
+    <field name="name">Copy Payment Terms</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">school_enrollment.wizard_copy_payment_term</field>
+    <field name="view_mode">form</field>
+    <field name="target">new</field>
+    <field name="binding_model_id" ref="model_school_enrollment" />
+</record>
+
+</odoo>

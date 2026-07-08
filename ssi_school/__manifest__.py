@@ -43,6 +43,7 @@
         "security/ir_model_access/school_enrollment_payment_term.xml",
         "security/ir_model_access/school_enrollment_payment_term_detail.xml",
         "security/ir_model_access/school_enrollment_payment_term_wizard_duplicate.xml",
+        "security/ir_model_access/school_enrollment_wizard_copy_payment_term.xml",
         "security/ir_model_access/school_enrollment_product_summary.xml",
         "security/ir_model_access/school_enrollment_payment_template.xml",
         "security/ir_model_access/school_homeroom.xml",
@@ -70,6 +71,7 @@
         "views/school_enrollment_payment_term_views.xml",
         "views/school_enrollment_payment_template_views.xml",
         "wizards/school_enrollment_payment_term_duplicate.xml",
+        "wizards/school_enrollment_copy_payment_term.xml",
     ],
     "demo": [
         "demo/res_partner.xml",

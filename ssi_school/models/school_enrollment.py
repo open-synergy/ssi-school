@@ -363,6 +363,16 @@ class SchoolEnrollment(models.Model):
         compute_sudo=True,
         help="Policy that determines whether the Graduate action button is visible.",
     )
+    copy_payment_term_ok = fields.Boolean(
+        string="Can Copy Payment Term",
+        compute="_compute_policy",
+        store=False,
+        compute_sudo=True,
+        help=(
+            "Policy that determines whether payment terms may be "
+            "copied into this enrollment."
+        ),
+    )
 
     def _recompute_product_summaries(self):
         for record in self.sudo():
@@ -743,6 +753,7 @@ Solution: Choose a different Grade Class or increase its capacity
             "fail_ok",
             "drop_out_ok",
             "graduate_ok",
+            "copy_payment_term_ok",
         ]
         res += policy_field
         return res
