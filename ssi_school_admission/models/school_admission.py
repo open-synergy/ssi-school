@@ -257,6 +257,18 @@ class SchoolAdmission(models.Model):
             "copied into this admission."
         ),
     )
+    addendum_ok = fields.Boolean(
+        string="Can Addendum",
+        compute="_compute_policy",
+        store=False,
+        compute_sudo=True,
+        help=(
+            "Policy that determines whether new payment terms/details may "
+            "be added to this admission while it is On Progress (open), "
+            "via the addendum mechanism. Existing terms/details created "
+            "before the addendum remain locked."
+        ),
+    )
 
     def _compute_policy(self):  # pylint: disable=missing-return
         _super = super()
@@ -387,6 +399,25 @@ class SchoolAdmission(models.Model):
                 )
 
     @ssi_decorator.post_open_action()
+    def _20_lock_existing_payment_term(self):
+        self.ensure_one()
+        self._lock_payment_term()
+
+    def action_close_addendum(self):
+        for record in self.sudo():
+            record._lock_payment_term()  # pylint: disable=protected-access
+
+    def _lock_payment_term(self):
+        self.ensure_one()
+        terms = self.payment_term_ids.filtered(lambda t: not t.locked).with_context(
+            bypass_addendum_lock=True
+        )
+        terms.write({"locked": True})
+        terms.mapped("detail_ids").filtered(lambda d: not d.locked).with_context(
+            bypass_addendum_lock=True
+        ).write({"locked": True})
+
+    @ssi_decorator.post_open_action()
     def _10_create_school_student(self):
         self.ensure_one()
         if self.school_student_id:
@@ -420,6 +451,7 @@ class SchoolAdmission(models.Model):
             "restart_approval_ok",
             "manual_number_ok",
             "copy_payment_term_ok",
+            "addendum_ok",
         ]
         res += policy_field
         return res

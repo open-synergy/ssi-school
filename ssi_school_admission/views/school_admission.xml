@@ -124,6 +124,15 @@
                                     attrs="{'invisible':['|',('payment_template_id','=',False),('state','!=','draft')]}"
                                     class="btn-primary"
                                 />
+                            <button
+                                    name="action_close_addendum"
+                                    type="object"
+                                    string="Close Addendum"
+                                    confirm="This will lock all currently unlocked payment terms/details. Continue?"
+                                    attrs="{'invisible':[('addendum_ok','=',False)]}"
+                                    groups="school_admission_validator_group"
+                                    class="btn-secondary"
+                                />
                         </group>
                     </group>
                     <field
@@ -131,13 +140,25 @@
                             colspan="4"
                             nolabel="1"
                             context="{'form_view_ref': 'ssi_school_admission.school_admission_payment_term_view_form_embedded'}"
+                            attrs="{'readonly': [('state','!=','draft'),('addendum_ok','=',False)]}"
                         >
                         <tree>
                             <field name="sequence" invisible="1" />
-                            <field name="name" />
-                            <field name="date_invoice" />
-                            <field name="date_due" />
+                            <field
+                                    name="name"
+                                    attrs="{'readonly': [('locked','=',True)]}"
+                                />
+                            <field
+                                    name="date_invoice"
+                                    attrs="{'readonly': [('locked','=',True)]}"
+                                />
+                            <field
+                                    name="date_due"
+                                    attrs="{'readonly': [('locked','=',True)]}"
+                                />
                             <field name="currency_id" invisible="1" />
+                            <field name="addendum_ok" invisible="1" />
+                            <field name="locked" invisible="1" />
                             <field name="amount_untaxed" />
                             <field name="amount_tax" />
                             <field name="amount_total" />
@@ -192,6 +213,9 @@
                         <field name="school_student_id" />
                     </group>
                 </page>
+            </xpath>
+            <xpath expr="//group[@name='policy_2']" position="inside">
+                <field name="addendum_ok" />
             </xpath>
         </data>
     </field>
