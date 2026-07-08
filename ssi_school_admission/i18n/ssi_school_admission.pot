@@ -14,6 +14,31 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: ssi_school_admission
+#: code:addons/ssi_school_admission/wizards/school_admission_copy_payment_term.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Copy payment terms between admissions\n"
+"Database ID: %s\n"
+"Problem: No target admission selected\n"
+"Solution: Select at least one draft admission from the list view before running this wizard\n"
+msgstr ""
+
+#. module: ssi_school_admission
+#: code:addons/ssi_school_admission/wizards/school_admission_copy_payment_term.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Copy payment terms from admission '%s'\n"
+"Database ID: %s\n"
+"Problem: The following target admission(s) cannot receive payment terms:\n"
+"%s\n"
+"Solution: Deselect the listed admission(s), or make sure they are draft, allowed by\n"
+"the copy payment term policy, and share the same academic term/school/grade as the\n"
+"source\n"
+msgstr ""
+
+#. module: ssi_school_admission
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__admission_form_id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_tax__admission_form_id
 msgid "# Admission Form"
@@ -35,6 +60,18 @@ msgstr ""
 #: code:addons/ssi_school_admission/wizards/school_admission_payment_term_duplicate.py:0
 #, python-format
 msgid "%s (copy)"
+msgstr ""
+
+#. module: ssi_school_admission
+#: code:addons/ssi_school_admission/wizards/school_admission_copy_payment_term.py:0
+#, python-format
+msgid "- %s: academic term/school/grade does not match the source"
+msgstr ""
+
+#. module: ssi_school_admission
+#: code:addons/ssi_school_admission/wizards/school_admission_copy_payment_term.py:0
+#, python-format
+msgid "- %s: not allowed to receive payment terms (check state/policy)"
 msgstr ""
 
 #. module: ssi_school_admission
@@ -157,6 +194,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__activity_type_icon
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__activity_type_icon
 msgid "Activity Type Icon"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields.selection,name:ssi_school_admission.selection__school_admission_wizard_copy_payment_term__mode__add
+msgid "Add"
 msgstr ""
 
 #. module: ssi_school_admission
@@ -380,6 +422,11 @@ msgid "Can Confirm"
 msgstr ""
 
 #. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__copy_payment_term_ok
+msgid "Can Copy Payment Term"
+msgstr ""
+
+#. module: ssi_school_admission
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__create_admission_ok
 msgid "Can Create Admission"
 msgstr ""
@@ -440,6 +487,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_form_wizard_create_admission_view_form
 #: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_payment_term_wizard_duplicate_view_form
 #: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_test_wizard_create_admission_view_form
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_wizard_copy_payment_term_view_form
 msgid "Cancel"
 msgstr ""
 
@@ -543,6 +591,17 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_admission
+#: model:ir.actions.act_window,name:ssi_school_admission.school_admission_wizard_copy_payment_term_action
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_wizard_copy_payment_term_view_form
+msgid "Copy Payment Terms"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model,name:ssi_school_admission.model_school_admission_wizard_copy_payment_term
+msgid "Copy Payment Terms Between Admissions"
+msgstr ""
+
+#. module: ssi_school_admission
 #: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_form_view_form
 #: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_form_wizard_create_admission_view_form
 #: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_test_wizard_create_admission_view_form
@@ -596,6 +655,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_product_summary__create_uid
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__create_uid
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test_wizard_create_admission__create_uid
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_wizard_copy_payment_term__create_uid
 msgid "Created by"
 msgstr ""
 
@@ -616,6 +676,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_product_summary__create_date
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__create_date
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test_wizard_create_admission__create_date
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_wizard_copy_payment_term__create_date
 msgid "Created on"
 msgstr ""
 
@@ -727,6 +788,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_product_summary__display_name
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__display_name
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test_wizard_create_admission__display_name
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_wizard_copy_payment_term__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -748,6 +810,13 @@ msgstr ""
 #. module: ssi_school_admission
 #: model:ir.model.fields.selection,name:ssi_school_admission.selection__school_admission_payment_term__state__draft
 msgid "Draft"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_wizard_copy_payment_term__target_admission_ids
+msgid ""
+"Draft admissions selected from the list view that will receive the copied "
+"payment terms."
 msgstr ""
 
 #. module: ssi_school_admission
@@ -952,6 +1021,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_product_summary__id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test_wizard_create_admission__id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_wizard_copy_payment_term__id
 msgid "ID"
 msgstr ""
 
@@ -1079,6 +1149,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_product_summary____last_update
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test____last_update
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test_wizard_create_admission____last_update
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_wizard_copy_payment_term____last_update
 msgid "Last Modified on"
 msgstr ""
 
@@ -1099,6 +1170,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_product_summary__write_uid
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__write_uid
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test_wizard_create_admission__write_uid
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_wizard_copy_payment_term__write_uid
 msgid "Last Updated by"
 msgstr ""
 
@@ -1119,6 +1191,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_product_summary__write_date
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__write_date
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test_wizard_create_admission__write_date
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_wizard_copy_payment_term__write_date
 msgid "Last Updated on"
 msgstr ""
 
@@ -1202,6 +1275,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__message_ids
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__message_ids
 msgid "Messages"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_wizard_copy_payment_term__mode
+msgid "Mode"
 msgstr ""
 
 #. module: ssi_school_admission
@@ -1402,6 +1480,13 @@ msgid "Policy Template"
 msgstr ""
 
 #. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__copy_payment_term_ok
+msgid ""
+"Policy that determines whether payment terms may be copied into this "
+"admission."
+msgstr ""
+
+#. module: ssi_school_admission
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template_line__price_subtotal
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__price_subtotal
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_detail__price_subtotal
@@ -1506,6 +1591,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__rejected
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__rejected
 msgid "Rejected"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields.selection,name:ssi_school_admission.selection__school_admission_wizard_copy_payment_term__mode__replace
+msgid "Replace"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_wizard_copy_payment_term__mode
+msgid ""
+"Replace: delete existing payment terms on each target before copying. Add: "
+"append source terms to each target's existing terms."
 msgstr ""
 
 #. module: ssi_school_admission
@@ -1676,6 +1773,11 @@ msgid "Sequence"
 msgstr ""
 
 #. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_wizard_copy_payment_term__source_admission_id
+msgid "Source Admission"
+msgstr ""
+
+#. module: ssi_school_admission
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__source_date
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__source_date
 msgid "Source Date"
@@ -1784,6 +1886,11 @@ msgstr ""
 #. module: ssi_school_admission
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_product_summary__amount_untaxed
 msgid "Subtotal"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_wizard_copy_payment_term__target_admission_ids
+msgid "Target Admissions"
 msgstr ""
 
 #. module: ssi_school_admission
@@ -1916,6 +2023,11 @@ msgstr ""
 #. module: ssi_school_admission
 #: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form__admission_test_id
 msgid "The admission test associated with this form."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_wizard_copy_payment_term__source_admission_id
+msgid "The admission whose payment terms (and detail lines) will be copied."
 msgstr ""
 
 #. module: ssi_school_admission
