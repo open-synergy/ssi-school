@@ -32,6 +32,27 @@
     <field name="restrict_additional" eval="0" />
 </record>
 
+<!-- Copy Payment Term -->
+<record
+        id="policy_template_school_enrollment_copy_payment_term"
+        model="policy.template_detail"
+    >
+    <field name="template_id" ref="policy_template_school_enrollment" />
+    <field
+            name="field_id"
+            search="[('model_id.model','=','school_enrollment'),('name','=','copy_payment_term_ok')]"
+        />
+    <field name="restrict_state" eval="1" />
+    <field
+            name="state_ids"
+            search="[('field_id.model_id.model','=','school_enrollment'),('value','=','draft')]"
+        />
+    <field name="restrict_user" eval="1" />
+    <field name="computation_method">use_group</field>
+    <field name="group_ids" eval="[(6,0,[ref('school_enrollment_user_group')])]" />
+    <field name="restrict_additional" eval="0" />
+</record>
+
 <!-- Done -->
 <record id="policy_template_school_enrollment_done" model="policy.template_detail">
     <field name="template_id" ref="policy_template_school_enrollment" />

@@ -1,0 +1,706 @@
+scenarios:
+  - name: "Copy Payment Terms - Replace Mode"
+    steps:
+      - step: "Setup - get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "School Fee Income CPTR1"
+          code: "CPTR14200"
+          user_type_id: "EVAL: registry['account_type'].id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Fee CPTR1"
+          type: "service"
+          list_price: 500000.0
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type CPTR1"
+          code: "GTCPTR1"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 CPTR1"
+          code: "AYCPTR1"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester CPTR1"
+          code: "SMCPTR1"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "EVAL: registry['academic_year'].id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School CPTR1"
+          code: "SCHCPTR1"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade CPTR1"
+          code: "GCPTR1"
+          sequence: 10
+          type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class CPTR1"
+          code: "CLACPTR1"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+
+      - step: "Setup - create source student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "source_contact"
+        values:
+          name: "Source Student Contact CPTR1"
+
+      - step: "Setup - create source student"
+        action: "create"
+        model: "school_student"
+        save_as: "source_student"
+        values:
+          name: "Source Student CPTR1"
+          code: "SSTUCPTR1"
+          contact_id: "EVAL: registry['source_contact'].id"
+          school_id: "EVAL: registry['school'].id"
+
+      - step: "Setup - create source enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "source"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "EVAL: registry['academic_year'].id"
+          academic_term_id: "EVAL: registry['academic_term'].id"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          grade_class_id: "EVAL: registry['grade_class'].id"
+          student_id: "EVAL: registry['source_student'].id"
+          currency_id: "EVAL: env.company.currency_id.id"
+
+      - step: "Setup - create source payment term with detail"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "source_term"
+        values:
+          enrollment_id: "EVAL: registry['source'].id"
+          name: "Term Source CPTR1"
+          sequence: 10
+          date_invoice: "2024-08-01"
+          date_due: "2024-08-15"
+          detail_ids:
+            - - 0
+              - 0
+              - product_id: "EVAL: registry['product'].id"
+                name: "Fee CPTR1"
+                account_id: "EVAL: registry['account'].id"
+                uom_quantity: 1.0
+                uom_id: "REF: uom.product_uom_unit"
+                price_unit: 500000.0
+
+      - step: "Setup - create target student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "target_contact"
+        values:
+          name: "Target Student Contact CPTR1"
+
+      - step: "Setup - create target student"
+        action: "create"
+        model: "school_student"
+        save_as: "target_student"
+        values:
+          name: "Target Student CPTR1"
+          code: "TSTUCPTR1"
+          contact_id: "EVAL: registry['target_contact'].id"
+          school_id: "EVAL: registry['school'].id"
+
+      - step: "Setup - create target enrollment (draft, same term/school/grade)"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "target"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "EVAL: registry['academic_year'].id"
+          academic_term_id: "EVAL: registry['academic_term'].id"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          grade_class_id: "EVAL: registry['grade_class'].id"
+          student_id: "EVAL: registry['target_student'].id"
+          currency_id: "EVAL: env.company.currency_id.id"
+
+      - step: "Setup - create pre-existing term on target"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "target_old_term"
+        values:
+          enrollment_id: "EVAL: registry['target'].id"
+          name: "Term Old CPTR1"
+          sequence: 5
+
+      - step: "Create copy wizard in replace mode"
+        action: "create"
+        model: "school_enrollment.wizard_copy_payment_term"
+        save_as: "wizard"
+        values:
+          target_enrollment_ids:
+            - - 6
+              - 0
+              - - "EVAL: registry['target'].id"
+          source_enrollment_id: "EVAL: registry['source'].id"
+          mode: "replace"
+
+      - step: "Run copy payment term"
+        action: "call"
+        target: "wizard"
+        method: "action_copy_payment_term"
+
+      - step: "Assert target has exactly one term (old one replaced)"
+        action: "search"
+        model: "school_enrollment_payment_term"
+        domain:
+          - ["enrollment_id", "=", "EVAL: registry['target'].id"]
+        save_as: "target_terms_after"
+        expect_count: 1
+
+      - step: "Search the copied term on target"
+        action: "search"
+        model: "school_enrollment_payment_term"
+        domain:
+          - ["enrollment_id", "=", "EVAL: registry['target'].id"]
+          - ["name", "=", "Term Source CPTR1"]
+        save_as: "copied_term"
+        expect_count: 1
+
+      - step: "Assert copied term matches source and has no invoice"
+        action: "assert"
+        target: "copied_term"
+        asserts:
+          sequence:
+            type: "value"
+            expected: 10
+          invoice_id:
+            type: "value"
+            operator: "is_falsy"
+          detail_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 1
+
+      - step: "Search copied detail line"
+        action: "search"
+        model: "school_enrollment_payment_term_detail"
+        domain:
+          - ["term_id", "=", "EVAL: registry['copied_term'].id"]
+        save_as: "copied_detail"
+        expect_count: 1
+
+      - step: "Assert copied detail matches source and has no invoice line"
+        action: "assert"
+        target: "copied_detail"
+        asserts:
+          name:
+            type: "value"
+            expected: "Fee CPTR1"
+          price_unit:
+            type: "value"
+            expected: 500000.0
+          invoice_line_id:
+            type: "value"
+            operator: "is_falsy"
+
+      - step: "Assert source term is untouched"
+        action: "assert"
+        target: "source_term"
+        asserts:
+          name:
+            type: "value"
+            expected: "Term Source CPTR1"
+
+  - name: "Copy Payment Terms - Add Mode"
+    steps:
+      - step: "Setup - get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "School Fee Income CPTR2"
+          code: "CPTR24200"
+          user_type_id: "EVAL: registry['account_type'].id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Fee CPTR2"
+          type: "service"
+          list_price: 500000.0
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type CPTR2"
+          code: "GTCPTR2"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 CPTR2"
+          code: "AYCPTR2"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester CPTR2"
+          code: "SMCPTR2"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "EVAL: registry['academic_year'].id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School CPTR2"
+          code: "SCHCPTR2"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade CPTR2"
+          code: "GCPTR2"
+          sequence: 10
+          type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class CPTR2"
+          code: "CLACPTR2"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+
+      - step: "Setup - create source student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "source_contact"
+        values:
+          name: "Source Student Contact CPTR2"
+
+      - step: "Setup - create source student"
+        action: "create"
+        model: "school_student"
+        save_as: "source_student"
+        values:
+          name: "Source Student CPTR2"
+          code: "SSTUCPTR2"
+          contact_id: "EVAL: registry['source_contact'].id"
+          school_id: "EVAL: registry['school'].id"
+
+      - step: "Setup - create source enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "source"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "EVAL: registry['academic_year'].id"
+          academic_term_id: "EVAL: registry['academic_term'].id"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          grade_class_id: "EVAL: registry['grade_class'].id"
+          student_id: "EVAL: registry['source_student'].id"
+          currency_id: "EVAL: env.company.currency_id.id"
+
+      - step: "Setup - create source payment term with detail"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "source_term"
+        values:
+          enrollment_id: "EVAL: registry['source'].id"
+          name: "Term Source CPTR2"
+          sequence: 10
+          detail_ids:
+            - - 0
+              - 0
+              - product_id: "EVAL: registry['product'].id"
+                name: "Fee CPTR2"
+                account_id: "EVAL: registry['account'].id"
+                uom_quantity: 1.0
+                uom_id: "REF: uom.product_uom_unit"
+                price_unit: 500000.0
+
+      - step: "Setup - create target student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "target_contact"
+        values:
+          name: "Target Student Contact CPTR2"
+
+      - step: "Setup - create target student"
+        action: "create"
+        model: "school_student"
+        save_as: "target_student"
+        values:
+          name: "Target Student CPTR2"
+          code: "TSTUCPTR2"
+          contact_id: "EVAL: registry['target_contact'].id"
+          school_id: "EVAL: registry['school'].id"
+
+      - step: "Setup - create target enrollment (draft, same term/school/grade)"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "target"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "EVAL: registry['academic_year'].id"
+          academic_term_id: "EVAL: registry['academic_term'].id"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          grade_class_id: "EVAL: registry['grade_class'].id"
+          student_id: "EVAL: registry['target_student'].id"
+          currency_id: "EVAL: env.company.currency_id.id"
+
+      - step: "Setup - create pre-existing term on target"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "target_old_term"
+        values:
+          enrollment_id: "EVAL: registry['target'].id"
+          name: "Term Old CPTR2"
+          sequence: 5
+
+      - step: "Create copy wizard in add mode"
+        action: "create"
+        model: "school_enrollment.wizard_copy_payment_term"
+        save_as: "wizard"
+        values:
+          target_enrollment_ids:
+            - - 6
+              - 0
+              - - "EVAL: registry['target'].id"
+          source_enrollment_id: "EVAL: registry['source'].id"
+          mode: "add"
+
+      - step: "Run copy payment term"
+        action: "call"
+        target: "wizard"
+        method: "action_copy_payment_term"
+
+      - step: "Assert target now has two terms (old kept, source appended)"
+        action: "search"
+        model: "school_enrollment_payment_term"
+        domain:
+          - ["enrollment_id", "=", "EVAL: registry['target'].id"]
+        save_as: "target_terms_after"
+        expect_count: 2
+
+      - step: "Assert old term still present"
+        action: "assert"
+        target: "target_old_term"
+        asserts:
+          name:
+            type: "value"
+            expected: "Term Old CPTR2"
+          sequence:
+            type: "value"
+            expected: 5
+
+      - step: "Assert appended source term is present alongside the old one"
+        action: "search"
+        model: "school_enrollment_payment_term"
+        domain:
+          - ["enrollment_id", "=", "EVAL: registry['target'].id"]
+          - ["name", "=", "Term Source CPTR2"]
+        save_as: "appended_term"
+        expect_count: 1
+
+  - name: "Copy Payment Terms - Multi Target"
+    steps:
+      - step: "Setup - get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "School Fee Income CPTR3"
+          code: "CPTR34200"
+          user_type_id: "EVAL: registry['account_type'].id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Fee CPTR3"
+          type: "service"
+          list_price: 500000.0
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type CPTR3"
+          code: "GTCPTR3"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 CPTR3"
+          code: "AYCPTR3"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester CPTR3"
+          code: "SMCPTR3"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "EVAL: registry['academic_year'].id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School CPTR3"
+          code: "SCHCPTR3"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade CPTR3"
+          code: "GCPTR3"
+          sequence: 10
+          type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class CPTR3"
+          code: "CLACPTR3"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+
+      - step: "Setup - create source student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "source_contact"
+        values:
+          name: "Source Student Contact CPTR3"
+
+      - step: "Setup - create source student"
+        action: "create"
+        model: "school_student"
+        save_as: "source_student"
+        values:
+          name: "Source Student CPTR3"
+          code: "SSTUCPTR3"
+          contact_id: "EVAL: registry['source_contact'].id"
+          school_id: "EVAL: registry['school'].id"
+
+      - step: "Setup - create source enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "source"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "EVAL: registry['academic_year'].id"
+          academic_term_id: "EVAL: registry['academic_term'].id"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          grade_class_id: "EVAL: registry['grade_class'].id"
+          student_id: "EVAL: registry['source_student'].id"
+          currency_id: "EVAL: env.company.currency_id.id"
+
+      - step: "Setup - create source payment term with detail"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "source_term"
+        values:
+          enrollment_id: "EVAL: registry['source'].id"
+          name: "Term Source CPTR3"
+          sequence: 10
+          detail_ids:
+            - - 0
+              - 0
+              - product_id: "EVAL: registry['product'].id"
+                name: "Fee CPTR3"
+                account_id: "EVAL: registry['account'].id"
+                uom_quantity: 1.0
+                uom_id: "REF: uom.product_uom_unit"
+                price_unit: 500000.0
+
+      - step: "Setup - create target1 student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "target1_contact"
+        values:
+          name: "Target1 Student Contact CPTR3"
+
+      - step: "Setup - create target1 student"
+        action: "create"
+        model: "school_student"
+        save_as: "target1_student"
+        values:
+          name: "Target1 Student CPTR3"
+          code: "T1STUCPTR3"
+          contact_id: "EVAL: registry['target1_contact'].id"
+          school_id: "EVAL: registry['school'].id"
+
+      - step: "Setup - create target1 enrollment (draft)"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "target1"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "EVAL: registry['academic_year'].id"
+          academic_term_id: "EVAL: registry['academic_term'].id"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          grade_class_id: "EVAL: registry['grade_class'].id"
+          student_id: "EVAL: registry['target1_student'].id"
+          currency_id: "EVAL: env.company.currency_id.id"
+
+      - step: "Setup - create target2 student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "target2_contact"
+        values:
+          name: "Target2 Student Contact CPTR3"
+
+      - step: "Setup - create target2 student"
+        action: "create"
+        model: "school_student"
+        save_as: "target2_student"
+        values:
+          name: "Target2 Student CPTR3"
+          code: "T2STUCPTR3"
+          contact_id: "EVAL: registry['target2_contact'].id"
+          school_id: "EVAL: registry['school'].id"
+
+      - step: "Setup - create target2 enrollment (draft)"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "target2"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "EVAL: registry['academic_year'].id"
+          academic_term_id: "EVAL: registry['academic_term'].id"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          grade_class_id: "EVAL: registry['grade_class'].id"
+          student_id: "EVAL: registry['target2_student'].id"
+          currency_id: "EVAL: env.company.currency_id.id"
+
+      - step: "Create copy wizard for both targets"
+        action: "create"
+        model: "school_enrollment.wizard_copy_payment_term"
+        save_as: "wizard"
+        values:
+          target_enrollment_ids:
+            - - 6
+              - 0
+              - - "EVAL: registry['target1'].id"
+                - "EVAL: registry['target2'].id"
+          source_enrollment_id: "EVAL: registry['source'].id"
+          mode: "replace"
+
+      - step: "Run copy payment term"
+        action: "call"
+        target: "wizard"
+        method: "action_copy_payment_term"
+
+      - step: "Assert target1 received the term"
+        action: "search"
+        model: "school_enrollment_payment_term"
+        domain:
+          - ["enrollment_id", "=", "EVAL: registry['target1'].id"]
+          - ["name", "=", "Term Source CPTR3"]
+        save_as: "target1_term"
+        expect_count: 1
+
+      - step: "Assert target2 received the term"
+        action: "search"
+        model: "school_enrollment_payment_term"
+        domain:
+          - ["enrollment_id", "=", "EVAL: registry['target2'].id"]
+          - ["name", "=", "Term Source CPTR3"]
+        save_as: "target2_term"
+        expect_count: 1
