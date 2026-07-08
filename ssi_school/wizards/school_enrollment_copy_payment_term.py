@@ -23,6 +23,9 @@ class SchoolEnrollmentWizardCopyPaymentTerm(models.TransientModel):
     target_enrollment_ids = fields.Many2many(
         string="Target Enrollments",
         comodel_name="school_enrollment",
+        relation="rel_school_enrollment_copy_payment_term_target",
+        column1="wizard_id",
+        column2="enrollment_id",
         readonly=True,
         help=(
             "Draft enrollments selected from the list view that will "
