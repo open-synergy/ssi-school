@@ -23,6 +23,9 @@ class SchoolAdmissionWizardCopyPaymentTerm(models.TransientModel):
     target_admission_ids = fields.Many2many(
         string="Target Admissions",
         comodel_name="school_admission",
+        relation="rel_school_admission_copy_payment_term_target",
+        column1="wizard_id",
+        column2="admission_id",
         readonly=True,
         help=(
             "Draft admissions selected from the list view that will "
