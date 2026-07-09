@@ -125,6 +125,7 @@ scenarios:
         action: "create"
         model: "school_admission"
         save_as: "admission"
+        as_user: "base.user_admin"
         values:
           date: "2024-07-01"
           academic_year_id: "EVAL: registry['academic_year'].id"
