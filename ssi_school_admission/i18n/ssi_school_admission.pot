@@ -39,6 +39,50 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_admission
+#: code:addons/ssi_school_admission/models/school_admission_payment_term.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Delete payment term\n"
+"Database ID: %s\n"
+"Problem: Payment term '%s' is locked and cannot be deleted\n"
+"Solution: Locked payment terms are permanent; create a new one via addendum instead\n"
+msgstr ""
+
+#. module: ssi_school_admission
+#: code:addons/ssi_school_admission/models/school_admission_payment_term_detail.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Delete payment term detail\n"
+"Database ID: %s\n"
+"Problem: Payment term detail '%s' is locked and cannot be deleted\n"
+"Solution: Locked detail lines are permanent; create a new one via the addendum mechanism\n"
+msgstr ""
+
+#. module: ssi_school_admission
+#: code:addons/ssi_school_admission/models/school_admission_payment_term.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Update payment term\n"
+"Database ID: %s\n"
+"Problem: Payment term '%s' is locked and cannot be modified\n"
+"Solution: Add a new payment term via the addendum mechanism instead of editing this one\n"
+msgstr ""
+
+#. module: ssi_school_admission
+#: code:addons/ssi_school_admission/models/school_admission_payment_term_detail.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Update payment term detail\n"
+"Database ID: %s\n"
+"Problem: Payment term detail '%s' is locked and cannot be modified\n"
+"Solution: Add a new detail line via the addendum mechanism instead of editing this one\n"
+msgstr ""
+
+#. module: ssi_school_admission
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__admission_form_id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_tax__admission_form_id
 msgid "# Admission Form"
@@ -315,6 +359,12 @@ msgid "Allowed Pricelists"
 msgstr ""
 
 #. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template_term_detail__allowed_product_ids
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_detail__allowed_product_ids
+msgid "Allowed Products"
+msgstr ""
+
+#. module: ssi_school_admission
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template_line__allowed_uom_ids
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__allowed_uom_ids
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_detail__allowed_uom_ids
@@ -390,6 +440,22 @@ msgid "Attachment Count"
 msgstr ""
 
 #. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_term_detail__locked
+msgid ""
+"Automatically set to True when the admission is opened. Locked detail lines "
+"can no longer be edited or deleted; new detail lines added afterwards via "
+"the addendum mechanism start unlocked."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_term__locked
+msgid ""
+"Automatically set to True when the admission is opened. Locked payment terms"
+" can no longer be edited or deleted; new terms added afterwards via the "
+"addendum mechanism start unlocked."
+msgstr ""
+
+#. module: ssi_school_admission
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_tax__base_amount
 msgid "Base Amount"
 msgstr ""
@@ -398,6 +464,13 @@ msgstr ""
 #: model:product.product,name:ssi_school_admission.demo_product_admission_2
 #: model:product.template,name:ssi_school_admission.demo_product_admission_2_product_template
 msgid "Books and Uniform Fee - (demo)"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__addendum_ok
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term__addendum_ok
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_detail__addendum_ok
+msgid "Can Addendum"
 msgstr ""
 
 #. module: ssi_school_admission
@@ -511,6 +584,11 @@ msgstr ""
 #. module: ssi_school_admission
 #: model:ir.model.fields.selection,name:ssi_school_admission.selection__school_admission_payment_term__state__cancelled
 msgid "Cancelled"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_view_form
+msgid "Close Addendum"
 msgstr ""
 
 #. module: ssi_school_admission
@@ -798,6 +876,11 @@ msgid "Display order of this product summary line."
 msgstr ""
 
 #. module: ssi_school_admission
+#: model:ir.model.fields.selection,name:ssi_school_admission.selection__school_admission_payment_template__product_selection_method__domain
+msgid "Domain"
+msgstr ""
+
+#. module: ssi_school_admission
 #: model:ir.model.fields,help:ssi_school_admission.field_school_admission__done_ok
 #: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form__done_ok
 #: model:ir.model.fields,help:ssi_school_admission.field_school_admission_test__done_ok
@@ -1004,6 +1087,13 @@ msgid "Group By"
 msgstr ""
 
 #. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_template__product_selection_method
+msgid ""
+"How the allowed products for this template's fee lines are determined: a "
+"manual list, a search domain, or Python code."
+msgstr ""
+
+#. module: ssi_school_admission
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_academic_term__id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template__id
@@ -1196,6 +1286,12 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term__locked
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_detail__locked
+msgid "Locked"
+msgstr ""
+
+#. module: ssi_school_admission
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__message_main_attachment_id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template__message_main_attachment_id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__message_main_attachment_id
@@ -1206,6 +1302,7 @@ msgstr ""
 
 #. module: ssi_school_admission
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_tax__manual
+#: model:ir.model.fields.selection,name:ssi_school_admission.selection__school_admission_payment_template__product_selection_method__manual
 msgid "Manual"
 msgstr ""
 
@@ -1223,6 +1320,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term__manually_control
 #: model:ir.model.fields.selection,name:ssi_school_admission.selection__school_admission_payment_term__state__manual
 msgid "Manually Controlled"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_template__product_ids
+msgid "Manually selected products allowed on this template's fee lines."
 msgstr ""
 
 #. module: ssi_school_admission
@@ -1480,6 +1582,14 @@ msgid "Policy Template"
 msgstr ""
 
 #. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__addendum_ok
+msgid ""
+"Policy that determines whether new payment terms/details may be added to "
+"this admission while it is On Progress (open), via the addendum mechanism. "
+"Existing terms/details created before the addendum remain locked."
+msgstr ""
+
+#. module: ssi_school_admission
 #: model:ir.model.fields,help:ssi_school_admission.field_school_admission__copy_payment_term_ok
 msgid ""
 "Policy that determines whether payment terms may be copied into this "
@@ -1534,8 +1644,54 @@ msgid "Product Category"
 msgstr ""
 
 #. module: ssi_school_admission
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_payment_template_view_form
+msgid "Product Configuration"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__product_domain
+msgid "Product Domain"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__product_python_code
+msgid "Product Python Code"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__product_selection_method
+msgid "Product Selection Method"
+msgstr ""
+
+#. module: ssi_school_admission
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__product_summary_ids
 msgid "Product Summary"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__product_ids
+msgid "Products"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_term_detail__allowed_product_ids
+msgid "Products allowed on this line, per the admission's payment template."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_template_term_detail__allowed_product_ids
+msgid ""
+"Products allowed on this line, per the template's Product Configuration."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields.selection,name:ssi_school_admission.selection__school_admission_payment_template__product_selection_method__code
+msgid "Python Code"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_template__product_python_code
+msgid "Python code that sets `result` to the allowed product recordset."
 msgstr ""
 
 #. module: ssi_school_admission
@@ -1751,6 +1907,11 @@ msgstr ""
 #. module: ssi_school_admission
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__school_student_id
 msgid "School Student"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_template__product_domain
+msgid "Search domain used to determine allowed products."
 msgstr ""
 
 #. module: ssi_school_admission
@@ -2363,6 +2524,11 @@ msgid "The unit price of the fee item."
 msgstr ""
 
 #. module: ssi_school_admission
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_view_form
+msgid "This will lock all currently unlocked payment terms/details. Continue?"
+msgstr ""
+
+#. module: ssi_school_admission
 #: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_form_view_form
 msgid "This will replace existing fee details. Continue?"
 msgstr ""
@@ -2565,6 +2731,14 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_template__website_message_ids
 #: model:ir.model.fields,help:ssi_school_admission.field_school_admission_test__website_message_ids
 msgid "Website communication history"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_term__addendum_ok
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_term_detail__addendum_ok
+msgid ""
+"Whether the owning admission currently allows adding new payment "
+"terms/details via the addendum mechanism."
 msgstr ""
 
 #. module: ssi_school_admission
