@@ -102,6 +102,7 @@ class TestSchoolAdmissionAddendum(YamlTransactionCase):
         )
         admin = self.env.ref("base.user_admin")
         admission.with_user(admin).action_confirm()
+        admission.invalidate_cache()
         admission.with_user(admin).action_approve_approval()
         self.assertEqual(admission.state, "open")
         term.invalidate_cache()
