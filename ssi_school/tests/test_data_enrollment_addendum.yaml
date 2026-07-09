@@ -145,6 +145,7 @@ scenarios:
         action: "create"
         model: "school_enrollment"
         save_as: "enrollment"
+        as_user: "base.user_admin"
         values:
           date: "2024-07-01"
           academic_year_id: "EVAL: registry['academic_year'].id"
