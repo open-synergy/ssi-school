@@ -27,4 +27,5 @@ from . import (  # noqa: F401
     test_school_homeroom,
     test_school_homeroom_integrity,
     test_school_homeroom_generate,
+    test_school_student_mutation,
 )

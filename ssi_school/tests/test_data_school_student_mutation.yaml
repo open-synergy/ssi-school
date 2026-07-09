@@ -1,0 +1,787 @@
+scenarios:
+  - name: "Create Class Mutation Draft"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type for Mutation Test 1"
+          code: "GTSMY1"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School for Mutation Test 1"
+          code: "SCHSMY1"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade for Mutation Test 1"
+          code: "GSMY1"
+          sequence: 10
+          type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create source grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_a"
+        values:
+          name: "Class A Mutation Test 1"
+          code: "CLSMY1A"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          capacity: 30
+
+      - step: "Setup - create destination grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_b"
+        values:
+          name: "Class B Mutation Test 1"
+          code: "CLSMY1B"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          capacity: 30
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "Year Mutation Test 1"
+          code: "AYSMY1"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Term Mutation Test 1"
+          code: "TMSMY1"
+          date_start: "2024-07-01"
+          date_end: "2024-12-31"
+          year_id: "EVAL: registry['academic_year'].id"
+          enrollment_state: "open"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact Mutation Test 1"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student Mutation Test 1"
+          code: "STUSMY1"
+          contact_id: "EVAL: registry['contact'].id"
+          school_id: "EVAL: registry['school'].id"
+
+      - step: "Setup - create enrollment in source class"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "EVAL: registry['academic_year'].id"
+          academic_term_id: "EVAL: registry['academic_term'].id"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          grade_class_id: "EVAL: registry['grade_class_a'].id"
+          student_id: "EVAL: registry['student'].id"
+          currency_id: "EVAL: env.company.currency_id.id"
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Invalidate enrollment cache before approve"
+        action: "call"
+        target: "enrollment"
+        method: "invalidate_cache"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Setup - create source homeroom batch"
+        action: "create"
+        model: "school_homeroom"
+        save_as: "homeroom_a"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "EVAL: registry['academic_year'].id"
+          academic_term_id: "EVAL: registry['academic_term'].id"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          grade_class_id: "EVAL: registry['grade_class_a'].id"
+          capacity: 30
+
+      - step: "Link enrollment to source homeroom"
+        action: "write"
+        target: "enrollment"
+        values:
+          homeroom_id: "EVAL: registry['homeroom_a'].id"
+
+      - step: "Create class mutation draft"
+        action: "create"
+        model: "school_student_mutation"
+        save_as: "mutation"
+        values:
+          date: "2024-07-01"
+          student_id: "EVAL: registry['student'].id"
+          enrollment_id: "EVAL: registry['enrollment'].id"
+          source_grade_class_id: "EVAL: registry['grade_class_a'].id"
+          source_homeroom_id: "EVAL: registry['homeroom_a'].id"
+          destination_grade_class_id: "EVAL: registry['grade_class_b'].id"
+
+      - step: "Assert mutation created in draft"
+        action: "assert"
+        target: "mutation"
+        asserts:
+          id:
+            type: "value"
+            operator: "is_truthy"
+          state:
+            type: "value"
+            expected: "draft"
+
+      - step: "Assert source grade class snapshot matches class A"
+        action: "search"
+        model: "school_student_mutation"
+        domain:
+          - ["id", "=", "EVAL: registry['mutation'].id"]
+          - ["source_grade_class_id", "=", "EVAL: registry['grade_class_a'].id"]
+        save_as: "check_source_class"
+        expect_count: 1
+
+      - step: "Assert source homeroom snapshot matches homeroom A"
+        action: "search"
+        model: "school_student_mutation"
+        domain:
+          - ["id", "=", "EVAL: registry['mutation'].id"]
+          - ["source_homeroom_id", "=", "EVAL: registry['homeroom_a'].id"]
+        save_as: "check_source_homeroom"
+        expect_count: 1
+
+      - step: "Assert destination grade class is class B"
+        action: "search"
+        model: "school_student_mutation"
+        domain:
+          - ["id", "=", "EVAL: registry['mutation'].id"]
+          - ["destination_grade_class_id", "=", "EVAL: registry['grade_class_b'].id"]
+        save_as: "check_destination_class"
+        expect_count: 1
+
+  - name: "Class Mutation Full Workflow Confirm Approve Done"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type for Mutation Test 2"
+          code: "GTSMY2"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School for Mutation Test 2"
+          code: "SCHSMY2"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade for Mutation Test 2"
+          code: "GSMY2"
+          sequence: 10
+          type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create source grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_a"
+        values:
+          name: "Class A Mutation Test 2"
+          code: "CLSMY2A"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          capacity: 30
+
+      - step: "Setup - create destination grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_b"
+        values:
+          name: "Class B Mutation Test 2"
+          code: "CLSMY2B"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          capacity: 30
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "Year Mutation Test 2"
+          code: "AYSMY2"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Term Mutation Test 2"
+          code: "TMSMY2"
+          date_start: "2024-07-01"
+          date_end: "2024-12-31"
+          year_id: "EVAL: registry['academic_year'].id"
+          enrollment_state: "open"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact Mutation Test 2"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student Mutation Test 2"
+          code: "STUSMY2"
+          contact_id: "EVAL: registry['contact'].id"
+          school_id: "EVAL: registry['school'].id"
+
+      - step: "Setup - create enrollment in source class"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "EVAL: registry['academic_year'].id"
+          academic_term_id: "EVAL: registry['academic_term'].id"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          grade_class_id: "EVAL: registry['grade_class_a'].id"
+          student_id: "EVAL: registry['student'].id"
+          currency_id: "EVAL: env.company.currency_id.id"
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Invalidate enrollment cache before approve"
+        action: "call"
+        target: "enrollment"
+        method: "invalidate_cache"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Setup - create destination homeroom batch"
+        action: "create"
+        model: "school_homeroom"
+        save_as: "homeroom_b"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "EVAL: registry['academic_year'].id"
+          academic_term_id: "EVAL: registry['academic_term'].id"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          grade_class_id: "EVAL: registry['grade_class_b'].id"
+          capacity: 30
+
+      - step: "Create class mutation to class B"
+        action: "create"
+        model: "school_student_mutation"
+        save_as: "mutation"
+        values:
+          date: "2024-07-01"
+          student_id: "EVAL: registry['student'].id"
+          enrollment_id: "EVAL: registry['enrollment'].id"
+          source_grade_class_id: "EVAL: registry['grade_class_a'].id"
+          destination_grade_class_id: "EVAL: registry['grade_class_b'].id"
+          destination_homeroom_id: "EVAL: registry['homeroom_b'].id"
+
+      - step: "Assert mutation created in draft"
+        action: "assert"
+        target: "mutation"
+        asserts:
+          state:
+            type: "value"
+            expected: "draft"
+
+      - step: "Confirm mutation"
+        action: "call"
+        target: "mutation"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Invalidate mutation cache before approve"
+        action: "call"
+        target: "mutation"
+        method: "invalidate_cache"
+
+      - step: "Approve mutation"
+        action: "call"
+        target: "mutation"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+      - step: "Invalidate mutation cache after approve"
+        action: "call"
+        target: "mutation"
+        method: "invalidate_cache"
+
+      - step: "Assert mutation number generated on done"
+        action: "assert"
+        target: "mutation"
+        asserts:
+          name:
+            type: "value"
+            operator: "contains"
+            expected: "SM"
+          cancel_ok:
+            type: "value"
+            operator: "is_falsy"
+
+      - step: "Assert enrollment moved to destination class"
+        action: "search"
+        model: "school_enrollment"
+        domain:
+          - ["id", "=", "EVAL: registry['enrollment'].id"]
+          - ["grade_class_id", "=", "EVAL: registry['grade_class_b'].id"]
+          - ["homeroom_id", "=", "EVAL: registry['homeroom_b'].id"]
+        save_as: "check_moved_enrollment"
+        expect_count: 1
+
+      - step: "Assert student grade class follows the enrollment"
+        action: "search"
+        model: "school_student"
+        domain:
+          - ["id", "=", "EVAL: registry['student'].id"]
+          - ["grade_class_id", "=", "EVAL: registry['grade_class_b'].id"]
+        save_as: "check_student_grade_class"
+        expect_count: 1
+
+  - name: "Cancel Draft Class Mutation"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type for Mutation Test 3"
+          code: "GTSMY3"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School for Mutation Test 3"
+          code: "SCHSMY3"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade for Mutation Test 3"
+          code: "GSMY3"
+          sequence: 10
+          type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create source grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_a"
+        values:
+          name: "Class A Mutation Test 3"
+          code: "CLSMY3A"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          capacity: 30
+
+      - step: "Setup - create destination grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_b"
+        values:
+          name: "Class B Mutation Test 3"
+          code: "CLSMY3B"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          capacity: 30
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "Year Mutation Test 3"
+          code: "AYSMY3"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Term Mutation Test 3"
+          code: "TMSMY3"
+          date_start: "2024-07-01"
+          date_end: "2024-12-31"
+          year_id: "EVAL: registry['academic_year'].id"
+          enrollment_state: "open"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact Mutation Test 3"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student Mutation Test 3"
+          code: "STUSMY3"
+          contact_id: "EVAL: registry['contact'].id"
+          school_id: "EVAL: registry['school'].id"
+
+      - step: "Setup - create enrollment in source class"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "EVAL: registry['academic_year'].id"
+          academic_term_id: "EVAL: registry['academic_term'].id"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          grade_class_id: "EVAL: registry['grade_class_a'].id"
+          student_id: "EVAL: registry['student'].id"
+          currency_id: "EVAL: env.company.currency_id.id"
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate enrollment cache before approve"
+        action: "call"
+        target: "enrollment"
+        method: "invalidate_cache"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create class mutation draft"
+        action: "create"
+        model: "school_student_mutation"
+        save_as: "mutation"
+        values:
+          date: "2024-07-01"
+          student_id: "EVAL: registry['student'].id"
+          enrollment_id: "EVAL: registry['enrollment'].id"
+          source_grade_class_id: "EVAL: registry['grade_class_a'].id"
+          destination_grade_class_id: "EVAL: registry['grade_class_b'].id"
+
+      - step: "Cancel draft mutation"
+        action: "call"
+        target: "mutation"
+        method: "action_cancel"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "cancel"
+
+      - step: "Assert enrollment stayed in source class"
+        action: "search"
+        model: "school_enrollment"
+        domain:
+          - ["id", "=", "EVAL: registry['enrollment'].id"]
+          - ["grade_class_id", "=", "EVAL: registry['grade_class_a'].id"]
+        save_as: "check_unchanged_enrollment"
+        expect_count: 1
+
+  - name: "Undo Completed Mutation Via Reverse Mutation"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type for Mutation Test 4"
+          code: "GTSMY4"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School for Mutation Test 4"
+          code: "SCHSMY4"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade for Mutation Test 4"
+          code: "GSMY4"
+          sequence: 10
+          type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create class A"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_a"
+        values:
+          name: "Class A Mutation Test 4"
+          code: "CLSMY4A"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          capacity: 30
+
+      - step: "Setup - create class B"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_b"
+        values:
+          name: "Class B Mutation Test 4"
+          code: "CLSMY4B"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          capacity: 30
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "Year Mutation Test 4"
+          code: "AYSMY4"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Term Mutation Test 4"
+          code: "TMSMY4"
+          date_start: "2024-07-01"
+          date_end: "2024-12-31"
+          year_id: "EVAL: registry['academic_year'].id"
+          enrollment_state: "open"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact Mutation Test 4"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student Mutation Test 4"
+          code: "STUSMY4"
+          contact_id: "EVAL: registry['contact'].id"
+          school_id: "EVAL: registry['school'].id"
+
+      - step: "Setup - create enrollment in class A"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "EVAL: registry['academic_year'].id"
+          academic_term_id: "EVAL: registry['academic_term'].id"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          grade_class_id: "EVAL: registry['grade_class_a'].id"
+          student_id: "EVAL: registry['student'].id"
+          currency_id: "EVAL: env.company.currency_id.id"
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate enrollment cache before approve"
+        action: "call"
+        target: "enrollment"
+        method: "invalidate_cache"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create forward mutation A to B"
+        action: "create"
+        model: "school_student_mutation"
+        save_as: "mutation_forward"
+        values:
+          date: "2024-07-01"
+          student_id: "EVAL: registry['student'].id"
+          enrollment_id: "EVAL: registry['enrollment'].id"
+          source_grade_class_id: "EVAL: registry['grade_class_a'].id"
+          destination_grade_class_id: "EVAL: registry['grade_class_b'].id"
+
+      - step: "Confirm forward mutation"
+        action: "call"
+        target: "mutation_forward"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate cache before approving forward mutation"
+        action: "call"
+        target: "mutation_forward"
+        method: "invalidate_cache"
+
+      - step: "Approve forward mutation"
+        action: "call"
+        target: "mutation_forward"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+      - step: "Assert enrollment moved to class B"
+        action: "search"
+        model: "school_enrollment"
+        domain:
+          - ["id", "=", "EVAL: registry['enrollment'].id"]
+          - ["grade_class_id", "=", "EVAL: registry['grade_class_b'].id"]
+        save_as: "check_moved_forward"
+        expect_count: 1
+
+      - step: "Create reverse mutation B to A"
+        action: "create"
+        model: "school_student_mutation"
+        save_as: "mutation_reverse"
+        values:
+          date: "2024-08-01"
+          student_id: "EVAL: registry['student'].id"
+          enrollment_id: "EVAL: registry['enrollment'].id"
+          source_grade_class_id: "EVAL: registry['grade_class_b'].id"
+          destination_grade_class_id: "EVAL: registry['grade_class_a'].id"
+
+      - step: "Confirm reverse mutation"
+        action: "call"
+        target: "mutation_reverse"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate cache before approving reverse mutation"
+        action: "call"
+        target: "mutation_reverse"
+        method: "invalidate_cache"
+
+      - step: "Approve reverse mutation"
+        action: "call"
+        target: "mutation_reverse"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+      - step: "Assert enrollment moved back to class A"
+        action: "search"
+        model: "school_enrollment"
+        domain:
+          - ["id", "=", "EVAL: registry['enrollment'].id"]
+          - ["grade_class_id", "=", "EVAL: registry['grade_class_a'].id"]
+        save_as: "check_moved_back"
+        expect_count: 1

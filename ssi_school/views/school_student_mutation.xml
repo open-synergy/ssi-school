@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 OpenSynergy Indonesia
+     Copyright 2026 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+<record id="school_student_mutation_view_search" model="ir.ui.view">
+    <field name="name">school_student_mutation - search</field>
+    <field name="model">school_student_mutation</field>
+    <field
+            name="inherit_id"
+            ref="ssi_transaction_mixin.mixin_transaction_view_search"
+        />
+    <field name="mode">primary</field>
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//search" position="inside">
+                <field name="student_id" />
+                <field name="enrollment_id" />
+                <field name="school_id" />
+                <field name="academic_year_id" />
+                <field name="academic_term_id" />
+                <field name="grade_id" />
+                <field name="destination_grade_class_id" />
+                <group expand="0" string="Group By">
+                    <filter
+                            name="group_by_school_id"
+                            string="School"
+                            context="{'group_by': 'school_id'}"
+                        />
+                    <filter
+                            name="group_by_academic_year_id"
+                            string="Academic Year"
+                            context="{'group_by': 'academic_year_id'}"
+                        />
+                    <filter
+                            name="group_by_academic_term_id"
+                            string="Academic Term"
+                            context="{'group_by': 'academic_term_id'}"
+                        />
+                    <filter
+                            name="group_by_grade_id"
+                            string="Grade"
+                            context="{'group_by': 'grade_id'}"
+                        />
+                    <filter
+                            name="group_by_student_id"
+                            string="Student"
+                            context="{'group_by': 'student_id'}"
+                        />
+                </group>
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_student_mutation_view_tree" model="ir.ui.view">
+    <field name="name">school_student_mutation - tree</field>
+    <field name="model">school_student_mutation</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="ssi_transaction_mixin.mixin_transaction_view_tree" />
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name="date" />
+                <field name="student_id" />
+                <field name="enrollment_id" />
+                <field name="source_grade_class_id" />
+                <field name="destination_grade_class_id" />
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_student_mutation_view_form" model="ir.ui.view">
+    <field name="name">school_student_mutation - form</field>
+    <field name="model">school_student_mutation</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="ssi_transaction_mixin.mixin_transaction_view_form" />
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="student_id" />
+                <field name="allowed_enrollment_ids" invisible="1" />
+                <field
+                        name="enrollment_id"
+                        domain="[('id','in',allowed_enrollment_ids)]"
+                    />
+                <field name="school_id" />
+                <field name="academic_year_id" />
+                <field name="academic_term_id" />
+                <field name="grade_id" />
+            </xpath>
+            <xpath expr="//group[@name='header_right']" position="inside">
+                <field name="date" />
+            </xpath>
+            <xpath expr="//page[1]" position="before">
+                <page name="mutation" string="Class Mutation">
+                    <group name="mutation_source" string="Source (current)">
+                        <field name="source_grade_class_id" />
+                        <field name="source_homeroom_id" />
+                    </group>
+                    <group name="mutation_destination" string="Destination">
+                        <field
+                                name="allowed_destination_grade_class_ids"
+                                invisible="1"
+                            />
+                        <field
+                                name="destination_grade_class_id"
+                                domain="[('id','in',allowed_destination_grade_class_ids)]"
+                            />
+                        <field name="destination_homeroom_id" />
+                    </group>
+                    <group name="mutation_reason" string="Reason">
+                        <field name="reason" nolabel="1" />
+                    </group>
+                </page>
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_student_mutation_action" model="ir.actions.act_window">
+    <field name="name">Student Class Mutations</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">school_student_mutation</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<menuitem
+        id="school_student_mutation_menu"
+        name="Student Class Mutations"
+        parent="ssi_school.menu_school_root"
+        action="school_student_mutation_action"
+        groups="school_student_mutation_viewer_group"
+        sequence="146"
+    />
+
+</odoo>
