@@ -386,6 +386,11 @@ scenarios:
             type: "value"
             expected: "done"
 
+      - step: "Invalidate mutation cache after approve"
+        action: "call"
+        target: "mutation"
+        method: "invalidate_cache"
+
       - step: "Assert mutation number generated on done"
         action: "assert"
         target: "mutation"
