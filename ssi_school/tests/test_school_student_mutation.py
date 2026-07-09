@@ -100,6 +100,7 @@ class TestSchoolStudentMutation(YamlTransactionCase):
         )
         admin = self.env.ref("base.user_admin")
         enrollment.with_user(admin).action_confirm()
+        enrollment.invalidate_cache()
         enrollment.with_user(admin).action_approve_approval()
         self.assertEqual(enrollment.state, "open")
         return {
@@ -162,6 +163,7 @@ class TestSchoolStudentMutation(YamlTransactionCase):
         )
         admin = self.env.ref("base.user_admin")
         homeroom_b.with_user(admin).action_confirm()
+        homeroom_b.invalidate_cache()
         homeroom_b.with_user(admin).action_approve_approval()
         self.assertEqual(homeroom_b.state, "open")
 
@@ -284,6 +286,7 @@ class TestSchoolStudentMutation(YamlTransactionCase):
         )
         admin = self.env.ref("base.user_admin")
         filler_enrollment.with_user(admin).action_confirm()
+        filler_enrollment.invalidate_cache()
         filler_enrollment.with_user(admin).action_approve_approval()
         self.assertEqual(filler_enrollment.state, "open")
 
@@ -296,6 +299,7 @@ class TestSchoolStudentMutation(YamlTransactionCase):
             }
         )
         mutation.with_user(admin).action_confirm()
+        mutation.invalidate_cache()
         self.assertEqual(mutation.state, "confirm")
 
         with self.assertRaises(ValidationError):
