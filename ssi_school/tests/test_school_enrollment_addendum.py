@@ -117,6 +117,7 @@ class TestSchoolEnrollmentAddendum(YamlTransactionCase):
         )
         admin = self.env.ref("base.user_admin")
         enrollment.with_user(admin).action_confirm()
+        enrollment.invalidate_cache()
         enrollment.with_user(admin).action_approve_approval()
         self.assertEqual(enrollment.state, "open")
         term.invalidate_cache()

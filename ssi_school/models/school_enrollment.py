@@ -753,13 +753,20 @@ Solution: Choose a different Grade Class or increase its capacity
 
     def _lock_payment_term(self):
         self.ensure_one()
-        terms = self.payment_term_ids.filtered(lambda t: not t.locked).with_context(
-            bypass_addendum_lock=True
+        Term = self.env[
+            "school_enrollment_payment_term"
+        ]  # pylint: disable=invalid-name
+        Detail = self.env[  # pylint: disable=invalid-name
+            "school_enrollment_payment_term_detail"
+        ]
+        terms = Term.search([("enrollment_id", "=", self.id), ("locked", "=", False)])
+        if terms:
+            terms.with_context(bypass_addendum_lock=True).write({"locked": True})
+        details = Detail.search(
+            [("term_id.enrollment_id", "=", self.id), ("locked", "=", False)]
         )
-        terms.write({"locked": True})
-        terms.mapped("detail_ids").filtered(lambda d: not d.locked).with_context(
-            bypass_addendum_lock=True
-        ).write({"locked": True})
+        if details:
+            details.with_context(bypass_addendum_lock=True).write({"locked": True})
 
     @ssi_decorator.post_cancel_action()
     def _10_unenroll_student(self):
