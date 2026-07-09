@@ -14,6 +14,31 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: ssi_school
+#: code:addons/ssi_school/models/school_student_mutation.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Change class mutation state into %s\n"
+"Database ID: %s\n"
+"Problem: Another mutation for enrollment '%s' is already draft or\n"
+"waiting for approval\n"
+"Solution: Complete, reject, or cancel the other mutation before\n"
+"confirming this one\n"
+msgstr ""
+
+#. module: ssi_school
+#: code:addons/ssi_school/models/school_student_mutation.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Change class mutation state into %s\n"
+"Database ID: %s\n"
+"Problem: Enrollment '%s' is not in open state\n"
+"Solution: The enrollment must be open before this mutation can be\n"
+"confirmed or completed\n"
+msgstr ""
+
+#. module: ssi_school
 #: code:addons/ssi_school/models/school_student.py:0
 #, python-format
 msgid ""
@@ -22,6 +47,31 @@ msgid ""
 "Database ID: %s\n"
 "Problem: State cannot change from '%s' to '%s'\n"
 "Solution: Follow the allowed student state transition sequence\n"
+msgstr ""
+
+#. module: ssi_school
+#: code:addons/ssi_school/models/school_student_mutation.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Complete class mutation\n"
+"Database ID: %s\n"
+"Problem: Destination Grade Class '%s' is at full capacity (%s/%s\n"
+"students)\n"
+"Solution: Choose a different destination class or increase its\n"
+"capacity\n"
+msgstr ""
+
+#. module: ssi_school
+#: code:addons/ssi_school/models/school_student_mutation.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Complete class mutation\n"
+"Database ID: %s\n"
+"Problem: Enrollment '%s' is no longer open\n"
+"Solution: Cancel this mutation; the enrollment must stay open until\n"
+"the mutation is completed\n"
 msgstr ""
 
 #. module: ssi_school
@@ -173,6 +223,30 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school
+#: code:addons/ssi_school/models/school_student_mutation.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Set class mutation destination\n"
+"Database ID: %s\n"
+"Problem: Destination Grade Class '%s' does not belong to the same\n"
+"Grade/School as the enrollment\n"
+"Solution: Select a Destination Grade Class within the same Grade and\n"
+"School as the enrollment\n"
+msgstr ""
+
+#. module: ssi_school
+#: code:addons/ssi_school/models/school_student_mutation.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Set class mutation destination\n"
+"Database ID: %s\n"
+"Problem: Destination Grade Class '%s' is the same as the current class\n"
+"Solution: Select a different Grade Class as the mutation destination\n"
+msgstr ""
+
+#. module: ssi_school
 #: code:addons/ssi_school/models/school_enrollment.py:0
 #, python-format
 msgid ""
@@ -219,6 +293,7 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__name
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__name
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__name
 msgid "# Document"
 msgstr ""
 
@@ -334,10 +409,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__academic_term_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__academic_term_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__academic_term_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__academic_term_id
 #: model:res.groups,name:ssi_school.school_academic_term_group
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_payment_template_view_search
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_search
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_homeroom_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_student_mutation_view_search
 msgid "Academic Term"
 msgstr ""
 
@@ -351,10 +428,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__year_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__academic_year_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__academic_year_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__academic_year_id
 #: model:res.groups,name:ssi_school.school_academic_year_group
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_academic_term_view_search
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_search
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_homeroom_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_student_mutation_view_search
 msgid "Academic Year"
 msgstr ""
 
@@ -392,6 +471,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__message_needaction
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__message_needaction
 #: model:ir.model.fields,field_description:ssi_school.field_school_student__message_needaction
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__message_needaction
 #: model:ir.model.fields,field_description:ssi_school.field_school_teacher__message_needaction
 msgid "Action Needed"
 msgstr ""
@@ -412,6 +492,7 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__active_approval_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__active_approval_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__active_approval_ids
 msgid "Active Approvals"
 msgstr ""
 
@@ -423,12 +504,14 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__active_approver_partner_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__active_approver_partner_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__active_approver_partner_ids
 msgid "Active Partners"
 msgstr ""
 
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__active_approver_user_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__active_approver_user_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__active_approver_user_ids
 msgid "Active Users"
 msgstr ""
 
@@ -443,6 +526,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__activity_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__activity_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_student__activity_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__activity_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_teacher__activity_ids
 msgid "Activities"
 msgstr ""
@@ -458,6 +542,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__activity_exception_decoration
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__activity_exception_decoration
 #: model:ir.model.fields,field_description:ssi_school.field_school_student__activity_exception_decoration
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__activity_exception_decoration
 #: model:ir.model.fields,field_description:ssi_school.field_school_teacher__activity_exception_decoration
 msgid "Activity Exception Decoration"
 msgstr ""
@@ -473,6 +558,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__activity_state
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__activity_state
 #: model:ir.model.fields,field_description:ssi_school.field_school_student__activity_state
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__activity_state
 #: model:ir.model.fields,field_description:ssi_school.field_school_teacher__activity_state
 msgid "Activity State"
 msgstr ""
@@ -488,6 +574,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__activity_type_icon
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__activity_type_icon
 #: model:ir.model.fields,field_description:ssi_school.field_school_student__activity_type_icon
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__activity_type_icon
 #: model:ir.model.fields,field_description:ssi_school.field_school_teacher__activity_type_icon
 msgid "Activity Type Icon"
 msgstr ""
@@ -505,12 +592,24 @@ msgstr ""
 #. module: ssi_school
 #: model:res.groups,name:ssi_school.school_enrollment_all_group
 #: model:res.groups,name:ssi_school.school_homeroom_all_group
+#: model:res.groups,name:ssi_school.school_student_mutation_all_group
 msgid "All"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__allowed_destination_grade_class_ids
+msgid "Allowed Destination Grade Classes"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__allowed_enrollment_ids
+msgid "Allowed Enrollments"
 msgstr ""
 
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__allowed_policy_template_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__allowed_policy_template_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__allowed_policy_template_ids
 msgid "Allowed Policy Templates"
 msgstr ""
 
@@ -555,24 +654,28 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment__approval_template_id
 #: model:ir.model.fields,help:ssi_school.field_school_homeroom__approval_template_id
+#: model:ir.model.fields,help:ssi_school.field_school_student_mutation__approval_template_id
 msgid "Approval Configuration"
 msgstr ""
 
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__approval_template_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__approval_template_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__approval_template_id
 msgid "Approval Template"
 msgstr ""
 
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__approval_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__approval_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__approval_ids
 msgid "Approvals"
 msgstr ""
 
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment__approve_ok
 #: model:ir.model.fields,help:ssi_school.field_school_homeroom__approve_ok
+#: model:ir.model.fields,help:ssi_school.field_school_student_mutation__approve_ok
 msgid ""
 "Approve policy\n"
 "\n"
@@ -582,6 +685,7 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__approved
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__approved
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__approved
 msgid "Approved"
 msgstr ""
 
@@ -596,6 +700,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__message_attachment_count
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__message_attachment_count
 #: model:ir.model.fields,field_description:ssi_school.field_school_student__message_attachment_count
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__message_attachment_count
 #: model:ir.model.fields,field_description:ssi_school.field_school_teacher__message_attachment_count
 msgid "Attachment Count"
 msgstr ""
@@ -670,18 +775,21 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__approve_ok
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__approve_ok
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__approve_ok
 msgid "Can Approve"
 msgstr ""
 
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__cancel_ok
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__cancel_ok
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__cancel_ok
 msgid "Can Cancel"
 msgstr ""
 
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__confirm_ok
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__confirm_ok
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__confirm_ok
 msgid "Can Confirm"
 msgstr ""
 
@@ -698,6 +806,7 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__done_ok
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__done_ok
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__done_ok
 msgid "Can Finished"
 msgstr ""
 
@@ -709,24 +818,28 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__manual_number_ok
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__manual_number_ok
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__manual_number_ok
 msgid "Can Input Manual Document Number"
 msgstr ""
 
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__reject_ok
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__reject_ok
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__reject_ok
 msgid "Can Reject"
 msgstr ""
 
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__restart_ok
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__restart_ok
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__restart_ok
 msgid "Can Restart"
 msgstr ""
 
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__restart_approval_ok
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__restart_approval_ok
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__restart_approval_ok
 msgid "Can Restart Approval"
 msgstr ""
 
@@ -745,12 +858,14 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__cancel_reason_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__cancel_reason_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__cancel_reason_id
 msgid "Cancel Reason"
 msgstr ""
 
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment__cancel_ok
 #: model:ir.model.fields,help:ssi_school.field_school_homeroom__cancel_ok
+#: model:ir.model.fields,help:ssi_school.field_school_student_mutation__cancel_ok
 msgid ""
 "Cancel policy\n"
 "\n"
@@ -812,6 +927,11 @@ msgid "Class"
 msgstr ""
 
 #. module: ssi_school
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_student_mutation_view_form
+msgid "Class Mutation"
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.ui.menu,name:ssi_school.menu_school_classroom
 msgid "Classroom"
 msgstr ""
@@ -847,26 +967,31 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__company_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__company_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__company_id
 #: model:res.groups,name:ssi_school.school_enrollment_company_group
 #: model:res.groups,name:ssi_school.school_homeroom_company_group
+#: model:res.groups,name:ssi_school.school_student_mutation_company_group
 msgid "Company"
 msgstr ""
 
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__company_partner_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__company_partner_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__company_partner_id
 msgid "Company Partner"
 msgstr ""
 
 #. module: ssi_school
 #: model:res.groups,name:ssi_school.school_enrollment_company_child_group
 #: model:res.groups,name:ssi_school.school_homeroom_company_child_group
+#: model:res.groups,name:ssi_school.school_student_mutation_company_child_group
 msgid "Company and All Child Companies"
 msgstr ""
 
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment__company_id
 #: model:ir.model.fields,help:ssi_school.field_school_homeroom__company_id
+#: model:ir.model.fields,help:ssi_school.field_school_student_mutation__company_id
 msgid ""
 "Company that own the document\n"
 "\n"
@@ -887,6 +1012,7 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment__confirm_ok
 #: model:ir.model.fields,help:ssi_school.field_school_homeroom__confirm_ok
+#: model:ir.model.fields,help:ssi_school.field_school_student_mutation__confirm_ok
 msgid ""
 "Confirm policy\n"
 "\n"
@@ -973,6 +1099,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__create_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__create_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_student__create_uid
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__create_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_teacher__create_uid
 msgid "Created by"
 msgstr ""
@@ -995,6 +1122,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__create_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__create_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_student__create_date
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__create_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_teacher__create_date
 msgid "Created on"
 msgstr ""
@@ -1028,6 +1156,7 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__date
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__date
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__date
 msgid "Date"
 msgstr ""
 
@@ -1088,6 +1217,21 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_student_mutation_view_form
+msgid "Destination"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__destination_grade_class_id
+msgid "Destination Grade Class"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__destination_homeroom_id
+msgid "Destination Homeroom"
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template_term__detail_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term__detail_ids
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_payment_template_view_form
@@ -1125,6 +1269,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__display_name
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__display_name
 #: model:ir.model.fields,field_description:ssi_school.field_school_student__display_name
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__display_name
 #: model:ir.model.fields,field_description:ssi_school.field_school_teacher__display_name
 msgid "Display Name"
 msgstr ""
@@ -1150,6 +1295,7 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment__done_ok
 #: model:ir.model.fields,help:ssi_school.field_school_homeroom__done_ok
+#: model:ir.model.fields,help:ssi_school.field_school_student_mutation__done_ok
 msgid ""
 "Done policy\n"
 "\n"
@@ -1272,6 +1418,7 @@ msgstr ""
 
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term__enrollment_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__enrollment_id
 #: model:ir.ui.menu,name:ssi_school.menu_enrollment_configuration
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_academic_term_view_form
 msgid "Enrollment"
@@ -1409,6 +1556,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__message_follower_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__message_follower_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_student__message_follower_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__message_follower_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_teacher__message_follower_ids
 msgid "Followers"
 msgstr ""
@@ -1424,6 +1572,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__message_channel_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__message_channel_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_student__message_channel_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__message_channel_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_teacher__message_channel_ids
 msgid "Followers (Channels)"
 msgstr ""
@@ -1439,6 +1588,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__message_partner_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__message_partner_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_student__message_partner_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__message_partner_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_teacher__message_partner_ids
 msgid "Followers (Partners)"
 msgstr ""
@@ -1454,6 +1604,7 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school.field_school_grade_type__activity_type_icon
 #: model:ir.model.fields,help:ssi_school.field_school_homeroom__activity_type_icon
 #: model:ir.model.fields,help:ssi_school.field_school_student__activity_type_icon
+#: model:ir.model.fields,help:ssi_school.field_school_student_mutation__activity_type_icon
 #: model:ir.model.fields,help:ssi_school.field_school_teacher__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
 msgstr ""
@@ -1468,12 +1619,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__grade_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__grade_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__grade_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__grade_id
 #: model:ir.ui.menu,name:ssi_school.menu_grade_configuration
 #: model:res.groups,name:ssi_school.school_grade_group
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_payment_template_view_search
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_search
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_grade_class_view_search
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_homeroom_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_student_mutation_view_search
 msgid "Grade"
 msgstr ""
 
@@ -1512,6 +1665,13 @@ msgid "Grade Types"
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_student_mutation__allowed_destination_grade_class_ids
+msgid ""
+"Grade classes eligible as mutation destination: same grade and school as the"
+" enrollment, excluding the source class."
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.ui.menu,name:ssi_school.school_grade_menu
 msgid "Grades"
 msgstr ""
@@ -1538,6 +1698,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_grade_type_view_search
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_grade_view_search
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_homeroom_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_student_mutation_view_search
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_student_view_search
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_view_search
 msgid "Group By"
@@ -1615,6 +1776,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__id
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__id
 #: model:ir.model.fields,field_description:ssi_school.field_school_student__id
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__id
 #: model:ir.model.fields,field_description:ssi_school.field_school_teacher__id
 msgid "ID"
 msgstr ""
@@ -1674,6 +1836,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__activity_exception_icon
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__activity_exception_icon
 #: model:ir.model.fields,field_description:ssi_school.field_school_student__activity_exception_icon
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__activity_exception_icon
 #: model:ir.model.fields,field_description:ssi_school.field_school_teacher__activity_exception_icon
 msgid "Icon"
 msgstr ""
@@ -1689,6 +1852,7 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school.field_school_grade_type__activity_exception_icon
 #: model:ir.model.fields,help:ssi_school.field_school_homeroom__activity_exception_icon
 #: model:ir.model.fields,help:ssi_school.field_school_student__activity_exception_icon
+#: model:ir.model.fields,help:ssi_school.field_school_student_mutation__activity_exception_icon
 #: model:ir.model.fields,help:ssi_school.field_school_teacher__activity_exception_icon
 msgid "Icon to indicate an exception activity."
 msgstr ""
@@ -1714,6 +1878,8 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school.field_school_homeroom__message_unread
 #: model:ir.model.fields,help:ssi_school.field_school_student__message_needaction
 #: model:ir.model.fields,help:ssi_school.field_school_student__message_unread
+#: model:ir.model.fields,help:ssi_school.field_school_student_mutation__message_needaction
+#: model:ir.model.fields,help:ssi_school.field_school_student_mutation__message_unread
 #: model:ir.model.fields,help:ssi_school.field_school_teacher__message_needaction
 #: model:ir.model.fields,help:ssi_school.field_school_teacher__message_unread
 msgid "If checked, new messages require your attention."
@@ -1730,6 +1896,7 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school.field_school_grade_type__message_has_error
 #: model:ir.model.fields,help:ssi_school.field_school_homeroom__message_has_error
 #: model:ir.model.fields,help:ssi_school.field_school_student__message_has_error
+#: model:ir.model.fields,help:ssi_school.field_school_student_mutation__message_has_error
 #: model:ir.model.fields,help:ssi_school.field_school_teacher__message_has_error
 msgid "If checked, some messages have a delivery error."
 msgstr ""
@@ -1803,6 +1970,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__message_is_follower
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__message_is_follower
 #: model:ir.model.fields,field_description:ssi_school.field_school_student__message_is_follower
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__message_is_follower
 #: model:ir.model.fields,field_description:ssi_school.field_school_teacher__message_is_follower
 msgid "Is Follower"
 msgstr ""
@@ -1835,6 +2003,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type____last_update
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom____last_update
 #: model:ir.model.fields,field_description:ssi_school.field_school_student____last_update
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation____last_update
 #: model:ir.model.fields,field_description:ssi_school.field_school_teacher____last_update
 msgid "Last Modified on"
 msgstr ""
@@ -1869,6 +2038,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__write_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__write_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_student__write_uid
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__write_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_teacher__write_uid
 msgid "Last Updated by"
 msgstr ""
@@ -1891,6 +2061,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__write_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__write_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_student__write_date
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__write_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_teacher__write_date
 msgid "Last Updated on"
 msgstr ""
@@ -1943,6 +2114,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__message_main_attachment_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__message_main_attachment_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_student__message_main_attachment_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__message_main_attachment_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_teacher__message_main_attachment_id
 msgid "Main Attachment"
 msgstr ""
@@ -1955,6 +2127,7 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment__manual_number_ok
 #: model:ir.model.fields,help:ssi_school.field_school_homeroom__manual_number_ok
+#: model:ir.model.fields,help:ssi_school.field_school_student_mutation__manual_number_ok
 msgid ""
 "Manual number assignment policy\n"
 "\n"
@@ -2034,6 +2207,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__message_has_error
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__message_has_error
 #: model:ir.model.fields,field_description:ssi_school.field_school_student__message_has_error
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__message_has_error
 #: model:ir.model.fields,field_description:ssi_school.field_school_teacher__message_has_error
 msgid "Message Delivery error"
 msgstr ""
@@ -2049,6 +2223,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__message_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__message_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_student__message_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__message_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_teacher__message_ids
 msgid "Messages"
 msgstr ""
@@ -2105,6 +2280,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__my_activity_date_deadline
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__my_activity_date_deadline
 #: model:ir.model.fields,field_description:ssi_school.field_school_student__my_activity_date_deadline
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__my_activity_date_deadline
 #: model:ir.model.fields,field_description:ssi_school.field_school_teacher__my_activity_date_deadline
 msgid "My Activity Deadline"
 msgstr ""
@@ -2144,6 +2320,7 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__need_validation
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__need_validation
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__need_validation
 msgid "Need Validation"
 msgstr ""
 
@@ -2158,6 +2335,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__activity_date_deadline
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__activity_date_deadline
 #: model:ir.model.fields,field_description:ssi_school.field_school_student__activity_date_deadline
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__activity_date_deadline
 #: model:ir.model.fields,field_description:ssi_school.field_school_teacher__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr ""
@@ -2173,6 +2351,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__activity_summary
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__activity_summary
 #: model:ir.model.fields,field_description:ssi_school.field_school_student__activity_summary
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__activity_summary
 #: model:ir.model.fields,field_description:ssi_school.field_school_teacher__activity_summary
 msgid "Next Activity Summary"
 msgstr ""
@@ -2188,6 +2367,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__activity_type_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__activity_type_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_student__activity_type_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__activity_type_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_teacher__activity_type_id
 msgid "Next Activity Type"
 msgstr ""
@@ -2195,6 +2375,7 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__next_approval_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__next_approval_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__next_approval_ids
 msgid "Next Approvals"
 msgstr ""
 
@@ -2221,6 +2402,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__note
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__note
 #: model:ir.model.fields,field_description:ssi_school.field_school_student__note
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__note
 #: model:ir.model.fields,field_description:ssi_school.field_school_teacher__note
 msgid "Note"
 msgstr ""
@@ -2236,6 +2418,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__message_needaction_counter
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__message_needaction_counter
 #: model:ir.model.fields,field_description:ssi_school.field_school_student__message_needaction_counter
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__message_needaction_counter
 #: model:ir.model.fields,field_description:ssi_school.field_school_teacher__message_needaction_counter
 msgid "Number of Actions"
 msgstr ""
@@ -2256,6 +2439,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__message_has_error_counter
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__message_has_error_counter
 #: model:ir.model.fields,field_description:ssi_school.field_school_student__message_has_error_counter
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__message_has_error_counter
 #: model:ir.model.fields,field_description:ssi_school.field_school_teacher__message_has_error_counter
 msgid "Number of errors"
 msgstr ""
@@ -2271,6 +2455,7 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school.field_school_grade_type__message_needaction_counter
 #: model:ir.model.fields,help:ssi_school.field_school_homeroom__message_needaction_counter
 #: model:ir.model.fields,help:ssi_school.field_school_student__message_needaction_counter
+#: model:ir.model.fields,help:ssi_school.field_school_student_mutation__message_needaction_counter
 #: model:ir.model.fields,help:ssi_school.field_school_teacher__message_needaction_counter
 msgid "Number of messages which requires an action"
 msgstr ""
@@ -2286,6 +2471,7 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school.field_school_grade_type__message_has_error_counter
 #: model:ir.model.fields,help:ssi_school.field_school_homeroom__message_has_error_counter
 #: model:ir.model.fields,help:ssi_school.field_school_student__message_has_error_counter
+#: model:ir.model.fields,help:ssi_school.field_school_student_mutation__message_has_error_counter
 #: model:ir.model.fields,help:ssi_school.field_school_teacher__message_has_error_counter
 msgid "Number of messages with delivery error"
 msgstr ""
@@ -2313,6 +2499,7 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school.field_school_grade_type__message_unread_counter
 #: model:ir.model.fields,help:ssi_school.field_school_homeroom__message_unread_counter
 #: model:ir.model.fields,help:ssi_school.field_school_student__message_unread_counter
+#: model:ir.model.fields,help:ssi_school.field_school_student_mutation__message_unread_counter
 #: model:ir.model.fields,help:ssi_school.field_school_teacher__message_unread_counter
 msgid "Number of unread messages"
 msgstr ""
@@ -2335,6 +2522,11 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields.selection,name:ssi_school.selection__school_academic_term__enrollment_state__open
 msgid "Open for Enrollment"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_student_mutation__reason
+msgid "Optional explanation for why this class mutation is made."
 msgstr ""
 
 #. module: ssi_school
@@ -2439,6 +2631,7 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__policy_template_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__policy_template_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__policy_template_id
 msgid "Policy Template"
 msgstr ""
 
@@ -2620,6 +2813,12 @@ msgid "Quantity or number of units to be billed."
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__reason
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_student_mutation_view_form
+msgid "Reason"
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__receivable_account_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__receivable_account_id
 msgid "Receivable Account"
@@ -2639,6 +2838,7 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment__reject_ok
 #: model:ir.model.fields,help:ssi_school.field_school_homeroom__reject_ok
+#: model:ir.model.fields,help:ssi_school.field_school_student_mutation__reject_ok
 msgid ""
 "Reject policy\n"
 "\n"
@@ -2648,6 +2848,7 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__rejected
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__rejected
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__rejected
 msgid "Rejected"
 msgstr ""
 
@@ -2688,6 +2889,7 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__user_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__user_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__user_id
 msgid "Responsible"
 msgstr ""
 
@@ -2702,6 +2904,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__activity_user_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__activity_user_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_student__activity_user_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__activity_user_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_teacher__activity_user_id
 msgid "Responsible User"
 msgstr ""
@@ -2714,6 +2917,7 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment__restart_approval_ok
 #: model:ir.model.fields,help:ssi_school.field_school_homeroom__restart_approval_ok
+#: model:ir.model.fields,help:ssi_school.field_school_student_mutation__restart_approval_ok
 msgid ""
 "Restart approval policy\n"
 "\n"
@@ -2723,6 +2927,7 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment__restart_ok
 #: model:ir.model.fields,help:ssi_school.field_school_homeroom__restart_ok
+#: model:ir.model.fields,help:ssi_school.field_school_student_mutation__restart_ok
 msgid ""
 "Restart policy\n"
 "\n"
@@ -2732,6 +2937,7 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__reviewer_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__reviewer_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__reviewer_id
 msgid "Reviewer"
 msgstr ""
 
@@ -2742,6 +2948,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__school_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__school_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_student__school_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__school_id
 #: model:ir.module.category,name:ssi_school.school_module_category
 #: model:ir.ui.menu,name:ssi_school.menu_school_root
 #: model:res.groups,name:ssi_school.school_group
@@ -2749,6 +2956,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_search
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_grade_class_view_search
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_homeroom_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_student_mutation_view_search
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_student_view_search
 msgid "School"
 msgstr ""
@@ -2863,6 +3071,12 @@ msgid "School Homeroom"
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.module.category,name:ssi_school.school_student_mutation_data_ownership_module_category
+#: model:ir.module.category,name:ssi_school.school_student_mutation_workflow_module_category
+msgid "School Student Mutation"
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.actions.act_window,name:ssi_school.school_action
 #: model:ir.ui.menu,name:ssi_school.school_menu
 msgid "Schools"
@@ -2935,8 +3149,39 @@ msgid "Set result to Pass?"
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_student_mutation__source_grade_class_id
+msgid ""
+"Snapshot of the enrollment's grade class before mutation, filled "
+"automatically when the Enrollment is selected. Kept unchanged after Done as "
+"an audit trail of the origin class."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_student_mutation__source_homeroom_id
+msgid ""
+"Snapshot of the enrollment's homeroom before mutation, filled automatically "
+"when the Enrollment is selected. Kept unchanged after Done as an audit trail"
+" of the origin homeroom."
+msgstr ""
+
+#. module: ssi_school
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_student_mutation_view_form
+msgid "Source (current)"
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_wizard_copy_payment_term__source_enrollment_id
 msgid "Source Enrollment"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__source_grade_class_id
+msgid "Source Grade Class"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__source_homeroom_id
+msgid "Source Homeroom"
 msgstr ""
 
 #. module: ssi_school
@@ -2990,6 +3235,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__state
 #: model:ir.model.fields,field_description:ssi_school.field_school_student__state
 #: model:ir.model.fields,field_description:ssi_school.field_school_student__state_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__state
 #: model:ir.model.fields,field_description:ssi_school.field_school_teacher__state_id
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_student_view_form
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_teacher_view_form
@@ -3013,6 +3259,7 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school.field_school_grade_type__activity_state
 #: model:ir.model.fields,help:ssi_school.field_school_homeroom__activity_state
 #: model:ir.model.fields,help:ssi_school.field_school_student__activity_state
+#: model:ir.model.fields,help:ssi_school.field_school_student_mutation__activity_state
 #: model:ir.model.fields,help:ssi_school.field_school_teacher__activity_state
 msgid ""
 "Status based on activities\n"
@@ -3065,8 +3312,21 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model,name:ssi_school.model_school_student
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__student_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__student_id
 #: model:res.groups,name:ssi_school.school_student_group
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_student_mutation_view_search
 msgid "Student"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model,name:ssi_school.model_school_student_mutation
+msgid "Student Class Mutation"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.actions.act_window,name:ssi_school.school_student_mutation_action
+#: model:ir.ui.menu,name:ssi_school.school_student_mutation_menu
+msgid "Student Class Mutations"
 msgstr ""
 
 #. module: ssi_school
@@ -3224,10 +3484,20 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_student_mutation__academic_term_id
+msgid "The academic term of the enrollment being mutated."
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template__academic_term_id
 msgid ""
 "The academic term this template is based on. Leave empty if applicable to "
 "all terms."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_student_mutation__academic_year_id
+msgid "The academic year of the enrollment being mutated."
 msgstr ""
 
 #. module: ssi_school
@@ -3311,6 +3581,11 @@ msgid "The date the Homeroom document was created."
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_student_mutation__date
+msgid "The date the class mutation document was created."
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment__date
 msgid "The date the enrollment document was created."
 msgstr ""
@@ -3373,6 +3648,20 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_academic_year__first_term_id
 msgid "The first term of the academic year, automatically computed."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_student_mutation__destination_grade_class_id
+msgid ""
+"The grade class the student will be moved into. Must belong to the same "
+"grade and school as the current enrollment."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_student_mutation__grade_id
+msgid ""
+"The grade of the enrollment being mutated. Mutation only moves the student "
+"between grade classes within this same grade."
 msgstr ""
 
 #. module: ssi_school
@@ -3443,6 +3732,14 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_student_mutation__destination_homeroom_id
+msgid ""
+"The open Homeroom batch for the destination class, if any. Automatically "
+"searched when the Destination Grade Class is selected, but may be left empty"
+" if no batch exists."
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template_term__template_id
 msgid "The parent template that owns this payment period."
 msgstr ""
@@ -3500,6 +3797,11 @@ msgid "The receivable account used to record enrollment billing."
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_student_mutation__school_id
+msgid "The school of the enrollment being mutated."
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_homeroom__school_id
 msgid "The school this Homeroom batch belongs to."
 msgstr ""
@@ -3543,6 +3845,11 @@ msgid "The student being enrolled."
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_student_mutation__student_id
+msgid "The student whose grade class is being mutated."
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment__academic_year_result
 msgid ""
 "The student's academic result at the end of the enrollment period: Passed, "
@@ -3580,6 +3887,20 @@ msgstr ""
 msgid ""
 "The student's current grade, automatically computed based on completed "
 "(done) enrollment history."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_student_mutation__allowed_enrollment_ids
+msgid ""
+"The student's enrollment(s) currently in open state, eligible to be selected"
+" as the enrollment to mutate."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_student_mutation__enrollment_id
+msgid ""
+"The student's open enrollment whose grade class and homeroom will be changed"
+" by this mutation."
 msgstr ""
 
 #. module: ssi_school
@@ -3646,6 +3967,7 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment__name
 #: model:ir.model.fields,help:ssi_school.field_school_homeroom__name
+#: model:ir.model.fields,help:ssi_school.field_school_student_mutation__name
 msgid ""
 "Transaction/document number\n"
 "\n"
@@ -3683,6 +4005,7 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school.field_school_grade_type__activity_exception_decoration
 #: model:ir.model.fields,help:ssi_school.field_school_homeroom__activity_exception_decoration
 #: model:ir.model.fields,help:ssi_school.field_school_student__activity_exception_decoration
+#: model:ir.model.fields,help:ssi_school.field_school_student_mutation__activity_exception_decoration
 #: model:ir.model.fields,help:ssi_school.field_school_teacher__activity_exception_decoration
 msgid "Type of the exception activity on record."
 msgstr ""
@@ -3727,6 +4050,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__message_unread
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__message_unread
 #: model:ir.model.fields,field_description:ssi_school.field_school_student__message_unread
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__message_unread
 #: model:ir.model.fields,field_description:ssi_school.field_school_teacher__message_unread
 msgid "Unread Messages"
 msgstr ""
@@ -3742,6 +4066,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__message_unread_counter
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__message_unread_counter
 #: model:ir.model.fields,field_description:ssi_school.field_school_student__message_unread_counter
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__message_unread_counter
 #: model:ir.model.fields,field_description:ssi_school.field_school_teacher__message_unread_counter
 msgid "Unread Messages Counter"
 msgstr ""
@@ -3780,12 +4105,14 @@ msgstr ""
 #. module: ssi_school
 #: model:res.groups,name:ssi_school.school_enrollment_user_group
 #: model:res.groups,name:ssi_school.school_homeroom_user_group
+#: model:res.groups,name:ssi_school.school_student_mutation_user_group
 msgid "User"
 msgstr ""
 
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment__user_id
 #: model:ir.model.fields,help:ssi_school.field_school_homeroom__user_id
+#: model:ir.model.fields,help:ssi_school.field_school_student_mutation__user_id
 msgid ""
 "User that responsible for document\n"
 "\n"
@@ -3797,6 +4124,7 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment__reviewer_id
 #: model:ir.model.fields,help:ssi_school.field_school_homeroom__reviewer_id
+#: model:ir.model.fields,help:ssi_school.field_school_student_mutation__reviewer_id
 msgid ""
 "User that responsible to review document\n"
 "\n"
@@ -3806,6 +4134,7 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment__active_approver_user_ids
 #: model:ir.model.fields,help:ssi_school.field_school_homeroom__active_approver_user_ids
+#: model:ir.model.fields,help:ssi_school.field_school_student_mutation__active_approver_user_ids
 msgid "Users that can approve/reject document"
 msgstr ""
 
@@ -3856,12 +4185,14 @@ msgstr ""
 #. module: ssi_school
 #: model:res.groups,name:ssi_school.school_enrollment_validator_group
 #: model:res.groups,name:ssi_school.school_homeroom_validator_group
+#: model:res.groups,name:ssi_school.school_student_mutation_validator_group
 msgid "Validator"
 msgstr ""
 
 #. module: ssi_school
 #: model:res.groups,name:ssi_school.school_enrollment_viewer_group
 #: model:res.groups,name:ssi_school.school_homeroom_viewer_group
+#: model:res.groups,name:ssi_school.school_student_mutation_viewer_group
 msgid "Viewer"
 msgstr ""
 
@@ -3881,6 +4212,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__website_message_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__website_message_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_student__website_message_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__website_message_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_teacher__website_message_ids
 msgid "Website Messages"
 msgstr ""
@@ -3896,6 +4228,7 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school.field_school_grade_type__website_message_ids
 #: model:ir.model.fields,help:ssi_school.field_school_homeroom__website_message_ids
 #: model:ir.model.fields,help:ssi_school.field_school_student__website_message_ids
+#: model:ir.model.fields,help:ssi_school.field_school_student_mutation__website_message_ids
 #: model:ir.model.fields,help:ssi_school.field_school_teacher__website_message_ids
 msgid "Website communication history"
 msgstr ""
