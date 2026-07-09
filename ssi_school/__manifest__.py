@@ -19,6 +19,7 @@
         "ssi_transaction_cancel_mixin",
         "ssi_localdict_mixin",
         "ssi_product_line_account_mixin",
+        "ssi_m2o_configurator_mixin",
         "base_address_city",
         "ssi_financial_accounting",
         "base_duration",

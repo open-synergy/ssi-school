@@ -1,0 +1,331 @@
+scenarios:
+  - name: "Addendum - Existing Payment Term Is Locked After Admission Opens"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "receivable_journal"
+        limit: 1
+
+      - step: "Setup - get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "Admission Fee Income ADDEN1"
+          code: "ADADDEN14200"
+          user_type_id: "EVAL: registry['account_type'].id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "Admission Fee ADDEN1"
+          type: "service"
+          list_price: 2000000.0
+
+      - step: "Setup - create pricelist"
+        action: "create"
+        model: "product.pricelist"
+        save_as: "pricelist"
+        values:
+          name: "Pricelist ADADDEN1"
+          currency_id: "EVAL: env.company.currency_id.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type ADADDEN1"
+          code: "GTADADDEN1"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 ADADDEN1"
+          code: "AYADADDEN1"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester ADADDEN1"
+          code: "SMADADDEN1"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "EVAL: registry['academic_year'].id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School ADADDEN1"
+          code: "SCHADADDEN1"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade ADADDEN1"
+          code: "GADADDEN1"
+          sequence: 10
+          type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "student_contact"
+        values:
+          name: "Student Contact ADADDEN1"
+
+      - step: "Setup - create payment template"
+        action: "create"
+        model: "school_admission_payment_template"
+        save_as: "payment_template"
+        values:
+          name: "Admission Payment Template ADADDEN1"
+          code: "ADADDEN1001"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          academic_term_id: "EVAL: registry['academic_term'].id"
+          term_ids:
+            - - 0
+              - 0
+              - name: "Admission Term 1 ADADDEN1"
+                sequence: 10
+                detail_ids:
+                  - - 0
+                    - 0
+                    - product_id: "EVAL: registry['product'].id"
+                      name: "Admission Fee ADADDEN1"
+                      account_id: "EVAL: registry['account'].id"
+                      uom_quantity: 1.0
+                      uom_id: "REF: uom.product_uom_unit"
+                      price_unit: 2000000.0
+
+      - step: "Create admission"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        as_user: "base.user_admin"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "EVAL: registry['academic_year'].id"
+          academic_term_id: "EVAL: registry['academic_term'].id"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          student_id: "EVAL: registry['student_contact'].id"
+          payment_template_id: "EVAL: registry['payment_template'].id"
+          pricelist_id: "EVAL: registry['pricelist'].id"
+          currency_id: "EVAL: env.company.currency_id.id"
+          receivable_journal_id: "EVAL: registry['receivable_journal'].id"
+
+      - step: "Confirm admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Compute payment"
+        action: "call"
+        target: "admission"
+        method: "action_compute_payment"
+        as_user: "base.user_admin"
+
+      - step: "Get admission payment term before opening"
+        action: "search"
+        model: "school_admission_payment_term"
+        domain: [["admission_id", "=", "EVAL: registry['admission'].id"]]
+        save_as: "term"
+        expect_count: 1
+
+      - step: "Assert term not locked before opening"
+        action: "assert"
+        target: "term"
+        asserts:
+          locked:
+            type: "value"
+            expected: false
+
+      - step: "Get admission payment term detail before opening"
+        action: "search"
+        model: "school_admission_payment_term_detail"
+        domain: [["term_id", "=", "EVAL: registry['term'].id"]]
+        save_as: "detail"
+        expect_count: 1
+
+      - step: "Assert detail not locked before opening"
+        action: "assert"
+        target: "detail"
+        asserts:
+          locked:
+            type: "value"
+            expected: false
+
+      - step: "Invalidate admission cache before approve"
+        action: "call"
+        target: "admission"
+        method: "invalidate_cache"
+
+      - step: "Approve admission"
+        action: "call"
+        target: "admission"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Invalidate term cache after admission opened"
+        action: "call"
+        target: "term"
+        method: "invalidate_cache"
+
+      - step: "Assert term locked after opening"
+        action: "assert"
+        target: "term"
+        asserts:
+          locked:
+            type: "value"
+            expected: true
+
+      - step: "Invalidate detail cache after admission opened"
+        action: "call"
+        target: "detail"
+        method: "invalidate_cache"
+
+      - step: "Assert detail locked after opening"
+        action: "assert"
+        target: "detail"
+        asserts:
+          locked:
+            type: "value"
+            expected: true
+
+      - step: "Addendum - add a new payment term while open"
+        action: "create"
+        model: "school_admission_payment_term"
+        save_as: "addendum_term"
+        as_user: "base.user_admin"
+        values:
+          admission_id: "EVAL: registry['admission'].id"
+          name: "Addendum Term ADADDEN1"
+          sequence: 20
+
+      - step: "Assert new addendum term is not locked"
+        action: "assert"
+        target: "addendum_term"
+        asserts:
+          locked:
+            type: "value"
+            expected: false
+
+      - step: "Addendum - add a new detail line to the existing locked term"
+        action: "create"
+        model: "school_admission_payment_term_detail"
+        save_as: "addendum_detail"
+        as_user: "base.user_admin"
+        values:
+          term_id: "EVAL: registry['term'].id"
+          product_id: "EVAL: registry['product'].id"
+          name: "Addendum Fee ADADDEN1"
+          account_id: "EVAL: registry['account'].id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 350000.0
+
+      - step: "Assert new addendum detail is not locked"
+        action: "assert"
+        target: "addendum_detail"
+        asserts:
+          locked:
+            type: "value"
+            expected: false
+
+      - step: "Close addendum (first round)"
+        action: "call"
+        target: "admission"
+        method: "action_close_addendum"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate addendum term cache after closing"
+        action: "call"
+        target: "addendum_term"
+        method: "invalidate_cache"
+
+      - step: "Assert first-round addendum term is locked after closing"
+        action: "assert"
+        target: "addendum_term"
+        asserts:
+          locked:
+            type: "value"
+            expected: true
+
+      - step: "Invalidate addendum detail cache after closing"
+        action: "call"
+        target: "addendum_detail"
+        method: "invalidate_cache"
+
+      - step: "Assert first-round addendum detail is locked after closing"
+        action: "assert"
+        target: "addendum_detail"
+        asserts:
+          locked:
+            type: "value"
+            expected: true
+
+      - step: "Addendum can happen again - add a second-round term"
+        action: "create"
+        model: "school_admission_payment_term"
+        save_as: "addendum_term_2"
+        as_user: "base.user_admin"
+        values:
+          admission_id: "EVAL: registry['admission'].id"
+          name: "Addendum Term 2 ADADDEN1"
+          sequence: 30
+
+      - step: "Assert second-round addendum term is not locked yet"
+        action: "assert"
+        target: "addendum_term_2"
+        asserts:
+          locked:
+            type: "value"
+            expected: false
+
+      - step: "Close addendum (second round)"
+        action: "call"
+        target: "admission"
+        method: "action_close_addendum"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate second-round addendum term cache after closing"
+        action: "call"
+        target: "addendum_term_2"
+        method: "invalidate_cache"
+
+      - step: "Assert second-round addendum term is locked after closing again"
+        action: "assert"
+        target: "addendum_term_2"
+        asserts:
+          locked:
+            type: "value"
+            expected: true

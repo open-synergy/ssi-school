@@ -2,7 +2,10 @@
 # Copyright 2024 PT. Simetri Sinergi Indonesia
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError
+
+ADDENDUM_LOCK_ALLOWED_FIELDS = {"invoice_line_id", "locked", "sequence"}
 
 
 class SchoolAdmissionPaymentTermDetail(models.Model):
@@ -17,6 +20,7 @@ class SchoolAdmissionPaymentTermDetail(models.Model):
     _order = "sequence, product_category_id, product_id, id"
     _inherit = [
         "mixin.product_line_account",
+        "mixin.many2one_configurator",
     ]
 
     term_id = fields.Many2one(
@@ -48,6 +52,88 @@ class SchoolAdmissionPaymentTermDetail(models.Model):
         ondelete="restrict",
         help=("The invoice line linked to this detail " "after the term is invoiced."),
     )
+    allowed_product_ids = fields.Many2many(
+        comodel_name="product.product",
+        string="Allowed Products",
+        compute="_compute_allowed_product_ids",
+        store=False,
+        compute_sudo=True,
+        help="Products allowed on this line, per the admission's payment template.",
+    )
+
+    addendum_ok = fields.Boolean(
+        string="Can Addendum",
+        related="term_id.admission_id.addendum_ok",
+        help=(
+            "Whether the owning admission currently allows adding new "
+            "payment terms/details via the addendum mechanism."
+        ),
+    )
+    locked = fields.Boolean(
+        string="Locked",
+        default=False,
+        readonly=True,
+        copy=False,
+        help=(
+            "Automatically set to True when the admission is opened. "
+            "Locked detail lines can no longer be edited or deleted; "
+            "new detail lines added afterwards via the addendum mechanism "
+            "start unlocked."
+        ),
+    )
+
+    @api.depends("term_id.admission_id.payment_template_id")
+    def _compute_allowed_product_ids(self):
+        for record in self:
+            result = False
+            template = record.term_id.admission_id.payment_template_id
+            if template:
+                result = record._m2o_configurator_get_filter(
+                    object_name="product.product",
+                    method_selection=template.product_selection_method,
+                    manual_recordset=template.product_ids,
+                    domain=template.product_domain,
+                    python_code=template.product_python_code,
+                )
+            record.allowed_product_ids = result
+
+    def _check_addendum_lock(self, vals):
+        if self.env.context.get("bypass_addendum_lock"):
+            return
+        if set(vals.keys()) <= ADDENDUM_LOCK_ALLOWED_FIELDS:
+            return
+        for record in self:
+            if record.locked:
+                error_message = (
+                    _(
+                        """
+Context: Update payment term detail
+Database ID: %s
+Problem: Payment term detail '%s' is locked and cannot be modified
+Solution: Add a new detail line via the addendum mechanism instead of editing this one
+"""
+                    )
+                    % (record.id, record.name)
+                )
+                raise UserError(error_message)
+
+    def _check_addendum_lock_unlink(self):
+        if self.env.context.get("bypass_addendum_lock"):
+            return
+        for record in self:
+            if record.locked:
+                error_message = (
+                    _(
+                        """
+Context: Delete payment term detail
+Database ID: %s
+Problem: Payment term detail '%s' is locked and cannot be deleted
+Solution: Locked detail lines are permanent; create a new one via the addendum mechanism
+"""
+                    )
+                    % (record.id, record.name)
+                )
+                raise UserError(error_message)
 
     @api.model
     def create(self, vals):
@@ -58,6 +144,7 @@ class SchoolAdmissionPaymentTermDetail(models.Model):
         return record
 
     def write(self, vals):
+        self._check_addendum_lock(vals)
         result = super().write(vals)
         self.mapped(
             "term_id.admission_id"
@@ -65,6 +152,7 @@ class SchoolAdmissionPaymentTermDetail(models.Model):
         return result
 
     def unlink(self):
+        self._check_addendum_lock_unlink()
         admissions = self.mapped("term_id.admission_id")
         result = super().unlink()
         admissions._recompute_product_summary()  # pylint: disable=protected-access

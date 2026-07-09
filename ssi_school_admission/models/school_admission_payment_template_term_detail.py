@@ -15,6 +15,9 @@ class SchoolAdmissionPaymentTemplateTermDetail(models.Model):
     _name = "school_admission_payment_template.term.detail"
     _description = "School Admission Payment Template Term Detail"
     _order = "term_id, sequence, id"
+    _inherit = [
+        "mixin.many2one_configurator",
+    ]
 
     term_id = fields.Many2one(
         string="Term",
@@ -70,6 +73,29 @@ class SchoolAdmissionPaymentTemplateTermDetail(models.Model):
         column2="tax_id",
         help="The taxes applied to this fee line.",
     )
+    allowed_product_ids = fields.Many2many(
+        comodel_name="product.product",
+        string="Allowed Products",
+        compute="_compute_allowed_product_ids",
+        store=False,
+        compute_sudo=True,
+        help="Products allowed on this line, per the template's Product Configuration.",
+    )
+
+    @api.depends("term_id.template_id")
+    def _compute_allowed_product_ids(self):
+        for record in self:
+            result = False
+            template = record.term_id.template_id
+            if template:
+                result = record._m2o_configurator_get_filter(
+                    object_name="product.product",
+                    method_selection=template.product_selection_method,
+                    manual_recordset=template.product_ids,
+                    domain=template.product_domain,
+                    python_code=template.product_python_code,
+                )
+            record.allowed_product_ids = result
 
     @api.onchange("product_id")
     def onchange_name(self):

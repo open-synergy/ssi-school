@@ -1,0 +1,875 @@
+scenarios:
+  - name: "Allowed Products - Template Detail - Manual Strategy"
+    steps:
+      - step: "Get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+      - step: "Create account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "Income Account ADCFG Manual"
+          code: "ADCFGMAN4200"
+          user_type_id: "EVAL: registry['account_type'].id"
+      - step: "Create allowed product 1"
+        action: "create"
+        model: "product.product"
+        save_as: "product_allowed_1"
+        values:
+          name: "Allowed Product ADCFG Manual 1"
+          type: "service"
+      - step: "Create allowed product 2"
+        action: "create"
+        model: "product.product"
+        save_as: "product_allowed_2"
+        values:
+          name: "Allowed Product ADCFG Manual 2"
+          type: "service"
+      - step: "Create payment template with manual product selection"
+        action: "create"
+        model: "school_admission_payment_template"
+        save_as: "template"
+        values:
+          name: "Template ADCFG Manual"
+          code: "TPLADCFGMAN"
+          product_selection_method: "manual"
+          product_ids:
+            - - 6
+              - 0
+              - - "EVAL: registry['product_allowed_1'].id"
+                - "EVAL: registry['product_allowed_2'].id"
+      - step: "Create term"
+        action: "create"
+        model: "school_admission_payment_template.term"
+        save_as: "term"
+        values:
+          name: "Term ADCFG Manual"
+          sequence: 10
+          template_id: "EVAL: registry['template'].id"
+      - step: "Create term detail"
+        action: "create"
+        model: "school_admission_payment_template.term.detail"
+        save_as: "detail"
+        values:
+          term_id: "EVAL: registry['term'].id"
+          sequence: 10
+          product_id: "EVAL: registry['product_allowed_1'].id"
+          name: "Fee ADCFG Manual"
+          account_id: "EVAL: registry['account'].id"
+          uom_quantity: 1.0
+          price_unit: 100000.0
+      - step: "Assert allowed_product_ids has the two manually selected products"
+        action: "assert"
+        target: "detail"
+        asserts:
+          allowed_product_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 2
+
+  - name: "Allowed Products - Template Detail - Manual Strategy Empty"
+    steps:
+      - step: "Get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+      - step: "Create account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "Income Account ADCFG Empty"
+          code: "ADCFGEMP4200"
+          user_type_id: "EVAL: registry['account_type'].id"
+      - step: "Create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "Product ADCFG Empty"
+          type: "service"
+      - step: "Create payment template with manual selection but no products"
+        action: "create"
+        model: "school_admission_payment_template"
+        save_as: "template"
+        values:
+          name: "Template ADCFG Empty"
+          code: "TPLADCFGEMP"
+          product_selection_method: "manual"
+      - step: "Create term"
+        action: "create"
+        model: "school_admission_payment_template.term"
+        save_as: "term"
+        values:
+          name: "Term ADCFG Empty"
+          sequence: 10
+          template_id: "EVAL: registry['template'].id"
+      - step: "Create term detail"
+        action: "create"
+        model: "school_admission_payment_template.term.detail"
+        save_as: "detail"
+        values:
+          term_id: "EVAL: registry['term'].id"
+          sequence: 10
+          product_id: "EVAL: registry['product'].id"
+          name: "Fee ADCFG Empty"
+          account_id: "EVAL: registry['account'].id"
+          uom_quantity: 1.0
+          price_unit: 100000.0
+      - step: "Assert allowed_product_ids is empty"
+        action: "assert"
+        target: "detail"
+        asserts:
+          allowed_product_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 0
+
+  - name: "Allowed Products - Template Detail - Domain Strategy"
+    steps:
+      - step: "Get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+      - step: "Create account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "Income Account ADCFG Domain"
+          code: "ADCFGDOM4200"
+          user_type_id: "EVAL: registry['account_type'].id"
+      - step: "Create matching product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_match"
+        values:
+          name: "Product ADCFG Domain Match"
+          default_code: "ADCFGDOMMATCH"
+          type: "service"
+      - step: "Create non-matching product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_no_match"
+        values:
+          name: "Product ADCFG Domain No Match"
+          default_code: "ADCFGDOMNOMATCH"
+          type: "service"
+      - step: "Create payment template with domain product selection"
+        action: "create"
+        model: "school_admission_payment_template"
+        save_as: "template"
+        values:
+          name: "Template ADCFG Domain"
+          code: "TPLADCFGDOM"
+          product_selection_method: "domain"
+          product_domain: "[('default_code','=','ADCFGDOMMATCH')]"
+      - step: "Create term"
+        action: "create"
+        model: "school_admission_payment_template.term"
+        save_as: "term"
+        values:
+          name: "Term ADCFG Domain"
+          sequence: 10
+          template_id: "EVAL: registry['template'].id"
+      - step: "Create term detail"
+        action: "create"
+        model: "school_admission_payment_template.term.detail"
+        save_as: "detail"
+        values:
+          term_id: "EVAL: registry['term'].id"
+          sequence: 10
+          product_id: "EVAL: registry['product_match'].id"
+          name: "Fee ADCFG Domain"
+          account_id: "EVAL: registry['account'].id"
+          uom_quantity: 1.0
+          price_unit: 100000.0
+      - step: "Assert allowed_product_ids has only the matching product"
+        action: "assert"
+        target: "detail"
+        asserts:
+          allowed_product_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 1
+
+  - name: "Allowed Products - Template Detail - Python Code Strategy"
+    steps:
+      - step: "Get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+      - step: "Create account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "Income Account ADCFG Code"
+          code: "ADCFGCOD4200"
+          user_type_id: "EVAL: registry['account_type'].id"
+      - step: "Create matching product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_match"
+        values:
+          name: "Product ADCFG Code Match"
+          default_code: "ADCFGCODMATCH"
+          type: "service"
+      - step: "Create non-matching product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_no_match"
+        values:
+          name: "Product ADCFG Code No Match"
+          default_code: "ADCFGCODNOMATCH"
+          type: "service"
+      - step: "Create payment template with python code product selection"
+        action: "create"
+        model: "school_admission_payment_template"
+        save_as: "template"
+        values:
+          name: "Template ADCFG Code"
+          code: "TPLADCFGCOD"
+          product_selection_method: "code"
+          product_python_code:
+            "result =
+            env['product.product'].search([('default_code','=','ADCFGCODMATCH')])"
+      - step: "Create term"
+        action: "create"
+        model: "school_admission_payment_template.term"
+        save_as: "term"
+        values:
+          name: "Term ADCFG Code"
+          sequence: 10
+          template_id: "EVAL: registry['template'].id"
+      - step: "Create term detail"
+        action: "create"
+        model: "school_admission_payment_template.term.detail"
+        save_as: "detail"
+        values:
+          term_id: "EVAL: registry['term'].id"
+          sequence: 10
+          product_id: "EVAL: registry['product_match'].id"
+          name: "Fee ADCFG Code"
+          account_id: "EVAL: registry['account'].id"
+          uom_quantity: 1.0
+          price_unit: 100000.0
+      - step: "Assert allowed_product_ids has only the matching product"
+        action: "assert"
+        target: "detail"
+        asserts:
+          allowed_product_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 1
+
+  - name: "Allowed Products - Admission Detail - Manual Strategy"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "receivable_journal"
+        limit: 1
+      - step: "Get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+      - step: "Create account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "Income Account ADCFG Adm Manual"
+          code: "ADCFGADMMAN4200"
+          user_type_id: "EVAL: registry['account_type'].id"
+      - step: "Create allowed product 1"
+        action: "create"
+        model: "product.product"
+        save_as: "product_allowed_1"
+        values:
+          name: "Allowed Product ADCFG Adm Manual 1"
+          type: "service"
+      - step: "Create allowed product 2"
+        action: "create"
+        model: "product.product"
+        save_as: "product_allowed_2"
+        values:
+          name: "Allowed Product ADCFG Adm Manual 2"
+          type: "service"
+      - step: "Create pricelist"
+        action: "create"
+        model: "product.pricelist"
+        save_as: "pricelist"
+        values:
+          name: "Pricelist ADCFG Adm Manual"
+          currency_id: "EVAL: env.company.currency_id.id"
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type ADCFG Adm Manual"
+          code: "GTADCFGADMMAN"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School ADCFG Adm Manual"
+          code: "SCHADCFGADMMAN"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+      - step: "Create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade ADCFG Adm Manual"
+          code: "GADCFGADMMAN"
+          sequence: 10
+          type_id: "EVAL: registry['grade_type'].id"
+      - step: "Create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 ADCFG Adm Manual"
+          code: "AYADCFGADMMAN"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+      - step: "Create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester ADCFG Adm Manual"
+          code: "SMADCFGADMMAN"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "EVAL: registry['academic_year'].id"
+          enrollment_state: "open"
+      - step: "Create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "student_contact"
+        values:
+          name: "Student Contact ADCFG Adm Manual"
+      - step: "Create payment template with manual product selection"
+        action: "create"
+        model: "school_admission_payment_template"
+        save_as: "payment_template"
+        values:
+          name: "Template ADCFG Adm Manual"
+          code: "TPLADCFGADMMAN"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          product_selection_method: "manual"
+          product_ids:
+            - - 6
+              - 0
+              - - "EVAL: registry['product_allowed_1'].id"
+                - "EVAL: registry['product_allowed_2'].id"
+          term_ids:
+            - - 0
+              - 0
+              - name: "Term 1 ADCFG Adm Manual"
+                sequence: 10
+                detail_ids:
+                  - - 0
+                    - 0
+                    - product_id: "EVAL: registry['product_allowed_1'].id"
+                      name: "Fee ADCFG Adm Manual"
+                      account_id: "EVAL: registry['account'].id"
+                      uom_quantity: 1.0
+                      uom_id: "REF: uom.product_uom_unit"
+                      price_unit: 100000.0
+      - step: "Create admission"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "EVAL: registry['academic_year'].id"
+          academic_term_id: "EVAL: registry['academic_term'].id"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          student_id: "EVAL: registry['student_contact'].id"
+          payment_template_id: "EVAL: registry['payment_template'].id"
+          pricelist_id: "EVAL: registry['pricelist'].id"
+          currency_id: "EVAL: env.company.currency_id.id"
+          receivable_journal_id: "EVAL: registry['receivable_journal'].id"
+      - step: "Confirm admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+      - step: "Compute payment"
+        action: "call"
+        target: "admission"
+        method: "action_compute_payment"
+        as_user: "base.user_admin"
+      - step: "Get admission payment term detail"
+        action: "search"
+        model: "school_admission_payment_term_detail"
+        domain: [["term_id.admission_id", "=", "EVAL: registry['admission'].id"]]
+        save_as: "detail"
+        expect_count: 1
+      - step: "Assert allowed_product_ids has the two manually selected products"
+        action: "assert"
+        target: "detail"
+        asserts:
+          allowed_product_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 2
+
+  - name: "Allowed Products - Admission Detail - No Template"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "receivable_journal"
+        limit: 1
+      - step: "Get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+      - step: "Create account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "Income Account ADCFG Adm NoTpl"
+          code: "ADCFGADMNT4200"
+          user_type_id: "EVAL: registry['account_type'].id"
+      - step: "Create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "Product ADCFG Adm NoTpl"
+          type: "service"
+      - step: "Create pricelist"
+        action: "create"
+        model: "product.pricelist"
+        save_as: "pricelist"
+        values:
+          name: "Pricelist ADCFG Adm NoTpl"
+          currency_id: "EVAL: env.company.currency_id.id"
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type ADCFG Adm NoTpl"
+          code: "GTADCFGADMNT"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School ADCFG Adm NoTpl"
+          code: "SCHADCFGADMNT"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+      - step: "Create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade ADCFG Adm NoTpl"
+          code: "GADCFGADMNT"
+          sequence: 10
+          type_id: "EVAL: registry['grade_type'].id"
+      - step: "Create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 ADCFG Adm NoTpl"
+          code: "AYADCFGADMNT"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+      - step: "Create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester ADCFG Adm NoTpl"
+          code: "SMADCFGADMNT"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "EVAL: registry['academic_year'].id"
+          enrollment_state: "open"
+      - step: "Create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "student_contact"
+        values:
+          name: "Student Contact ADCFG Adm NoTpl"
+      - step: "Create admission without payment template"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "EVAL: registry['academic_year'].id"
+          academic_term_id: "EVAL: registry['academic_term'].id"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          student_id: "EVAL: registry['student_contact'].id"
+          pricelist_id: "EVAL: registry['pricelist'].id"
+          currency_id: "EVAL: env.company.currency_id.id"
+          receivable_journal_id: "EVAL: registry['receivable_journal'].id"
+      - step: "Create payment term"
+        action: "create"
+        model: "school_admission_payment_term"
+        save_as: "term"
+        values:
+          name: "Term ADCFG Adm NoTpl"
+          sequence: 10
+          admission_id: "EVAL: registry['admission'].id"
+      - step: "Create payment term detail"
+        action: "create"
+        model: "school_admission_payment_term_detail"
+        save_as: "detail"
+        values:
+          term_id: "EVAL: registry['term'].id"
+          product_id: "EVAL: registry['product'].id"
+          name: "Fee ADCFG Adm NoTpl"
+          account_id: "EVAL: registry['account'].id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 100000.0
+      - step: "Assert allowed_product_ids is falsy without a payment template"
+        action: "assert"
+        target: "detail"
+        asserts:
+          allowed_product_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 0
+
+  - name: "Allowed Products - Admission Detail - Domain Strategy"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "receivable_journal"
+        limit: 1
+      - step: "Get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+      - step: "Create account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "Income Account ADCFG Adm Domain"
+          code: "ADCFGADMDOM4200"
+          user_type_id: "EVAL: registry['account_type'].id"
+      - step: "Create matching product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_match"
+        values:
+          name: "Product ADCFG Adm Domain Match"
+          default_code: "ADCFGADMDOMMATCH"
+          type: "service"
+      - step: "Create non-matching product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_no_match"
+        values:
+          name: "Product ADCFG Adm Domain No Match"
+          default_code: "ADCFGADMDOMNOMATCH"
+          type: "service"
+      - step: "Create pricelist"
+        action: "create"
+        model: "product.pricelist"
+        save_as: "pricelist"
+        values:
+          name: "Pricelist ADCFG Adm Domain"
+          currency_id: "EVAL: env.company.currency_id.id"
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type ADCFG Adm Domain"
+          code: "GTADCFGADMDOM"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School ADCFG Adm Domain"
+          code: "SCHADCFGADMDOM"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+      - step: "Create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade ADCFG Adm Domain"
+          code: "GADCFGADMDOM"
+          sequence: 10
+          type_id: "EVAL: registry['grade_type'].id"
+      - step: "Create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 ADCFG Adm Domain"
+          code: "AYADCFGADMDOM"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+      - step: "Create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester ADCFG Adm Domain"
+          code: "SMADCFGADMDOM"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "EVAL: registry['academic_year'].id"
+          enrollment_state: "open"
+      - step: "Create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "student_contact"
+        values:
+          name: "Student Contact ADCFG Adm Domain"
+      - step: "Create payment template with domain product selection"
+        action: "create"
+        model: "school_admission_payment_template"
+        save_as: "payment_template"
+        values:
+          name: "Template ADCFG Adm Domain"
+          code: "TPLADCFGADMDOM"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          product_selection_method: "domain"
+          product_domain: "[('default_code','=','ADCFGADMDOMMATCH')]"
+          term_ids:
+            - - 0
+              - 0
+              - name: "Term 1 ADCFG Adm Domain"
+                sequence: 10
+                detail_ids:
+                  - - 0
+                    - 0
+                    - product_id: "EVAL: registry['product_match'].id"
+                      name: "Fee ADCFG Adm Domain"
+                      account_id: "EVAL: registry['account'].id"
+                      uom_quantity: 1.0
+                      uom_id: "REF: uom.product_uom_unit"
+                      price_unit: 100000.0
+      - step: "Create admission"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "EVAL: registry['academic_year'].id"
+          academic_term_id: "EVAL: registry['academic_term'].id"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          student_id: "EVAL: registry['student_contact'].id"
+          payment_template_id: "EVAL: registry['payment_template'].id"
+          pricelist_id: "EVAL: registry['pricelist'].id"
+          currency_id: "EVAL: env.company.currency_id.id"
+          receivable_journal_id: "EVAL: registry['receivable_journal'].id"
+      - step: "Confirm admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+      - step: "Compute payment"
+        action: "call"
+        target: "admission"
+        method: "action_compute_payment"
+        as_user: "base.user_admin"
+      - step: "Get admission payment term detail"
+        action: "search"
+        model: "school_admission_payment_term_detail"
+        domain: [["term_id.admission_id", "=", "EVAL: registry['admission'].id"]]
+        save_as: "detail"
+        expect_count: 1
+      - step: "Assert allowed_product_ids has only the matching product"
+        action: "assert"
+        target: "detail"
+        asserts:
+          allowed_product_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 1
+
+  - name: "Allowed Products - Admission Detail - Python Code Strategy"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "receivable_journal"
+        limit: 1
+      - step: "Get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+      - step: "Create account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "Income Account ADCFG Adm Code"
+          code: "ADCFGADMCOD4200"
+          user_type_id: "EVAL: registry['account_type'].id"
+      - step: "Create matching product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_match"
+        values:
+          name: "Product ADCFG Adm Code Match"
+          default_code: "ADCFGADMCODMATCH"
+          type: "service"
+      - step: "Create non-matching product"
+        action: "create"
+        model: "product.product"
+        save_as: "product_no_match"
+        values:
+          name: "Product ADCFG Adm Code No Match"
+          default_code: "ADCFGADMCODNOMATCH"
+          type: "service"
+      - step: "Create pricelist"
+        action: "create"
+        model: "product.pricelist"
+        save_as: "pricelist"
+        values:
+          name: "Pricelist ADCFG Adm Code"
+          currency_id: "EVAL: env.company.currency_id.id"
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type ADCFG Adm Code"
+          code: "GTADCFGADMCOD"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School ADCFG Adm Code"
+          code: "SCHADCFGADMCOD"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+      - step: "Create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade ADCFG Adm Code"
+          code: "GADCFGADMCOD"
+          sequence: 10
+          type_id: "EVAL: registry['grade_type'].id"
+      - step: "Create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 ADCFG Adm Code"
+          code: "AYADCFGADMCOD"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+      - step: "Create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester ADCFG Adm Code"
+          code: "SMADCFGADMCOD"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "EVAL: registry['academic_year'].id"
+          enrollment_state: "open"
+      - step: "Create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "student_contact"
+        values:
+          name: "Student Contact ADCFG Adm Code"
+      - step: "Create payment template with python code product selection"
+        action: "create"
+        model: "school_admission_payment_template"
+        save_as: "payment_template"
+        values:
+          name: "Template ADCFG Adm Code"
+          code: "TPLADCFGADMCOD"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          product_selection_method: "code"
+          product_python_code:
+            "result =
+            env['product.product'].search([('default_code','=','ADCFGADMCODMATCH')])"
+          term_ids:
+            - - 0
+              - 0
+              - name: "Term 1 ADCFG Adm Code"
+                sequence: 10
+                detail_ids:
+                  - - 0
+                    - 0
+                    - product_id: "EVAL: registry['product_match'].id"
+                      name: "Fee ADCFG Adm Code"
+                      account_id: "EVAL: registry['account'].id"
+                      uom_quantity: 1.0
+                      uom_id: "REF: uom.product_uom_unit"
+                      price_unit: 100000.0
+      - step: "Create admission"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "EVAL: registry['academic_year'].id"
+          academic_term_id: "EVAL: registry['academic_term'].id"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          student_id: "EVAL: registry['student_contact'].id"
+          payment_template_id: "EVAL: registry['payment_template'].id"
+          pricelist_id: "EVAL: registry['pricelist'].id"
+          currency_id: "EVAL: env.company.currency_id.id"
+          receivable_journal_id: "EVAL: registry['receivable_journal'].id"
+      - step: "Confirm admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+      - step: "Compute payment"
+        action: "call"
+        target: "admission"
+        method: "action_compute_payment"
+        as_user: "base.user_admin"
+      - step: "Get admission payment term detail"
+        action: "search"
+        model: "school_admission_payment_term_detail"
+        domain: [["term_id.admission_id", "=", "EVAL: registry['admission'].id"]]
+        save_as: "detail"
+        expect_count: 1
+      - step: "Assert allowed_product_ids has only the matching product"
+        action: "assert"
+        target: "detail"
+        asserts:
+          allowed_product_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 1

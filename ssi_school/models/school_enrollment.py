@@ -373,6 +373,18 @@ class SchoolEnrollment(models.Model):
             "copied into this enrollment."
         ),
     )
+    addendum_ok = fields.Boolean(
+        string="Can Addendum",
+        compute="_compute_policy",
+        store=False,
+        compute_sudo=True,
+        help=(
+            "Policy that determines whether new payment terms/details may "
+            "be added to this enrollment while it is On Progress (open), "
+            "via the addendum mechanism. Existing terms/details created "
+            "before the addendum remain locked."
+        ),
+    )
 
     def _recompute_product_summaries(self):
         for record in self.sudo():
@@ -725,10 +737,36 @@ Solution: Choose a different Grade Class or increase its capacity
         self.ensure_one()
         self.student_id.action_set_to_enroll()  # pylint: disable=no-member
 
+    @ssi_decorator.post_open_action()
+    def _20_lock_existing_payment_term(self):
+        self.ensure_one()
+        self._lock_payment_term()
+
     @ssi_decorator.post_done_action()
     def _30_unenroll_or_graduate_student(self):
         self.ensure_one()
         self.student_id.action_set_to_draft()  # pylint: disable=no-member
+
+    def action_close_addendum(self):
+        for record in self.sudo():
+            record._lock_payment_term()  # pylint: disable=protected-access
+
+    def _lock_payment_term(self):
+        self.ensure_one()
+        Term = self.env[
+            "school_enrollment_payment_term"
+        ]  # pylint: disable=invalid-name
+        Detail = self.env[  # pylint: disable=invalid-name
+            "school_enrollment_payment_term_detail"
+        ]
+        terms = Term.search([("enrollment_id", "=", self.id), ("locked", "=", False)])
+        if terms:
+            terms.with_context(bypass_addendum_lock=True).write({"locked": True})
+        details = Detail.search(
+            [("term_id.enrollment_id", "=", self.id), ("locked", "=", False)]
+        )
+        if details:
+            details.with_context(bypass_addendum_lock=True).write({"locked": True})
 
     @ssi_decorator.post_cancel_action()
     def _10_unenroll_student(self):
@@ -754,6 +792,7 @@ Solution: Choose a different Grade Class or increase its capacity
             "drop_out_ok",
             "graduate_ok",
             "copy_payment_term_ok",
+            "addendum_ok",
         ]
         res += policy_field
         return res

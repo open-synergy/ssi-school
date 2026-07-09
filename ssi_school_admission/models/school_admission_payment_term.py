@@ -2,7 +2,10 @@
 # Copyright 2024 PT. Simetri Sinergi Indonesia
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError
+
+ADDENDUM_LOCK_ALLOWED_FIELDS = {"invoice_id", "manually_control", "locked", "sequence"}
 
 
 class SchoolAdmissionPaymentTerm(models.Model):
@@ -164,6 +167,64 @@ class SchoolAdmissionPaymentTerm(models.Model):
             "term-level actions such as duplication."
         ),
     )
+    addendum_ok = fields.Boolean(
+        string="Can Addendum",
+        related="admission_id.addendum_ok",
+        help=(
+            "Whether the owning admission currently allows adding new "
+            "payment terms/details via the addendum mechanism."
+        ),
+    )
+    locked = fields.Boolean(
+        string="Locked",
+        default=False,
+        readonly=True,
+        copy=False,
+        help=(
+            "Automatically set to True when the admission is opened. "
+            "Locked payment terms can no longer be edited or deleted; "
+            "new terms added afterwards via the addendum mechanism start "
+            "unlocked."
+        ),
+    )
+
+    def _check_addendum_lock(self, vals):
+        if self.env.context.get("bypass_addendum_lock"):
+            return
+        if set(vals.keys()) <= ADDENDUM_LOCK_ALLOWED_FIELDS:
+            return
+        for record in self:
+            if record.locked:
+                error_message = (
+                    _(
+                        """
+Context: Update payment term
+Database ID: %s
+Problem: Payment term '%s' is locked and cannot be modified
+Solution: Add a new payment term via the addendum mechanism instead of editing this one
+"""
+                    )
+                    % (record.id, record.name)
+                )
+                raise UserError(error_message)
+
+    def _check_addendum_lock_unlink(self):
+        if self.env.context.get("bypass_addendum_lock"):
+            return
+        for record in self:
+            if record.locked:
+                error_message = (
+                    _(
+                        """
+Context: Delete payment term
+Database ID: %s
+Problem: Payment term '%s' is locked and cannot be deleted
+Solution: Locked payment terms are permanent; create a new one via addendum instead
+"""
+                    )
+                    % (record.id, record.name)
+                )
+                raise UserError(error_message)
 
     @api.model
     def create(self, vals):
@@ -173,6 +234,7 @@ class SchoolAdmissionPaymentTerm(models.Model):
         return result
 
     def write(self, vals):
+        self._check_addendum_lock(vals)
         result = super().write(vals)
         self.mapped(
             "admission_id"
@@ -180,6 +242,7 @@ class SchoolAdmissionPaymentTerm(models.Model):
         return result
 
     def unlink(self):
+        self._check_addendum_lock_unlink()
         admissions = self.mapped("admission_id")
         result = super().unlink()
         admissions._recompute_product_summary()  # pylint: disable=protected-access
