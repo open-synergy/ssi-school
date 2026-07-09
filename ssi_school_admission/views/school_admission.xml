@@ -130,7 +130,7 @@
                                     string="Close Addendum"
                                     confirm="This will lock all currently unlocked payment terms/details. Continue?"
                                     attrs="{'invisible':[('addendum_ok','=',False)]}"
-                                    groups="school_admission_validator_group"
+                                    groups="ssi_school_admission.school_admission_validator_group"
                                     class="btn-secondary"
                                 />
                         </group>
