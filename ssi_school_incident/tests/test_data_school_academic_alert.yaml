@@ -1,0 +1,498 @@
+scenarios:
+  - name: "Academic Alert Full Workflow Create Confirm Approve Done"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type for Academic Alert Workflow Test"
+          code: "GTALERTWF"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School for Academic Alert Workflow Test"
+          code: "SCHALERTWF"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Academic Alert Workflow Student Contact"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student for Academic Alert Workflow"
+          code: "STUALERTWF"
+          contact_id: "EVAL: registry['contact'].id"
+          school_id: "EVAL: registry['school'].id"
+
+      - step: "Create academic alert"
+        action: "create"
+        model: "school_academic_alert"
+        save_as: "alert"
+        values:
+          date_alert: 2026-07-01
+          student_id: "EVAL: registry['student'].id"
+          subject_note: "Mathematics, Science"
+
+      - step: "Assert alert created in draft"
+        action: "assert"
+        target: "alert"
+        asserts:
+          id:
+            type: "value"
+            operator: "is_truthy"
+          state:
+            type: "value"
+            expected: "draft"
+          alert_level_id:
+            type: "value"
+            operator: "is_falsy"
+
+      - step: "Confirm alert"
+        action: "call"
+        target: "alert"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve alert"
+        action: "call"
+        target: "alert"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Assert document number generated"
+        action: "assert"
+        target: "alert"
+        asserts:
+          name:
+            type: "value"
+            operator: "contains"
+            expected: "ALERT"
+
+      - step: "Done alert"
+        action: "call"
+        target: "alert"
+        method: "action_done"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+  - name: "Evaluate Academic Alert Triggers Red Level"
+    steps:
+      - step: "Setup - create yellow level"
+        action: "create"
+        model: "school_academic_alert_level"
+        save_as: "level_yellow"
+        values:
+          name: "Yellow Level Red Scenario"
+          code: "ALERT-YELLOW-S2"
+          color: "yellow"
+          sequence: 10
+          python_code: "result = trigger_count >= 2"
+
+      - step: "Setup - create orange level"
+        action: "create"
+        model: "school_academic_alert_level"
+        save_as: "level_orange"
+        values:
+          name: "Orange Level Red Scenario"
+          code: "ALERT-ORANGE-S2"
+          color: "orange"
+          sequence: 20
+          python_code: "result = trigger_count >= 3"
+
+      - step: "Setup - create red level"
+        action: "create"
+        model: "school_academic_alert_level"
+        save_as: "level_red"
+        values:
+          name: "Red Level Red Scenario"
+          code: "ALERT-RED-S2"
+          color: "red"
+          sequence: 30
+          python_code: "result = trigger_count >= 4"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type for Red Trigger Test"
+          code: "GTALERTRED"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School for Red Trigger Test"
+          code: "SCHALERTRED"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Red Trigger Student Contact"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student for Red Trigger"
+          code: "STUALERTRED"
+          contact_id: "EVAL: registry['contact'].id"
+          school_id: "EVAL: registry['school'].id"
+
+      - step: "Create academic alert with trigger_count = 4"
+        action: "create"
+        model: "school_academic_alert"
+        save_as: "alert"
+        values:
+          date_alert: 2026-07-02
+          student_id: "EVAL: registry['student'].id"
+          evaluation_context: "trigger_count = 4"
+
+      - step: "Evaluate alert"
+        action: "call"
+        target: "alert"
+        method: "action_evaluate"
+
+      - step: "Assert red level triggered"
+        action: "assert"
+        target: "alert"
+        asserts:
+          color:
+            type: "value"
+            expected: "red"
+          alert_level_id:
+            type: "value"
+            operator: "is_truthy"
+
+  - name: "Evaluate Academic Alert Triggers Yellow Level"
+    steps:
+      - step: "Setup - create yellow level"
+        action: "create"
+        model: "school_academic_alert_level"
+        save_as: "level_yellow"
+        values:
+          name: "Yellow Level Yellow Scenario"
+          code: "ALERT-YELLOW-S3"
+          color: "yellow"
+          sequence: 10
+          python_code: "result = trigger_count >= 2"
+
+      - step: "Setup - create orange level"
+        action: "create"
+        model: "school_academic_alert_level"
+        save_as: "level_orange"
+        values:
+          name: "Orange Level Yellow Scenario"
+          code: "ALERT-ORANGE-S3"
+          color: "orange"
+          sequence: 20
+          python_code: "result = trigger_count >= 3"
+
+      - step: "Setup - create red level"
+        action: "create"
+        model: "school_academic_alert_level"
+        save_as: "level_red"
+        values:
+          name: "Red Level Yellow Scenario"
+          code: "ALERT-RED-S3"
+          color: "red"
+          sequence: 30
+          python_code: "result = trigger_count >= 4"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type for Yellow Trigger Test"
+          code: "GTALERTYEL"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School for Yellow Trigger Test"
+          code: "SCHALERTYEL"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Yellow Trigger Student Contact"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student for Yellow Trigger"
+          code: "STUALERTYEL"
+          contact_id: "EVAL: registry['contact'].id"
+          school_id: "EVAL: registry['school'].id"
+
+      - step: "Create academic alert with trigger_count = 2"
+        action: "create"
+        model: "school_academic_alert"
+        save_as: "alert"
+        values:
+          date_alert: 2026-07-03
+          student_id: "EVAL: registry['student'].id"
+          evaluation_context: "trigger_count = 2"
+
+      - step: "Evaluate alert"
+        action: "call"
+        target: "alert"
+        method: "action_evaluate"
+
+      - step: "Assert yellow level triggered"
+        action: "assert"
+        target: "alert"
+        asserts:
+          color:
+            type: "value"
+            expected: "yellow"
+
+  - name: "Evaluate Academic Alert No Level Triggers"
+    steps:
+      - step: "Setup - create yellow level"
+        action: "create"
+        model: "school_academic_alert_level"
+        save_as: "level_yellow"
+        values:
+          name: "Yellow Level No Trigger Scenario"
+          code: "ALERT-YELLOW-S4"
+          color: "yellow"
+          sequence: 10
+          python_code: "result = trigger_count >= 2"
+
+      - step: "Setup - create orange level"
+        action: "create"
+        model: "school_academic_alert_level"
+        save_as: "level_orange"
+        values:
+          name: "Orange Level No Trigger Scenario"
+          code: "ALERT-ORANGE-S4"
+          color: "orange"
+          sequence: 20
+          python_code: "result = trigger_count >= 3"
+
+      - step: "Setup - create red level"
+        action: "create"
+        model: "school_academic_alert_level"
+        save_as: "level_red"
+        values:
+          name: "Red Level No Trigger Scenario"
+          code: "ALERT-RED-S4"
+          color: "red"
+          sequence: 30
+          python_code: "result = trigger_count >= 4"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type for No Trigger Test"
+          code: "GTALERTNOTRIG"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School for No Trigger Test"
+          code: "SCHALERTNOTRIG"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "No Trigger Student Contact"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student for No Trigger"
+          code: "STUALERTNOTRIG"
+          contact_id: "EVAL: registry['contact'].id"
+          school_id: "EVAL: registry['school'].id"
+
+      - step: "Create academic alert with trigger_count = 0"
+        action: "create"
+        model: "school_academic_alert"
+        save_as: "alert"
+        values:
+          date_alert: 2026-07-04
+          student_id: "EVAL: registry['student'].id"
+          evaluation_context: "trigger_count = 0"
+
+      - step: "Evaluate alert"
+        action: "call"
+        target: "alert"
+        method: "action_evaluate"
+
+      - step: "Assert no level triggered"
+        action: "assert"
+        target: "alert"
+        asserts:
+          alert_level_id:
+            type: "value"
+            operator: "is_falsy"
+          color:
+            type: "value"
+            operator: "is_falsy"
+
+  - name: "Create Incident from Red Academic Alert"
+    steps:
+      - step: "Setup - create yellow level"
+        action: "create"
+        model: "school_academic_alert_level"
+        save_as: "level_yellow"
+        values:
+          name: "Yellow Level Incident Scenario"
+          code: "ALERT-YELLOW-S5"
+          color: "yellow"
+          sequence: 10
+          python_code: "result = trigger_count >= 2"
+
+      - step: "Setup - create orange level"
+        action: "create"
+        model: "school_academic_alert_level"
+        save_as: "level_orange"
+        values:
+          name: "Orange Level Incident Scenario"
+          code: "ALERT-ORANGE-S5"
+          color: "orange"
+          sequence: 20
+          python_code: "result = trigger_count >= 3"
+
+      - step: "Setup - create red level"
+        action: "create"
+        model: "school_academic_alert_level"
+        save_as: "level_red"
+        values:
+          name: "Red Level Incident Scenario"
+          code: "ALERT-RED-S5"
+          color: "red"
+          sequence: 30
+          python_code: "result = trigger_count >= 4"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type for Incident Creation Test"
+          code: "GTALERTINC"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School for Incident Creation Test"
+          code: "SCHALERTINC"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Incident Creation Student Contact"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student for Incident Creation"
+          code: "STUALERTINC"
+          contact_id: "EVAL: registry['contact'].id"
+          school_id: "EVAL: registry['school'].id"
+
+      - step: "Create academic alert with trigger_count = 5"
+        action: "create"
+        model: "school_academic_alert"
+        save_as: "alert"
+        values:
+          date_alert: 2026-07-05
+          student_id: "EVAL: registry['student'].id"
+          subject_note: "Mathematics, Science, English"
+          evaluation_context: "trigger_count = 5"
+
+      - step: "Evaluate alert"
+        action: "call"
+        target: "alert"
+        method: "action_evaluate"
+        asserts:
+          color:
+            type: "value"
+            expected: "red"
+
+      - step: "Create incident from red alert"
+        action: "call"
+        target: "alert"
+        method: "action_create_incident"
+        as_user: "base.user_admin"
+        asserts:
+          incident_id:
+            type: "value"
+            operator: "is_truthy"
+
+      - step: "Find the created incident"
+        action: "search"
+        model: "school_incident"
+        domain: [["student_id", "=", "EVAL: registry['student'].id"]]
+        save_as: "incident"
+        expect_count: 1
+
+      - step: "Assert incident uses the Academic incident type"
+        action: "assert"
+        target: "incident"
+        asserts:
+          incident_type_id:
+            type: "m2o"
+            expected_xml_id: "ssi_school_incident.school_incident_type_academic"
+          handling_level:
+            type: "value"
+            expected: "2"

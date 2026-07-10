@@ -1,0 +1,125 @@
+scenarios:
+  - name: "Weekly Review Full Workflow Create Confirm Done"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type for Weekly Review Workflow Test"
+          code: "GTWRWF"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School for Weekly Review Workflow Test"
+          code: "SCHWRWF"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Create weekly review"
+        action: "create"
+        model: "school_incident_weekly_review"
+        save_as: "review"
+        values:
+          school_id: "EVAL: registry['school'].id"
+          date_start: 2026-06-22
+          date_end: 2026-06-26
+
+      - step: "Assert review created in draft"
+        action: "assert"
+        target: "review"
+        asserts:
+          id:
+            type: "value"
+            operator: "is_truthy"
+          state:
+            type: "value"
+            expected: "draft"
+          count_total:
+            type: "value"
+            expected: 0
+          count_overdue:
+            type: "value"
+            expected: 0
+          count_unresolved_over_7d:
+            type: "value"
+            expected: 0
+          count_escalated:
+            type: "value"
+            expected: 0
+
+      - step: "Confirm review"
+        action: "call"
+        target: "review"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve review"
+        action: "call"
+        target: "review"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+          name:
+            type: "value"
+            operator: "contains"
+            expected: "WR"
+
+  - name: "Cancel Weekly Review From Draft"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type for Weekly Review Cancel Test"
+          code: "GTWRCX"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School for Weekly Review Cancel Test"
+          code: "SCHWRCX"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Create weekly review"
+        action: "create"
+        model: "school_incident_weekly_review"
+        save_as: "review"
+        values:
+          school_id: "EVAL: registry['school'].id"
+          date_start: 2026-06-22
+          date_end: 2026-06-26
+
+      - step: "Cancel review"
+        action: "call"
+        target: "review"
+        method: "action_cancel"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "cancel"
+
+      - step: "Restart review"
+        action: "call"
+        target: "review"
+        method: "action_restart"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "draft"

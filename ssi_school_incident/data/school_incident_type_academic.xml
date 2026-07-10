@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 OpenSynergy Indonesia
+     Copyright 2026 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo noupdate="1">
+<!-- Incident type used by school_academic_alert.action_create_incident when
+     an Orange/Red Academic Alert is turned into a School Incident (Bab 8.3
+     of the YPII Guideline). Default Handling Level is set at Tier 2
+     (Counselor/Vice Principal) since an academic alert only reaches this
+     point once it is already at least a "serious warning" (Orange). -->
+<record id="school_incident_type_academic" model="school_incident_type">
+    <field name="name">Academic</field>
+    <field name="code">INCTYPE-ACADEMIC</field>
+    <field name="default_handling_level">2</field>
+    <field name="first_contact_sla_hour">24.0</field>
+    <field name="is_health" eval="False" />
+</record>
+</odoo>
