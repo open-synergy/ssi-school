@@ -13,5 +13,6 @@ from . import (  # noqa: F401
     school_grade_type,
     school_homeroom,
     school_student,
+    school_student_mutation,
     school_teacher,
 )
