@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 OpenSynergy Indonesia
+     Copyright 2026 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+<record id="school_academic_alert_view_search" model="ir.ui.view">
+    <field name="name">school_academic_alert - search</field>
+    <field name="model">school_academic_alert</field>
+    <field
+            name="inherit_id"
+            ref="ssi_transaction_mixin.mixin_transaction_view_search"
+        />
+    <field name="mode">primary</field>
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//search" position="inside">
+                <field name="student_id" />
+                <field name="alert_level_id" />
+                <field name="color" />
+                <group expand="0" string="Group By">
+                    <filter
+                            name="group_by_alert_level_id"
+                            string="Alert Level"
+                            context="{'group_by': 'alert_level_id'}"
+                        />
+                    <filter
+                            name="group_by_color"
+                            string="Color"
+                            context="{'group_by': 'color'}"
+                        />
+                    <filter
+                            name="group_by_student_id"
+                            string="Student"
+                            context="{'group_by': 'student_id'}"
+                        />
+                </group>
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_academic_alert_view_tree" model="ir.ui.view">
+    <field name="name">school_academic_alert - tree</field>
+    <field name="model">school_academic_alert</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="ssi_transaction_mixin.mixin_transaction_view_tree" />
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name="date_alert" />
+                <field name="student_id" />
+                <field name="alert_level_id" />
+                <field name="color" />
+                <field name="incident_id" />
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_academic_alert_view_form" model="ir.ui.view">
+    <field name="name">school_academic_alert - form</field>
+    <field name="model">school_academic_alert</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="ssi_transaction_mixin.mixin_transaction_view_form" />
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//header/field[@name='state']" position="before">
+                <field name="evaluate_ok" invisible="1" />
+                <field name="create_incident_ok" invisible="1" />
+                <button
+                        name="action_evaluate"
+                        type="object"
+                        string="Evaluate"
+                        attrs="{'invisible': [('evaluate_ok', '=', False)]}"
+                        groups="ssi_school_incident.school_incident_user_group"
+                    />
+                <button
+                        name="action_create_incident"
+                        type="object"
+                        string="Create Incident"
+                        attrs="{
+                            'invisible': [
+                                '|',
+                                ('create_incident_ok', '=', False),
+                                ('color', 'not in', ['orange', 'red']),
+                            ]
+                        }"
+                        groups="ssi_school_incident.school_incident_officer_group"
+                    />
+            </xpath>
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="student_id" />
+                <field name="grade_class_id" />
+                <field name="subject_note" />
+            </xpath>
+            <xpath expr="//group[@name='header_right']" position="inside">
+                <field name="date_alert" />
+                <field name="alert_level_id" />
+                <field name="color" />
+            </xpath>
+            <xpath expr="//page[1]" position="before">
+                <page name="evaluation" string="Evaluation">
+                    <group name="evaluation_group_1" string="Evaluation Context">
+                        <field name="evaluation_context" nolabel="1" />
+                    </group>
+                    <group name="evaluation_group_2" string="Result">
+                        <field name="incident_id" />
+                    </group>
+                </page>
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_academic_alert_action" model="ir.actions.act_window">
+    <field name="name">Academic Alerts</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">school_academic_alert</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<menuitem
+        id="school_academic_alert_menu"
+        name="Academic Alerts"
+        parent="menu_incident_root"
+        action="school_academic_alert_action"
+        groups="school_incident_user_group"
+        sequence="20"
+    />
+
+</odoo>

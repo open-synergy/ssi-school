@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 OpenSynergy Indonesia
+     Copyright 2026 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo noupdate="1">
+<!-- Three-Color Academic Warning System default levels (Bab 8.3 of the
+     YPII Guideline). The Python Code below reproduces the guideline's own
+     example trigger (count of subjects below the passing grade), but any
+     school unit is free to edit these records (or add new ones) with a
+     different formula since the evaluation is entirely data-driven -
+     school_academic_alert._evaluate_alert_level() never hard-codes it.
+     Levels are evaluated from the highest sequence down (most severe
+     first), so Red (30) is checked before Orange (20) before Yellow (10). -->
+<record id="school_academic_alert_level_yellow" model="school_academic_alert_level">
+    <field name="name">Yellow - Early Warning</field>
+    <field name="code">ALERT-LEVEL-YELLOW</field>
+    <field name="color">yellow</field>
+    <field name="sequence">10</field>
+    <field name="python_code">result = trigger_count >= 2</field>
+    <field
+            name="action_guideline"
+        >Homeroom Teacher informs the parent informally (e.g. via WhatsApp) that the student is showing early signs of academic difficulty in 2 or more subjects, and offers guidance/remedial support.</field>
+    <field
+            name="sla_text"
+        >Parent informed within 3 school days of the alert being raised.</field>
+</record>
+
+<record id="school_academic_alert_level_orange" model="school_academic_alert_level">
+    <field name="name">Orange - Serious Warning</field>
+    <field name="code">ALERT-LEVEL-ORANGE</field>
+    <field name="color">orange</field>
+    <field name="sequence">20</field>
+    <field name="python_code">result = trigger_count >= 3</field>
+    <field
+            name="action_guideline"
+        >Counselor/Vice Principal schedules a formal meeting with the parent to discuss a remedial plan for the student, who is now below the passing grade in 3 or more subjects. A School Incident may be created to track follow-up.</field>
+    <field
+            name="sla_text"
+        >Parent meeting scheduled within 5 school days of the alert being raised.</field>
+</record>
+
+<record id="school_academic_alert_level_red" model="school_academic_alert_level">
+    <field name="name">Red - Critical Warning</field>
+    <field name="code">ALERT-LEVEL-RED</field>
+    <field name="color">red</field>
+    <field name="sequence">30</field>
+    <field name="python_code">result = trigger_count >= 4</field>
+    <field
+            name="action_guideline"
+        >Principal is notified and a School Incident is created immediately; the student is below the passing grade in 4 or more subjects and is at risk of not being promoted. A joint remedial plan with the parent is mandatory.</field>
+    <field
+            name="sla_text"
+        >Principal-level meeting held within 2 school days of the alert being raised.</field>
+</record>
+</odoo>

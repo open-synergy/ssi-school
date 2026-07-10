@@ -1,0 +1,413 @@
+scenarios:
+  - name: "School Incident Operating Unit - Default from user's operating unit"
+    steps:
+      - step: "Setup - create partner for Operating Unit A"
+        action: "create"
+        model: "res.partner"
+        save_as: "ou_a_partner"
+        values:
+          name: "Operating Unit A Partner"
+
+      - step: "Setup - create Operating Unit A"
+        action: "create"
+        model: "operating.unit"
+        save_as: "ou_a"
+        values:
+          name: "Operating Unit A"
+          code: "OUINCA"
+          company_id: "REF: base.main_company"
+          partner_id: "EVAL: registry['ou_a_partner'].id"
+
+      # NOTE: base.group_user is required here -- without it, even basic
+      # ORM operations (e.g. the internal ir.model lookups triggered while
+      # creating a school_incident) raise AccessError, since a large part
+      # of Odoo's base system models are only readable by internal users.
+      # This does mean the pre-existing "School Incident - Company" ir.rule
+      # (security/ir_rule/school_incident.xml, from BL-0066, scoped to
+      # base.group_user, domain company_id = user.company_id) also applies
+      # to this user and is OR-combined with the new Operating Unit rule
+      # below -- that is expected Odoo ir.rule behavior (group-scoped rules
+      # combine via OR) and is exercised/explained in the next scenario.
+      # This scenario only checks that operating_unit_id defaults correctly
+      # from the creating user; it does not depend on row-level isolation.
+      - step: "Setup - create user restricted to Operating Unit A"
+        action: "create"
+        model: "res.users"
+        save_as: "user_ou_a"
+        values:
+          name: "Incident User OU-A"
+          login: "test_incident_ou_a@ssi-school.test"
+          company_id: "REF: base.main_company"
+          groups_id:
+            - - 6
+              - 0
+              - - "REF: base.group_user"
+                - "REF: ssi_school_incident.school_incident_user_group"
+                - "REF:
+                  ssi_school_incident_operating_unit.school_incident_operating_unit_group"
+          assigned_operating_unit_ids:
+            - - 6
+              - 0
+              - - "EVAL: registry['ou_a'].id"
+          default_operating_unit_id: "EVAL: registry['ou_a'].id"
+
+      - step: "Setup - create incident type"
+        action: "create"
+        model: "school_incident_type"
+        save_as: "incident_type"
+        values:
+          name: "Incident Type OU Default Test"
+          code: "INCTYPE-OU-DEF"
+          default_handling_level: "1"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type OU Default Test"
+          code: "GTOUDEF"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School OU Default Test"
+          code: "SCHOUDEF"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "student_contact"
+        values:
+          name: "Student OU Default Test Contact"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student OU Default Test"
+          code: "STUOUDEF"
+          contact_id: "EVAL: registry['student_contact'].id"
+          school_id: "EVAL: registry['school'].id"
+
+      # The odoo-yaml-test framework's own "as_user" step key only accepts
+      # an XML ID resolvable via env.ref(), so it cannot address a res.users
+      # record created earlier in this same scenario (it has no XML ID).
+      # `with_user()` is used instead, inside an EVAL domain leaf, to run
+      # the actual create() call as that specific user -- this is what
+      # makes mixin.single_operating_unit's own
+      # `operating_unit_default_get()` default resolve against *that*
+      # user's default_operating_unit_id, exactly as it would in the real
+      # app. The surrounding "search" action then confirms both that the
+      # created record exists and that its operating_unit_id matches
+      # Operating Unit A in the same step.
+      - step:
+          "Create incident as Operating Unit A user (operating_unit_id must default from
+          that user)"
+        action: "search"
+        model: "school_incident"
+        domain:
+          - - "id"
+            - "="
+            - >-
+              EVAL: env['school_incident'].with_user(registry['user_ou_a']).create({
+              'date_incident': date(2026, 7, 1), 'student_id': registry['student'].id,
+              'incident_type_id': registry['incident_type'].id, 'description': 'Case
+              used to verify Operating Unit defaults from the creating user.' }).id
+          - ["operating_unit_id", "=", "EVAL: registry['ou_a'].id"]
+        save_as: "incident"
+        expect_count: 1
+
+      - step: "Assert incident created in draft"
+        action: "assert"
+        target: "incident"
+        asserts:
+          state:
+            type: "value"
+            expected: "draft"
+
+  - name:
+      "School Incident Operating Unit - Two operating units both default and record
+      their own OU correctly"
+    steps:
+      - step: "Setup - create partner for Operating Unit A"
+        action: "create"
+        model: "res.partner"
+        save_as: "ou_a_partner"
+        values:
+          name: "Isolation Operating Unit A Partner"
+
+      - step: "Setup - create Operating Unit A"
+        action: "create"
+        model: "operating.unit"
+        save_as: "ou_a"
+        values:
+          name: "Isolation Operating Unit A"
+          code: "OUINCISOA"
+          company_id: "REF: base.main_company"
+          partner_id: "EVAL: registry['ou_a_partner'].id"
+
+      - step: "Setup - create partner for Operating Unit B"
+        action: "create"
+        model: "res.partner"
+        save_as: "ou_b_partner"
+        values:
+          name: "Isolation Operating Unit B Partner"
+
+      - step: "Setup - create Operating Unit B"
+        action: "create"
+        model: "operating.unit"
+        save_as: "ou_b"
+        values:
+          name: "Isolation Operating Unit B"
+          code: "OUINCISOB"
+          company_id: "REF: base.main_company"
+          partner_id: "EVAL: registry['ou_b_partner'].id"
+
+      # base.group_user is required for basic ORM functionality (see note
+      # in the previous scenario). Because ssi_school_incident's own
+      # company-wide ir.rule (scoped to base.group_user) is combined with
+      # the Operating Unit rule via OR (standard Odoo ir.rule semantics for
+      # group-scoped rules), a same-company internal user is not expected
+      # to be blocked from seeing another OU's records purely by the new
+      # OU rule -- that pre-existing company-wide rule already grants
+      # same-company visibility regardless of OU. This scenario therefore
+      # verifies what the OU glue module is actually responsible for: each
+      # user's own operating_unit_id defaults correctly and independently
+      # of the other user/OU, and the new ir.rule record itself is wired
+      # with the expected domain and group.
+      - step: "Setup - create user restricted to Operating Unit A"
+        action: "create"
+        model: "res.users"
+        save_as: "user_ou_a"
+        values:
+          name: "Isolation Incident User OU-A"
+          login: "test_incident_isolation_ou_a@ssi-school.test"
+          company_id: "REF: base.main_company"
+          groups_id:
+            - - 6
+              - 0
+              - - "REF: base.group_user"
+                - "REF: ssi_school_incident.school_incident_user_group"
+                - "REF:
+                  ssi_school_incident_operating_unit.school_incident_operating_unit_group"
+          assigned_operating_unit_ids:
+            - - 6
+              - 0
+              - - "EVAL: registry['ou_a'].id"
+          default_operating_unit_id: "EVAL: registry['ou_a'].id"
+
+      - step: "Setup - create user restricted to Operating Unit B"
+        action: "create"
+        model: "res.users"
+        save_as: "user_ou_b"
+        values:
+          name: "Isolation Incident User OU-B"
+          login: "test_incident_isolation_ou_b@ssi-school.test"
+          company_id: "REF: base.main_company"
+          groups_id:
+            - - 6
+              - 0
+              - - "REF: base.group_user"
+                - "REF: ssi_school_incident.school_incident_user_group"
+                - "REF:
+                  ssi_school_incident_operating_unit.school_incident_operating_unit_group"
+          assigned_operating_unit_ids:
+            - - 6
+              - 0
+              - - "EVAL: registry['ou_b'].id"
+          default_operating_unit_id: "EVAL: registry['ou_b'].id"
+
+      - step: "Setup - create incident type"
+        action: "create"
+        model: "school_incident_type"
+        save_as: "incident_type"
+        values:
+          name: "Incident Type OU Isolation Test"
+          code: "INCTYPE-OU-ISO"
+          default_handling_level: "1"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type OU Isolation Test"
+          code: "GTOUISO"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School OU Isolation Test"
+          code: "SCHOUISO"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create student contact for Operating Unit A case"
+        action: "create"
+        model: "res.partner"
+        save_as: "student_a_contact"
+        values:
+          name: "Student OU Isolation A Contact"
+
+      - step: "Setup - create student for Operating Unit A case"
+        action: "create"
+        model: "school_student"
+        save_as: "student_a"
+        values:
+          name: "Student OU Isolation A"
+          code: "STUOUISOA"
+          contact_id: "EVAL: registry['student_a_contact'].id"
+          school_id: "EVAL: registry['school'].id"
+
+      - step: "Setup - create student contact for Operating Unit B case"
+        action: "create"
+        model: "res.partner"
+        save_as: "student_b_contact"
+        values:
+          name: "Student OU Isolation B Contact"
+
+      - step: "Setup - create student for Operating Unit B case"
+        action: "create"
+        model: "school_student"
+        save_as: "student_b"
+        values:
+          name: "Student OU Isolation B"
+          code: "STUOUISOB"
+          contact_id: "EVAL: registry['student_b_contact'].id"
+          school_id: "EVAL: registry['school'].id"
+
+      - step: "Create incident as Operating Unit A user"
+        action: "search"
+        model: "school_incident"
+        domain:
+          - - "id"
+            - "="
+            - >-
+              EVAL: env['school_incident'].with_user(registry['user_ou_a']).create({
+              'date_incident': date(2026, 7, 1), 'student_id': registry['student_a'].id,
+              'incident_type_id': registry['incident_type'].id, 'description': 'Case
+              created by the Operating Unit A user.' }).id
+          - ["operating_unit_id", "=", "EVAL: registry['ou_a'].id"]
+        save_as: "incident_a"
+        expect_count: 1
+
+      - step: "Create incident as Operating Unit B user"
+        action: "search"
+        model: "school_incident"
+        domain:
+          - - "id"
+            - "="
+            - >-
+              EVAL: env['school_incident'].with_user(registry['user_ou_b']).create({
+              'date_incident': date(2026, 7, 1), 'student_id': registry['student_b'].id,
+              'incident_type_id': registry['incident_type'].id, 'description': 'Case
+              created by the Operating Unit B user.' }).id
+          - ["operating_unit_id", "=", "EVAL: registry['ou_b'].id"]
+        save_as: "incident_b"
+        expect_count: 1
+
+      - step:
+          "Operating Unit B user still sees their own incident (baseline sanity check)"
+        action: "search"
+        model: "school_incident"
+        domain:
+          - - "id"
+            - "in"
+            - "EVAL:
+              env['school_incident'].with_user(registry['user_ou_b']).search([('id',
+              '=', registry['incident_b'].id)]).ids"
+        save_as: "ou_b_incident_seen_by_ou_b"
+        expect_count: 1
+
+      - step: "Assert the Operating Unit ir.rule for school_incident is wired correctly"
+        action: "search"
+        model: "ir.rule"
+        save_as: "ou_rule_check"
+        domain:
+          - ["id", "=", "REF: ssi_school_incident_operating_unit.school_incident_ou"]
+          - [
+              "domain_force",
+              "=",
+              "[('operating_unit_id','in',[g.id for g in user.operating_unit_ids])]",
+            ]
+          - [
+              "groups",
+              "in",
+              "REF:
+              ssi_school_incident_operating_unit.school_incident_operating_unit_group",
+            ]
+        expect_count: 1
+
+  - name:
+      "School Incident Operating Unit - Weekly review defaults from user's operating
+      unit"
+    steps:
+      - step: "Setup - create partner for Operating Unit A"
+        action: "create"
+        model: "res.partner"
+        save_as: "ou_a_partner"
+        values:
+          name: "Weekly Review Operating Unit A Partner"
+
+      - step: "Setup - create Operating Unit A"
+        action: "create"
+        model: "operating.unit"
+        save_as: "ou_a"
+        values:
+          name: "Weekly Review Operating Unit A"
+          code: "OUINCWR"
+          company_id: "REF: base.main_company"
+          partner_id: "EVAL: registry['ou_a_partner'].id"
+
+      - step: "Setup - create officer user restricted to Operating Unit A"
+        action: "create"
+        model: "res.users"
+        save_as: "user_ou_a"
+        values:
+          name: "Weekly Review Officer OU-A"
+          login: "test_weekly_review_ou_a@ssi-school.test"
+          company_id: "REF: base.main_company"
+          groups_id:
+            - - 6
+              - 0
+              - - "REF: base.group_user"
+                - "REF: ssi_school_incident.school_incident_officer_group"
+                - "REF:
+                  ssi_school_incident_operating_unit.school_incident_operating_unit_group"
+          assigned_operating_unit_ids:
+            - - 6
+              - 0
+              - - "EVAL: registry['ou_a'].id"
+          default_operating_unit_id: "EVAL: registry['ou_a'].id"
+
+      - step:
+          "Create weekly review as Operating Unit A user (operating_unit_id must default
+          from that user)"
+        action: "search"
+        model: "school_incident_weekly_review"
+        domain:
+          - - "id"
+            - "="
+            - >-
+              EVAL:
+              env['school_incident_weekly_review'].with_user(registry['user_ou_a']).create({
+              'date_start': date(2026, 6, 25), 'date_end': date(2026, 7, 1) }).id
+          - ["operating_unit_id", "=", "EVAL: registry['ou_a'].id"]
+        save_as: "review"
+        expect_count: 1
+
+      - step: "Assert weekly review created in draft"
+        action: "assert"
+        target: "review"
+        asserts:
+          state:
+            type: "value"
+            expected: "draft"

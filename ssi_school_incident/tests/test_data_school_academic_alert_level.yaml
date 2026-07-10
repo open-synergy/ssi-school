@@ -1,0 +1,76 @@
+scenarios:
+  - name: "Create Academic Alert Level"
+    steps:
+      - step: "Create level"
+        action: "create"
+        model: "school_academic_alert_level"
+        save_as: "level"
+        values:
+          name: "Test Yellow Level"
+          code: "TEST-ALERT-YELLOW"
+          color: "yellow"
+          sequence: 10
+          python_code: "result = trigger_count >= 2"
+          action_guideline: "Homeroom Teacher informs the parent informally."
+          sla_text: "Within 3 school days."
+      - step: "Assert level created"
+        action: "assert"
+        target: "level"
+        asserts:
+          id:
+            type: "value"
+            operator: "is_truthy"
+          color:
+            type: "value"
+            expected: "yellow"
+          sequence:
+            type: "value"
+            expected: 10
+
+  - name: "Edit Academic Alert Level SLA Text"
+    steps:
+      - step: "Create level"
+        action: "create"
+        model: "school_academic_alert_level"
+        save_as: "level"
+        values:
+          name: "Test Orange Level"
+          code: "TEST-ALERT-ORANGE"
+          color: "orange"
+          sequence: 20
+          python_code: "result = trigger_count >= 3"
+      - step: "Write new SLA text"
+        action: "write"
+        target: "level"
+        values:
+          sla_text: "Updated SLA: within 5 school days."
+      - step: "Assert SLA text updated"
+        action: "assert"
+        target: "level"
+        asserts:
+          sla_text:
+            type: "value"
+            expected: "Updated SLA: within 5 school days."
+
+  - name: "Delete Academic Alert Level"
+    steps:
+      - step: "Create level"
+        action: "create"
+        model: "school_academic_alert_level"
+        save_as: "level"
+        values:
+          name: "Test Red Level To Delete"
+          code: "TEST-ALERT-RED-DEL"
+          color: "red"
+          sequence: 30
+          python_code: "result = trigger_count >= 4"
+      - step: "Delete level"
+        action: "call"
+        target: "level"
+        method: "unlink"
+      - step: "Verify deleted"
+        action: "search"
+        model: "school_academic_alert_level"
+        domain: [["code", "=", "TEST-ALERT-RED-DEL"]]
+        save_as: "result"
+        expect_count: 0

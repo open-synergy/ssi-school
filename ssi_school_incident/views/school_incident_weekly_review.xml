@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 OpenSynergy Indonesia
+     Copyright 2026 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+<record id="school_incident_weekly_review_view_search" model="ir.ui.view">
+    <field name="name">school_incident_weekly_review - search</field>
+    <field name="model">school_incident_weekly_review</field>
+    <field
+            name="inherit_id"
+            ref="ssi_transaction_mixin.mixin_transaction_view_search"
+        />
+    <field name="mode">primary</field>
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//search" position="inside">
+                <field name="school_id" />
+                <field name="date_start" />
+                <field name="date_end" />
+                <group expand="0" string="Group By">
+                    <filter
+                            name="group_by_school_id"
+                            string="School"
+                            context="{'group_by': 'school_id'}"
+                        />
+                </group>
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_incident_weekly_review_view_tree" model="ir.ui.view">
+    <field name="name">school_incident_weekly_review - tree</field>
+    <field name="model">school_incident_weekly_review</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="ssi_transaction_mixin.mixin_transaction_view_tree" />
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name="school_id" />
+                <field name="date_start" />
+                <field name="date_end" />
+                <field name="count_total" />
+                <field name="count_overdue" />
+                <field name="count_unresolved_over_7d" />
+                <field name="count_escalated" />
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_incident_weekly_review_view_form" model="ir.ui.view">
+    <field name="name">school_incident_weekly_review - form</field>
+    <field name="model">school_incident_weekly_review</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="ssi_transaction_mixin.mixin_transaction_view_form" />
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//header/field[@name='state']" position="before">
+                <field name="collect_ok" invisible="1" />
+                <button
+                        name="action_collect_incidents"
+                        type="object"
+                        string="Collect Incidents"
+                        attrs="{'invisible': [('collect_ok', '=', False)]}"
+                        groups="ssi_school_incident.school_incident_officer_group"
+                    />
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button
+                        name="action_view_total_incidents"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-list"
+                    >
+                    <field name="count_total" widget="statinfo" string="Total" />
+                </button>
+                <button
+                        name="action_view_overdue_incidents"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-exclamation-triangle"
+                    >
+                    <field name="count_overdue" widget="statinfo" string="Overdue" />
+                </button>
+                <button
+                        name="action_view_unresolved_over_7d_incidents"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-clock-o"
+                    >
+                    <field
+                            name="count_unresolved_over_7d"
+                            widget="statinfo"
+                            string="Not Resolved &gt; 7d"
+                        />
+                </button>
+                <button
+                        name="action_view_escalated_incidents"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-arrow-up"
+                    >
+                    <field
+                            name="count_escalated"
+                            widget="statinfo"
+                            string="Escalated"
+                        />
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="school_id" />
+            </xpath>
+            <xpath expr="//group[@name='header_right']" position="inside">
+                <field name="date_start" />
+                <field name="date_end" />
+            </xpath>
+            <xpath expr="//page[1]" position="before">
+                <page name="checklist" string="Weekly Review Checklist">
+                    <group name="checklist_group" string="Bab 8 / Lampiran 3 Checklist">
+                        <field name="chk_master_log_updated" />
+                        <field name="chk_unresolved_over_7d_flagged" />
+                        <field name="chk_sla_breach_identified" />
+                        <field
+                                name="chk_escalation_criteria_audited"
+                                string="Agenda 5 - Escalation Criteria Audited"
+                            />
+                        <field
+                                name="chk_health_summary_available"
+                                string="Agenda 6 - Health Case Summary Available"
+                            />
+                    </group>
+                </page>
+            </xpath>
+            <xpath expr="//page[@name='checklist']" position="after">
+                <page name="incidents" string="Collected Incidents">
+                    <field name="incident_ids" readonly="1">
+                        <tree>
+                            <field name="date_incident" />
+                            <field name="student_id" />
+                            <field name="incident_type_id" />
+                            <field name="handling_level" />
+                            <field name="resolution_status" />
+                            <field name="is_overdue" />
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_incident_weekly_review_action" model="ir.actions.act_window">
+    <field name="name">Weekly Case Reviews</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">school_incident_weekly_review</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<menuitem
+        id="school_incident_weekly_review_menu"
+        name="Weekly Case Reviews"
+        parent="menu_incident_root"
+        action="school_incident_weekly_review_action"
+        groups="school_incident_officer_group"
+        sequence="30"
+    />
+
+</odoo>

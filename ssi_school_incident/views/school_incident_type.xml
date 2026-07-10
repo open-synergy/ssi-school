@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 OpenSynergy Indonesia
+     Copyright 2026 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+<record id="school_incident_type_view_search" model="ir.ui.view">
+    <field name="name">school_incident_type - search</field>
+    <field name="model">school_incident_type</field>
+    <field
+            name="inherit_id"
+            ref="ssi_master_data_mixin.mixin_master_data_view_search"
+        />
+    <field name="mode">primary</field>
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//search" position="inside">
+                <filter
+                        name="filter_is_health"
+                        string="Health-Related"
+                        domain="[('is_health', '=', True)]"
+                    />
+                <group expand="0" string="Group By">
+                    <filter
+                            name="group_by_default_handling_level"
+                            string="Default Handling Level"
+                            context="{'group_by': 'default_handling_level'}"
+                        />
+                </group>
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_incident_type_view_tree" model="ir.ui.view">
+    <field name="name">school_incident_type - tree</field>
+    <field name="model">school_incident_type</field>
+    <field name="inherit_id" ref="ssi_master_data_mixin.mixin_master_data_view_tree" />
+    <field name="mode">primary</field>
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='code']" position="after">
+                <field name="default_handling_level" />
+                <field name="first_contact_sla_hour" />
+                <field name="is_health" />
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_incident_type_view_form" model="ir.ui.view">
+    <field name="name">school_incident_type - form</field>
+    <field name="model">school_incident_type</field>
+    <field name="inherit_id" ref="ssi_master_data_mixin.mixin_master_data_view_form" />
+    <field name="mode">primary</field>
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//notebook/page[@name='note']" position="before">
+                <page name="handling" string="Handling">
+                    <group name="handling_group_1" string="Handling Configuration">
+                        <field name="default_handling_level" />
+                        <field name="first_contact_sla_hour" />
+                        <field name="is_health" />
+                    </group>
+                </page>
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_incident_type_action" model="ir.actions.act_window">
+    <field name="name">Incident Types</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">school_incident_type</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<menuitem
+        id="school_incident_type_menu"
+        name="Incident Types"
+        parent="menu_incident_configuration"
+        action="school_incident_type_action"
+        groups="school_incident_manager_group"
+        sequence="10"
+    />
+
+</odoo>
