@@ -3487,6 +3487,11 @@ msgid "Student"
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.ui.menu,name:ssi_school.menu_school_student_activity
+msgid "Student Activities"
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model,name:ssi_school.model_school_student_mutation
 msgid "Student Class Mutation"
 msgstr ""
