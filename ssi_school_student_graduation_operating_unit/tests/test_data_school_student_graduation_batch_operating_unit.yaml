@@ -1,0 +1,110 @@
+scenarios:
+  - name: "Student Graduation Batch propagates Operating Unit to generated Graduation"
+    steps:
+      - step: "Setup - create operating unit partner"
+        action: "create"
+        model: "res.partner"
+        save_as: "ou_partner"
+        values:
+          name: "Graduation Batch Operating Unit Partner"
+
+      - step: "Setup - create operating unit"
+        action: "create"
+        model: "operating.unit"
+        save_as: "ou"
+        values:
+          name: "Graduation Batch Operating Unit"
+          code: "OUSGB1"
+          company_id: "REF: base.main_company"
+          partner_id: "EVAL: registry['ou_partner'].id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Graduation Batch OU Test"
+          code: "GTSGBOU1"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Graduation Batch OU Test"
+          code: "SCHSGBOU1"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact Graduation Batch OU Test"
+
+      - step: "Setup - create student, already enrolled and eligible"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student Graduation Batch OU Test"
+          code: "STUSGBOU1"
+          contact_id: "EVAL: registry['contact'].id"
+          school_id: "EVAL: registry['school'].id"
+          state: "enrol"
+
+      - step: "Create graduation batch with operating unit and student line"
+        action: "create"
+        model: "school_student_graduation_batch"
+        save_as: "batch"
+        values:
+          date: "2025-06-30"
+          operating_unit_id: "EVAL: registry['ou'].id"
+          line_ids:
+            - - 0
+              - 0
+              - student_id: "EVAL: registry['student'].id"
+
+      - step: "Assert operating unit stored on batch via search"
+        action: "search"
+        model: "school_student_graduation_batch"
+        domain:
+          - ["id", "=", "EVAL: registry['batch'].id"]
+          - ["operating_unit_id", "=", "EVAL: registry['ou'].id"]
+        save_as: "check_batch_operating_unit_stored"
+        expect_count: 1
+
+      - step: "Confirm batch"
+        action: "call"
+        target: "batch"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Invalidate batch cache before approve"
+        action: "call"
+        target: "batch"
+        method: "invalidate_cache"
+
+      - step: "Approve batch, triggering done and graduation generation"
+        action: "call"
+        target: "batch"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+      - step: "Assert generated graduation inherited batch operating unit"
+        action: "search"
+        model: "school_student_graduation"
+        domain:
+          - ["student_id", "=", "EVAL: registry['student'].id"]
+          - ["operating_unit_id", "=", "EVAL: registry['ou'].id"]
+        save_as: "check_graduation_operating_unit_propagated"
+        expect_count: 1
