@@ -1,0 +1,648 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* ssi_school_student_leave
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: ssi_school_student_leave
+#: code:addons/ssi_school_student_leave/models/school_student_leave.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Change student leave state into %s\n"
+"Database ID: %s\n"
+"Problem: Another leave for student '%s' is already draft or waiting\n"
+"for approval\n"
+"Solution: Complete, reject, or cancel the other leave before\n"
+"confirming this one\n"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: code:addons/ssi_school_student_leave/models/school_student_leave.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Change student leave state into %s\n"
+"Database ID: %s\n"
+"Problem: Student '%s' is not in enrol state\n"
+"Solution: The student must be enrolled before this leave can be\n"
+"confirmed or completed\n"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: code:addons/ssi_school_student_leave/models/school_student_leave.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Complete student leave\n"
+"Database ID: %s\n"
+"Problem: Student '%s' is no longer in enrol state\n"
+"Solution: Cancel this leave; the student must stay enrolled until\n"
+"the leave is completed\n"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: code:addons/ssi_school_student_leave/models/school_student_leave.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Return student from leave\n"
+"Database ID: %s\n"
+"Problem: Student '%s' is not currently on leave\n"
+"Solution: This action is only valid when the student is in on_leave\n"
+"state\n"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__name
+msgid "# Document"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__academic_term_id
+#: model_terms:ir.ui.view,arch_db:ssi_school_student_leave.school_student_leave_view_search
+msgid "Academic Term"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__message_needaction
+msgid "Action Needed"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__active_approval_ids
+msgid "Active Approvals"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__active_enrollment_id
+msgid "Active Enrollment"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__active_approver_partner_ids
+msgid "Active Partners"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__active_approver_user_ids
+msgid "Active Users"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__activity_ids
+msgid "Activities"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__activity_state
+msgid "Activity State"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__activity_type_icon
+msgid "Activity Type Icon"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:res.groups,name:ssi_school_student_leave.school_student_leave_all_group
+msgid "All"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__allowed_policy_template_ids
+msgid "Allowed Policy Templates"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,help:ssi_school_student_leave.field_school_student_leave__approval_template_id
+msgid "Approval Configuration"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__approval_template_id
+msgid "Approval Template"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__approval_ids
+msgid "Approvals"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,help:ssi_school_student_leave.field_school_student_leave__approve_ok
+msgid ""
+"Approve policy\n"
+"\n"
+"* If active user can see and execute 'Approve' button"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__approved
+msgid "Approved"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__message_attachment_count
+msgid "Attachment Count"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__approve_ok
+msgid "Can Approve"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__cancel_ok
+msgid "Can Cancel"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__confirm_ok
+msgid "Can Confirm"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__done_ok
+msgid "Can Finished"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__manual_number_ok
+msgid "Can Input Manual Document Number"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__reject_ok
+msgid "Can Reject"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__restart_ok
+msgid "Can Restart"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__restart_approval_ok
+msgid "Can Restart Approval"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__cancel_reason_id
+msgid "Cancel Reason"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,help:ssi_school_student_leave.field_school_student_leave__cancel_ok
+msgid ""
+"Cancel policy\n"
+"\n"
+"* If active user can see and execute 'Cancel' button"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__company_id
+#: model:res.groups,name:ssi_school_student_leave.school_student_leave_company_group
+msgid "Company"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__company_partner_id
+msgid "Company Partner"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:res.groups,name:ssi_school_student_leave.school_student_leave_company_child_group
+msgid "Company and All Child Companies"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,help:ssi_school_student_leave.field_school_student_leave__company_id
+msgid ""
+"Company that own the document\n"
+"\n"
+"* Automatically filled with user's company.\n"
+"  Default company can be changed"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,help:ssi_school_student_leave.field_school_student_leave__confirm_ok
+msgid ""
+"Confirm policy\n"
+"\n"
+"* If active user can see and execute 'Confirm' button"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__date
+msgid "Date"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,help:ssi_school_student_leave.field_school_student_leave__done_ok
+msgid ""
+"Done policy\n"
+"\n"
+"* If active user can see and execute 'Done' button"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__expected_return_date
+msgid "Expected Return Date"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,help:ssi_school_student_leave.field_school_student_leave__reason
+msgid "Explanation for why this leave of absence is requested."
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__message_follower_ids
+msgid "Followers"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__message_channel_ids
+msgid "Followers (Channels)"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__message_partner_ids
+msgid "Followers (Partners)"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,help:ssi_school_student_leave.field_school_student_leave__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model_terms:ir.ui.view,arch_db:ssi_school_student_leave.school_student_leave_view_search
+msgid "Group By"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__id
+msgid "ID"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__activity_exception_icon
+msgid "Icon"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,help:ssi_school_student_leave.field_school_student_leave__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,help:ssi_school_student_leave.field_school_student_leave__message_needaction
+#: model:ir.model.fields,help:ssi_school_student_leave.field_school_student_leave__message_unread
+msgid "If checked, new messages require your attention."
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,help:ssi_school_student_leave.field_school_student_leave__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__message_is_follower
+msgid "Is Follower"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model_terms:ir.ui.view,arch_db:ssi_school_student_leave.school_student_leave_view_form
+msgid "Leave"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__message_main_attachment_id
+msgid "Main Attachment"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,help:ssi_school_student_leave.field_school_student_leave__manual_number_ok
+msgid ""
+"Manual number assignment policy\n"
+"\n"
+"* If active user can edit document number"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__message_ids
+msgid "Messages"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__need_validation
+msgid "Need Validation"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__activity_summary
+msgid "Next Activity Summary"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__activity_type_id
+msgid "Next Activity Type"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__next_approval_ids
+msgid "Next Approvals"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__note
+msgid "Note"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__message_needaction_counter
+msgid "Number of Actions"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__message_has_error_counter
+msgid "Number of errors"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,help:ssi_school_student_leave.field_school_student_leave__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,help:ssi_school_student_leave.field_school_student_leave__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,help:ssi_school_student_leave.field_school_student_leave__message_unread_counter
+msgid "Number of unread messages"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__policy_template_id
+msgid "Policy Template"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__reason
+#: model_terms:ir.ui.view,arch_db:ssi_school_student_leave.school_student_leave_view_form
+msgid "Reason"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,help:ssi_school_student_leave.field_school_student_leave__reject_ok
+msgid ""
+"Reject policy\n"
+"\n"
+"* If active user can see and execute 'Reject' button"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__rejected
+msgid "Rejected"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__user_id
+msgid "Responsible"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__activity_user_id
+msgid "Responsible User"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,help:ssi_school_student_leave.field_school_student_leave__restart_approval_ok
+msgid ""
+"Restart approval policy\n"
+"\n"
+"* If active user can see and execute 'Restart Approval' button"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,help:ssi_school_student_leave.field_school_student_leave__restart_ok
+msgid ""
+"Restart policy\n"
+"\n"
+"* If active user can see and execute 'Restart' button"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model_terms:ir.ui.view,arch_db:ssi_school_student_leave.school_student_leave_view_form
+msgid "Return"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__reviewer_id
+msgid "Reviewer"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.module.category,name:ssi_school_student_leave.school_student_leave_data_ownership_module_category
+#: model:ir.module.category,name:ssi_school_student_leave.school_student_leave_workflow_module_category
+msgid "School Student Leave"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__state
+msgid "State"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,help:ssi_school_student_leave.field_school_student_leave__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__student_id
+#: model_terms:ir.ui.view,arch_db:ssi_school_student_leave.school_student_leave_view_search
+msgid "Student"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model,name:ssi_school_student_leave.model_school_student_leave
+msgid "Student Leave"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.actions.act_window,name:ssi_school_student_leave.school_student_leave_action
+#: model:ir.ui.menu,name:ssi_school_student_leave.school_student_leave_menu
+msgid "Student Leaves"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,help:ssi_school_student_leave.field_school_student_leave__date
+msgid "The date the leave of absence document was created."
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,help:ssi_school_student_leave.field_school_student_leave__expected_return_date
+msgid ""
+"The date the student is expected to return from leave and resume enrollment."
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,help:ssi_school_student_leave.field_school_student_leave__academic_term_id
+msgid ""
+"The single academic term during which the student is on leave. The leave is "
+"only valid for this term."
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,help:ssi_school_student_leave.field_school_student_leave__student_id
+msgid "The student who is applying for a leave of absence."
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,help:ssi_school_student_leave.field_school_student_leave__active_enrollment_id
+msgid ""
+"The student's currently active (open) enrollment, shown for reference when "
+"granting the leave."
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,help:ssi_school_student_leave.field_school_student_leave__name
+msgid ""
+"Transaction/document number\n"
+"\n"
+"* Unique indentifer of transaction\n"
+"* Leave '/' to automatically generate number\n"
+"* Change '/' into any number/identifier to manually assign number.\n"
+"  Manual number assignment can be done in 'Draft' state\n"
+"  Only user with 'Can Manualy Assign Number' policy can manually assign number.\n"
+"* Transaction with number other than '/' can not be deleted."
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,help:ssi_school_student_leave.field_school_student_leave__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__message_unread
+msgid "Unread Messages"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:res.groups,name:ssi_school_student_leave.school_student_leave_user_group
+msgid "User"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,help:ssi_school_student_leave.field_school_student_leave__user_id
+msgid ""
+"User that responsible for document\n"
+"\n"
+"* Create user can be different with responsible user\n"
+"* Automatically filled with user that initiate document creation.\n"
+"  Default responsible can be changed."
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,help:ssi_school_student_leave.field_school_student_leave__reviewer_id
+msgid ""
+"User that responsible to review document\n"
+"\n"
+"* Unless it configured to approve reviewer does not equal to approver"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,help:ssi_school_student_leave.field_school_student_leave__active_approver_user_ids
+msgid "Users that can approve/reject document"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:res.groups,name:ssi_school_student_leave.school_student_leave_validator_group
+msgid "Validator"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:res.groups,name:ssi_school_student_leave.school_student_leave_viewer_group
+msgid "Viewer"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,field_description:ssi_school_student_leave.field_school_student_leave__website_message_ids
+msgid "Website Messages"
+msgstr ""
+
+#. module: ssi_school_student_leave
+#: model:ir.model.fields,help:ssi_school_student_leave.field_school_student_leave__website_message_ids
+msgid "Website communication history"
+msgstr ""
