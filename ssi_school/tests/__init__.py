@@ -12,6 +12,7 @@ from . import (  # noqa: F401
     test_school_academic_term,
     test_school_teacher,
     test_school_student,
+    test_school_student_personal_data,
     test_school_student_states,
     test_school_enrollment_payment_template,
     test_school_enrollment_payment_product_configurator,

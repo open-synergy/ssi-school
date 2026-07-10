@@ -90,6 +90,88 @@ class SchoolStudent(models.Model):
         readonly=False,
         help="Email address of the student, synchronized from the contact.",
     )
+
+    # Personal Information
+    gender = fields.Selection(
+        related="contact_id.gender",
+        store=True,
+        readonly=False,
+        help="Gender of the student, synchronized from the contact.",
+    )
+    birthdate_date = fields.Date(
+        related="contact_id.birthdate_date",
+        store=True,
+        readonly=False,
+        help="Date of birth of the student, synchronized from the contact.",
+    )
+    age = fields.Integer(
+        related="contact_id.age",
+        readonly=True,
+        help="Current age of the student, computed live from the contact's date of birth.",
+    )
+    birth_city = fields.Char(
+        related="contact_id.birth_city",
+        store=True,
+        readonly=False,
+        help="City of birth of the student, synchronized from the contact.",
+    )
+    birth_state_id = fields.Many2one(
+        related="contact_id.birth_state_id",
+        store=True,
+        readonly=False,
+        help="State/province of birth of the student, synchronized from the contact.",
+    )
+    birth_country_id = fields.Many2one(
+        related="contact_id.birth_country_id",
+        store=True,
+        readonly=False,
+        help="Country of birth of the student, synchronized from the contact.",
+    )
+    nationality_id = fields.Many2one(
+        related="contact_id.nationality_id",
+        store=True,
+        readonly=False,
+        help="Nationality of the student, synchronized from the contact.",
+    )
+    blood_type = fields.Selection(
+        related="contact_id.blood_type",
+        store=True,
+        readonly=False,
+        help="ABO blood type of the student, synchronized from the contact.",
+    )
+    blood_type_rhesus = fields.Selection(
+        related="contact_id.blood_type_rhesus",
+        store=True,
+        readonly=False,
+        help="Rhesus blood type of the student, synchronized from the contact.",
+    )
+    religion_id = fields.Many2one(
+        related="contact_id.religion_id",
+        store=True,
+        readonly=False,
+        help="Religion of the student, synchronized from the contact.",
+    )
+    ethnicity_id = fields.Many2one(
+        related="contact_id.ethnicity_id",
+        store=True,
+        readonly=False,
+        help="Ethnicity of the student, synchronized from the contact.",
+    )
+    marital = fields.Selection(
+        related="contact_id.marital",
+        store=True,
+        readonly=False,
+        help="Marital status of the student, synchronized from the contact.",
+    )
+
+    # Bank Accounts
+    bank_ids = fields.One2many(
+        string="Bank Accounts",
+        related="contact_id.bank_ids",
+        readonly=False,
+        help="Bank accounts of the student, managed through the linked contact.",
+    )
+
     school_id = fields.Many2one(
         string="School",
         comodel_name="school",

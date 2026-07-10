@@ -1,0 +1,228 @@
+scenarios:
+  - name: "Write-Through Scalar Personal Data From Student To Contact"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Personal Data WT"
+          code: "GTPDWT"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Personal Data WT"
+          code: "SCHPDWT"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+      - step: "Create religion"
+        action: "create"
+        model: "res_partner_religion"
+        save_as: "religion"
+        values:
+          name: "Religion Personal Data WT"
+          code: "RELPDWT"
+      - step: "Create contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Personal Data WT Contact"
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Personal Data WT Student"
+          code: "STUPDWT"
+          contact_id: "EVAL: registry['contact'].id"
+          school_id: "EVAL: registry['school'].id"
+      - step: "Write personal data on student"
+        action: "write"
+        target: "student"
+        values:
+          gender: "male"
+          religion_id: "EVAL: registry['religion'].id"
+          birthdate_date: 2010-05-01
+          blood_type: "A"
+      - step: "Assert scalar values written through to contact"
+        action: "assert"
+        target: "contact"
+        asserts:
+          gender:
+            type: "value"
+            expected: "male"
+          birthdate_date:
+            type: "value"
+            expected: 2010-05-01
+          blood_type:
+            type: "value"
+            expected: "A"
+      - step: "Assert religion_id written through to contact"
+        action: "search"
+        model: "res.partner"
+        domain:
+          - ["id", "=", "EVAL: registry['contact'].id"]
+          - ["religion_id", "=", "EVAL: registry['religion'].id"]
+        save_as: "check_religion"
+        expect_count: 1
+
+  - name: "Related Read Back From Contact To Student"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Personal Data RB"
+          code: "GTPDRB"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Personal Data RB"
+          code: "SCHPDRB"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+      - step: "Create contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Personal Data RB Contact"
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Personal Data RB Student"
+          code: "STUPDRB"
+          contact_id: "EVAL: registry['contact'].id"
+          school_id: "EVAL: registry['school'].id"
+      - step: "Write gender directly on contact"
+        action: "write"
+        target: "contact"
+        values:
+          gender: "female"
+      - step: "Assert gender read back on student"
+        action: "assert"
+        target: "student"
+        asserts:
+          gender:
+            type: "value"
+            expected: "female"
+
+  - name: "Bank Line Created Via Student Reflects On Contact"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Personal Data Bank"
+          code: "GTPDBK"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Personal Data Bank"
+          code: "SCHPDBK"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+      - step: "Create contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Personal Data Bank Contact"
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Personal Data Bank Student"
+          code: "STUPDBK"
+          contact_id: "EVAL: registry['contact'].id"
+          school_id: "EVAL: registry['school'].id"
+      - step: "Create bank"
+        action: "create"
+        model: "res.bank"
+        save_as: "bank"
+        values:
+          name: "Personal Data Bank Test"
+      - step: "Add bank line via student"
+        action: "write"
+        target: "student"
+        values:
+          bank_ids:
+            - - 0
+              - 0
+              - acc_number: "1234567890"
+                bank_id: "EVAL: registry['bank'].id"
+      - step: "Assert bank line added to contact"
+        action: "assert"
+        target: "contact"
+        asserts:
+          bank_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 1
+      - step: "Assert bank line owned by contact"
+        action: "search"
+        model: "res.partner.bank"
+        domain:
+          - ["acc_number", "=", "1234567890"]
+          - ["partner_id", "=", "EVAL: registry['contact'].id"]
+        save_as: "check_bank_line"
+        expect_count: 1
+
+  - name: "Age Non-Stored Reflects Contact Live Value"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Personal Data Age"
+          code: "GTPDAG"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Personal Data Age"
+          code: "SCHPDAG"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+      - step: "Create contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Personal Data Age Contact"
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Personal Data Age Student"
+          code: "STUPDAG"
+          contact_id: "EVAL: registry['contact'].id"
+          school_id: "EVAL: registry['school'].id"
+      - step: "Write birthdate_date on student"
+        action: "write"
+        target: "student"
+        values:
+          birthdate_date: 2000-01-01
+      - step: "Assert student age matches contact age"
+        action: "search"
+        model: "school_student"
+        domain:
+          - ["id", "=", "EVAL: registry['student'].id"]
+          - ["age", "=", "EVAL: registry['contact'].age"]
+        save_as: "check_age"
+        expect_count: 1

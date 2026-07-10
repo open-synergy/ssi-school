@@ -22,6 +22,7 @@
         "ssi_m2o_configurator_mixin",
         "base_address_city",
         "ssi_financial_accounting",
+        "ssi_partner",
         "base_duration",
         "queue_job",
     ],
