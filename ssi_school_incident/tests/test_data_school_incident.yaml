@@ -103,6 +103,11 @@ scenarios:
             operator: "contains"
             expected: "INC"
 
+      - step: "Invalidate incident cache before done"
+        action: "call"
+        target: "incident"
+        method: "invalidate_cache"
+
       - step: "Done incident"
         action: "call"
         target: "incident"
@@ -526,6 +531,7 @@ scenarios:
           date_incident: 2026-07-04
           student_id: "EVAL: registry['student'].id"
           incident_type_id: "EVAL: registry['incident_type'].id"
+          handling_level: "1"
           description: "Case used to verify the guarded escalation happy path."
 
       - step: "Confirm incident"

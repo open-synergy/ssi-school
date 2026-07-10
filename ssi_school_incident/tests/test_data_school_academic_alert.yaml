@@ -93,6 +93,11 @@ scenarios:
             operator: "contains"
             expected: "ALERT"
 
+      - step: "Invalidate alert cache before done"
+        action: "call"
+        target: "alert"
+        method: "invalidate_cache"
+
       - step: "Done alert"
         action: "call"
         target: "alert"
