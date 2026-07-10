@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 OpenSynergy Indonesia
+     Copyright 2026 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+<record id="school_student_graduation_view_search" model="ir.ui.view">
+    <field name="name">school_student_graduation - search</field>
+    <field name="model">school_student_graduation</field>
+    <field
+            name="inherit_id"
+            ref="ssi_transaction_mixin.mixin_transaction_view_search"
+        />
+    <field name="mode">primary</field>
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//search" position="inside">
+                <field name="student_id" />
+                <field name="active_enrollment_id" />
+                <field name="academic_year_id" />
+                <field name="academic_term_id" />
+                <group expand="0" string="Group By">
+                    <filter
+                            name="group_by_academic_year_id"
+                            string="Academic Year"
+                            context="{'group_by': 'academic_year_id'}"
+                        />
+                    <filter
+                            name="group_by_academic_term_id"
+                            string="Academic Term"
+                            context="{'group_by': 'academic_term_id'}"
+                        />
+                    <filter
+                            name="group_by_student_id"
+                            string="Student"
+                            context="{'group_by': 'student_id'}"
+                        />
+                </group>
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_student_graduation_view_tree" model="ir.ui.view">
+    <field name="name">school_student_graduation - tree</field>
+    <field name="model">school_student_graduation</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="ssi_transaction_mixin.mixin_transaction_view_tree" />
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name="date" />
+                <field name="student_id" />
+                <field name="graduation_date" />
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_student_graduation_view_form" model="ir.ui.view">
+    <field name="name">school_student_graduation - form</field>
+    <field name="model">school_student_graduation</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="ssi_transaction_mixin.mixin_transaction_view_form" />
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="student_id" />
+                <field name="active_enrollment_id" />
+                <field name="academic_year_id" />
+                <field name="academic_term_id" />
+            </xpath>
+            <xpath expr="//group[@name='header_right']" position="inside">
+                <field name="date" />
+                <field name="graduation_date" />
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_student_graduation_action" model="ir.actions.act_window">
+    <field name="name">Student Graduations</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">school_student_graduation</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<menuitem
+        id="school_student_graduation_menu"
+        name="Student Graduations"
+        parent="ssi_school.menu_school_student_activity"
+        action="school_student_graduation_action"
+        groups="school_student_graduation_viewer_group"
+        sequence="50"
+    />
+
+</odoo>

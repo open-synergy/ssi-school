@@ -129,10 +129,10 @@
 <menuitem
         id="school_student_mutation_menu"
         name="Student Class Mutations"
-        parent="ssi_school.menu_school_root"
+        parent="ssi_school.menu_school_student_activity"
         action="school_student_mutation_action"
         groups="school_student_mutation_viewer_group"
-        sequence="146"
+        sequence="20"
     />
 
 </odoo>

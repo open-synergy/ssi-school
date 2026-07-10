@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 OpenSynergy Indonesia
+     Copyright 2026 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+<record id="school_student_graduation_batch_view_search" model="ir.ui.view">
+    <field name="name">school_student_graduation_batch - search</field>
+    <field name="model">school_student_graduation_batch</field>
+    <field
+            name="inherit_id"
+            ref="ssi_transaction_mixin.mixin_transaction_view_search"
+        />
+    <field name="mode">primary</field>
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//search" position="inside">
+                <field name="academic_year_id" />
+                <field name="academic_term_id" />
+                <field name="grade_id" />
+                <group expand="0" string="Group By">
+                    <filter
+                            name="group_by_academic_year_id"
+                            string="Academic Year"
+                            context="{'group_by': 'academic_year_id'}"
+                        />
+                    <filter
+                            name="group_by_academic_term_id"
+                            string="Academic Term"
+                            context="{'group_by': 'academic_term_id'}"
+                        />
+                    <filter
+                            name="group_by_grade_id"
+                            string="Grade"
+                            context="{'group_by': 'grade_id'}"
+                        />
+                </group>
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_student_graduation_batch_view_tree" model="ir.ui.view">
+    <field name="name">school_student_graduation_batch - tree</field>
+    <field name="model">school_student_graduation_batch</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="ssi_transaction_mixin.mixin_transaction_view_tree" />
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name="date" />
+                <field name="academic_year_id" />
+                <field name="academic_term_id" />
+                <field name="grade_id" />
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_student_graduation_batch_view_form" model="ir.ui.view">
+    <field name="name">school_student_graduation_batch - form</field>
+    <field name="model">school_student_graduation_batch</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="ssi_transaction_mixin.mixin_transaction_view_form" />
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//group[@name='header_right']" position="inside">
+                <field name="date" />
+                <field name="academic_year_id" />
+                <field name="academic_term_id" />
+                <field name="grade_id" />
+            </xpath>
+            <xpath expr="//page[1]" position="before">
+                <page name="line" string="Students">
+                    <div class="oe_right">
+                        <button
+                                name="action_populate_lines"
+                                type="object"
+                                string="Populate Eligible Students"
+                                class="btn-secondary"
+                                attrs="{'invisible': [('state', '!=', 'draft')]}"
+                            />
+                    </div>
+                    <field name="line_ids">
+                        <tree editable="bottom">
+                            <field name="student_id" />
+                            <field name="graduation_id" />
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="school_student_graduation_batch_action" model="ir.actions.act_window">
+    <field name="name">Graduation Batches</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">school_student_graduation_batch</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<menuitem
+        id="school_student_graduation_batch_menu"
+        name="Graduation Batches"
+        parent="ssi_school.menu_school_student_activity"
+        action="school_student_graduation_batch_action"
+        groups="school_student_graduation_batch_viewer_group"
+        sequence="55"
+    />
+
+</odoo>

@@ -309,10 +309,10 @@
 <menuitem
         id="school_enrollment_menu"
         name="Enrollments"
-        parent="ssi_school.menu_school_root"
+        parent="ssi_school.menu_school_student_activity"
         action="school_enrollment_action"
         groups="school_enrollment_viewer_group"
-        sequence="150"
+        sequence="10"
     />
 
 </odoo>
