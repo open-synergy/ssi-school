@@ -4,7 +4,7 @@
 
 
 from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 
 
 class SchoolStudent(models.Model):
@@ -265,6 +265,30 @@ Solution: Follow the allowed student state transition sequence
                     )
                     raise ValidationError(error_message)
         return super().write(values)
+
+    @api.constrains("code", "school_id")
+    def _check_duplicate_code(self):
+        for record in self:
+            if record.code == "/":
+                continue
+            criteria = [
+                ("code", "=", record.code),
+                ("id", "!=", record.id),
+                ("code", "!=", "/"),
+                ("school_id", "=", record.school_id.id),
+            ]
+            count_duplicate = self.search_count(criteria)
+            if count_duplicate > 0:
+                error_message = _(
+                    """
+Context: Create or update student
+Database ID: %s
+Problem: Duplicate code '%s' in school '%s'
+Solution: Change the student code to be unique within the school
+"""
+                    % (record.id, record.code, record.school_id.name)
+                )
+                raise UserError(error_message)
 
     @api.depends("enrollment_ids", "enrollment_ids.state")
     def _compute_active_enrollment_id(self):

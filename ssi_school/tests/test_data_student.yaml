@@ -490,6 +490,140 @@ scenarios:
             type: "value"
             expected: "draft"
 
+  - name: "Duplicate Code Allowed Across Different Schools"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Dup Code"
+          code: "GTDUPC"
+          sequence: 10
+      - step: "Create school A"
+        action: "create"
+        model: "school"
+        save_as: "school_a"
+        values:
+          name: "School Dup Code A"
+          code: "SCHDUPA"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+      - step: "Create school B"
+        action: "create"
+        model: "school"
+        save_as: "school_b"
+        values:
+          name: "School Dup Code B"
+          code: "SCHDUPB"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+      - step: "Create contact for school A student"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_a"
+        values:
+          name: "Student Dup Code Contact A"
+      - step: "Create contact for school B student"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_b"
+        values:
+          name: "Student Dup Code Contact B"
+      - step: "Create student in school A with code DUP01"
+        action: "create"
+        model: "school_student"
+        save_as: "student_a"
+        values:
+          name: "Student Dup Code A"
+          code: "DUP01"
+          contact_id: "EVAL: registry['contact_a'].id"
+          school_id: "EVAL: registry['school_a'].id"
+      - step: "Create student in school B with the same code DUP01"
+        action: "create"
+        model: "school_student"
+        save_as: "student_b"
+        values:
+          name: "Student Dup Code B"
+          code: "DUP01"
+          contact_id: "EVAL: registry['contact_b'].id"
+          school_id: "EVAL: registry['school_b'].id"
+      - step: "Assert both students created"
+        action: "assert"
+        target: "student_a"
+        asserts:
+          id:
+            type: "value"
+            operator: "is_truthy"
+      - step: "Assert second student created"
+        action: "assert"
+        target: "student_b"
+        asserts:
+          id:
+            type: "value"
+            operator: "is_truthy"
+
+  - name: "Duplicate Slash Code Allowed In Same School"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Slash Code"
+          code: "GTSLC"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Slash Code"
+          code: "SCHSLC"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+      - step: "Create contact for first student"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact1"
+        values:
+          name: "Student Slash Code Contact 1"
+      - step: "Create contact for second student"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact2"
+        values:
+          name: "Student Slash Code Contact 2"
+      - step: "Create first student with code /"
+        action: "create"
+        model: "school_student"
+        save_as: "student1"
+        values:
+          name: "Student Slash Code 1"
+          code: "/"
+          contact_id: "EVAL: registry['contact1'].id"
+          school_id: "EVAL: registry['school'].id"
+      - step: "Create second student with code / in the same school"
+        action: "create"
+        model: "school_student"
+        save_as: "student2"
+        values:
+          name: "Student Slash Code 2"
+          code: "/"
+          contact_id: "EVAL: registry['contact2'].id"
+          school_id: "EVAL: registry['school'].id"
+      - step: "Assert first student created"
+        action: "assert"
+        target: "student1"
+        asserts:
+          id:
+            type: "value"
+            operator: "is_truthy"
+      - step: "Assert second student created"
+        action: "assert"
+        target: "student2"
+        asserts:
+          id:
+            type: "value"
+            operator: "is_truthy"
+
   - name: "Action Student State Transitions"
     steps:
       - step: "Create grade type"
