@@ -4,7 +4,7 @@
 
 {
     "name": "School - Operating Unit",
-    "version": "14.0.1.3.0",
+    "version": "14.0.1.4.0",
     "website": "https://simetri-sinergi.id",
     "author": (
         "OpenSynergy Indonesia, "
@@ -26,6 +26,9 @@
         # Security - transactional (school_homeroom)
         "security/res_groups/school_homeroom.xml",
         "security/ir_rule/school_homeroom.xml",
+        # Security - transactional (school_student_mutation)
+        "security/res_groups/school_student_mutation.xml",
+        "security/ir_rule/school_student_mutation.xml",
         # Security - master data (global OU rules)
         "security/ir_rule/school.xml",
         "security/ir_rule/school_grade_type.xml",
@@ -38,6 +41,7 @@
         # Views
         "views/school_enrollment.xml",
         "views/school_homeroom.xml",
+        "views/school_student_mutation.xml",
         "views/school.xml",
         "views/school_grade_type.xml",
         "views/school_grade.xml",
