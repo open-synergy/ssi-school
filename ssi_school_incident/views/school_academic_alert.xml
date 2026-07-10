@@ -70,7 +70,7 @@
                         type="object"
                         string="Evaluate"
                         attrs="{'invisible': [('evaluate_ok', '=', False)]}"
-                        groups="school_incident_user_group"
+                        groups="ssi_school_incident.school_incident_user_group"
                     />
                 <button
                         name="action_create_incident"
@@ -83,7 +83,7 @@
                                 ('color', 'not in', ['orange', 'red']),
                             ]
                         }"
-                        groups="school_incident_officer_group"
+                        groups="ssi_school_incident.school_incident_officer_group"
                     />
             </xpath>
             <xpath expr="//field[@name='user_id']" position="after">

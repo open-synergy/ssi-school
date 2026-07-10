@@ -86,7 +86,7 @@
                         type="action"
                         string="Escalate"
                         attrs="{'invisible': [('escalate_ok', '=', False)]}"
-                        groups="school_incident_officer_group"
+                        groups="ssi_school_incident.school_incident_officer_group"
                     />
             </xpath>
             <xpath expr="//field[@name='user_id']" position="after">

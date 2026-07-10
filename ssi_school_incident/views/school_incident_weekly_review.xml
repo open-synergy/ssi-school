@@ -62,7 +62,7 @@
                         type="object"
                         string="Collect Incidents"
                         attrs="{'invisible': [('collect_ok', '=', False)]}"
-                        groups="school_incident_officer_group"
+                        groups="ssi_school_incident.school_incident_officer_group"
                     />
             </xpath>
             <xpath expr="//div[@name='button_box']" position="inside">
