@@ -417,6 +417,11 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_student__blood_type
+msgid "ABO blood type of the student, synchronized from the contact."
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__academic_term_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__academic_term_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__academic_term_id
@@ -601,6 +606,11 @@ msgid "Admission"
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__age
+msgid "Age"
+msgstr ""
+
+#. module: ssi_school
 #: model:res.groups,name:ssi_school.school_enrollment_all_group
 #: model:res.groups,name:ssi_school.school_homeroom_all_group
 #: model:res.groups,name:ssi_school.school_student_mutation_all_group
@@ -764,6 +774,17 @@ msgid "Available pricelists based on the selected currency."
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__bank_ids
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_student_view_form
+msgid "Bank Accounts"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_student__bank_ids
+msgid "Bank accounts of the student, managed through the linked contact."
+msgstr ""
+
+#. module: ssi_school
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_form
 msgid "Billing"
 msgstr ""
@@ -774,6 +795,41 @@ msgid ""
 "Billing status: Draft = enrollment still in draft/confirm, Uninvoiced = "
 "enrollment open/done but no invoice yet, Invoiced = invoice created, "
 "Manually Controlled = managed manually, Cancelled = enrollment cancelled."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__birth_city
+msgid "Birth City"
+msgstr ""
+
+#. module: ssi_school
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_student_view_form
+msgid "Birth Place"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__birth_country_id
+msgid "Birth country"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__birth_state_id
+msgid "Birth state"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__birthdate_date
+msgid "Birthdate"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__blood_type
+msgid "Blood Type (ABO)"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__blood_type_rhesus
+msgid "Blood Type (Rh)"
 msgstr ""
 
 #. module: ssi_school
@@ -919,6 +975,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_student__city_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_teacher__city_id
 msgid "City of Address"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_student__birth_city
+msgid "City of birth of the student, synchronized from the contact."
 msgstr ""
 
 #. module: ssi_school
@@ -1077,6 +1138,11 @@ msgid "Country"
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_student__birth_country_id
+msgid "Country of birth of the student, synchronized from the contact."
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_student__country_id
 msgid "Country of the student's address, synchronized from the contact."
 msgstr ""
@@ -1158,6 +1224,12 @@ msgid "Current Grade Type"
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_student__age
+msgid ""
+"Current age of the student, computed live from the contact's date of birth."
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_student__state
 msgid ""
 "Current status of the student, from waiting for enrollment to actively "
@@ -1181,6 +1253,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__date_start
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__date_start
 msgid "Date Start"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_student__birthdate_date
+msgid "Date of birth of the student, synchronized from the contact."
 msgstr ""
 
 #. module: ssi_school
@@ -1509,6 +1586,16 @@ msgid "Estimated due date for payment of this billing period."
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__ethnicity_id
+msgid "Ethnicity"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_student__ethnicity_id
+msgid "Ethnicity of the student, synchronized from the contact."
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_academic_term__state
 msgid ""
 "Execution status of the semester/term: Unstarted, On Progress, or Done."
@@ -1621,6 +1708,16 @@ msgid "Font awesome icon e.g. fa-tasks"
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__gender
+msgid "Gender"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_student__gender
+msgid "Gender of the student, synchronized from the contact."
+msgstr ""
+
+#. module: ssi_school
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_homeroom_view_form
 msgid "Generate Enrollments"
 msgstr ""
@@ -1723,6 +1820,11 @@ msgstr ""
 #. module: ssi_school
 #: model:school_teacher,name:ssi_school.school_teacher_3
 msgid "Guntur Imam (demo)"
+msgstr ""
+
+#. module: ssi_school
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_student_view_form
+msgid "Health"
 msgstr ""
 
 #. module: ssi_school
@@ -1866,6 +1968,11 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school.field_school_student_mutation__activity_exception_icon
 #: model:ir.model.fields,help:ssi_school.field_school_teacher__activity_exception_icon
 msgid "Icon to indicate an exception activity."
+msgstr ""
+
+#. module: ssi_school
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_student_view_form
+msgid "Identity"
 msgstr ""
 
 #. module: ssi_school
@@ -2157,6 +2264,16 @@ msgid "Manually selected products allowed on this template's fee lines."
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__marital
+msgid "Marital Status"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_student__marital
+msgid "Marital status of the student, synchronized from the contact."
+msgstr ""
+
+#. module: ssi_school
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_payment_term_view_tree
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_form
 msgid "Mark as Manual"
@@ -2326,6 +2443,16 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template_term__name
 msgid ""
 "Name of the payment period, e.g. 'Registration Fee' or 'Tuition Semester 1'."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__nationality_id
+msgid "Nationality"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_student__nationality_id
+msgid "Nationality of the student, synchronized from the contact."
 msgstr ""
 
 #. module: ssi_school
@@ -2624,6 +2751,11 @@ msgid "Period"
 msgstr ""
 
 #. module: ssi_school
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_student_view_form
+msgid "Personal Information"
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_student__phone
 #: model:ir.model.fields,field_description:ssi_school.field_school_teacher__phone
 msgid "Phone"
@@ -2864,6 +2996,16 @@ msgid "Rejected"
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_student__religion_id
+msgid "Religion"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_student__religion_id
+msgid "Religion of the student, synchronized from the contact."
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_grade_class__available_seat
 msgid ""
 "Remaining seats in this class (Capacity minus Student Count). Not meaningful"
@@ -2950,6 +3092,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__reviewer_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__reviewer_id
 msgid "Reviewer"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_student__blood_type_rhesus
+msgid "Rhesus blood type of the student, synchronized from the contact."
 msgstr ""
 
 #. module: ssi_school
@@ -3176,6 +3323,11 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_student_view_form
+msgid "Socio-Cultural"
+msgstr ""
+
+#. module: ssi_school
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_student_mutation_view_form
 msgid "Source (current)"
 msgstr ""
@@ -3251,6 +3403,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_student_view_form
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_teacher_view_form
 msgid "State"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_student__birth_state_id
+msgid "State/province of birth of the student, synchronized from the contact."
 msgstr ""
 
 #. module: ssi_school
