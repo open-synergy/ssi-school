@@ -330,6 +330,7 @@ scenarios:
       - step: "Assert the Operating Unit ir.rule for school_incident is wired correctly"
         action: "search"
         model: "ir.rule"
+        save_as: "ou_rule_check"
         domain:
           - ["id", "=", "REF: ssi_school_incident_operating_unit.school_incident_ou"]
           - [
