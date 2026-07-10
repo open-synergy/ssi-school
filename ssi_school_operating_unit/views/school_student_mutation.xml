@@ -43,7 +43,7 @@
     <field name="inherit_id" ref="ssi_school.school_student_mutation_view_search" />
     <field name="arch" type="xml">
         <data>
-            <xpath expr="//group[@string='Group By']" position="inside">
+            <xpath expr="//group" position="inside">
                 <filter
                         name="grp_ou"
                         string="Operating Unit"
