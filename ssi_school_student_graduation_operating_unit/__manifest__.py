@@ -4,7 +4,7 @@
 
 {
     "name": "School Student Graduation - Operating Unit",
-    "version": "14.0.1.0.0",
+    "version": "14.0.1.1.0",
     "website": "https://simetri-sinergi.id",
     "author": (
         "OpenSynergy Indonesia, "
@@ -22,6 +22,9 @@
         "security/res_groups/school_student_graduation.xml",
         "security/ir_rule/school_student_graduation.xml",
         "views/school_student_graduation.xml",
+        "security/res_groups/school_student_graduation_batch.xml",
+        "security/ir_rule/school_student_graduation_batch.xml",
+        "views/school_student_graduation_batch.xml",
     ],
     "demo": [],
 }
