@@ -65,6 +65,8 @@
     <field name="arch" type="xml">
         <data>
             <xpath expr="//header/field[@name='state']" position="before">
+                <field name="evaluate_ok" invisible="1" />
+                <field name="create_incident_ok" invisible="1" />
                 <button
                         name="action_evaluate"
                         type="object"

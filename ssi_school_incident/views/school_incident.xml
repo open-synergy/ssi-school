@@ -81,6 +81,7 @@
     <field name="arch" type="xml">
         <data>
             <xpath expr="//header/field[@name='state']" position="before">
+                <field name="escalate_ok" invisible="1" />
                 <button
                         name="%(school_incident_wizard_escalate_action)d"
                         type="action"

@@ -57,6 +57,7 @@
     <field name="arch" type="xml">
         <data>
             <xpath expr="//header/field[@name='state']" position="before">
+                <field name="collect_ok" invisible="1" />
                 <button
                         name="action_collect_incidents"
                         type="object"
