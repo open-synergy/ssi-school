@@ -390,7 +390,17 @@ Solution: Change the student code to be unique within the school
                 ("state", "in", ["open", "done"]),
                 ("student_id", "=", record.id),
             ]
-            enrollments = self.env["school_enrollment"].search(criteria)
+            enrollments = (
+                self.env["school_enrollment"]
+                .search(criteria)
+                .sorted(
+                    key=lambda e: (
+                        e.academic_term_id.date_start
+                        or fields.Date.to_date("1900-01-01"),
+                        e.id,
+                    )
+                )
+            )
             if len(enrollments) > 0:
                 result = enrollments[-1].grade_id
             record.current_grade_id = result
@@ -422,7 +432,17 @@ Solution: Change the student code to be unique within the school
                     ("state", "=", "done"),
                     ("student_id", "=", record.id),
                 ]
-                enrollments = self.env["school_enrollment"].search(criteria)
+                enrollments = (
+                    self.env["school_enrollment"]
+                    .search(criteria)
+                    .sorted(
+                        key=lambda e: (
+                            e.academic_term_id.date_start
+                            or fields.Date.to_date("1900-01-01"),
+                            e.id,
+                        )
+                    )
+                )
                 if len(enrollments) > 0:
                     last_enrollment = enrollments[-1]
                     if last_enrollment.last_term:
