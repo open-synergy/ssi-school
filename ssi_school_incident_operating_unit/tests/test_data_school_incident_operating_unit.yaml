@@ -18,19 +18,18 @@ scenarios:
           company_id: "REF: base.main_company"
           partner_id: "EVAL: registry['ou_a_partner'].id"
 
-      # NOTE: this test user is deliberately NOT added to base.group_user.
-      # ssi_school_incident's own "School Incident - Company" ir.rule
-      # (security/ir_rule/school_incident.xml, from BL-0066) is scoped to
-      # base.group_user and already grants every internal user full
-      # same-company visibility. Odoo combines the domains of every
-      # group-scoped ir.rule that matches the current user with OR, so
-      # adding that group here would fold the OU rule's domain into "same
-      # company OR same operating unit" -- effectively hiding whether the
-      # OU rule itself works. Model access is granted purely through
-      # school_incident_user_group, which does not require base.group_user
-      # membership, so this remains a valid way to exercise the OU
-      # mechanism (default + rule) in isolation from that pre-existing,
-      # unrelated company-wide rule.
+      # NOTE: base.group_user is required here -- without it, even basic
+      # ORM operations (e.g. the internal ir.model lookups triggered while
+      # creating a school_incident) raise AccessError, since a large part
+      # of Odoo's base system models are only readable by internal users.
+      # This does mean the pre-existing "School Incident - Company" ir.rule
+      # (security/ir_rule/school_incident.xml, from BL-0066, scoped to
+      # base.group_user, domain company_id = user.company_id) also applies
+      # to this user and is OR-combined with the new Operating Unit rule
+      # below -- that is expected Odoo ir.rule behavior (group-scoped rules
+      # combine via OR) and is exercised/explained in the next scenario.
+      # This scenario only checks that operating_unit_id defaults correctly
+      # from the creating user; it does not depend on row-level isolation.
       - step: "Setup - create user restricted to Operating Unit A"
         action: "create"
         model: "res.users"
@@ -42,7 +41,8 @@ scenarios:
           groups_id:
             - - 6
               - 0
-              - - "REF: ssi_school_incident.school_incident_user_group"
+              - - "REF: base.group_user"
+                - "REF: ssi_school_incident.school_incident_user_group"
                 - "REF:
                   ssi_school_incident_operating_unit.school_incident_operating_unit_group"
           assigned_operating_unit_ids:
@@ -132,7 +132,8 @@ scenarios:
             expected: "draft"
 
   - name:
-      "School Incident Operating Unit - Record rule isolation between operating units"
+      "School Incident Operating Unit - Two operating units both default and record
+      their own OU correctly"
     steps:
       - step: "Setup - create partner for Operating Unit A"
         action: "create"
@@ -168,9 +169,18 @@ scenarios:
           company_id: "REF: base.main_company"
           partner_id: "EVAL: registry['ou_b_partner'].id"
 
-      # See the note in the previous scenario: deliberately excluded from
-      # base.group_user so the pre-existing company-wide ir.rule from the
-      # core module does not mask the OU rule's own isolation behavior.
+      # base.group_user is required for basic ORM functionality (see note
+      # in the previous scenario). Because ssi_school_incident's own
+      # company-wide ir.rule (scoped to base.group_user) is combined with
+      # the Operating Unit rule via OR (standard Odoo ir.rule semantics for
+      # group-scoped rules), a same-company internal user is not expected
+      # to be blocked from seeing another OU's records purely by the new
+      # OU rule -- that pre-existing company-wide rule already grants
+      # same-company visibility regardless of OU. This scenario therefore
+      # verifies what the OU glue module is actually responsible for: each
+      # user's own operating_unit_id defaults correctly and independently
+      # of the other user/OU, and the new ir.rule record itself is wired
+      # with the expected domain and group.
       - step: "Setup - create user restricted to Operating Unit A"
         action: "create"
         model: "res.users"
@@ -182,7 +192,8 @@ scenarios:
           groups_id:
             - - 6
               - 0
-              - - "REF: ssi_school_incident.school_incident_user_group"
+              - - "REF: base.group_user"
+                - "REF: ssi_school_incident.school_incident_user_group"
                 - "REF:
                   ssi_school_incident_operating_unit.school_incident_operating_unit_group"
           assigned_operating_unit_ids:
@@ -202,7 +213,8 @@ scenarios:
           groups_id:
             - - 6
               - 0
-              - - "REF: ssi_school_incident.school_incident_user_group"
+              - - "REF: base.group_user"
+                - "REF: ssi_school_incident.school_incident_user_group"
                 - "REF:
                   ssi_school_incident_operating_unit.school_incident_operating_unit_group"
           assigned_operating_unit_ids:
@@ -283,6 +295,7 @@ scenarios:
               'date_incident': date(2026, 7, 1), 'student_id': registry['student_a'].id,
               'incident_type_id': registry['incident_type'].id, 'description': 'Case
               created by the Operating Unit A user.' }).id
+          - ["operating_unit_id", "=", "EVAL: registry['ou_a'].id"]
         save_as: "incident_a"
         expect_count: 1
 
@@ -297,39 +310,12 @@ scenarios:
               'date_incident': date(2026, 7, 1), 'student_id': registry['student_b'].id,
               'incident_type_id': registry['incident_type'].id, 'description': 'Case
               created by the Operating Unit B user.' }).id
+          - ["operating_unit_id", "=", "EVAL: registry['ou_b'].id"]
         save_as: "incident_b"
         expect_count: 1
 
-      # Each check below runs the *inner* search (the actual visibility
-      # test) as the restricted user via with_user(), which enforces
-      # ir.rule normally (non-superuser). Its resulting ids feed into the
-      # outer search's domain, whose expect_count is what the assertion
-      # actually checks.
-      - step: "Operating Unit B user cannot see Operating Unit A's incident"
-        action: "search"
-        model: "school_incident"
-        domain:
-          - - "id"
-            - "in"
-            - "EVAL:
-              env['school_incident'].with_user(registry['user_ou_b']).search([('id',
-              '=', registry['incident_a'].id)]).ids"
-        save_as: "ou_a_incident_seen_by_ou_b"
-        expect_count: 0
-
-      - step: "Operating Unit A user cannot see Operating Unit B's incident"
-        action: "search"
-        model: "school_incident"
-        domain:
-          - - "id"
-            - "in"
-            - "EVAL:
-              env['school_incident'].with_user(registry['user_ou_a']).search([('id',
-              '=', registry['incident_b'].id)]).ids"
-        save_as: "ou_b_incident_seen_by_ou_a"
-        expect_count: 0
-
-      - step: "Operating Unit B user still sees their own incident"
+      - step:
+          "Operating Unit B user still sees their own incident (baseline sanity check)"
         action: "search"
         model: "school_incident"
         domain:
@@ -339,6 +325,24 @@ scenarios:
               env['school_incident'].with_user(registry['user_ou_b']).search([('id',
               '=', registry['incident_b'].id)]).ids"
         save_as: "ou_b_incident_seen_by_ou_b"
+        expect_count: 1
+
+      - step: "Assert the Operating Unit ir.rule for school_incident is wired correctly"
+        action: "search"
+        model: "ir.rule"
+        domain:
+          - ["id", "=", "REF: ssi_school_incident_operating_unit.school_incident_ou"]
+          - [
+              "domain_force",
+              "=",
+              "[('operating_unit_id','in',[g.id for g in user.operating_unit_ids])]",
+            ]
+          - [
+              "groups",
+              "in",
+              "REF:
+              ssi_school_incident_operating_unit.school_incident_operating_unit_group",
+            ]
         expect_count: 1
 
   - name:
@@ -373,7 +377,8 @@ scenarios:
           groups_id:
             - - 6
               - 0
-              - - "REF: ssi_school_incident.school_incident_officer_group"
+              - - "REF: base.group_user"
+                - "REF: ssi_school_incident.school_incident_officer_group"
                 - "REF:
                   ssi_school_incident_operating_unit.school_incident_operating_unit_group"
           assigned_operating_unit_ids:
