@@ -28,7 +28,7 @@ addon | version | maintainers | summary
 [ssi_school_lead](ssi_school_lead/) | 14.0.1.6.0 |  | School Lead
 [ssi_school_operating_unit](ssi_school_operating_unit/) | 14.0.1.4.0 |  | School - Operating Unit
 [ssi_school_student_graduation](ssi_school_student_graduation/) | 14.0.1.0.0 |  | School Student Graduation
-[ssi_school_student_graduation_operating_unit](ssi_school_student_graduation_operating_unit/) | 14.0.1.0.0 |  | School Student Graduation - Operating Unit
+[ssi_school_student_graduation_operating_unit](ssi_school_student_graduation_operating_unit/) | 14.0.1.2.0 |  | School Student Graduation - Operating Unit
 [ssi_school_student_leave](ssi_school_student_leave/) | 14.0.1.0.0 |  | School Student Leave
 [ssi_school_student_leave_operating_unit](ssi_school_student_leave_operating_unit/) | 14.0.1.0.0 |  | School Student Leave - Operating Unit
 [ssi_school_student_withdrawal](ssi_school_student_withdrawal/) | 14.0.1.0.0 |  | School Student Withdrawal
