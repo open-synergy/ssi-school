@@ -100,6 +100,17 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school
+#: code:addons/ssi_school/models/school_student.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Create or update student\n"
+"Database ID: %s\n"
+"Problem: Duplicate code '%s' in school '%s'\n"
+"Solution: Change the student code to be unique within the school\n"
+msgstr ""
+
+#. module: ssi_school
 #: code:addons/ssi_school/models/school_enrollment_payment_term.py:0
 #, python-format
 msgid ""
