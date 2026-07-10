@@ -26,7 +26,7 @@ addon | version | maintainers | summary
 [ssi_school_incident](ssi_school_incident/) | 14.0.1.0.0 |  | School Incident
 [ssi_school_incident_operating_unit](ssi_school_incident_operating_unit/) | 14.0.1.0.0 |  | School Incident - Operating Unit
 [ssi_school_lead](ssi_school_lead/) | 14.0.1.6.0 |  | School Lead
-[ssi_school_operating_unit](ssi_school_operating_unit/) | 14.0.1.3.0 |  | School - Operating Unit
+[ssi_school_operating_unit](ssi_school_operating_unit/) | 14.0.1.4.0 |  | School - Operating Unit
 
 [//]: # (end addons)
 
