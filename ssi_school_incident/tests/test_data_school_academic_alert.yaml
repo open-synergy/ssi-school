@@ -69,6 +69,11 @@ scenarios:
             type: "value"
             expected: "confirm"
 
+      - step: "Invalidate alert cache before approve"
+        action: "call"
+        target: "alert"
+        method: "invalidate_cache"
+
       - step: "Approve alert"
         action: "call"
         target: "alert"

@@ -79,6 +79,11 @@ scenarios:
             type: "value"
             expected: "confirm"
 
+      - step: "Invalidate incident cache before approve"
+        action: "call"
+        target: "incident"
+        method: "invalidate_cache"
+
       - step: "Approve incident"
         action: "call"
         target: "incident"
@@ -532,6 +537,11 @@ scenarios:
           state:
             type: "value"
             expected: "confirm"
+
+      - step: "Invalidate incident cache before approve"
+        action: "call"
+        target: "incident"
+        method: "invalidate_cache"
 
       - step: "Approve incident"
         action: "call"

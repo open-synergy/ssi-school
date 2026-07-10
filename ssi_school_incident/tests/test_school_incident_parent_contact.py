@@ -52,14 +52,12 @@ class TestSchoolIncidentParentContact(YamlTransactionCase):
                 "code": "INCTYPE-OC-PARENT-CONTACT-ONCHANGE",
             }
         )
-        incident = self.env["school_incident"].create(
-            {
-                "date_incident": fields.Date.today(),
-                "student_id": student.id,
-                "incident_type_id": incident_type.id,
-                "description": "Case used to verify the contact onchange.",
-            }
-        )
+        incident_form = Form(self.env["school_incident"])
+        incident_form.date_incident = fields.Date.today()
+        incident_form.student_id = student
+        incident_form.incident_type_id = incident_type
+        incident_form.description = "Case used to verify the contact onchange."
+        incident = incident_form.save()
         self.assertEqual(incident.parent_partner_id, father)
 
         form = Form(self.env["school_incident_parent_contact"])
