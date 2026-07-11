@@ -14,6 +14,17 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: ssi_school
+#: code:addons/ssi_school/models/school_enrollment.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Cancel enrollment\n"
+"Database ID: %s\n"
+"Problem: Payment term '%s' is already linked to an invoice\n"
+"Solution: Delete or disconnect the invoice on the payment term before cancelling this enrollment\n"
+msgstr ""
+
+#. module: ssi_school
 #: code:addons/ssi_school/models/school_student_mutation.py:0
 #, python-format
 msgid ""
