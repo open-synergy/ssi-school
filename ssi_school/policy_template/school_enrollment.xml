@@ -194,7 +194,12 @@ if document.last_term:
             name="group_ids"
             eval="[(6,0,[ref('school_enrollment_validator_group')])]"
         />
-            <field name="restrict_additional" eval="0" />
+            <field name="restrict_additional" eval="1" />
+            <field name="additional_python_code">result = True
+for term in document.payment_term_ids:
+    if term.invoice_id:
+        result = False
+        break</field>
 </record>
 
 <!-- Restart -->

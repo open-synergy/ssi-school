@@ -1,0 +1,282 @@
+scenarios:
+  - name: "Restart Unlocks Payment Term And Detail, Remains Editable"
+    steps:
+      - step: "Setup - get receivable journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "receivable_journal"
+        limit: 1
+
+      - step: "Setup - get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "School Fee Income RUNLK1"
+          code: "RUNLK14200"
+          user_type_id: "EVAL: registry['account_type'].id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Fee RUNLK1"
+          type: "service"
+          list_price: 1000000.0
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type RUNLK1"
+          code: "GTRUNLK1"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 RUNLK1"
+          code: "AYRUNLK1"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester RUNLK1"
+          code: "SMRUNLK1"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "EVAL: registry['academic_year'].id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School RUNLK1"
+          code: "SCHRUNLK1"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade RUNLK1"
+          code: "GRUNLK1"
+          sequence: 10
+          type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class RUNLK1"
+          code: "CLARUNLK1"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact RUNLK1"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student RUNLK1"
+          code: "STURUNLK1"
+          contact_id: "EVAL: registry['contact'].id"
+          school_id: "EVAL: registry['school'].id"
+
+      - step: "Create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        as_user: "base.user_admin"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "EVAL: registry['academic_year'].id"
+          academic_term_id: "EVAL: registry['academic_term'].id"
+          school_id: "EVAL: registry['school'].id"
+          grade_id: "EVAL: registry['grade'].id"
+          grade_class_id: "EVAL: registry['grade_class'].id"
+          student_id: "EVAL: registry['student'].id"
+          currency_id: "EVAL: env.company.currency_id.id"
+          receivable_journal_id: "EVAL: registry['receivable_journal'].id"
+
+      - step: "Create payment term"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term"
+        as_user: "base.user_admin"
+        values:
+          enrollment_id: "EVAL: registry['enrollment'].id"
+          name: "Term 1 RUNLK1"
+          sequence: 10
+
+      - step: "Create payment term detail"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        save_as: "detail"
+        as_user: "base.user_admin"
+        values:
+          term_id: "EVAL: registry['term'].id"
+          product_id: "EVAL: registry['product'].id"
+          name: "Fee RUNLK1"
+          account_id: "EVAL: registry['account'].id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate enrollment cache before approve"
+        action: "call"
+        target: "enrollment"
+        method: "invalidate_cache"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Invalidate term cache after opening"
+        action: "call"
+        target: "term"
+        method: "invalidate_cache"
+
+      - step: "Assert term locked after opening (control)"
+        action: "assert"
+        target: "term"
+        asserts:
+          locked:
+            type: "value"
+            expected: true
+
+      - step: "Invalidate detail cache after opening"
+        action: "call"
+        target: "detail"
+        method: "invalidate_cache"
+
+      - step: "Assert detail locked after opening (control)"
+        action: "assert"
+        target: "detail"
+        asserts:
+          locked:
+            type: "value"
+            expected: true
+
+      - step: "Invalidate enrollment cache before cancel"
+        action: "call"
+        target: "enrollment"
+        method: "invalidate_cache"
+
+      - step: "Cancel enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_cancel"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "cancel"
+
+      - step: "Invalidate enrollment cache before restart"
+        action: "call"
+        target: "enrollment"
+        method: "invalidate_cache"
+
+      - step: "Restart enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_restart"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "draft"
+
+      - step: "Invalidate term cache after restart"
+        action: "call"
+        target: "term"
+        method: "invalidate_cache"
+
+      - step: "Assert term unlocked after restart"
+        action: "assert"
+        target: "term"
+        asserts:
+          locked:
+            type: "value"
+            expected: false
+
+      - step: "Invalidate detail cache after restart"
+        action: "call"
+        target: "detail"
+        method: "invalidate_cache"
+
+      - step: "Assert detail unlocked after restart"
+        action: "assert"
+        target: "detail"
+        asserts:
+          locked:
+            type: "value"
+            expected: false
+
+      - step: "Term is editable again after restart"
+        action: "write"
+        target: "term"
+        as_user: "base.user_admin"
+        values:
+          name: "Term 1 RUNLK1 Edited"
+
+      - step: "Assert term name updated"
+        action: "assert"
+        target: "term"
+        asserts:
+          name:
+            type: "value"
+            expected: "Term 1 RUNLK1 Edited"
+
+      - step: "Detail is editable again after restart"
+        action: "write"
+        target: "detail"
+        as_user: "base.user_admin"
+        values:
+          price_unit: 750000.0
+
+      - step: "Assert detail price updated"
+        action: "assert"
+        target: "detail"
+        asserts:
+          price_unit:
+            type: "value"
+            expected: 750000.0
