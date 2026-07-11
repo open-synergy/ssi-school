@@ -5,7 +5,7 @@
 from datetime import date as datetime_date
 
 from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.ssi_decorator import ssi_decorator
 
@@ -767,6 +767,46 @@ Solution: Choose a different Grade Class or increase its capacity
         )
         if details:
             details.with_context(bypass_addendum_lock=True).write({"locked": True})
+
+    def _unlock_payment_term(self):
+        self.ensure_one()
+        Term = self.env[
+            "school_enrollment_payment_term"
+        ]  # pylint: disable=invalid-name
+        Detail = self.env[  # pylint: disable=invalid-name
+            "school_enrollment_payment_term_detail"
+        ]
+        terms = Term.search([("enrollment_id", "=", self.id), ("locked", "=", True)])
+        if terms:
+            terms.with_context(bypass_addendum_lock=True).write({"locked": False})
+        details = Detail.search(
+            [("term_id.enrollment_id", "=", self.id), ("locked", "=", True)]
+        )
+        if details:
+            details.with_context(bypass_addendum_lock=True).write({"locked": False})
+
+    @ssi_decorator.post_restart_action()
+    def _10_unlock_payment_term(self):
+        self.ensure_one()
+        self._unlock_payment_term()
+
+    @ssi_decorator.pre_cancel_action()
+    def _10_check_payment_term_invoice(self):
+        self.ensure_one()
+        invoiced_terms = self.payment_term_ids.filtered(lambda r: r.invoice_id)
+        if invoiced_terms:
+            error_message = (
+                _(
+                    """
+Context: Cancel enrollment
+Database ID: %s
+Problem: Payment term '%s' is already linked to an invoice
+Solution: Delete or disconnect the invoice on the payment term before cancelling this enrollment
+"""
+                )
+                % (self.id, invoiced_terms[0].name)
+            )
+            raise UserError(error_message)
 
     @ssi_decorator.post_cancel_action()
     def _10_unenroll_student(self):
