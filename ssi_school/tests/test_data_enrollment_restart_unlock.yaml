@@ -154,6 +154,11 @@ scenarios:
         method: "action_confirm"
         as_user: "base.user_admin"
 
+      - step: "Invalidate enrollment cache before approve"
+        action: "call"
+        target: "enrollment"
+        method: "invalidate_cache"
+
       - step: "Approve enrollment"
         action: "call"
         target: "enrollment"
@@ -190,6 +195,11 @@ scenarios:
             type: "value"
             expected: true
 
+      - step: "Invalidate enrollment cache before cancel"
+        action: "call"
+        target: "enrollment"
+        method: "invalidate_cache"
+
       - step: "Cancel enrollment"
         action: "call"
         target: "enrollment"
@@ -199,6 +209,11 @@ scenarios:
           state:
             type: "value"
             expected: "cancel"
+
+      - step: "Invalidate enrollment cache before restart"
+        action: "call"
+        target: "enrollment"
+        method: "invalidate_cache"
 
       - step: "Restart enrollment"
         action: "call"
