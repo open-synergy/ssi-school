@@ -145,8 +145,10 @@ class TestSchoolAdmissionRestartUnlock(YamlTransactionCase):
         self._open_admission(target)
 
         admin = self.env.ref("base.user_admin")
+        target.invalidate_cache()
         target.with_user(admin).action_cancel()
         self.assertEqual(target.state, "cancel")
+        target.invalidate_cache()
         target.with_user(admin).action_restart()
         self.assertEqual(target.state, "draft")
         old_term.invalidate_cache()

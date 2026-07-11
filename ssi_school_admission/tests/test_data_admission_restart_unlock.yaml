@@ -133,6 +133,11 @@ scenarios:
         method: "action_confirm"
         as_user: "base.user_admin"
 
+      - step: "Invalidate admission cache before approve"
+        action: "call"
+        target: "admission"
+        method: "invalidate_cache"
+
       - step: "Approve admission"
         action: "call"
         target: "admission"
@@ -169,6 +174,11 @@ scenarios:
             type: "value"
             expected: true
 
+      - step: "Invalidate admission cache before cancel"
+        action: "call"
+        target: "admission"
+        method: "invalidate_cache"
+
       - step: "Cancel admission"
         action: "call"
         target: "admission"
@@ -178,6 +188,11 @@ scenarios:
           state:
             type: "value"
             expected: "cancel"
+
+      - step: "Invalidate admission cache before restart"
+        action: "call"
+        target: "admission"
+        method: "invalidate_cache"
 
       - step: "Restart admission"
         action: "call"
