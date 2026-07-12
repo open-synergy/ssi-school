@@ -221,6 +221,7 @@ scenarios:
           name: "Teacher Personal Employee"
           company_id: "base.main_company"
           address_home_id: "EVAL: registry['partner'].id"
+          marital: "married"
       - step: "Create teacher"
         action: "create"
         model: "school_teacher"
