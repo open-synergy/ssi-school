@@ -433,6 +433,11 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school
+#: model_terms:ir.ui.view,arch_db:ssi_school.hr_employee_view_form
+msgid "<span class=\"o_stat_text\">Teacher</span>"
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment__payment_template_id
 msgid ""
 "A payment template that can be applied to auto-populate the billing terms."
@@ -1275,6 +1280,11 @@ msgid "Create Invoice"
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.actions.server,name:ssi_school.action_hr_employee_create_teacher
+msgid "Create Teacher"
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school__create_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__create_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__create_uid
@@ -1476,6 +1486,7 @@ msgid "Disconnect Invoice"
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_hr_employee__display_name
 #: model:ir.model.fields,field_description:ssi_school.field_school__display_name
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__display_name
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__display_name
@@ -1632,6 +1643,7 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model,name:ssi_school.model_hr_employee
 #: model:ir.model.fields,field_description:ssi_school.field_school_teacher__employee_id
 msgid "Employee"
 msgstr ""
@@ -2034,6 +2046,7 @@ msgid "I-B (demo)"
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_hr_employee__id
 #: model:ir.model.fields,field_description:ssi_school.field_school__id
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__id
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__id
@@ -2274,6 +2287,7 @@ msgid "Joko Wahyudi (demo)"
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_hr_employee____last_update
 #: model:ir.model.fields,field_description:ssi_school.field_school____last_update
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term____last_update
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_year____last_update
@@ -3862,6 +3876,7 @@ msgstr ""
 
 #. module: ssi_school
 #: model:ir.model,name:ssi_school.model_school_teacher
+#: model:ir.model.fields,field_description:ssi_school.field_hr_employee__teacher_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__teacher_id
 #: model:res.groups,name:ssi_school.school_teacher_group
 msgid "Teacher"
@@ -3873,7 +3888,18 @@ msgid "Teacher photo, taken from the employee's home address."
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_hr_employee__teacher_id
+msgid "Teacher record representing this employee, if any."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_hr_employee__teacher_ids
+msgid "Teacher records created from this employee."
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.actions.act_window,name:ssi_school.school_teacher_action
+#: model:ir.model.fields,field_description:ssi_school.field_hr_employee__teacher_ids
 #: model:ir.ui.menu,name:ssi_school.school_teacher_menu
 msgid "Teachers"
 msgstr ""
