@@ -3,7 +3,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 {
     "name": "School",
-    "version": "14.0.4.25.0",
+    "version": "14.0.5.0.0",
     "website": "https://simetri-sinergi.id",
     # pylint: disable=line-too-long
     "author": "PT. Simetri Sinergi Indonesia, OpenSynergy Indonesia, Odoo Community Association (OCA)",  # noqa: B950
@@ -25,6 +25,7 @@
         "ssi_partner",
         "base_duration",
         "queue_job",
+        "hr",
     ],
     "data": [
         "security/ir_module_category_data.xml",
@@ -41,6 +42,7 @@
         "security/ir_model_access/school.xml",
         "security/ir_model_access/school_grade_class.xml",
         "security/ir_model_access/school_student.xml",
+        "security/ir_model_access/hr_employee.xml",
         "security/ir_model_access/school_teacher.xml",
         "security/ir_model_access/school_academic_year.xml",
         "security/ir_model_access/school_academic_term.xml",
@@ -96,6 +98,7 @@
         "demo/school_academic_year.xml",
         "demo/school_academic_term.xml",
         "demo/school_student.xml",
+        "demo/hr_employee.xml",
         "demo/school_teacher.xml",
     ],
 }

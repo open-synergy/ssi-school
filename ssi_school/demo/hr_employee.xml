@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 OpenSynergy Indonesia
+     Copyright 2026 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+<record id="hr_employee_1" model="hr.employee">
+    <field name="name">Jamaluddin Ismail</field>
+    <field name="company_id" ref="base.main_company" />
+    <field name="address_home_id" ref="res_partner_8" />
+</record>
+
+<record id="hr_employee_2" model="hr.employee">
+    <field name="name">Nila Asih</field>
+    <field name="company_id" ref="base.main_company" />
+    <field name="address_home_id" ref="res_partner_9" />
+</record>
+
+<record id="hr_employee_3" model="hr.employee">
+    <field name="name">Guntur Imam</field>
+    <field name="company_id" ref="base.main_company" />
+    <field name="address_home_id" ref="res_partner_10" />
+</record>
+
+<record id="hr_employee_4" model="hr.employee">
+    <field name="name">Dewi Tirta</field>
+    <field name="company_id" ref="base.main_company" />
+    <field name="address_home_id" ref="res_partner_11" />
+</record>
+</odoo>

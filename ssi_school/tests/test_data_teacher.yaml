@@ -1,12 +1,20 @@
 scenarios:
   - name: "Create Teacher"
     steps:
-      - step: "Create contact"
+      - step: "Create home address partner"
         action: "create"
         model: "res.partner"
-        save_as: "contact"
+        save_as: "partner"
         values:
-          name: "New Teacher Contact"
+          name: "New Teacher Home Address"
+      - step: "Create employee"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee"
+        values:
+          name: "New Teacher Employee"
+          company_id: "base.main_company"
+          address_home_id: "EVAL: registry['partner'].id"
       - step: "Create teacher"
         action: "create"
         model: "school_teacher"
@@ -14,7 +22,7 @@ scenarios:
         values:
           name: "New Teacher"
           code: "TCH002"
-          contact_id: "EVAL: registry['contact'].id"
+          employee_id: "EVAL: registry['employee'].id"
       - step: "Assert created"
         action: "assert"
         target: "teacher"
@@ -25,20 +33,26 @@ scenarios:
           name:
             type: "value"
             expected: "New Teacher"
-          contact_id:
+          employee_id:
             type: "value"
             operator: "is_truthy"
 
   - name: "Edit Teacher Name"
     steps:
-      - step: "Create contact"
+      - step: "Create home address partner"
         action: "create"
         model: "res.partner"
-        save_as: "contact"
+        save_as: "partner"
         values:
-          name: "Teacher Contact Edit"
-          phone: "081234567890"
-          email: "teacher@test.com"
+          name: "Teacher Home Address Edit"
+      - step: "Create employee"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee"
+        values:
+          name: "Teacher Employee Edit"
+          company_id: "base.main_company"
+          address_home_id: "EVAL: registry['partner'].id"
       - step: "Create teacher"
         action: "create"
         model: "school_teacher"
@@ -46,7 +60,7 @@ scenarios:
         values:
           name: "Teacher 1"
           code: "TCH001ED"
-          contact_id: "EVAL: registry['contact'].id"
+          employee_id: "EVAL: registry['employee'].id"
       - step: "Write new name"
         action: "write"
         target: "teacher"
@@ -60,52 +74,76 @@ scenarios:
             type: "value"
             expected: "Teacher 1 Updated"
 
-  - name: "Edit Teacher Contact"
+  - name: "Edit Teacher Employee"
     steps:
-      - step: "Create first contact"
+      - step: "Create first home address partner"
         action: "create"
         model: "res.partner"
-        save_as: "contact"
+        save_as: "partner_1"
         values:
-          name: "Teacher Original Contact"
-      - step: "Create another contact"
+          name: "Teacher Original Home Address"
+      - step: "Create first employee"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_1"
+        values:
+          name: "Teacher Original Employee"
+          company_id: "base.main_company"
+          address_home_id: "EVAL: registry['partner_1'].id"
+      - step: "Create second home address partner"
         action: "create"
         model: "res.partner"
-        save_as: "new_contact"
+        save_as: "partner_2"
         values:
-          name: "Another Teacher Contact"
+          name: "Another Teacher Home Address"
+      - step: "Create second employee"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee_2"
+        values:
+          name: "Another Teacher Employee"
+          company_id: "base.main_company"
+          address_home_id: "EVAL: registry['partner_2'].id"
       - step: "Create teacher"
         action: "create"
         model: "school_teacher"
         save_as: "teacher"
         values:
-          name: "Teacher Edit Contact"
+          name: "Teacher Edit Employee"
           code: "TCHEC"
-          contact_id: "EVAL: registry['contact'].id"
-      - step: "Update contact"
+          employee_id: "EVAL: registry['employee_1'].id"
+      - step: "Update employee"
         action: "write"
         target: "teacher"
         values:
-          contact_id: "EVAL: registry['new_contact'].id"
-      - step: "Verify contact was updated"
+          employee_id: "EVAL: registry['employee_2'].id"
+      - step: "Verify employee was updated"
         action: "search"
         model: "school_teacher"
         domain:
           [
             ["id", "=", "EVAL: registry['teacher'].id"],
-            ["contact_id", "=", "EVAL: registry['new_contact'].id"],
+            ["employee_id", "=", "EVAL: registry['employee_2'].id"],
           ]
         save_as: "_check"
         expect_count: 1
 
   - name: "Delete Teacher"
     steps:
-      - step: "Create contact"
+      - step: "Create home address partner"
         action: "create"
         model: "res.partner"
-        save_as: "contact"
+        save_as: "partner"
         values:
-          name: "Teacher To Delete Contact"
+          name: "Teacher To Delete Home Address"
+      - step: "Create employee"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee"
+        values:
+          name: "Teacher To Delete Employee"
+          company_id: "base.main_company"
+          address_home_id: "EVAL: registry['partner'].id"
       - step: "Create teacher"
         action: "create"
         model: "school_teacher"
@@ -113,7 +151,7 @@ scenarios:
         values:
           name: "Teacher To Delete"
           code: "TCHDEL"
-          contact_id: "EVAL: registry['contact'].id"
+          employee_id: "EVAL: registry['employee'].id"
       - step: "Delete teacher"
         action: "call"
         target: "teacher"
@@ -125,16 +163,24 @@ scenarios:
         save_as: "result"
         expect_count: 0
 
-  - name: "Related Fields From Contact"
+  - name: "Related Fields From Home Address"
     steps:
-      - step: "Create contact with phone and email"
+      - step: "Create home address partner with phone and email"
         action: "create"
         model: "res.partner"
-        save_as: "contact"
+        save_as: "partner"
         values:
-          name: "Teacher Related Contact"
+          name: "Teacher Related Home Address"
           phone: "081234567890"
           email: "teacher@test.com"
+      - step: "Create employee"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee"
+        values:
+          name: "Teacher Related Employee"
+          company_id: "base.main_company"
+          address_home_id: "EVAL: registry['partner'].id"
       - step: "Create teacher"
         action: "create"
         model: "school_teacher"
@@ -142,8 +188,8 @@ scenarios:
         values:
           name: "Teacher Related"
           code: "TCHREL"
-          contact_id: "EVAL: registry['contact'].id"
-      - step: "Assert phone and email are from contact"
+          employee_id: "EVAL: registry['employee'].id"
+      - step: "Assert phone and email are from home address"
         action: "assert"
         target: "teacher"
         asserts:
@@ -153,3 +199,93 @@ scenarios:
           email:
             type: "value"
             expected: "teacher@test.com"
+
+  - name: "Personal Information From Home Address"
+    steps:
+      - step: "Create home address partner with personal information"
+        action: "create"
+        model: "res.partner"
+        save_as: "partner"
+        values:
+          name: "Teacher Personal Home Address"
+          gender: "male"
+          birthdate_date: 1985-05-17
+          birth_city: "Bandung"
+          blood_type: "0"
+          marital: "married"
+      - step: "Create employee"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee"
+        values:
+          name: "Teacher Personal Employee"
+          company_id: "base.main_company"
+          address_home_id: "EVAL: registry['partner'].id"
+      - step: "Create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher"
+        values:
+          name: "Teacher Personal"
+          code: "TCHPRS"
+          employee_id: "EVAL: registry['employee'].id"
+      - step: "Assert personal information from home address"
+        action: "assert"
+        target: "teacher"
+        asserts:
+          gender:
+            type: "value"
+            expected: "male"
+          birthdate_date:
+            type: "value"
+            expected: 1985-05-17
+          birth_city:
+            type: "value"
+            expected: "Bandung"
+          blood_type:
+            type: "value"
+            expected: "0"
+          marital:
+            type: "value"
+            expected: "married"
+
+  - name: "Write Back To Home Address"
+    steps:
+      - step: "Create home address partner"
+        action: "create"
+        model: "res.partner"
+        save_as: "partner"
+        values:
+          name: "Teacher Write Back Home Address"
+          street: "Old Street"
+      - step: "Create employee"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee"
+        values:
+          name: "Teacher Write Back Employee"
+          company_id: "base.main_company"
+          address_home_id: "EVAL: registry['partner'].id"
+      - step: "Create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher"
+        values:
+          name: "Teacher Write Back"
+          code: "TCHWB"
+          employee_id: "EVAL: registry['employee'].id"
+      - step: "Write street on teacher"
+        action: "write"
+        target: "teacher"
+        values:
+          street: "New Street 123"
+      - step: "Verify home address partner street was updated"
+        action: "search"
+        model: "res.partner"
+        domain:
+          [
+            ["id", "=", "EVAL: registry['partner'].id"],
+            ["street", "=", "New Street 123"],
+          ]
+        save_as: "_check"
+        expect_count: 1
