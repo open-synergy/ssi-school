@@ -123,6 +123,7 @@
                             />
                         <field name="state" />
                         <field name="invoice_id" />
+                        <field name="currency_id" invisible="1" />
                         <field name="locked" invisible="1" />
                         <field name="admission_state" invisible="1" />
                         <field name="addendum_ok" invisible="1" />
@@ -132,7 +133,7 @@
                     <page name="detail" string="Detail">
                         <field
                                 name="detail_ids"
-                                colspan="4"
+                                colspan="2"
                                 nolabel="1"
                                 attrs="{'readonly': [('admission_state','!=','draft'),('addendum_ok','=',False)]}"
                             >
@@ -156,7 +157,13 @@
                                         name="account_id"
                                         attrs="{'readonly': [('locked','=',True)]}"
                                     />
+                                <field name="currency_id" invisible="1" />
+                                <field name="pricelist_id" invisible="1" />
                                 <field name="locked" invisible="1" />
+                                <field
+                                        name="price_unit"
+                                        attrs="{'readonly': [('locked','=',True)]}"
+                                    />
                                 <field
                                         name="uom_quantity"
                                         string="Quantity"
@@ -166,33 +173,101 @@
                                         name="uom_id"
                                         attrs="{'readonly': [('locked','=',True)]}"
                                     />
-                                <field
-                                        name="price_unit"
-                                        attrs="{'readonly': [('locked','=',True)]}"
-                                    />
+                                <field name="price_subtotal" />
                                 <field
                                         name="tax_ids"
                                         widget="many2many_tags"
                                         attrs="{'readonly': [('locked','=',True)]}"
                                     />
-                                <field name="price_subtotal" />
                                 <field name="price_tax" />
                                 <field name="price_total" />
                             </tree>
+                            <form>
+                                <header />
+                                <sheet>
+                                    <group name="detail_group" colspan="4" col="2">
+                                        <group name="detail_left" colspan="1" col="2">
+                                            <field
+                                                    name="allowed_product_ids"
+                                                    widget="many2many_tags"
+                                                    invisible="1"
+                                                />
+                                            <field name="locked" invisible="1" />
+                                            <field
+                                                    name="product_id"
+                                                    domain="[('id','in',allowed_product_ids)]"
+                                                    attrs="{'readonly': [('locked','=',True)]}"
+                                                />
+                                            <field
+                                                    name="name"
+                                                    attrs="{'readonly': [('locked','=',True)]}"
+                                                />
+                                            <field
+                                                    name="usage_id"
+                                                    attrs="{'readonly': [('locked','=',True)]}"
+                                                />
+                                            <field
+                                                    name="account_id"
+                                                    attrs="{'readonly': [('locked','=',True)]}"
+                                                />
+                                            <field
+                                                    name="analytic_account_id"
+                                                    attrs="{'readonly': [('locked','=',True)]}"
+                                                />
+                                        </group>
+                                        <group name="detail_right" colspan="1" col="2">
+                                            <label
+                                                    for="uom_quantity"
+                                                    string="Quantity"
+                                                />
+                                            <div>
+                                                <field
+                                                        name="uom_quantity"
+                                                        class="oe_inline"
+                                                        attrs="{'readonly': [('locked','=',True)]}"
+                                                    />
+                                                <field
+                                                        name="uom_id"
+                                                        attrs="{'required':[('product_id','!=',False)],'readonly': [('locked','=',True)]}"
+                                                        class="oe_inline"
+                                                    />
+                                            </div>
+                                            <field
+                                                    name="currency_id"
+                                                    invisible="1"
+                                                    force_save="1"
+                                                />
+                                            <field
+                                                    name="pricelist_id"
+                                                    invisible="1"
+                                                    force_save="1"
+                                                />
+                                            <field
+                                                    name="price_unit"
+                                                    attrs="{'readonly': [('locked','=',True)]}"
+                                                />
+                                            <field name="price_subtotal" />
+                                            <field
+                                                    name="tax_ids"
+                                                    widget="many2many_tags"
+                                                    attrs="{'readonly': [('locked','=',True)]}"
+                                                />
+                                            <field name="price_tax" />
+                                            <field name="price_total" />
+                                        </group>
+                                    </group>
+                                </sheet>
+                            </form>
                         </field>
                     </page>
-                    <page name="amount" string="Amount">
-                        <group name="amount_group" colspan="4" col="2">
-                            <group name="amount_left" colspan="1" col="2" />
-                            <group name="amount_right" colspan="1" col="2">
-                                <field name="currency_id" invisible="1" />
-                                <field name="amount_untaxed" />
-                                <field name="amount_tax" />
-                                <field name="amount_total" />
-                            </group>
-                        </group>
-                    </page>
                 </notebook>
+                <group name="term_footer" colspan="4" col="2">
+                    <group name="term_footer_left" colspan="1" col="2">
+                        <field name="amount_untaxed" />
+                        <field name="amount_tax" />
+                        <field name="amount_total" />
+                    </group>
+                </group>
             </sheet>
         </form>
     </field>

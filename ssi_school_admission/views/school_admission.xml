@@ -142,7 +142,7 @@
                             context="{'form_view_ref': 'ssi_school_admission.school_admission_payment_term_view_form_embedded'}"
                             attrs="{'readonly': [('state','!=','draft'),('addendum_ok','=',False)]}"
                         >
-                        <tree>
+                        <tree create="true" edit="true" delete="true">
                             <field name="sequence" invisible="1" />
                             <field
                                     name="name"
@@ -157,6 +157,7 @@
                                     attrs="{'readonly': [('locked','=',True)]}"
                                 />
                             <field name="currency_id" invisible="1" />
+                            <field name="admission_state" invisible="1" />
                             <field name="addendum_ok" invisible="1" />
                             <field name="locked" invisible="1" />
                             <field name="amount_untaxed" />
@@ -177,6 +178,34 @@
                                     type="object"
                                     icon="fa-eraser"
                                     states="invoiced"
+                                />
+                            <button
+                                    name="action_disconnect_invoice"
+                                    title="Disconnect Invoice"
+                                    type="object"
+                                    icon="fa-unlink"
+                                    states="invoiced"
+                                />
+                            <button
+                                    name="action_mark_as_manual"
+                                    title="Mark as Manual"
+                                    type="object"
+                                    icon="fa-square-o"
+                                    states="uninvoiced"
+                                />
+                            <button
+                                    name="action_unmark_as_manual"
+                                    title="Unmark as Manual"
+                                    type="object"
+                                    icon="fa-check-square-o"
+                                    states="manual"
+                                />
+                            <button
+                                    name="action_open_duplicate_wizard"
+                                    title="Duplicate Term"
+                                    type="object"
+                                    icon="fa-files-o"
+                                    attrs="{'invisible':[('admission_state','!=','draft')]}"
                                 />
                         </tree>
                     </field>
