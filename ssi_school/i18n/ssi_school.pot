@@ -291,6 +291,17 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school
+#: code:addons/ssi_school/models/school.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Set school branch\n"
+"Database ID: %s\n"
+"Problem: Branch '%s' does not belong to Center '%s'\n"
+"Solution: Select a Branch whose Center matches the school's Center\n"
+msgstr ""
+
+#. module: ssi_school
 #: code:addons/ssi_school/models/school_enrollment_payment_term.py:0
 #, python-format
 msgid ""
@@ -491,6 +502,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school__message_needaction
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__message_needaction
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__message_needaction
+#: model:ir.model.fields,field_description:ssi_school.field_school_branch__message_needaction
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__message_needaction
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__message_needaction
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade__message_needaction
@@ -507,6 +519,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school__active
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__active
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__active
+#: model:ir.model.fields,field_description:ssi_school.field_school_branch__active
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__active
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade__active
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__active
@@ -546,6 +559,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school__activity_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__activity_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__activity_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_branch__activity_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__activity_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__activity_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade__activity_ids
@@ -562,6 +576,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school__activity_exception_decoration
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__activity_exception_decoration
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__activity_exception_decoration
+#: model:ir.model.fields,field_description:ssi_school.field_school_branch__activity_exception_decoration
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__activity_exception_decoration
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__activity_exception_decoration
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade__activity_exception_decoration
@@ -578,6 +593,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school__activity_state
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__activity_state
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__activity_state
+#: model:ir.model.fields,field_description:ssi_school.field_school_branch__activity_state
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__activity_state
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__activity_state
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade__activity_state
@@ -594,6 +610,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school__activity_type_icon
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__activity_type_icon
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__activity_type_icon
+#: model:ir.model.fields,field_description:ssi_school.field_school_branch__activity_type_icon
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__activity_type_icon
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__activity_type_icon
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade__activity_type_icon
@@ -725,6 +742,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school__message_attachment_count
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__message_attachment_count
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__message_attachment_count
+#: model:ir.model.fields,field_description:ssi_school.field_school_branch__message_attachment_count
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__message_attachment_count
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__message_attachment_count
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade__message_attachment_count
@@ -841,6 +859,36 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_student__blood_type_rhesus
 msgid "Blood Type (Rh)"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school__branch_id
+#: model:res.groups,name:ssi_school.school_branch_group
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_view_search
+msgid "Branch"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_branch,name:ssi_school.school_branch_demo_2
+msgid "Branch Bandung"
+msgstr ""
+
+#. module: ssi_school
+#: model:school_branch,name:ssi_school.school_branch_demo_1
+msgid "Branch Jakarta"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school__branch_id
+msgid ""
+"Branch that oversees this school unit. Leave empty when the unit is directly"
+" overseen by the center."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.actions.act_window,name:ssi_school.school_branch_action
+#: model:ir.ui.menu,name:ssi_school.school_branch_menu
+msgid "Branches"
 msgstr ""
 
 #. module: ssi_school
@@ -972,6 +1020,23 @@ msgid "Capacity"
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school__company_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_branch__company_id
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_branch_view_search
+msgid "Center"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_branch__company_id
+msgid "Center (head office) that oversees this branch."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school__company_id
+msgid "Center (head office) that oversees this school unit."
+msgstr ""
+
+#. module: ssi_school
 #: model:school_student,name:ssi_school.school_student_7
 msgid "Cinta Cahaya (demo)"
 msgstr ""
@@ -1038,6 +1103,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school__code
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__code
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__code
+#: model:ir.model.fields,field_description:ssi_school.field_school_branch__code
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__code
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade__code
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__code
@@ -1173,6 +1239,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school__create_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__create_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__create_uid
+#: model:ir.model.fields,field_description:ssi_school.field_school_branch__create_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__create_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__create_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template_term__create_uid
@@ -1196,6 +1263,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school__create_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__create_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__create_date
+#: model:ir.model.fields,field_description:ssi_school.field_school_branch__create_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__create_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__create_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template_term__create_date
@@ -1345,6 +1413,11 @@ msgid "Dewi Tirta (demo)"
 msgstr ""
 
 #. module: ssi_school
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_view_search
+msgid "Directly Under Center"
+msgstr ""
+
+#. module: ssi_school
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_payment_term_view_tree
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_form
 msgid "Disconnect Invoice"
@@ -1354,6 +1427,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school__display_name
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__display_name
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__display_name
+#: model:ir.model.fields,field_description:ssi_school.field_school_branch__display_name
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__display_name
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__display_name
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template_term__display_name
@@ -1658,6 +1732,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school__message_follower_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__message_follower_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__message_follower_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_branch__message_follower_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__message_follower_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__message_follower_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade__message_follower_ids
@@ -1674,6 +1749,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school__message_channel_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__message_channel_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__message_channel_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_branch__message_channel_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__message_channel_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__message_channel_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade__message_channel_ids
@@ -1690,6 +1766,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school__message_partner_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__message_partner_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__message_partner_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_branch__message_partner_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__message_partner_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__message_partner_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade__message_partner_ids
@@ -1706,6 +1783,7 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school.field_school__activity_type_icon
 #: model:ir.model.fields,help:ssi_school.field_school_academic_term__activity_type_icon
 #: model:ir.model.fields,help:ssi_school.field_school_academic_year__activity_type_icon
+#: model:ir.model.fields,help:ssi_school.field_school_branch__activity_type_icon
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment__activity_type_icon
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template__activity_type_icon
 #: model:ir.model.fields,help:ssi_school.field_school_grade__activity_type_icon
@@ -1811,6 +1889,7 @@ msgstr ""
 #. module: ssi_school
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_academic_term_view_search
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_academic_year_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_branch_view_search
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_payment_template_view_search
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_search
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_grade_class_view_search
@@ -1886,6 +1965,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school__id
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__id
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__id
+#: model:ir.model.fields,field_description:ssi_school.field_school_branch__id
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__id
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__id
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template_term__id
@@ -1953,6 +2033,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school__activity_exception_icon
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__activity_exception_icon
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__activity_exception_icon
+#: model:ir.model.fields,field_description:ssi_school.field_school_branch__activity_exception_icon
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__activity_exception_icon
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__activity_exception_icon
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade__activity_exception_icon
@@ -1969,6 +2050,7 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school.field_school__activity_exception_icon
 #: model:ir.model.fields,help:ssi_school.field_school_academic_term__activity_exception_icon
 #: model:ir.model.fields,help:ssi_school.field_school_academic_year__activity_exception_icon
+#: model:ir.model.fields,help:ssi_school.field_school_branch__activity_exception_icon
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment__activity_exception_icon
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template__activity_exception_icon
 #: model:ir.model.fields,help:ssi_school.field_school_grade__activity_exception_icon
@@ -1993,6 +2075,8 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school.field_school_academic_term__message_unread
 #: model:ir.model.fields,help:ssi_school.field_school_academic_year__message_needaction
 #: model:ir.model.fields,help:ssi_school.field_school_academic_year__message_unread
+#: model:ir.model.fields,help:ssi_school.field_school_branch__message_needaction
+#: model:ir.model.fields,help:ssi_school.field_school_branch__message_unread
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment__message_needaction
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment__message_unread
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template__message_needaction
@@ -2018,6 +2102,7 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school.field_school__message_has_error
 #: model:ir.model.fields,help:ssi_school.field_school_academic_term__message_has_error
 #: model:ir.model.fields,help:ssi_school.field_school_academic_year__message_has_error
+#: model:ir.model.fields,help:ssi_school.field_school_branch__message_has_error
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment__message_has_error
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template__message_has_error
 #: model:ir.model.fields,help:ssi_school.field_school_grade__message_has_error
@@ -2092,6 +2177,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school__message_is_follower
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__message_is_follower
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__message_is_follower
+#: model:ir.model.fields,field_description:ssi_school.field_school_branch__message_is_follower
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__message_is_follower
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__message_is_follower
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade__message_is_follower
@@ -2118,6 +2204,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school____last_update
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term____last_update
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_year____last_update
+#: model:ir.model.fields,field_description:ssi_school.field_school_branch____last_update
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment____last_update
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template____last_update
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template_term____last_update
@@ -2153,6 +2240,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school__write_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__write_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__write_uid
+#: model:ir.model.fields,field_description:ssi_school.field_school_branch__write_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__write_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__write_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template_term__write_uid
@@ -2176,6 +2264,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school__write_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__write_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__write_date
+#: model:ir.model.fields,field_description:ssi_school.field_school_branch__write_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__write_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__write_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template_term__write_date
@@ -2236,6 +2325,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school__message_main_attachment_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__message_main_attachment_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__message_main_attachment_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_branch__message_main_attachment_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__message_main_attachment_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__message_main_attachment_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade__message_main_attachment_id
@@ -2294,6 +2384,7 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school.field_school__active
 #: model:ir.model.fields,help:ssi_school.field_school_academic_term__active
 #: model:ir.model.fields,help:ssi_school.field_school_academic_year__active
+#: model:ir.model.fields,help:ssi_school.field_school_branch__active
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template__active
 #: model:ir.model.fields,help:ssi_school.field_school_grade__active
 #: model:ir.model.fields,help:ssi_school.field_school_grade_class__active
@@ -2313,6 +2404,7 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school.field_school__code
 #: model:ir.model.fields,help:ssi_school.field_school_academic_term__code
 #: model:ir.model.fields,help:ssi_school.field_school_academic_year__code
+#: model:ir.model.fields,help:ssi_school.field_school_branch__code
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template__code
 #: model:ir.model.fields,help:ssi_school.field_school_grade__code
 #: model:ir.model.fields,help:ssi_school.field_school_grade_class__code
@@ -2339,6 +2431,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school__message_has_error
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__message_has_error
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__message_has_error
+#: model:ir.model.fields,field_description:ssi_school.field_school_branch__message_has_error
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__message_has_error
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__message_has_error
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade__message_has_error
@@ -2355,6 +2448,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school__message_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__message_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__message_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_branch__message_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__message_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__message_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade__message_ids
@@ -2412,6 +2506,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school__my_activity_date_deadline
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__my_activity_date_deadline
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__my_activity_date_deadline
+#: model:ir.model.fields,field_description:ssi_school.field_school_branch__my_activity_date_deadline
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__my_activity_date_deadline
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__my_activity_date_deadline
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade__my_activity_date_deadline
@@ -2428,6 +2523,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school__name
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__name
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__name
+#: model:ir.model.fields,field_description:ssi_school.field_school_branch__name
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__name
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade__name
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__name
@@ -2477,6 +2573,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school__activity_date_deadline
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__activity_date_deadline
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__activity_date_deadline
+#: model:ir.model.fields,field_description:ssi_school.field_school_branch__activity_date_deadline
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__activity_date_deadline
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__activity_date_deadline
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade__activity_date_deadline
@@ -2493,6 +2590,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school__activity_summary
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__activity_summary
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__activity_summary
+#: model:ir.model.fields,field_description:ssi_school.field_school_branch__activity_summary
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__activity_summary
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__activity_summary
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade__activity_summary
@@ -2509,6 +2607,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school__activity_type_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__activity_type_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__activity_type_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_branch__activity_type_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__activity_type_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__activity_type_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade__activity_type_id
@@ -2543,6 +2642,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school__note
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__note
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__note
+#: model:ir.model.fields,field_description:ssi_school.field_school_branch__note
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__note
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__note
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__note
@@ -2560,6 +2660,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school__message_needaction_counter
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__message_needaction_counter
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__message_needaction_counter
+#: model:ir.model.fields,field_description:ssi_school.field_school_branch__message_needaction_counter
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__message_needaction_counter
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__message_needaction_counter
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade__message_needaction_counter
@@ -2573,6 +2674,11 @@ msgid "Number of Actions"
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_branch__school_count
+msgid "Number of School Units"
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_homeroom__enrolled_count
 msgid "Number of enrollments currently linked to this Homeroom batch."
 msgstr ""
@@ -2581,6 +2687,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school__message_has_error_counter
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__message_has_error_counter
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__message_has_error_counter
+#: model:ir.model.fields,field_description:ssi_school.field_school_branch__message_has_error_counter
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__message_has_error_counter
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__message_has_error_counter
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade__message_has_error_counter
@@ -2597,6 +2704,7 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school.field_school__message_needaction_counter
 #: model:ir.model.fields,help:ssi_school.field_school_academic_term__message_needaction_counter
 #: model:ir.model.fields,help:ssi_school.field_school_academic_year__message_needaction_counter
+#: model:ir.model.fields,help:ssi_school.field_school_branch__message_needaction_counter
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment__message_needaction_counter
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template__message_needaction_counter
 #: model:ir.model.fields,help:ssi_school.field_school_grade__message_needaction_counter
@@ -2613,6 +2721,7 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school.field_school__message_has_error_counter
 #: model:ir.model.fields,help:ssi_school.field_school_academic_term__message_has_error_counter
 #: model:ir.model.fields,help:ssi_school.field_school_academic_year__message_has_error_counter
+#: model:ir.model.fields,help:ssi_school.field_school_branch__message_has_error_counter
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment__message_has_error_counter
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template__message_has_error_counter
 #: model:ir.model.fields,help:ssi_school.field_school_grade__message_has_error_counter
@@ -2623,6 +2732,11 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school.field_school_student_mutation__message_has_error_counter
 #: model:ir.model.fields,help:ssi_school.field_school_teacher__message_has_error_counter
 msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_branch__school_count
+msgid "Number of school units overseen by this branch."
 msgstr ""
 
 #. module: ssi_school
@@ -2641,6 +2755,7 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school.field_school__message_unread_counter
 #: model:ir.model.fields,help:ssi_school.field_school_academic_term__message_unread_counter
 #: model:ir.model.fields,help:ssi_school.field_school_academic_year__message_unread_counter
+#: model:ir.model.fields,help:ssi_school.field_school_branch__message_unread_counter
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment__message_unread_counter
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template__message_unread_counter
 #: model:ir.model.fields,help:ssi_school.field_school_grade__message_unread_counter
@@ -3061,6 +3176,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school__activity_user_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__activity_user_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__activity_user_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_branch__activity_user_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__activity_user_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__activity_user_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade__activity_user_id
@@ -3166,6 +3282,11 @@ msgid "School Academic Year"
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model,name:ssi_school.model_school_branch
+msgid "School Branch"
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model,name:ssi_school.model_school_enrollment
 #: model:ir.module.category,name:ssi_school.school_enrollment_data_ownership_module_category
 #: model:ir.module.category,name:ssi_school.school_enrollment_workflow_module_category
@@ -3243,6 +3364,18 @@ msgstr ""
 #: model:ir.module.category,name:ssi_school.school_student_mutation_data_ownership_module_category
 #: model:ir.module.category,name:ssi_school.school_student_mutation_workflow_module_category
 msgid "School Student Mutation"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.actions.act_window,name:ssi_school.school_branch_open_school_action
+#: model:ir.model.fields,field_description:ssi_school.field_school_branch__school_ids
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_branch_view_form
+msgid "School Units"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_branch__school_ids
+msgid "School units directly overseen by this branch."
 msgstr ""
 
 #. module: ssi_school
@@ -3431,6 +3564,7 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school.field_school__activity_state
 #: model:ir.model.fields,help:ssi_school.field_school_academic_term__activity_state
 #: model:ir.model.fields,help:ssi_school.field_school_academic_year__activity_state
+#: model:ir.model.fields,help:ssi_school.field_school_branch__activity_state
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment__activity_state
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template__activity_state
 #: model:ir.model.fields,help:ssi_school.field_school_grade__activity_state
@@ -4182,6 +4316,7 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school.field_school__activity_exception_decoration
 #: model:ir.model.fields,help:ssi_school.field_school_academic_term__activity_exception_decoration
 #: model:ir.model.fields,help:ssi_school.field_school_academic_year__activity_exception_decoration
+#: model:ir.model.fields,help:ssi_school.field_school_branch__activity_exception_decoration
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment__activity_exception_decoration
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template__activity_exception_decoration
 #: model:ir.model.fields,help:ssi_school.field_school_grade__activity_exception_decoration
@@ -4227,6 +4362,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school__message_unread
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__message_unread
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__message_unread
+#: model:ir.model.fields,field_description:ssi_school.field_school_branch__message_unread
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__message_unread
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__message_unread
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade__message_unread
@@ -4243,6 +4379,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school__message_unread_counter
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__message_unread_counter
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__message_unread_counter
+#: model:ir.model.fields,field_description:ssi_school.field_school_branch__message_unread_counter
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__message_unread_counter
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__message_unread_counter
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade__message_unread_counter
@@ -4389,6 +4526,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school__website_message_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__website_message_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__website_message_ids
+#: model:ir.model.fields,field_description:ssi_school.field_school_branch__website_message_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__website_message_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__website_message_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade__website_message_ids
@@ -4405,6 +4543,7 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school.field_school__website_message_ids
 #: model:ir.model.fields,help:ssi_school.field_school_academic_term__website_message_ids
 #: model:ir.model.fields,help:ssi_school.field_school_academic_year__website_message_ids
+#: model:ir.model.fields,help:ssi_school.field_school_branch__website_message_ids
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment__website_message_ids
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template__website_message_ids
 #: model:ir.model.fields,help:ssi_school.field_school_grade__website_message_ids
