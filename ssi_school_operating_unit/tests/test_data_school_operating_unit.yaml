@@ -189,12 +189,21 @@ scenarios:
             type: "value"
             operator: "is_truthy"
 
-      - step: "Create teacher contact"
+      - step: "Create teacher home address partner"
         action: "create"
         model: "res.partner"
         save_as: "teacher_contact"
         values:
           name: "Teacher Contact OU Test"
+
+      - step: "Create teacher employee"
+        action: "create"
+        model: "hr.employee"
+        save_as: "teacher_employee"
+        values:
+          name: "Teacher Employee OU Test"
+          company_id: "base.main_company"
+          address_home_id: "EVAL: registry['teacher_contact'].id"
 
       - step: "Create school teacher with operating unit"
         action: "create"
@@ -203,7 +212,7 @@ scenarios:
         values:
           name: "Teacher OU Test"
           code: "TCHOU02"
-          contact_id: "EVAL: registry['teacher_contact'].id"
+          employee_id: "EVAL: registry['teacher_employee'].id"
           operating_unit_ids:
             - - 4
               - "EVAL: registry['operating_unit'].id"
