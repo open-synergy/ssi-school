@@ -41,6 +41,15 @@
     </field>
 </record>
 
+<record id="school_branch_open_school_action" model="ir.actions.act_window">
+    <field name="name">School Units</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">school</field>
+    <field name="view_mode">tree,form</field>
+    <field name="domain">[('branch_id', '=', active_id)]</field>
+    <field name="context">{'default_branch_id': active_id}</field>
+</record>
+
 <record id="school_branch_view_form" model="ir.ui.view">
     <field name="name">school_branch - form</field>
     <field name="model">school_branch</field>
@@ -67,15 +76,6 @@
             </xpath>
         </data>
     </field>
-</record>
-
-<record id="school_branch_open_school_action" model="ir.actions.act_window">
-    <field name="name">School Units</field>
-    <field name="type">ir.actions.act_window</field>
-    <field name="res_model">school</field>
-    <field name="view_mode">tree,form</field>
-    <field name="domain">[('branch_id', '=', active_id)]</field>
-    <field name="context">{'default_branch_id': active_id}</field>
 </record>
 
 <record id="school_branch_action" model="ir.actions.act_window">
