@@ -21,6 +21,15 @@
         />
 </record>
 
+<record id="school_branch_group" model="res.groups">
+    <field name="name">Branch</field>
+    <field name="category_id" ref="school_configurator_module_category" />
+    <field
+            name="users"
+            eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"
+        />
+</record>
+
 <record id="school_grade_group" model="res.groups">
     <field name="name">Grade</field>
     <field name="category_id" ref="school_configurator_module_category" />

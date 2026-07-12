@@ -5,6 +5,7 @@
 from . import (  # noqa: F401
     school_grade_type,
     school_grade,
+    school_branch,
     school,
     school_grade_class,
     school_academic_year,

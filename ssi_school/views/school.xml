@@ -15,11 +15,22 @@
         <data>
             <xpath expr="//search" position="inside">
                 <field name="grade_type_id" />
+                <field name="branch_id" />
+                <filter
+                        name="directly_under_center"
+                        string="Directly Under Center"
+                        domain="[('branch_id', '=', False)]"
+                    />
                 <group expand="0" string="Group By">
                     <filter
                             name="group_by_grade_type_id"
                             string="Grade Type"
                             context="{'group_by': 'grade_type_id'}"
+                        />
+                    <filter
+                            name="group_by_branch_id"
+                            string="Branch"
+                            context="{'group_by': 'branch_id'}"
                         />
                 </group>
             </xpath>
@@ -36,6 +47,7 @@
         <data>
             <xpath expr="//field[@name='code']" position="after">
                 <field name="grade_type_id" />
+                <field name="branch_id" />
             </xpath>
         </data>
     </field>
@@ -50,6 +62,8 @@
         <data>
             <xpath expr="//field[@name='active']" position="after">
                 <field name="grade_type_id" />
+                <field name="company_id" />
+                <field name="branch_id" />
             </xpath>
         </data>
     </field>
