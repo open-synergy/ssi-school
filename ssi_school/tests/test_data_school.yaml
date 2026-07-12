@@ -104,6 +104,112 @@ scenarios:
         save_as: "_check"
         expect_count: 1
 
+  - name: "Create School Directly Under Center"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Direct Center"
+          code: "GTDC"
+          sequence: 10
+      - step: "Create school without branch"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Direct Center"
+          code: "SCHDC"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+      - step: "Assert no branch"
+        action: "assert"
+        target: "school"
+        asserts:
+          branch_id:
+            type: "value"
+            operator: "is_falsy"
+      - step: "Assert center is active company"
+        action: "assert"
+        target: "school"
+        asserts:
+          company_id:
+            type: "m2o"
+            expected_xml_id: "base.main_company"
+
+  - name: "Create School Under Branch"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Under Branch"
+          code: "GTUB"
+          sequence: 10
+      - step: "Create branch"
+        action: "create"
+        model: "school_branch"
+        save_as: "branch"
+        values:
+          name: "Branch Under Test"
+          code: "BRUB"
+      - step: "Create school under branch"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Under Branch"
+          code: "SCHUB"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+          branch_id: "EVAL: registry['branch'].id"
+      - step: "Assert branch assigned"
+        action: "assert"
+        target: "school"
+        asserts:
+          branch_id:
+            type: "value"
+            operator: "is_truthy"
+
+  - name: "Move School From Branch to Direct Center"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Move To Center"
+          code: "GTMTC"
+          sequence: 10
+      - step: "Create branch"
+        action: "create"
+        model: "school_branch"
+        save_as: "branch"
+        values:
+          name: "Branch Move Test"
+          code: "BRMT"
+      - step: "Create school under branch"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Move Test"
+          code: "SCHMT"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+          branch_id: "EVAL: registry['branch'].id"
+      - step: "Clear branch"
+        action: "write"
+        target: "school"
+        values:
+          branch_id: false
+      - step: "Assert branch cleared"
+        action: "assert"
+        target: "school"
+        asserts:
+          branch_id:
+            type: "value"
+            operator: "is_falsy"
+
   - name: "Delete School"
     steps:
       - step: "Create grade type"

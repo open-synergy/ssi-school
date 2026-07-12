@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 OpenSynergy Indonesia
+     Copyright 2026 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="school_branch_demo_1" model="school_branch">
+        <field name="name">Branch Jakarta</field>
+        <field name="code">BR-JKT</field>
+        <field name="company_id" ref="base.main_company" />
+    </record>
+
+    <record id="school_branch_demo_2" model="school_branch">
+        <field name="name">Branch Bandung</field>
+        <field name="code">BR-BDG</field>
+        <field name="company_id" ref="base.main_company" />
+    </record>
+</odoo>

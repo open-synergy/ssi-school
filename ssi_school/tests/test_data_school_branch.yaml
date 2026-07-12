@@ -1,0 +1,193 @@
+scenarios:
+  - name: "Create School Branch"
+    steps:
+      - step: "Create branch"
+        action: "create"
+        model: "school_branch"
+        save_as: "branch"
+        values:
+          name: "Branch Jakarta"
+          code: "BR-JKT-T1"
+      - step: "Assert created"
+        action: "assert"
+        target: "branch"
+        asserts:
+          id:
+            type: "value"
+            operator: "is_truthy"
+          name:
+            type: "value"
+            expected: "Branch Jakarta"
+      - step: "Assert default center is active company"
+        action: "assert"
+        target: "branch"
+        asserts:
+          company_id:
+            type: "m2o"
+            expected_xml_id: "base.main_company"
+
+  - name: "Create School Branch with Explicit Center"
+    steps:
+      - step: "Create branch with explicit company"
+        action: "create"
+        model: "school_branch"
+        save_as: "branch"
+        values:
+          name: "Branch Bandung"
+          code: "BR-BDG-T1"
+          company_id: "base.main_company"
+      - step: "Assert center matches input"
+        action: "assert"
+        target: "branch"
+        asserts:
+          company_id:
+            type: "m2o"
+            expected_xml_id: "base.main_company"
+
+  - name: "Edit School Branch Name"
+    steps:
+      - step: "Create branch"
+        action: "create"
+        model: "school_branch"
+        save_as: "branch"
+        values:
+          name: "Branch Original"
+          code: "BR-ORIG"
+      - step: "Write new name"
+        action: "write"
+        target: "branch"
+        values:
+          name: "Branch Renamed"
+      - step: "Assert name updated"
+        action: "assert"
+        target: "branch"
+        asserts:
+          name:
+            type: "value"
+            expected: "Branch Renamed"
+
+  - name: "Archive School Branch"
+    steps:
+      - step: "Create branch"
+        action: "create"
+        model: "school_branch"
+        save_as: "branch"
+        values:
+          name: "Branch Archive Test"
+          code: "BR-ARCH"
+      - step: "Assert active by default"
+        action: "assert"
+        target: "branch"
+        asserts:
+          active:
+            type: "value"
+            expected: true
+      - step: "Archive branch"
+        action: "write"
+        target: "branch"
+        values:
+          active: false
+      - step: "Assert archived"
+        action: "assert"
+        target: "branch"
+        asserts:
+          active:
+            type: "value"
+            expected: false
+
+  - name: "School Units Reverse Relation and Count"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Branch Reverse"
+          code: "GTBR"
+          sequence: 10
+      - step: "Create branch"
+        action: "create"
+        model: "school_branch"
+        save_as: "branch"
+        values:
+          name: "Branch Reverse Test"
+          code: "BR-REV"
+      - step: "Create first school under branch"
+        action: "create"
+        model: "school"
+        save_as: "school_1"
+        values:
+          name: "Reverse School 1"
+          code: "SCHREV1"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+          branch_id: "EVAL: registry['branch'].id"
+      - step: "Create second school under branch"
+        action: "create"
+        model: "school"
+        save_as: "school_2"
+        values:
+          name: "Reverse School 2"
+          code: "SCHREV2"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+          branch_id: "EVAL: registry['branch'].id"
+      - step: "Create school directly under center"
+        action: "create"
+        model: "school"
+        save_as: "school_3"
+        values:
+          name: "Reverse School 3 Direct"
+          code: "SCHREV3"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+      - step: "Assert school_ids contains both branch schools"
+        action: "assert"
+        target: "branch"
+        asserts:
+          school_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 2
+      - step: "Assert school_count matches"
+        action: "assert"
+        target: "branch"
+        asserts:
+          school_count:
+            type: "value"
+            expected: 2
+      - step: "Detach second school from branch"
+        action: "write"
+        target: "school_2"
+        values:
+          branch_id: false
+      - step: "Assert school_count decreased"
+        action: "assert"
+        target: "branch"
+        asserts:
+          school_count:
+            type: "value"
+            expected: 1
+      - step: "Search schools directly under center"
+        action: "search"
+        model: "school"
+        domain: [["branch_id", "=", false], ["code", "in", ["SCHREV2", "SCHREV3"]]]
+        save_as: "direct_schools"
+        expect_count: 2
+
+  - name: "Delete School Branch"
+    steps:
+      - step: "Create branch"
+        action: "create"
+        model: "school_branch"
+        save_as: "branch"
+        values:
+          name: "Branch To Delete"
+          code: "BR-DEL"
+      - step: "Delete branch"
+        action: "call"
+        target: "branch"
+        method: "unlink"
+      - step: "Search expects zero results"
+        action: "search"
+        model: "school_branch"
+        domain: [["code", "=", "BR-DEL"]]
+        save_as: "result"
+        expect_count: 0
