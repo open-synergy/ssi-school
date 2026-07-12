@@ -1,0 +1,166 @@
+scenarios:
+  - name: "Create Teacher From Employee"
+    steps:
+      - step: "Create home address partner"
+        action: "create"
+        model: "res.partner"
+        save_as: "partner"
+        values:
+          name: "Employee Home Address EMP-T-001"
+      - step: "Create employee with barcode"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee"
+        values:
+          name: "Employee EMP-T-001"
+          barcode: "EMP-T-001"
+          company_id: "base.main_company"
+          address_home_id: "EVAL: registry['partner'].id"
+      - step: "Run Create Teacher action"
+        action: "call"
+        target: "employee"
+        method: "action_create_teacher"
+      - step: "Verify Teacher created for employee"
+        action: "search"
+        model: "school_teacher"
+        domain: [["employee_id", "=", "EVAL: registry['employee'].id"]]
+        save_as: "teachers"
+        expect_count: 1
+      - step: "Assert employee.teacher_id is set"
+        action: "assert"
+        target: "employee"
+        asserts:
+          teacher_id:
+            type: "value"
+            operator: "is_truthy"
+
+  - name: "Teacher Code From Barcode"
+    steps:
+      - step: "Create home address partner"
+        action: "create"
+        model: "res.partner"
+        save_as: "partner"
+        values:
+          name: "Employee Home Address EMP-T-002"
+      - step: "Create employee with barcode"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee"
+        values:
+          name: "Employee EMP-T-002"
+          barcode: "EMP-T-002"
+          company_id: "base.main_company"
+          address_home_id: "EVAL: registry['partner'].id"
+      - step: "Run Create Teacher action"
+        action: "call"
+        target: "employee"
+        method: "action_create_teacher"
+      - step: "Verify Teacher code equals employee barcode"
+        action: "search"
+        model: "school_teacher"
+        domain: [["code", "=", "EMP-T-002"]]
+        save_as: "teachers"
+        expect_count: 1
+
+  - name: "Fallback Code When No Barcode"
+    steps:
+      - step: "Create home address partner"
+        action: "create"
+        model: "res.partner"
+        save_as: "partner"
+        values:
+          name: "Employee Home Address No Barcode"
+      - step: "Create employee without barcode"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee"
+        values:
+          name: "Employee No Barcode"
+          company_id: "base.main_company"
+          address_home_id: "EVAL: registry['partner'].id"
+      - step: "Run Create Teacher action"
+        action: "call"
+        target: "employee"
+        method: "action_create_teacher"
+      - step: "Verify Teacher code falls back to /"
+        action: "search"
+        model: "school_teacher"
+        domain:
+          - ["employee_id", "=", "EVAL: registry['employee'].id"]
+          - ["code", "=", "/"]
+        save_as: "teachers"
+        expect_count: 1
+
+  - name: "Idempotent - No Duplicate Teacher"
+    steps:
+      - step: "Create home address partner"
+        action: "create"
+        model: "res.partner"
+        save_as: "partner"
+        values:
+          name: "Employee Home Address Idempotent"
+      - step: "Create employee with barcode"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee"
+        values:
+          name: "Employee Idempotent"
+          barcode: "EMP-T-IDEMPOTENT"
+          company_id: "base.main_company"
+          address_home_id: "EVAL: registry['partner'].id"
+      - step: "Run Create Teacher action first time"
+        action: "call"
+        target: "employee"
+        method: "action_create_teacher"
+      - step: "Run Create Teacher action second time"
+        action: "call"
+        target: "employee"
+        method: "action_create_teacher"
+      - step: "Verify only one Teacher exists for employee"
+        action: "search"
+        model: "school_teacher"
+        domain: [["employee_id", "=", "EVAL: registry['employee'].id"]]
+        save_as: "teachers"
+        expect_count: 1
+
+  - name: "Existing Teacher Is Not Recreated"
+    steps:
+      - step: "Create home address partner"
+        action: "create"
+        model: "res.partner"
+        save_as: "partner"
+        values:
+          name: "Employee Home Address Existing Teacher"
+      - step: "Create employee with barcode"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee"
+        values:
+          name: "Employee Existing Teacher"
+          barcode: "EMP-T-EXISTING"
+          company_id: "base.main_company"
+          address_home_id: "EVAL: registry['partner'].id"
+      - step: "Manually create Teacher for employee"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher"
+        values:
+          name: "Existing Teacher"
+          code: "TCHEXIST"
+          employee_id: "EVAL: registry['employee'].id"
+      - step: "Run Create Teacher action"
+        action: "call"
+        target: "employee"
+        method: "action_create_teacher"
+      - step: "Verify still only one Teacher for employee"
+        action: "search"
+        model: "school_teacher"
+        domain: [["employee_id", "=", "EVAL: registry['employee'].id"]]
+        save_as: "teachers_for_employee"
+        expect_count: 1
+      - step: "Verify existing Teacher was not overwritten"
+        action: "search"
+        model: "school_teacher"
+        domain: [["code", "=", "TCHEXIST"]]
+        save_as: "teachers_existing"
+        expect_count: 1
