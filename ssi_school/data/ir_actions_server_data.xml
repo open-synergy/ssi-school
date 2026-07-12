@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 OpenSynergy Indonesia
+     Copyright 2026 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo noupdate="1">
+<record id="action_hr_employee_create_teacher" model="ir.actions.server">
+    <field name="name">Create Teacher</field>
+    <field name="model_id" ref="hr.model_hr_employee" />
+    <field name="binding_model_id" ref="hr.model_hr_employee" />
+    <field name="binding_type">action</field>
+    <field name="state">code</field>
+    <field name="code">records.action_create_teacher()</field>
+</record>
+</odoo>

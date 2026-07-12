@@ -4,6 +4,7 @@
 
 from . import (  # noqa: F401
     common,
+    test_hr_employee,
     test_school_grade_type,
     test_school_grade,
     test_school_branch,
