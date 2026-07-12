@@ -390,11 +390,6 @@ msgid "Allowed Usages"
 msgstr ""
 
 #. module: ssi_school_admission
-#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_payment_term_view_form_embedded
-msgid "Amount"
-msgstr ""
-
-#. module: ssi_school_admission
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template_line__analytic_account_id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__analytic_account_id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__analytic_account_id
@@ -856,6 +851,7 @@ msgstr ""
 
 #. module: ssi_school_admission
 #: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_payment_term_view_tree
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_view_form
 msgid "Disconnect Invoice"
 msgstr ""
 
@@ -936,6 +932,7 @@ msgstr ""
 
 #. module: ssi_school_admission
 #: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_payment_term_view_tree
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_view_form
 msgid "Duplicate Term"
 msgstr ""
 
@@ -1340,6 +1337,7 @@ msgstr ""
 
 #. module: ssi_school_admission
 #: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_payment_term_view_tree
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_view_form
 msgid "Mark as Manual"
 msgstr ""
 
@@ -2623,6 +2621,7 @@ msgstr ""
 
 #. module: ssi_school_admission
 #: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_payment_term_view_tree
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_view_form
 msgid "Unmark as Manual"
 msgstr ""
 
