@@ -1,3 +1,5 @@
+options:
+  auto_refresh: true
 scenarios:
   - name: "Addendum - Existing Payment Term Is Locked After Enrollment Opens"
     steps:
@@ -216,11 +218,6 @@ scenarios:
             type: "value"
             expected: "open"
 
-      - step: "Invalidate term cache after enrollment opened"
-        action: "call"
-        target: "term"
-        method: "invalidate_cache"
-
       - step: "Assert term locked after opening"
         action: "assert"
         target: "term"
@@ -228,11 +225,6 @@ scenarios:
           locked:
             type: "value"
             expected: true
-
-      - step: "Invalidate detail cache after enrollment opened"
-        action: "call"
-        target: "detail"
-        method: "invalidate_cache"
 
       - step: "Assert detail locked after opening"
         action: "assert"
@@ -288,11 +280,6 @@ scenarios:
         method: "action_close_addendum"
         as_user: "base.user_admin"
 
-      - step: "Invalidate addendum term cache after closing"
-        action: "call"
-        target: "addendum_term"
-        method: "invalidate_cache"
-
       - step: "Assert first-round addendum term is locked after closing"
         action: "assert"
         target: "addendum_term"
@@ -300,11 +287,6 @@ scenarios:
           locked:
             type: "value"
             expected: true
-
-      - step: "Invalidate addendum detail cache after closing"
-        action: "call"
-        target: "addendum_detail"
-        method: "invalidate_cache"
 
       - step: "Assert first-round addendum detail is locked after closing"
         action: "assert"
@@ -337,11 +319,6 @@ scenarios:
         target: "enrollment"
         method: "action_close_addendum"
         as_user: "base.user_admin"
-
-      - step: "Invalidate second-round addendum term cache after closing"
-        action: "call"
-        target: "addendum_term_2"
-        method: "invalidate_cache"
 
       - step: "Assert second-round addendum term is locked after closing again"
         action: "assert"

@@ -1,3 +1,5 @@
+options:
+  auto_refresh: true
 scenarios:
   - name: "Compute Payment - Estimated Invoice and Due Date from Duration"
     steps:
@@ -213,11 +215,6 @@ scenarios:
         method: "action_compute_payment"
         as_user: "base.user_admin"
 
-      - step: "Invalidate enrollment cache after compute"
-        action: "call"
-        target: "enrollment"
-        method: "invalidate_cache"
-
       - step: "Get enrollment payment term 1"
         action: "search"
         model: "school_enrollment_payment_term"
@@ -432,11 +429,6 @@ scenarios:
         target: "enrollment"
         method: "action_compute_payment"
         as_user: "base.user_admin"
-
-      - step: "Invalidate enrollment cache after compute"
-        action: "call"
-        target: "enrollment"
-        method: "invalidate_cache"
 
       - step: "Get enrollment payment term"
         action: "search"

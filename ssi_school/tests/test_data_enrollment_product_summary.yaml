@@ -1,3 +1,5 @@
+options:
+  auto_refresh: true
 scenarios:
   - name: "Product Summary - satu produk satu term tercompute saat detail ditambah"
     steps:
@@ -145,11 +147,6 @@ scenarios:
           uom_quantity: 1.0
           uom_id: "REF: uom.product_uom_unit"
           price_unit: 1000000.0
-
-      - step: "Invalidate enrollment cache"
-        action: "call"
-        target: "enrollment"
-        method: "invalidate_cache"
 
       - step: "Assert product_summary_ids berisi 1 record"
         action: "assert"
@@ -339,11 +336,6 @@ scenarios:
           uom_id: "REF: uom.product_uom_unit"
           price_unit: 500000.0
 
-      - step: "Invalidate enrollment cache"
-        action: "call"
-        target: "enrollment"
-        method: "invalidate_cache"
-
       - step: "Assert product_summary_ids hanya 1 record meski 2 term"
         action: "assert"
         target: "enrollment"
@@ -512,11 +504,6 @@ scenarios:
           uom_id: "REF: uom.product_uom_unit"
           price_unit: 750000.0
 
-      - step: "Invalidate enrollment cache"
-        action: "call"
-        target: "enrollment"
-        method: "invalidate_cache"
-
       - step: "Assert summary ada sebelum detail dihapus"
         action: "assert"
         target: "enrollment"
@@ -530,11 +517,6 @@ scenarios:
         action: "call"
         target: "detail"
         method: "unlink"
-
-      - step: "Invalidate enrollment cache setelah hapus detail"
-        action: "call"
-        target: "enrollment"
-        method: "invalidate_cache"
 
       - step: "Assert summary kosong setelah detail dihapus"
         action: "assert"
@@ -682,11 +664,6 @@ scenarios:
           uom_id: "REF: uom.product_uom_unit"
           price_unit: 250000.0
 
-      - step: "Invalidate enrollment cache"
-        action: "call"
-        target: "enrollment"
-        method: "invalidate_cache"
-
       - step: "Assert summary ada sebelum term dihapus"
         action: "assert"
         target: "enrollment"
@@ -700,11 +677,6 @@ scenarios:
         action: "call"
         target: "term"
         method: "unlink"
-
-      - step: "Invalidate enrollment cache setelah hapus term"
-        action: "call"
-        target: "enrollment"
-        method: "invalidate_cache"
 
       - step: "Assert summary kosong setelah term dihapus"
         action: "assert"

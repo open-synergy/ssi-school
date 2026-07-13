@@ -1,3 +1,5 @@
+options:
+  auto_refresh: true
 scenarios:
   - name: "Enrollment Full Workflow Create Confirm Approve Invoice Done"
     steps:
@@ -211,11 +213,6 @@ scenarios:
         target: "enrollment"
         method: "action_compute_payment"
         as_user: "base.user_admin"
-
-      - step: "Invalidate enrollment cache after compute"
-        action: "call"
-        target: "enrollment"
-        method: "invalidate_cache"
 
       - step: "Assert payment terms created"
         action: "assert"
@@ -509,11 +506,6 @@ scenarios:
         action: "call"
         target: "term_2"
         method: "action_create_invoice"
-
-      - step: "Invalidate term_2 cache"
-        action: "call"
-        target: "term_2"
-        method: "invalidate_cache"
 
       - step: "Assert second term has invoice"
         action: "assert"

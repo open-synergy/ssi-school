@@ -20,6 +20,7 @@ from . import (  # noqa: F401
     test_school_enrollment_payment_template,
     test_school_enrollment_payment_product_configurator,
     test_school_enrollment,
+    test_school_enrollment_access,
     test_school_enrollment_results,
     test_school_enrollment_payment_term_management,
     test_school_enrollment_payment_term_duplicate,

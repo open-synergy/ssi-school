@@ -1,3 +1,5 @@
+options:
+  auto_refresh: true
 scenarios:
   - name: "Restart Unlocks Payment Term And Detail, Remains Editable"
     steps:
@@ -169,11 +171,6 @@ scenarios:
             type: "value"
             expected: "open"
 
-      - step: "Invalidate term cache after opening"
-        action: "call"
-        target: "term"
-        method: "invalidate_cache"
-
       - step: "Assert term locked after opening (control)"
         action: "assert"
         target: "term"
@@ -181,11 +178,6 @@ scenarios:
           locked:
             type: "value"
             expected: true
-
-      - step: "Invalidate detail cache after opening"
-        action: "call"
-        target: "detail"
-        method: "invalidate_cache"
 
       - step: "Assert detail locked after opening (control)"
         action: "assert"
@@ -225,11 +217,6 @@ scenarios:
             type: "value"
             expected: "draft"
 
-      - step: "Invalidate term cache after restart"
-        action: "call"
-        target: "term"
-        method: "invalidate_cache"
-
       - step: "Assert term unlocked after restart"
         action: "assert"
         target: "term"
@@ -237,11 +224,6 @@ scenarios:
           locked:
             type: "value"
             expected: false
-
-      - step: "Invalidate detail cache after restart"
-        action: "call"
-        target: "detail"
-        method: "invalidate_cache"
 
       - step: "Assert detail unlocked after restart"
         action: "assert"

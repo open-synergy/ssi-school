@@ -1,3 +1,5 @@
+options:
+  auto_refresh: true
 scenarios:
   - name: "Copy Payment Terms - Replace Mode"
     steps:

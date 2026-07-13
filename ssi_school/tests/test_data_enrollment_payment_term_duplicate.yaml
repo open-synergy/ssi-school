@@ -1,3 +1,5 @@
+options:
+  auto_refresh: true
 scenarios:
   - name: "Enrollment Payment Term - Duplicate via Wizard"
     steps:
@@ -178,11 +180,6 @@ scenarios:
         action: "call"
         target: "term"
         method: "action_create_invoice"
-
-      - step: "Invalidate term cache after invoice creation"
-        action: "call"
-        target: "term"
-        method: "invalidate_cache"
 
       - step: "Assert source term has an invoice"
         action: "assert"

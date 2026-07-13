@@ -1,3 +1,5 @@
+options:
+  auto_refresh: true
 scenarios:
   - name: "Allowed Products - Template Detail - Manual Strategy"
     steps:

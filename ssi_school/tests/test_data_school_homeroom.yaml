@@ -1,3 +1,5 @@
+options:
+  auto_refresh: true
 scenarios:
   - name: "Create Homeroom Draft"
     steps:
@@ -235,11 +237,6 @@ scenarios:
           student_id: "EVAL: registry['student_2'].id"
           homeroom_id: "EVAL: registry['homeroom'].id"
           currency_id: "EVAL: env.company.currency_id.id"
-
-      - step: "Invalidate homeroom cache after linking enrollments"
-        action: "call"
-        target: "homeroom"
-        method: "invalidate_cache"
 
       - step: "Assert homeroom aggregates enrollments"
         action: "assert"

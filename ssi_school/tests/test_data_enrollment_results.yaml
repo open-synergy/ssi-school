@@ -1,3 +1,5 @@
+options:
+  auto_refresh: true
 scenarios:
   - name: "Enrollment Result - Passed"
     steps:
@@ -138,11 +140,6 @@ scenarios:
         method: "action_set_result_to_passed"
         as_user: "base.user_admin"
 
-      - step: "Invalidate enrollment cache after result"
-        action: "call"
-        target: "enrollment"
-        method: "invalidate_cache"
-
       - step: "Assert enrollment is done with passed result"
         action: "assert"
         target: "enrollment"
@@ -156,11 +153,6 @@ scenarios:
           promote_to_grade_id:
             type: "value"
             operator: "is_truthy"
-
-      - step: "Invalidate student cache after result"
-        action: "call"
-        target: "student"
-        method: "invalidate_cache"
 
       - step: "Assert student state returned to draft after passed"
         action: "assert"
@@ -295,11 +287,6 @@ scenarios:
         method: "action_set_result_to_failed"
         as_user: "base.user_admin"
 
-      - step: "Invalidate enrollment cache after result"
-        action: "call"
-        target: "enrollment"
-        method: "invalidate_cache"
-
       - step: "Assert enrollment is done with failed result"
         action: "assert"
         target: "enrollment"
@@ -310,11 +297,6 @@ scenarios:
           academic_year_result:
             type: "value"
             expected: "failed"
-
-      - step: "Invalidate student cache"
-        action: "call"
-        target: "student"
-        method: "invalidate_cache"
 
       - step: "Assert student state returned to draft after failed"
         action: "assert"
@@ -449,11 +431,6 @@ scenarios:
         method: "action_set_result_to_drop_out"
         as_user: "base.user_admin"
 
-      - step: "Invalidate enrollment cache after result"
-        action: "call"
-        target: "enrollment"
-        method: "invalidate_cache"
-
       - step: "Assert enrollment is done with drop out result"
         action: "assert"
         target: "enrollment"
@@ -464,11 +441,6 @@ scenarios:
           academic_year_result:
             type: "value"
             expected: "drop_out"
-
-      - step: "Invalidate student cache"
-        action: "call"
-        target: "student"
-        method: "invalidate_cache"
 
       - step: "Assert student state is dropped"
         action: "assert"
@@ -603,11 +575,6 @@ scenarios:
         method: "action_set_result_to_graduate"
         as_user: "base.user_admin"
 
-      - step: "Invalidate enrollment cache after result"
-        action: "call"
-        target: "enrollment"
-        method: "invalidate_cache"
-
       - step: "Assert enrollment is done with graduate result"
         action: "assert"
         target: "enrollment"
@@ -618,11 +585,6 @@ scenarios:
           academic_year_result:
             type: "value"
             expected: "graduate"
-
-      - step: "Invalidate student cache"
-        action: "call"
-        target: "student"
-        method: "invalidate_cache"
 
       - step: "Assert student state is graduate"
         action: "assert"
