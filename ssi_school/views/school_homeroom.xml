@@ -162,10 +162,10 @@
 <menuitem
         id="school_homeroom_menu"
         name="Homerooms"
-        parent="ssi_school.menu_school_root"
+        parent="ssi_school.menu_school_student_activity"
         action="school_homeroom_action"
         groups="school_homeroom_viewer_group"
-        sequence="145"
+        sequence="60"
     />
 
 </odoo>

@@ -265,7 +265,7 @@
         parent="menu_school_root"
         action="school_student_action"
         groups="school_student_group"
-        sequence="110"
+        sequence="20"
     />
 
 </odoo>
