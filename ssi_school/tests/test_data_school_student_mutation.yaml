@@ -1,3 +1,5 @@
+options:
+  auto_refresh: true
 scenarios:
   - name: "Create Class Mutation Draft"
     steps:
@@ -113,11 +115,6 @@ scenarios:
           state:
             type: "value"
             expected: "confirm"
-
-      - step: "Invalidate enrollment cache before approve"
-        action: "call"
-        target: "enrollment"
-        method: "invalidate_cache"
 
       - step: "Approve enrollment"
         action: "call"
@@ -313,11 +310,6 @@ scenarios:
             type: "value"
             expected: "confirm"
 
-      - step: "Invalidate enrollment cache before approve"
-        action: "call"
-        target: "enrollment"
-        method: "invalidate_cache"
-
       - step: "Approve enrollment"
         action: "call"
         target: "enrollment"
@@ -371,11 +363,6 @@ scenarios:
             type: "value"
             expected: "confirm"
 
-      - step: "Invalidate mutation cache before approve"
-        action: "call"
-        target: "mutation"
-        method: "invalidate_cache"
-
       - step: "Approve mutation"
         action: "call"
         target: "mutation"
@@ -385,11 +372,6 @@ scenarios:
           state:
             type: "value"
             expected: "done"
-
-      - step: "Invalidate mutation cache after approve"
-        action: "call"
-        target: "mutation"
-        method: "invalidate_cache"
 
       - step: "Assert mutation number generated on done"
         action: "assert"
@@ -532,11 +514,6 @@ scenarios:
         target: "enrollment"
         method: "action_confirm"
         as_user: "base.user_admin"
-
-      - step: "Invalidate enrollment cache before approve"
-        action: "call"
-        target: "enrollment"
-        method: "invalidate_cache"
 
       - step: "Approve enrollment"
         action: "call"
@@ -689,11 +666,6 @@ scenarios:
         method: "action_confirm"
         as_user: "base.user_admin"
 
-      - step: "Invalidate enrollment cache before approve"
-        action: "call"
-        target: "enrollment"
-        method: "invalidate_cache"
-
       - step: "Approve enrollment"
         action: "call"
         target: "enrollment"
@@ -720,11 +692,6 @@ scenarios:
         target: "mutation_forward"
         method: "action_confirm"
         as_user: "base.user_admin"
-
-      - step: "Invalidate cache before approving forward mutation"
-        action: "call"
-        target: "mutation_forward"
-        method: "invalidate_cache"
 
       - step: "Approve forward mutation"
         action: "call"
@@ -761,11 +728,6 @@ scenarios:
         target: "mutation_reverse"
         method: "action_confirm"
         as_user: "base.user_admin"
-
-      - step: "Invalidate cache before approving reverse mutation"
-        action: "call"
-        target: "mutation_reverse"
-        method: "invalidate_cache"
 
       - step: "Approve reverse mutation"
         action: "call"
