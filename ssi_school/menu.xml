@@ -13,28 +13,28 @@
         id="menu_school_student_activity"
         name="Student Activities"
         parent="menu_school_root"
-        sequence="130"
+        sequence="40"
     />
 
 <menuitem
         id="menu_school_classroom"
         name="Classroom"
         parent="menu_school_root"
-        sequence="400"
+        sequence="60"
     />
 
 <menuitem
         id="menu_school_report"
-        name="Report"
+        name="Reporting"
         parent="menu_school_root"
-        sequence="980"
+        sequence="98"
     />
 
 <menuitem
         id="menu_school_configuration"
         name="Configuration"
         parent="menu_school_root"
-        sequence="990"
+        sequence="99"
     />
 
 <menuitem

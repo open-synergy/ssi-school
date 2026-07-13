@@ -7,7 +7,7 @@
         id="menu_incident_root"
         name="Incident"
         parent="ssi_school.menu_school_root"
-        sequence="500"
+        sequence="70"
     />
 
 <menuitem
