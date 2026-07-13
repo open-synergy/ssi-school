@@ -3272,7 +3272,7 @@ msgstr ""
 
 #. module: ssi_school
 #: model:ir.ui.menu,name:ssi_school.menu_school_report
-msgid "Report"
+msgid "Reporting"
 msgstr ""
 
 #. module: ssi_school
