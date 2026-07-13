@@ -200,6 +200,11 @@ scenarios:
         method: "action_confirm"
         as_user: "base.user_admin"
 
+      - step: "Invalidate homeroom cache before approve"
+        action: "call"
+        target: "homeroom"
+        method: "invalidate_cache"
+
       - step: "Approve homeroom"
         action: "call"
         target: "homeroom"
@@ -725,6 +730,11 @@ scenarios:
         method: "action_confirm"
         as_user: "base.user_admin"
 
+      - step: "Invalidate homeroom cache before approve"
+        action: "call"
+        target: "homeroom"
+        method: "invalidate_cache"
+
       - step: "Approve homeroom"
         action: "call"
         target: "homeroom"
@@ -930,6 +940,11 @@ scenarios:
         target: "homeroom"
         method: "action_confirm"
         as_user: "base.user_admin"
+
+      - step: "Invalidate homeroom cache before approve"
+        action: "call"
+        target: "homeroom"
+        method: "invalidate_cache"
 
       - step: "Approve homeroom"
         action: "call"

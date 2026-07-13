@@ -203,6 +203,11 @@ scenarios:
             type: "value"
             expected: false
 
+      - step: "Invalidate enrollment cache before approve"
+        action: "call"
+        target: "enrollment"
+        method: "invalidate_cache"
+
       - step: "Approve enrollment"
         action: "call"
         target: "enrollment"

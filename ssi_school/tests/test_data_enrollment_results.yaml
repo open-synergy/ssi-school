@@ -114,6 +114,11 @@ scenarios:
             type: "value"
             expected: "confirm"
 
+      - step: "Invalidate enrollment cache before approve"
+        action: "call"
+        target: "enrollment"
+        method: "invalidate_cache"
+
       - step: "Approve enrollment"
         action: "call"
         target: "enrollment"
@@ -123,6 +128,11 @@ scenarios:
           state:
             type: "value"
             expected: "open"
+
+      - step: "Invalidate enrollment cache after approve"
+        action: "call"
+        target: "enrollment"
+        method: "invalidate_cache"
 
       - step: "Set result to passed"
         action: "call"
@@ -251,6 +261,11 @@ scenarios:
         method: "action_confirm"
         as_user: "base.user_admin"
 
+      - step: "Invalidate enrollment cache before approve"
+        action: "call"
+        target: "enrollment"
+        method: "invalidate_cache"
+
       - step: "Approve enrollment"
         action: "call"
         target: "enrollment"
@@ -260,6 +275,11 @@ scenarios:
           state:
             type: "value"
             expected: "open"
+
+      - step: "Invalidate enrollment cache"
+        action: "call"
+        target: "enrollment"
+        method: "invalidate_cache"
 
       - step: "Set result to failed"
         action: "call"
@@ -385,6 +405,11 @@ scenarios:
         method: "action_confirm"
         as_user: "base.user_admin"
 
+      - step: "Invalidate enrollment cache before approve"
+        action: "call"
+        target: "enrollment"
+        method: "invalidate_cache"
+
       - step: "Approve enrollment"
         action: "call"
         target: "enrollment"
@@ -394,6 +419,11 @@ scenarios:
           state:
             type: "value"
             expected: "open"
+
+      - step: "Invalidate enrollment cache"
+        action: "call"
+        target: "enrollment"
+        method: "invalidate_cache"
 
       - step: "Set result to drop out"
         action: "call"
@@ -519,6 +549,11 @@ scenarios:
         method: "action_confirm"
         as_user: "base.user_admin"
 
+      - step: "Invalidate enrollment cache before approve"
+        action: "call"
+        target: "enrollment"
+        method: "invalidate_cache"
+
       - step: "Approve enrollment"
         action: "call"
         target: "enrollment"
@@ -528,6 +563,11 @@ scenarios:
           state:
             type: "value"
             expected: "open"
+
+      - step: "Invalidate enrollment cache"
+        action: "call"
+        target: "enrollment"
+        method: "invalidate_cache"
 
       - step: "Set result to graduate"
         action: "call"

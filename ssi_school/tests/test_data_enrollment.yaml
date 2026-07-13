@@ -244,6 +244,11 @@ scenarios:
         target: "all_terms"
         method: "action_create_invoice"
 
+      - step: "Invalidate enrollment cache after invoicing"
+        action: "call"
+        target: "enrollment"
+        method: "invalidate_cache"
+
       - step: "Assert enrollment done"
         action: "call"
         target: "enrollment"
@@ -454,6 +459,11 @@ scenarios:
         target: "enrollment"
         method: "action_compute_payment"
         as_user: "base.user_admin"
+
+      - step: "Invalidate enrollment cache"
+        action: "call"
+        target: "enrollment"
+        method: "invalidate_cache"
 
       - step: "Approve enrollment"
         action: "call"
