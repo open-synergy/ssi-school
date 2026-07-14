@@ -270,6 +270,16 @@ class SchoolAdmission(models.Model):
             "before the addendum remain locked."
         ),
     )
+    create_invoice_ok = fields.Boolean(
+        string="Can Create Due Invoice",
+        compute="_compute_policy",
+        store=False,
+        compute_sudo=True,
+        help=(
+            "Policy that determines whether invoices may be created for "
+            "payment terms that are due, via the Create Due Invoice wizard."
+        ),
+    )
 
     def _compute_policy(self):  # pylint: disable=missing-return
         _super = super()
@@ -408,6 +418,62 @@ class SchoolAdmission(models.Model):
         for record in self.sudo():
             record._lock_payment_term()  # pylint: disable=protected-access
 
+    def action_open_create_due_invoice_wizard(self):
+        for record in self.sudo():
+            # pylint: disable=protected-access
+            result = record._open_create_due_invoice_wizard()
+        return result
+
+    def _open_create_due_invoice_wizard(self):
+        self.ensure_one()
+        waction = self.env.ref(
+            "ssi_school_admission.school_admission_wizard_create_due_invoice_action"
+        ).read()[0]
+        waction.update(
+            {
+                "context": {
+                    "active_model": "school_admission",
+                    "active_id": self.id,
+                    "active_ids": [self.id],
+                },
+            }
+        )
+        return waction
+
+    def _create_due_invoice(self, date_start=False, date_end=False):
+        self.ensure_one()
+        self._check_create_invoice_policy()
+        for term in self._get_due_payment_term(date_start, date_end):
+            term._create_invoice()  # pylint: disable=protected-access
+
+    def _get_due_payment_term(self, date_start=False, date_end=False):
+        self.ensure_one()
+        date_end = date_end or fields.Date.context_today(self)
+        return self.payment_term_ids.filtered(
+            lambda r: r.state == "uninvoiced"
+            and r.date_invoice
+            and (not date_start or r.date_invoice >= date_start)
+            and r.date_invoice <= date_end
+        )
+
+    def _check_create_invoice_policy(self):
+        self.ensure_one()
+        if self.env.context.get("bypass_policy_check", False):
+            return True
+        if not self.create_invoice_ok:
+            error_message = (
+                _(
+                    """
+Context: Create due invoice
+Database ID: %s
+Problem: Document is not allowed to create due invoice
+Solution: Check create due invoice policy prerequisite
+"""
+                )
+                % (self.id,)
+            )
+            raise UserError(error_message)
+
     def _lock_payment_term(self):
         self.ensure_one()
         Term = self.env["school_admission_payment_term"]  # pylint: disable=invalid-name
@@ -496,6 +562,7 @@ Solution: Delete or disconnect the invoice on the payment term before cancelling
             "manual_number_ok",
             "copy_payment_term_ok",
             "addendum_ok",
+            "create_invoice_ok",
         ]
         res += policy_field
         return res
