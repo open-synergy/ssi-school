@@ -111,6 +111,52 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school
+#: code:addons/ssi_school/models/school_enrollment.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Create due invoice\n"
+"Database ID: %s\n"
+"Problem: Document is not allowed to create due invoice\n"
+"Solution: Check create due invoice policy prerequisite\n"
+msgstr ""
+
+#. module: ssi_school
+#: code:addons/ssi_school/wizards/school_enrollment_create_due_invoice.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Create due invoice for enrollments\n"
+"Database ID: %s\n"
+"Problem: Date Start '%s' is later than Date End '%s'\n"
+"Solution: Choose a Date Start that is not later than Date End\n"
+msgstr ""
+
+#. module: ssi_school
+#: code:addons/ssi_school/wizards/school_enrollment_create_due_invoice.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Create due invoice for enrollments\n"
+"Database ID: %s\n"
+"Problem: No enrollment selected\n"
+"Solution: Select at least one enrollment from the list view before running this wizard\n"
+msgstr ""
+
+#. module: ssi_school
+#: code:addons/ssi_school/wizards/school_enrollment_create_due_invoice.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Create due invoice for enrollments\n"
+"Database ID: %s\n"
+"Problem: The following enrollment(s) are not allowed to create due invoice:\n"
+"%s\n"
+"Solution: Deselect the listed enrollment(s), or make sure they are open and allowed\n"
+"by the create due invoice policy\n"
+msgstr ""
+
+#. module: ssi_school
 #: code:addons/ssi_school/models/school_student.py:0
 #, python-format
 msgid ""
@@ -350,6 +396,12 @@ msgstr ""
 #: code:addons/ssi_school/wizards/school_enrollment_copy_payment_term.py:0
 #, python-format
 msgid "- %s: academic term/school/grade does not match the source"
+msgstr ""
+
+#. module: ssi_school
+#: code:addons/ssi_school/wizards/school_enrollment_create_due_invoice.py:0
+#, python-format
+msgid "- %s: not allowed to create due invoice (check state/policy)"
 msgstr ""
 
 #. module: ssi_school
@@ -967,6 +1019,11 @@ msgid "Can Copy Payment Term"
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__create_invoice_ok
+msgid "Can Create Due Invoice"
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__fill_random_ok
 msgid "Can Fill Random"
 msgstr ""
@@ -1020,6 +1077,7 @@ msgstr ""
 #. module: ssi_school
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_payment_term_wizard_duplicate_view_form
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_wizard_copy_payment_term_view_form
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_wizard_create_due_invoice_view_form
 msgid "Cancel"
 msgstr ""
 
@@ -1291,6 +1349,18 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.actions.act_window,name:ssi_school.school_enrollment_wizard_create_due_invoice_action
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_form
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_wizard_create_due_invoice_view_form
+msgid "Create Due Invoice"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model,name:ssi_school.model_school_enrollment_wizard_create_due_invoice
+msgid "Create Due Invoice for Enrollment Payment Terms"
+msgstr ""
+
+#. module: ssi_school
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_payment_term_view_tree
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_form
 msgid "Create Invoice"
@@ -1315,6 +1385,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_wizard_duplicate__create_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_product_summary__create_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_wizard_copy_payment_term__create_uid
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_wizard_create_due_invoice__create_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade__create_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__create_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__create_uid
@@ -1339,6 +1410,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_wizard_duplicate__create_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_product_summary__create_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_wizard_copy_payment_term__create_date
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_wizard_create_due_invoice__create_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade__create_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__create_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__create_date
@@ -1399,12 +1471,14 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__date_end
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__date_end
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_wizard_create_due_invoice__date_end
 msgid "Date End"
 msgstr ""
 
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__date_start
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__date_start
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_wizard_create_due_invoice__date_start
 msgid "Date Start"
 msgstr ""
 
@@ -1525,6 +1599,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_wizard_duplicate__display_name
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_product_summary__display_name
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_wizard_copy_payment_term__display_name
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_wizard_create_due_invoice__display_name
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade__display_name
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__display_name
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__display_name
@@ -1645,6 +1720,12 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_wizard_create_due_invoice__date_start
+msgid ""
+"Earliest estimated invoice date to process. Leave empty for no lower bound."
+msgstr ""
+
+#. module: ssi_school
 #: model:school_grade_type,name:ssi_school.elementary_school_grade_type
 msgid "Elementary School (demo)"
 msgstr ""
@@ -1755,6 +1836,7 @@ msgstr ""
 
 #. module: ssi_school
 #: model:ir.actions.act_window,name:ssi_school.school_enrollment_action
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_wizard_create_due_invoice__enrollment_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__enrollment_ids
 #: model:ir.model.fields,field_description:ssi_school.field_school_student__enrollment_ids
 #: model:ir.ui.menu,name:ssi_school.school_enrollment_menu
@@ -1766,6 +1848,11 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_homeroom__enrollment_ids
 msgid "Enrollments generated or linked under this Homeroom batch."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_wizard_create_due_invoice__enrollment_ids
+msgid "Enrollments whose due payment terms will be invoiced."
 msgstr ""
 
 #. module: ssi_school
@@ -2131,6 +2218,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_wizard_duplicate__id
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_product_summary__id
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_wizard_copy_payment_term__id
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_wizard_create_due_invoice__id
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade__id
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__id
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__id
@@ -2384,6 +2472,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_wizard_duplicate____last_update
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_product_summary____last_update
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_wizard_copy_payment_term____last_update
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_wizard_create_due_invoice____last_update
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade____last_update
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_class____last_update
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type____last_update
@@ -2420,6 +2509,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_wizard_duplicate__write_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_product_summary__write_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_wizard_copy_payment_term__write_uid
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_wizard_create_due_invoice__write_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade__write_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__write_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__write_uid
@@ -2444,6 +2534,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_wizard_duplicate__write_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_product_summary__write_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_wizard_copy_payment_term__write_date
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_wizard_create_due_invoice__write_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade__write_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__write_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_type__write_date
@@ -2452,6 +2543,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__write_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_teacher__write_date
 msgid "Last Updated on"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_wizard_create_due_invoice__date_end
+msgid ""
+"Latest estimated invoice date to process. Leave empty to process up to "
+"today."
 msgstr ""
 
 #. module: ssi_school
@@ -3105,6 +3203,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__policy_template_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__policy_template_id
 msgid "Policy Template"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__create_invoice_ok
+msgid ""
+"Policy that determines whether invoices may be created for payment terms "
+"that are due, via the Create Due Invoice wizard."
 msgstr ""
 
 #. module: ssi_school
