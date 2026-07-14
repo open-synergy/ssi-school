@@ -9,10 +9,23 @@
 
 ## Flow
 
+### Single Record
+
 1. Open the **School > Incident > Academic Alerts** menu.
 2. Open the School Academic Alert record to approve.
 3. Click the **Approve** button.
 4. Click **OK** on the confirmation dialog.
+
+### Bulk (Multiple Records)
+
+1. Open the **School > Incident > Academic Alerts** menu.
+2. In the list view, open the **Filters** panel and select **Waiting for Approval** so
+   only records awaiting approval are shown.
+3. Select the checkbox of each record to approve — select only records where the active
+   user is a valid approver, since a single ineligible record in the selection aborts
+   the whole action and none of the selected records are approved.
+4. Click the **Approve** button that appears above the list.
+5. Click **OK** on the confirmation dialog.
 
 ## Post-Condition
 
@@ -22,3 +35,6 @@
   document from Waiting for Approval directly to Open; there is no separate manual
   "Start" step).
 - A Document Number is generated once the record reaches **Open** status.
+- When approved in bulk, each selected record's approval is evaluated independently:
+  every selected record moves to **Open** by the same rule as the single-record flow
+  above.
