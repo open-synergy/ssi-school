@@ -20,6 +20,7 @@ from . import (  # noqa: F401
     school_enrollment_payment_term,
     school_enrollment_payment_term_detail,
     school_enrollment_product_summary,
+    school_enrollment_fee_analysis,
     school_homeroom,
     school_student_mutation,
 )

@@ -1,0 +1,278 @@
+options:
+  auto_refresh: true
+
+setup:
+  steps:
+    - step: "Setup - get account type ref"
+      action: "ref"
+      xml_id: "account.data_account_type_revenue"
+      save_as: "account_type"
+
+    - step: "Setup - create income account"
+      action: "create"
+      model: "account.account"
+      save_as: "account"
+      values:
+        name: "School Fee Income FA"
+        code: "FA4200"
+        user_type_id: "REC: account_type.id"
+
+    - step: "Setup - create product"
+      action: "create"
+      model: "product.product"
+      save_as: "product"
+      values:
+        name: "School Fee FA"
+        type: "service"
+        list_price: 1000000.0
+
+    - step: "Setup - create grade type"
+      action: "create"
+      model: "school_grade_type"
+      save_as: "grade_type"
+      values:
+        name: "Grade Type FA"
+        code: "GTFA"
+        sequence: 10
+
+    - step: "Setup - create academic year"
+      action: "create"
+      model: "school_academic_year"
+      save_as: "academic_year"
+      values:
+        name: "2024/2025 FA"
+        code: "AYFA"
+        date_start: 2024-07-01
+        date_end: 2025-06-30
+
+    - step: "Setup - create academic term"
+      action: "create"
+      model: "school_academic_term"
+      save_as: "academic_term"
+      values:
+        name: "Semester FA"
+        code: "SMFA"
+        date_start: 2024-07-01
+        date_end: 2025-06-30
+        year_id: "REC: academic_year.id"
+        enrollment_state: "open"
+
+    - step: "Setup - create school"
+      action: "create"
+      model: "school"
+      save_as: "school"
+      values:
+        name: "School FA"
+        code: "SCHFA"
+        grade_type_id: "REC: grade_type.id"
+
+    - step: "Setup - create grade"
+      action: "create"
+      model: "school_grade"
+      save_as: "grade"
+      values:
+        name: "Grade FA"
+        code: "GFA"
+        sequence: 10
+        type_id: "REC: grade_type.id"
+
+    - step: "Setup - create grade class"
+      action: "create"
+      model: "school_grade_class"
+      save_as: "grade_class"
+      values:
+        name: "Class FA"
+        code: "CLAFA"
+        school_id: "REC: school.id"
+        grade_id: "REC: grade.id"
+
+    - step: "Setup - create student contact"
+      action: "create"
+      model: "res.partner"
+      save_as: "contact"
+      values:
+        name: "Student Contact FA"
+
+    - step: "Setup - create student"
+      action: "create"
+      model: "school_student"
+      save_as: "student"
+      values:
+        name: "Student FA"
+        code: "STUFA"
+        contact_id: "REC: contact.id"
+        school_id: "REC: school.id"
+
+    - step: "Setup - create enrollment"
+      action: "create"
+      model: "school_enrollment"
+      save_as: "enrollment"
+      values:
+        date: 2024-07-01
+        academic_year_id: "REC: academic_year.id"
+        academic_term_id: "REC: academic_term.id"
+        school_id: "REC: school.id"
+        grade_id: "REC: grade.id"
+        grade_class_id: "REC: grade_class.id"
+        student_id: "REC: student.id"
+        currency_id: "REC: company.currency_id.id"
+
+scenarios:
+  - name: "Satu detail muncul dengan nilai & dimensi benar"
+    steps:
+      - step: "Tambah payment term pada enrollment"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term 1 FA"
+          sequence: 10
+
+      - step: "Tambah detail pada payment term"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        save_as: "detail"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "School Fee FA"
+          account_id: "REC: account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+
+      - step: "Cari baris analysis untuk detail ini"
+        action: "search"
+        model: "school_enrollment_fee_analysis"
+        domain: [["detail_id", "=", "REC: detail.id"]]
+        save_as: "row"
+        expect_count: 1
+
+      - step: "Assert nilai & dimensi baris analysis"
+        action: "assert"
+        target: "row"
+        asserts:
+          uom_quantity:
+            type: "value"
+            expected: 1.0
+          price_subtotal:
+            type: "value"
+            expected: 1000000.0
+          price_total:
+            type: "value"
+            expected: 1000000.0
+          academic_year_id:
+            type: "m2o"
+            expected: "REC: academic_year"
+          academic_term_id:
+            type: "m2o"
+            expected: "REC: academic_term"
+          school_id:
+            type: "m2o"
+            expected: "REC: school"
+          grade_id:
+            type: "m2o"
+            expected: "REC: grade"
+          product_id:
+            type: "m2o"
+            expected: "REC: product"
+          student_id:
+            type: "m2o"
+            expected: "REC: student"
+
+  - name: "Dua term dengan detail terpisah menghasilkan dua baris (tidak diaggregate)"
+    steps:
+      - step: "Tambah term 1 pada enrollment"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term1"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term 1 FA2"
+          sequence: 10
+
+      - step: "Tambah detail pada term 1"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        save_as: "detail1"
+        values:
+          term_id: "REC: term1.id"
+          product_id: "REC: product.id"
+          name: "Fee Term 1 FA2"
+          account_id: "REC: account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+
+      - step: "Tambah term 2 pada enrollment yang sama"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term2"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term 2 FA2"
+          sequence: 20
+
+      - step: "Tambah detail pada term 2 (produk sama dengan term 1)"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        save_as: "detail2"
+        values:
+          term_id: "REC: term2.id"
+          product_id: "REC: product.id"
+          name: "Fee Term 2 FA2"
+          account_id: "REC: account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+
+      - step: "Cari baris analysis untuk enrollment ini"
+        action: "search"
+        model: "school_enrollment_fee_analysis"
+        domain: [["enrollment_id", "=", "REC: enrollment.id"]]
+        save_as: "rows"
+        expect_count: 2
+
+  - name: "Baris analysis hilang saat detail di-unlink"
+    steps:
+      - step: "Tambah payment term pada enrollment"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term 1 FA3"
+          sequence: 10
+
+      - step: "Tambah detail pada payment term"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        save_as: "detail"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "School Fee FA3"
+          account_id: "REC: account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+
+      - step: "Assert baris analysis ada sebelum detail dihapus"
+        action: "search"
+        model: "school_enrollment_fee_analysis"
+        domain: [["detail_id", "=", "REC: detail.id"]]
+        save_as: "row_before"
+        expect_count: 1
+
+      - step: "Hapus detail"
+        action: "call"
+        target: "detail"
+        method: "unlink"
+
+      - step: "Assert baris analysis hilang setelah detail dihapus"
+        action: "search"
+        model: "school_enrollment_fee_analysis"
+        domain: [["detail_id", "=", "REC: detail.id"]]
+        save_as: "row_after"
+        expect_count: 0
