@@ -4,3 +4,4 @@
 
 from . import school_enrollment_payment_term_duplicate  # noqa: F401
 from . import school_enrollment_copy_payment_term  # noqa: F401
+from . import school_enrollment_create_due_invoice  # noqa: F401

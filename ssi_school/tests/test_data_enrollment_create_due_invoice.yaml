@@ -1,0 +1,1824 @@
+options:
+  auto_refresh: true
+scenarios:
+  - name: "Create Due Invoice - No Range Invoices Only Due Terms"
+    steps:
+      - step: "Setup - get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "School Fee Income CDI1"
+          code: "CDI14200"
+          user_type_id: "REC: account_type.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Fee CDI1"
+          type: "service"
+          list_price: 500000.0
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type CDI1"
+          code: "GTCDI1"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 CDI1"
+          code: "AYCDI1"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester CDI1"
+          code: "SMCDI1"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School CDI1"
+          code: "SCHCDI1"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade CDI1"
+          code: "GCDI1"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class CDI1"
+          code: "CLACDI1"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Setup - get receivable journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "receivable_journal"
+        limit: 1
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact CDI1"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student CDI1"
+          code: "STUCDI1"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+          receivable_journal_id: "REC: receivable_journal.id"
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate enrollment cache before approve"
+        action: "call"
+        target: "enrollment"
+        method: "invalidate_cache"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Assert enrollment is allowed to create due invoice"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          create_invoice_ok:
+            type: "value"
+            expected: true
+
+      - step: "Create term A (10 days ago, uninvoiced)"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_a"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term A CDI1"
+          sequence: 10
+          date_invoice: "EVAL: (datetime.now() + timedelta(days=-10)).date()"
+          detail_ids:
+            - - 0
+              - 0
+              - product_id: "REC: product.id"
+                name: "Fee A CDI1"
+                account_id: "REC: account.id"
+                uom_quantity: 1.0
+                uom_id: "REF: uom.product_uom_unit"
+                price_unit: 500000.0
+
+      - step: "Create term B (today, uninvoiced)"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_b"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term B CDI1"
+          sequence: 20
+          date_invoice: "EVAL: datetime.now().date()"
+          detail_ids:
+            - - 0
+              - 0
+              - product_id: "REC: product.id"
+                name: "Fee B CDI1"
+                account_id: "REC: account.id"
+                uom_quantity: 1.0
+                uom_id: "REF: uom.product_uom_unit"
+                price_unit: 500000.0
+
+      - step: "Create term C (10 days from now, uninvoiced)"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_c"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term C CDI1"
+          sequence: 30
+          date_invoice: "EVAL: (datetime.now() + timedelta(days=10)).date()"
+          detail_ids:
+            - - 0
+              - 0
+              - product_id: "REC: product.id"
+                name: "Fee C CDI1"
+                account_id: "REC: account.id"
+                uom_quantity: 1.0
+                uom_id: "REF: uom.product_uom_unit"
+                price_unit: 500000.0
+
+      - step: "Create term D (manually controlled, yesterday)"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_d"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term D CDI1"
+          sequence: 40
+          manually_control: true
+          date_invoice: "EVAL: (datetime.now() + timedelta(days=-1)).date()"
+
+      - step: "Create term E (uninvoiced, no date_invoice)"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_e"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term E CDI1"
+          sequence: 50
+
+      - step: "Create wizard with no date range"
+        action: "create"
+        model: "school_enrollment.wizard_create_due_invoice"
+        save_as: "wizard"
+        values:
+          enrollment_ids:
+            - - 6
+              - 0
+              - - "REC: enrollment.id"
+
+      - step: "Run create due invoice (no range)"
+        action: "call"
+        target: "wizard"
+        method: "action_create_due_invoice"
+
+      - step: "Assert term A invoiced"
+        action: "assert"
+        target: "term_a"
+        asserts:
+          state:
+            type: "value"
+            expected: "invoiced"
+          invoice_id:
+            type: "value"
+            operator: "is_truthy"
+
+      - step: "Assert term B invoiced"
+        action: "assert"
+        target: "term_b"
+        asserts:
+          state:
+            type: "value"
+            expected: "invoiced"
+          invoice_id:
+            type: "value"
+            operator: "is_truthy"
+
+      - step: "Assert term C untouched (in the future)"
+        action: "assert"
+        target: "term_c"
+        asserts:
+          state:
+            type: "value"
+            expected: "uninvoiced"
+          invoice_id:
+            type: "value"
+            operator: "is_falsy"
+
+      - step: "Assert term D untouched (manually controlled)"
+        action: "assert"
+        target: "term_d"
+        asserts:
+          state:
+            type: "value"
+            expected: "manual"
+          invoice_id:
+            type: "value"
+            operator: "is_falsy"
+
+      - step: "Assert term E untouched (no date_invoice)"
+        action: "assert"
+        target: "term_e"
+        asserts:
+          state:
+            type: "value"
+            expected: "uninvoiced"
+          invoice_id:
+            type: "value"
+            operator: "is_falsy"
+
+  - name: "Create Due Invoice - Future Date End Includes Term C"
+    steps:
+      - step: "Setup - get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "School Fee Income CDI2"
+          code: "CDI24200"
+          user_type_id: "REC: account_type.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Fee CDI2"
+          type: "service"
+          list_price: 500000.0
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type CDI2"
+          code: "GTCDI2"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 CDI2"
+          code: "AYCDI2"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester CDI2"
+          code: "SMCDI2"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School CDI2"
+          code: "SCHCDI2"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade CDI2"
+          code: "GCDI2"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class CDI2"
+          code: "CLACDI2"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Setup - get receivable journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "receivable_journal"
+        limit: 1
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact CDI2"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student CDI2"
+          code: "STUCDI2"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+          receivable_journal_id: "REC: receivable_journal.id"
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate enrollment cache before approve"
+        action: "call"
+        target: "enrollment"
+        method: "invalidate_cache"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create term A (10 days ago, uninvoiced)"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_a"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term A CDI2"
+          sequence: 10
+          date_invoice: "EVAL: (datetime.now() + timedelta(days=-10)).date()"
+          detail_ids:
+            - - 0
+              - 0
+              - product_id: "REC: product.id"
+                name: "Fee A CDI2"
+                account_id: "REC: account.id"
+                uom_quantity: 1.0
+                uom_id: "REF: uom.product_uom_unit"
+                price_unit: 500000.0
+
+      - step: "Create term B (today, uninvoiced)"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_b"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term B CDI2"
+          sequence: 20
+          date_invoice: "EVAL: datetime.now().date()"
+          detail_ids:
+            - - 0
+              - 0
+              - product_id: "REC: product.id"
+                name: "Fee B CDI2"
+                account_id: "REC: account.id"
+                uom_quantity: 1.0
+                uom_id: "REF: uom.product_uom_unit"
+                price_unit: 500000.0
+
+      - step: "Create term C (10 days from now, uninvoiced)"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_c"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term C CDI2"
+          sequence: 30
+          date_invoice: "EVAL: (datetime.now() + timedelta(days=10)).date()"
+          detail_ids:
+            - - 0
+              - 0
+              - product_id: "REC: product.id"
+                name: "Fee C CDI2"
+                account_id: "REC: account.id"
+                uom_quantity: 1.0
+                uom_id: "REF: uom.product_uom_unit"
+                price_unit: 500000.0
+
+      - step: "Create term D (manually controlled, yesterday)"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_d"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term D CDI2"
+          sequence: 40
+          manually_control: true
+          date_invoice: "EVAL: (datetime.now() + timedelta(days=-1)).date()"
+
+      - step: "Create term E (uninvoiced, no date_invoice)"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_e"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term E CDI2"
+          sequence: 50
+
+      - step: "Create wizard with date_end 15 days in the future"
+        action: "create"
+        model: "school_enrollment.wizard_create_due_invoice"
+        save_as: "wizard"
+        values:
+          enrollment_ids:
+            - - 6
+              - 0
+              - - "REC: enrollment.id"
+          date_end: "EVAL: (datetime.now() + timedelta(days=15)).date()"
+
+      - step: "Run create due invoice (future date_end)"
+        action: "call"
+        target: "wizard"
+        method: "action_create_due_invoice"
+
+      - step: "Assert term A invoiced"
+        action: "assert"
+        target: "term_a"
+        asserts:
+          state:
+            type: "value"
+            expected: "invoiced"
+
+      - step: "Assert term B invoiced"
+        action: "assert"
+        target: "term_b"
+        asserts:
+          state:
+            type: "value"
+            expected: "invoiced"
+
+      - step: "Assert term C invoiced"
+        action: "assert"
+        target: "term_c"
+        asserts:
+          state:
+            type: "value"
+            expected: "invoiced"
+          invoice_id:
+            type: "value"
+            operator: "is_truthy"
+
+      - step: "Assert term D untouched (manually controlled)"
+        action: "assert"
+        target: "term_d"
+        asserts:
+          state:
+            type: "value"
+            expected: "manual"
+
+      - step: "Assert term E untouched (no date_invoice)"
+        action: "assert"
+        target: "term_e"
+        asserts:
+          state:
+            type: "value"
+            expected: "uninvoiced"
+
+  - name: "Create Due Invoice - Date Start Only Excludes Past And Future Terms"
+    steps:
+      - step: "Setup - get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "School Fee Income CDI3"
+          code: "CDI34200"
+          user_type_id: "REC: account_type.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Fee CDI3"
+          type: "service"
+          list_price: 500000.0
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type CDI3"
+          code: "GTCDI3"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 CDI3"
+          code: "AYCDI3"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester CDI3"
+          code: "SMCDI3"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School CDI3"
+          code: "SCHCDI3"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade CDI3"
+          code: "GCDI3"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class CDI3"
+          code: "CLACDI3"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Setup - get receivable journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "receivable_journal"
+        limit: 1
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact CDI3"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student CDI3"
+          code: "STUCDI3"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+          receivable_journal_id: "REC: receivable_journal.id"
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate enrollment cache before approve"
+        action: "call"
+        target: "enrollment"
+        method: "invalidate_cache"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create term A (10 days ago, uninvoiced)"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_a"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term A CDI3"
+          sequence: 10
+          date_invoice: "EVAL: (datetime.now() + timedelta(days=-10)).date()"
+          detail_ids:
+            - - 0
+              - 0
+              - product_id: "REC: product.id"
+                name: "Fee A CDI3"
+                account_id: "REC: account.id"
+                uom_quantity: 1.0
+                uom_id: "REF: uom.product_uom_unit"
+                price_unit: 500000.0
+
+      - step: "Create term B (today, uninvoiced)"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_b"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term B CDI3"
+          sequence: 20
+          date_invoice: "EVAL: datetime.now().date()"
+          detail_ids:
+            - - 0
+              - 0
+              - product_id: "REC: product.id"
+                name: "Fee B CDI3"
+                account_id: "REC: account.id"
+                uom_quantity: 1.0
+                uom_id: "REF: uom.product_uom_unit"
+                price_unit: 500000.0
+
+      - step: "Create term C (10 days from now, uninvoiced)"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_c"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term C CDI3"
+          sequence: 30
+          date_invoice: "EVAL: (datetime.now() + timedelta(days=10)).date()"
+          detail_ids:
+            - - 0
+              - 0
+              - product_id: "REC: product.id"
+                name: "Fee C CDI3"
+                account_id: "REC: account.id"
+                uom_quantity: 1.0
+                uom_id: "REF: uom.product_uom_unit"
+                price_unit: 500000.0
+
+      - step: "Create term D (manually controlled, yesterday)"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_d"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term D CDI3"
+          sequence: 40
+          manually_control: true
+          date_invoice: "EVAL: (datetime.now() + timedelta(days=-1)).date()"
+
+      - step: "Create term E (uninvoiced, no date_invoice)"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_e"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term E CDI3"
+          sequence: 50
+
+      - step: "Create wizard with date_start yesterday, no date_end"
+        action: "create"
+        model: "school_enrollment.wizard_create_due_invoice"
+        save_as: "wizard"
+        values:
+          enrollment_ids:
+            - - 6
+              - 0
+              - - "REC: enrollment.id"
+          date_start: "EVAL: (datetime.now() + timedelta(days=-1)).date()"
+
+      - step: "Run create due invoice (date_start only)"
+        action: "call"
+        target: "wizard"
+        method: "action_create_due_invoice"
+
+      - step: "Assert term A untouched (before date_start)"
+        action: "assert"
+        target: "term_a"
+        asserts:
+          state:
+            type: "value"
+            expected: "uninvoiced"
+
+      - step: "Assert term B invoiced"
+        action: "assert"
+        target: "term_b"
+        asserts:
+          state:
+            type: "value"
+            expected: "invoiced"
+          invoice_id:
+            type: "value"
+            operator: "is_truthy"
+
+      - step: "Assert term C untouched (in the future)"
+        action: "assert"
+        target: "term_c"
+        asserts:
+          state:
+            type: "value"
+            expected: "uninvoiced"
+
+      - step: "Assert term D untouched (manually controlled)"
+        action: "assert"
+        target: "term_d"
+        asserts:
+          state:
+            type: "value"
+            expected: "manual"
+
+      - step: "Assert term E untouched (no date_invoice)"
+        action: "assert"
+        target: "term_e"
+        asserts:
+          state:
+            type: "value"
+            expected: "uninvoiced"
+
+  - name: "Create Due Invoice - Both Dates Set Narrows To Term A Only"
+    steps:
+      - step: "Setup - get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "School Fee Income CDI4"
+          code: "CDI44200"
+          user_type_id: "REC: account_type.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Fee CDI4"
+          type: "service"
+          list_price: 500000.0
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type CDI4"
+          code: "GTCDI4"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 CDI4"
+          code: "AYCDI4"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester CDI4"
+          code: "SMCDI4"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School CDI4"
+          code: "SCHCDI4"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade CDI4"
+          code: "GCDI4"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class CDI4"
+          code: "CLACDI4"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Setup - get receivable journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "receivable_journal"
+        limit: 1
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact CDI4"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student CDI4"
+          code: "STUCDI4"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+          receivable_journal_id: "REC: receivable_journal.id"
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate enrollment cache before approve"
+        action: "call"
+        target: "enrollment"
+        method: "invalidate_cache"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create term A (10 days ago, uninvoiced)"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_a"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term A CDI4"
+          sequence: 10
+          date_invoice: "EVAL: (datetime.now() + timedelta(days=-10)).date()"
+          detail_ids:
+            - - 0
+              - 0
+              - product_id: "REC: product.id"
+                name: "Fee A CDI4"
+                account_id: "REC: account.id"
+                uom_quantity: 1.0
+                uom_id: "REF: uom.product_uom_unit"
+                price_unit: 500000.0
+
+      - step: "Create term B (today, uninvoiced)"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_b"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term B CDI4"
+          sequence: 20
+          date_invoice: "EVAL: datetime.now().date()"
+          detail_ids:
+            - - 0
+              - 0
+              - product_id: "REC: product.id"
+                name: "Fee B CDI4"
+                account_id: "REC: account.id"
+                uom_quantity: 1.0
+                uom_id: "REF: uom.product_uom_unit"
+                price_unit: 500000.0
+
+      - step: "Create term C (10 days from now, uninvoiced)"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_c"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term C CDI4"
+          sequence: 30
+          date_invoice: "EVAL: (datetime.now() + timedelta(days=10)).date()"
+          detail_ids:
+            - - 0
+              - 0
+              - product_id: "REC: product.id"
+                name: "Fee C CDI4"
+                account_id: "REC: account.id"
+                uom_quantity: 1.0
+                uom_id: "REF: uom.product_uom_unit"
+                price_unit: 500000.0
+
+      - step: "Create term D (manually controlled, yesterday)"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_d"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term D CDI4"
+          sequence: 40
+          manually_control: true
+          date_invoice: "EVAL: (datetime.now() + timedelta(days=-1)).date()"
+
+      - step: "Create term E (uninvoiced, no date_invoice)"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_e"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term E CDI4"
+          sequence: 50
+
+      - step: "Create wizard with date_start -15 days and date_end -5 days"
+        action: "create"
+        model: "school_enrollment.wizard_create_due_invoice"
+        save_as: "wizard"
+        values:
+          enrollment_ids:
+            - - 6
+              - 0
+              - - "REC: enrollment.id"
+          date_start: "EVAL: (datetime.now() + timedelta(days=-15)).date()"
+          date_end: "EVAL: (datetime.now() + timedelta(days=-5)).date()"
+
+      - step: "Run create due invoice (narrow past range)"
+        action: "call"
+        target: "wizard"
+        method: "action_create_due_invoice"
+
+      - step: "Assert term A invoiced"
+        action: "assert"
+        target: "term_a"
+        asserts:
+          state:
+            type: "value"
+            expected: "invoiced"
+          invoice_id:
+            type: "value"
+            operator: "is_truthy"
+
+      - step: "Assert term B untouched (after the range)"
+        action: "assert"
+        target: "term_b"
+        asserts:
+          state:
+            type: "value"
+            expected: "uninvoiced"
+
+      - step: "Assert term C untouched (after the range)"
+        action: "assert"
+        target: "term_c"
+        asserts:
+          state:
+            type: "value"
+            expected: "uninvoiced"
+
+      - step: "Assert term D untouched (manually controlled)"
+        action: "assert"
+        target: "term_d"
+        asserts:
+          state:
+            type: "value"
+            expected: "manual"
+
+      - step: "Assert term E untouched (no date_invoice)"
+        action: "assert"
+        target: "term_e"
+        asserts:
+          state:
+            type: "value"
+            expected: "uninvoiced"
+
+  - name: "Create Due Invoice - Idempotent On Repeated Run"
+    steps:
+      - step: "Setup - get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "School Fee Income CDI5"
+          code: "CDI54200"
+          user_type_id: "REC: account_type.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Fee CDI5"
+          type: "service"
+          list_price: 500000.0
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type CDI5"
+          code: "GTCDI5"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 CDI5"
+          code: "AYCDI5"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester CDI5"
+          code: "SMCDI5"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School CDI5"
+          code: "SCHCDI5"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade CDI5"
+          code: "GCDI5"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class CDI5"
+          code: "CLACDI5"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Setup - get receivable journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "receivable_journal"
+        limit: 1
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact CDI5"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student CDI5"
+          code: "STUCDI5"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+          receivable_journal_id: "REC: receivable_journal.id"
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate enrollment cache before approve"
+        action: "call"
+        target: "enrollment"
+        method: "invalidate_cache"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create term A (10 days ago, uninvoiced)"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_a"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term A CDI5"
+          sequence: 10
+          date_invoice: "EVAL: (datetime.now() + timedelta(days=-10)).date()"
+          detail_ids:
+            - - 0
+              - 0
+              - product_id: "REC: product.id"
+                name: "Fee A CDI5"
+                account_id: "REC: account.id"
+                uom_quantity: 1.0
+                uom_id: "REF: uom.product_uom_unit"
+                price_unit: 500000.0
+
+      - step: "Create term B (today, uninvoiced)"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_b"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term B CDI5"
+          sequence: 20
+          date_invoice: "EVAL: datetime.now().date()"
+          detail_ids:
+            - - 0
+              - 0
+              - product_id: "REC: product.id"
+                name: "Fee B CDI5"
+                account_id: "REC: account.id"
+                uom_quantity: 1.0
+                uom_id: "REF: uom.product_uom_unit"
+                price_unit: 500000.0
+
+      - step: "Create wizard with no date range"
+        action: "create"
+        model: "school_enrollment.wizard_create_due_invoice"
+        save_as: "wizard"
+        values:
+          enrollment_ids:
+            - - 6
+              - 0
+              - - "REC: enrollment.id"
+
+      - step: "Run create due invoice (first run)"
+        action: "call"
+        target: "wizard"
+        method: "action_create_due_invoice"
+
+      - step: "Assert two invoices exist after the first run"
+        action: "search"
+        model: "account.move"
+        domain: [["invoice_origin", "=", "REC: enrollment.name"]]
+        save_as: "invoices_after_run1"
+        expect_count: 2
+
+      - step: "Run create due invoice again (second run)"
+        action: "call"
+        target: "wizard"
+        method: "action_create_due_invoice"
+
+      - step: "Assert invoice count is unchanged after the second run"
+        action: "search"
+        model: "account.move"
+        domain: [["invoice_origin", "=", "REC: enrollment.name"]]
+        save_as: "invoices_after_run2"
+        expect_count: 2
+
+      - step: "Assert term A invoice still present"
+        action: "assert"
+        target: "term_a"
+        asserts:
+          state:
+            type: "value"
+            expected: "invoiced"
+          invoice_id:
+            type: "value"
+            operator: "is_truthy"
+
+      - step: "Assert term B invoice still present"
+        action: "assert"
+        target: "term_b"
+        asserts:
+          state:
+            type: "value"
+            expected: "invoiced"
+          invoice_id:
+            type: "value"
+            operator: "is_truthy"
+
+  - name: "Create Due Invoice - Blocked When Selection Includes A Non-Open Enrollment"
+    steps:
+      - step: "Setup - get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "School Fee Income CDI6"
+          code: "CDI64200"
+          user_type_id: "REC: account_type.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Fee CDI6"
+          type: "service"
+          list_price: 500000.0
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type CDI6"
+          code: "GTCDI6"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 CDI6"
+          code: "AYCDI6"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester CDI6"
+          code: "SMCDI6"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School CDI6"
+          code: "SCHCDI6"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade CDI6"
+          code: "GCDI6"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class CDI6"
+          code: "CLACDI6"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Setup - get receivable journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "receivable_journal"
+        limit: 1
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact CDI6"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student CDI6"
+          code: "STUCDI6"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+          receivable_journal_id: "REC: receivable_journal.id"
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate enrollment cache before approve"
+        action: "call"
+        target: "enrollment"
+        method: "invalidate_cache"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create term A (10 days ago, uninvoiced)"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_a"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term A CDI6"
+          sequence: 10
+          date_invoice: "EVAL: (datetime.now() + timedelta(days=-10)).date()"
+          detail_ids:
+            - - 0
+              - 0
+              - product_id: "REC: product.id"
+                name: "Fee A CDI6"
+                account_id: "REC: account.id"
+                uom_quantity: 1.0
+                uom_id: "REF: uom.product_uom_unit"
+                price_unit: 500000.0
+
+      - step: "Setup - create second student contact for the draft enrollment"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact2"
+        values:
+          name: "Student Contact 2 CDI6"
+
+      - step: "Setup - create second student for the draft enrollment"
+        action: "create"
+        model: "school_student"
+        save_as: "student2"
+        values:
+          name: "Student 2 CDI6"
+          code: "STU2CDI6"
+          contact_id: "REC: contact2.id"
+          school_id: "REC: school.id"
+
+      - step: "Create second enrollment, left in draft"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_draft"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student2.id"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Assert draft enrollment is not allowed to create due invoice"
+        action: "assert"
+        target: "enrollment_draft"
+        asserts:
+          create_invoice_ok:
+            type: "value"
+            expected: false
+
+      - step: "Create wizard selecting both the open and the draft enrollment"
+        action: "create"
+        model: "school_enrollment.wizard_create_due_invoice"
+        save_as: "wizard"
+        values:
+          enrollment_ids:
+            - - 6
+              - 0
+              - - "REC: enrollment.id"
+                - "REC: enrollment_draft.id"
+
+      - step: "Run create due invoice must fail because of the draft enrollment"
+        action: "call"
+        target: "wizard"
+        method: "action_create_due_invoice"
+        expect_error:
+          type: "UserError"
+
+      - step: "Assert term A on the valid enrollment is still uninvoiced"
+        action: "assert"
+        target: "term_a"
+        asserts:
+          state:
+            type: "value"
+            expected: "uninvoiced"
+          invoice_id:
+            type: "value"
+            operator: "is_falsy"
+
+      - step: "Assert no invoice was created for the valid enrollment either"
+        action: "search"
+        model: "account.move"
+        domain: [["invoice_origin", "=", "REC: enrollment.name"]]
+        save_as: "invoices_after_failed_run"
+        expect_count: 0
+
+  - name: "Create Due Invoice - Blocked When Date Start Is Later Than Date End"
+    steps:
+      - step: "Setup - get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "School Fee Income CDI7"
+          code: "CDI74200"
+          user_type_id: "REC: account_type.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Fee CDI7"
+          type: "service"
+          list_price: 500000.0
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type CDI7"
+          code: "GTCDI7"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 CDI7"
+          code: "AYCDI7"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester CDI7"
+          code: "SMCDI7"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School CDI7"
+          code: "SCHCDI7"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade CDI7"
+          code: "GCDI7"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class CDI7"
+          code: "CLACDI7"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Setup - get receivable journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "receivable_journal"
+        limit: 1
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact CDI7"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student CDI7"
+          code: "STUCDI7"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+          receivable_journal_id: "REC: receivable_journal.id"
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate enrollment cache before approve"
+        action: "call"
+        target: "enrollment"
+        method: "invalidate_cache"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create term A (10 days ago, uninvoiced)"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_a"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term A CDI7"
+          sequence: 10
+          date_invoice: "EVAL: (datetime.now() + timedelta(days=-10)).date()"
+          detail_ids:
+            - - 0
+              - 0
+              - product_id: "REC: product.id"
+                name: "Fee A CDI7"
+                account_id: "REC: account.id"
+                uom_quantity: 1.0
+                uom_id: "REF: uom.product_uom_unit"
+                price_unit: 500000.0
+
+      - step: "Create wizard with date_start tomorrow (later than effective date_end)"
+        action: "create"
+        model: "school_enrollment.wizard_create_due_invoice"
+        save_as: "wizard"
+        values:
+          enrollment_ids:
+            - - 6
+              - 0
+              - - "REC: enrollment.id"
+          date_start: "EVAL: (datetime.now() + timedelta(days=1)).date()"
+
+      - step: "Run create due invoice must fail because of the reversed date range"
+        action: "call"
+        target: "wizard"
+        method: "action_create_due_invoice"
+        expect_error:
+          type: "UserError"
+
+      - step: "Assert term A is still uninvoiced"
+        action: "assert"
+        target: "term_a"
+        asserts:
+          state:
+            type: "value"
+            expected: "uninvoiced"
+          invoice_id:
+            type: "value"
+            operator: "is_falsy"
+
+      - step: "Assert no invoice was created"
+        action: "search"
+        model: "account.move"
+        domain: [["invoice_origin", "=", "REC: enrollment.name"]]
+        save_as: "invoices_after_failed_range"
+        expect_count: 0

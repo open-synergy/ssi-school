@@ -119,6 +119,12 @@
                         attrs="{'invisible':[('graduate_ok','=',False)]}"
                         groups="ssi_school.school_enrollment_user_group"
                     />
+                <button
+                        name="action_open_create_due_invoice_wizard"
+                        type="object"
+                        string="Create Due Invoice"
+                        attrs="{'invisible':[('create_invoice_ok','=',False)]}"
+                    />
             </xpath>
             <xpath expr="//field[@name='user_id']" position="after">
                 <label for="academic_term_id" string="Year/Term" />
@@ -294,6 +300,7 @@
                 <field name="drop_out_ok" />
                 <field name="graduate_ok" />
                 <field name="addendum_ok" />
+                <field name="create_invoice_ok" />
             </xpath>
         </data>
     </field>
