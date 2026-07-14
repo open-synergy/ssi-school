@@ -123,6 +123,11 @@ scenarios:
             type: "value"
             expected: "open"
 
+      - step: "Invalidate admission cache after approve"
+        action: "call"
+        target: "admission"
+        method: "invalidate_cache"
+
       - step: "Assert admission is allowed to create due invoice"
         action: "assert"
         target: "admission"
