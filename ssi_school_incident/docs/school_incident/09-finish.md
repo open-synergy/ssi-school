@@ -8,10 +8,26 @@
 
 ## Flow
 
+### Single Record
+
 1. Open the **School > Incident > Incidents** menu.
 2. Open the School Incident record to finish.
 3. Click the **Done** button.
 
+### Bulk (Multiple Records)
+
+1. Open the **School > Incident > Incidents** menu.
+2. In the list view, open the **Filters** panel and select **In Progress** so only
+   records currently Open are shown.
+3. Select the checkbox of each record to finish (or use the header checkbox to select
+   all filtered records).
+4. Click the **Done** button that appears above the list.
+5. Click **OK** on the confirmation dialog.
+
 ## Post-Condition
 
 - Status changes to **Done**.
+- When finished in bulk, every selected record moves to **Done** in the same action. If
+  any selected record is not in **Open** status, the whole action is cancelled and none
+  of the selected records are finished — always filter by **In Progress** first as
+  described above.
