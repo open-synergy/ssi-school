@@ -1,5 +1,3 @@
-options:
-  auto_refresh: true
 scenarios:
   - name: "Create Due Invoice - No Range Invoices Only Due Terms"
     steps:
