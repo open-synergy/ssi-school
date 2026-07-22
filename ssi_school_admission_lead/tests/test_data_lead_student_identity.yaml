@@ -1,53 +1,22 @@
 options:
   auto_refresh: true
 
-setup:
-  steps:
-    - step: "Setup - create grade type"
-      action: "create"
-      model: "school_grade_type"
-      save_as: "grade_type"
-      values:
-        name: "Grade Type Lead Student Identity"
-        code: "GTLSI"
-        sequence: 10
-
-    - step: "Setup - create school"
-      action: "create"
-      model: "school"
-      save_as: "school"
-      values:
-        name: "School Lead Student Identity"
-        code: "SCHLSI"
-        grade_type_id: "REC: grade_type.id"
-
-    - step: "Setup - create grade"
-      action: "create"
-      model: "school_grade"
-      save_as: "grade"
-      values:
-        name: "Grade Lead Student Identity"
-        code: "GLSI"
-        sequence: 10
-        type_id: "REC: grade_type.id"
-
-    - step: "Setup - create prospective student contact"
-      action: "create"
-      model: "res.partner"
-      save_as: "student_contact"
-      values:
-        name: "Student Lead Student Identity"
-
 scenarios:
   - name: "CRM Lead - Student identity written on the lead reaches the contact"
     steps:
+      - step: "Create prospective student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "student_contact"
+        values:
+          name: "Student Lead Write Identity"
+
       - step: "Create lead pointing to the prospective student"
         action: "create"
         model: "crm.lead"
         save_as: "lead"
         values:
           name: "Lead Write Student Identity"
-          school_id: "REC: school.id"
           student_id: "REC: student_contact.id"
 
       - step: "Write birthdate and gender on the lead"
@@ -71,6 +40,13 @@ scenarios:
 
   - name: "CRM Lead - Student identity written on the contact is read on the lead"
     steps:
+      - step: "Create prospective student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "student_contact"
+        values:
+          name: "Student Lead Read Identity"
+
       - step: "Create lead pointing to the prospective student"
         action: "create"
         model: "crm.lead"
@@ -135,7 +111,7 @@ scenarios:
           name: "Lead Gender Without Student"
           student_gender: "female"
 
-      - step: "Assert no error and no student identity is kept"
+      - step: "Assert the lead is created without error and keeps no identity"
         action: "assert"
         target: "lead"
         refresh: true
@@ -152,6 +128,34 @@ scenarios:
 
   - name: "CRM Lead - Grade type follows the school and restricts the grade"
     steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Lead Target Grade"
+          code: "GTLTG"
+          sequence: 10
+
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Lead Target Grade"
+          code: "SCHLTG"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade Lead Target Grade"
+          code: "GLTG"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
       - step: "Create lead with school"
         action: "create"
         model: "crm.lead"
