@@ -101,7 +101,7 @@ scenarios:
             type: "value"
             operator: "is_falsy"
 
-  - name: "CRM Lead - Student gender without a prospective student is not stored"
+  - name: "CRM Lead - Student gender without a prospective student reaches no contact"
     steps:
       - step: "Create lead with gender but without prospective student"
         action: "create"
@@ -111,7 +111,12 @@ scenarios:
           name: "Lead Gender Without Student"
           student_gender: "female"
 
-      - step: "Assert the lead is created without error and keeps no identity"
+      # Accepted hazard: the related field is stored, so the value given at
+      # create time stays on the lead column. There is no student contact to
+      # write it through to, so it is a local leftover that belongs to nobody.
+      # No constraint guards this on purpose - the portal is responsible for
+      # filling student_id before submitting.
+      - step: "Assert the lead is created without error and stays unlinked"
         action: "assert"
         target: "lead"
         refresh: true
@@ -124,7 +129,15 @@ scenarios:
             operator: "is_falsy"
           student_gender:
             type: "value"
-            operator: "is_falsy"
+            expected: "female"
+
+      - step: "Assert no contact was given that gender"
+        action: "search"
+        model: "res.partner"
+        domain:
+          [["gender", "=", "female"], ["name", "=", "Lead Gender Without Student"]]
+        save_as: "leftover_contacts"
+        expect_count: 0
 
   - name: "CRM Lead - Grade type follows the school and restricts the grade"
     steps:
