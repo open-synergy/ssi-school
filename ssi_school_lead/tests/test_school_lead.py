@@ -2,6 +2,7 @@
 # Copyright 2024 PT. Simetri Sinergi Indonesia
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
+from lxml import etree
 from odoo_yaml_test import YamlTransactionCase
 
 from odoo.tests import Form, tagged
@@ -222,3 +223,56 @@ class TestSchoolLead(YamlTransactionCase):
         self.assertTrue(admission)
         self.assertEqual(admission.receivable_journal_id, journal)
         self.assertEqual(admission.receivable_account_id, account)
+
+    def test_crm_lead_form_view_groups_school_fields(self):
+        """Python murni — pemicu P1 (L-01): tata letak view (arch hasil
+        `fields_view_get`) bukan permukaan yang bisa dibaca DSL `odoo-yaml-test`,
+        dan `action: call` membuang nilai balik method.
+
+        `student_id` harus berada di group `school_lead_prospective_student`,
+        `school_id` di `school_lead_admission_target`, dan `admission_id` di
+        `school_lead_admission_document` — bukan lagi anak langsung dari group
+        bawaan CRM `lead_partner`/`opportunity_partner`, yang tetap memuat
+        `partner_id` dan berjudul `Parent/Guardian`.
+        """
+        result = self.env["crm.lead"].fields_view_get(view_type="form")
+        arch = etree.fromstring(result["arch"])
+
+        for group_name, expected_string, expected_fields in (
+            ("school_lead_prospective_student", "Prospective Student", ["student_id"]),
+            ("school_lead_admission_target", "Admission Target", ["school_id"]),
+            (
+                "school_lead_admission_document",
+                "Admission Document",
+                ["admission_id", "create_admission_ok"],
+            ),
+        ):
+            group = arch.find(".//group[@name='%s']" % group_name)
+            self.assertIsNotNone(group, "Group %s not found in arch" % group_name)
+            self.assertEqual(group.get("string"), expected_string)
+            child_field_names = [
+                field.get("name") for field in group.findall("./field")
+            ]
+            self.assertEqual(sorted(child_field_names), sorted(expected_fields))
+
+        school_field_names = {
+            "school_id",
+            "student_id",
+            "admission_id",
+            "create_admission_ok",
+        }
+        for partner_group_name in ("lead_partner", "opportunity_partner"):
+            group = arch.find(".//group[@name='%s']" % partner_group_name)
+            self.assertIsNotNone(
+                group, "Group %s not found in arch" % partner_group_name
+            )
+            self.assertEqual(group.get("string"), "Parent/Guardian")
+            child_field_names = {
+                field.get("name") for field in group.findall("./field")
+            }
+            self.assertIn("partner_id", child_field_names)
+            self.assertFalse(
+                child_field_names & school_field_names,
+                "School fields leaked into group %s: %s"
+                % (partner_group_name, child_field_names & school_field_names),
+            )
