@@ -39,6 +39,11 @@ msgid "Admission Form"
 msgstr ""
 
 #. module: ssi_school_admission_lead
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission_lead.crm_lead_admission_form_view
+msgid "Admission Target"
+msgstr ""
+
+#. module: ssi_school_admission_lead
 #: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead__admission_test_id
 #: model_terms:ir.ui.view,arch_db:ssi_school_admission_lead.crm_lead_admission_form_view
 msgid "Admission Test"
@@ -86,6 +91,14 @@ msgid "Date"
 msgstr ""
 
 #. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead__student_birthdate
+msgid ""
+"Date of birth of the prospective student, synchronized from the contact "
+"referenced by the Student field. Writing this field updates the contact "
+"itself, so the identity data is not duplicated on the lead."
+msgstr ""
+
+#. module: ssi_school_admission_lead
 #: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead__display_name
 #: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead_create_admission_form__display_name
 msgid "Display Name"
@@ -97,11 +110,21 @@ msgid "Fee Template"
 msgstr ""
 
 #. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead__student_gender
+msgid ""
+"Gender of the prospective student, synchronized from the contact referenced "
+"by the Student field. Writing this field updates the contact itself, so the "
+"identity data is not duplicated on the lead."
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead__grade_id
 #: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead_create_admission_form__grade_id
 msgid "Grade"
 msgstr ""
 
 #. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead__grade_type_id
 #: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead_create_admission_form__grade_type_id
 msgid "Grade Type"
 msgstr ""
@@ -109,6 +132,13 @@ msgstr ""
 #. module: ssi_school_admission_lead
 #: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead_create_admission_form__grade_type_id
 msgid "Grade type derived from the selected school."
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead__grade_type_id
+msgid ""
+"Grade type derived from the selected school. Used to restrict the grades "
+"that can be selected on this lead."
 msgstr ""
 
 #. module: ssi_school_admission_lead
@@ -155,6 +185,11 @@ msgid "Pricelist"
 msgstr ""
 
 #. module: ssi_school_admission_lead
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission_lead.crm_lead_admission_form_view
+msgid "Prospective Student"
+msgstr ""
+
+#. module: ssi_school_admission_lead
 #: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead_create_admission_form__school_id
 msgid "School"
 msgstr ""
@@ -162,6 +197,16 @@ msgstr ""
 #. module: ssi_school_admission_lead
 #: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead_create_admission_form__student_id
 msgid "Student"
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead__student_birthdate
+msgid "Student Birthdate"
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead__student_gender
+msgid "Student Gender"
 msgstr ""
 
 #. module: ssi_school_admission_lead
@@ -198,6 +243,13 @@ msgstr ""
 msgid ""
 "The fee template to apply to the admission form. Auto-populated based on "
 "school and grade."
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead__grade_id
+msgid ""
+"The grade level the prospective student is applying for. Only grades "
+"belonging to the grade type of the selected school can be chosen."
 msgstr ""
 
 #. module: ssi_school_admission_lead
