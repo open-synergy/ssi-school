@@ -15,6 +15,53 @@ class CrmLead(models.Model):  # pylint: disable=too-few-public-methods
     _inherit = "crm.lead"
     _description = "CRM Lead"
 
+    student_birthdate = fields.Date(
+        string="Student Birthdate",
+        related="student_id.birthdate_date",
+        store=True,
+        readonly=False,
+        compute_sudo=True,
+        help=(
+            "Date of birth of the prospective student, synchronized from "
+            "the contact referenced by the Student field. Writing this "
+            "field updates the contact itself, so the identity data is not "
+            "duplicated on the lead."
+        ),
+    )
+    student_gender = fields.Selection(
+        string="Student Gender",
+        related="student_id.gender",
+        store=True,
+        readonly=False,
+        compute_sudo=True,
+        help=(
+            "Gender of the prospective student, synchronized from the "
+            "contact referenced by the Student field. Writing this field "
+            "updates the contact itself, so the identity data is not "
+            "duplicated on the lead."
+        ),
+    )
+    grade_type_id = fields.Many2one(
+        string="Grade Type",
+        comodel_name="school_grade_type",
+        related="school_id.grade_type_id",
+        help=(
+            "Grade type derived from the selected school. Used to restrict "
+            "the grades that can be selected on this lead."
+        ),
+    )
+    grade_id = fields.Many2one(
+        string="Grade",
+        comodel_name="school_grade",
+        ondelete="restrict",
+        tracking=True,
+        domain="[('type_id', '=', grade_type_id)]",
+        help=(
+            "The grade level the prospective student is applying for. "
+            "Only grades belonging to the grade type of the selected "
+            "school can be chosen."
+        ),
+    )
     admission_form_id = fields.Many2one(
         string="Admission Form",
         comodel_name="school_admission_form",

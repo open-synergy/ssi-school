@@ -25,6 +25,22 @@
                 <field name="admission_form_id" />
                 <field name="admission_test_id" />
             </xpath>
+            <xpath expr="//group[@name='opportunity_partner']" position="after">
+                <group
+                        name="school_admission_lead_student_identity"
+                        string="Prospective Student"
+                    >
+                    <field name="student_birthdate" />
+                    <field name="student_gender" />
+                </group>
+                <group
+                        name="school_admission_lead_target_grade"
+                        string="Admission Target"
+                    >
+                    <field name="grade_type_id" invisible="1" />
+                    <field name="grade_id" domain="[('type_id', '=', grade_type_id)]" />
+                </group>
+            </xpath>
             <xpath
                     expr="//header/button[@name='action_create_admission']"
                     position="before"
