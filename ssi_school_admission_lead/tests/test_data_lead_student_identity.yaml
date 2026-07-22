@@ -1,0 +1,206 @@
+options:
+  auto_refresh: true
+
+setup:
+  steps:
+    - step: "Setup - create grade type"
+      action: "create"
+      model: "school_grade_type"
+      save_as: "grade_type"
+      values:
+        name: "Grade Type Lead Student Identity"
+        code: "GTLSI"
+        sequence: 10
+
+    - step: "Setup - create school"
+      action: "create"
+      model: "school"
+      save_as: "school"
+      values:
+        name: "School Lead Student Identity"
+        code: "SCHLSI"
+        grade_type_id: "REC: grade_type.id"
+
+    - step: "Setup - create grade"
+      action: "create"
+      model: "school_grade"
+      save_as: "grade"
+      values:
+        name: "Grade Lead Student Identity"
+        code: "GLSI"
+        sequence: 10
+        type_id: "REC: grade_type.id"
+
+    - step: "Setup - create prospective student contact"
+      action: "create"
+      model: "res.partner"
+      save_as: "student_contact"
+      values:
+        name: "Student Lead Student Identity"
+
+scenarios:
+  - name: "CRM Lead - Student identity written on the lead reaches the contact"
+    steps:
+      - step: "Create lead pointing to the prospective student"
+        action: "create"
+        model: "crm.lead"
+        save_as: "lead"
+        values:
+          name: "Lead Write Student Identity"
+          school_id: "REC: school.id"
+          student_id: "REC: student_contact.id"
+
+      - step: "Write birthdate and gender on the lead"
+        action: "write"
+        target: "lead"
+        values:
+          student_birthdate: 2010-05-17
+          student_gender: "female"
+
+      - step: "Assert the contact received the identity data"
+        action: "assert"
+        target: "student_contact"
+        refresh: true
+        asserts:
+          birthdate_date:
+            type: "value"
+            expected: 2010-05-17
+          gender:
+            type: "value"
+            expected: "female"
+
+  - name: "CRM Lead - Student identity written on the contact is read on the lead"
+    steps:
+      - step: "Create lead pointing to the prospective student"
+        action: "create"
+        model: "crm.lead"
+        save_as: "lead"
+        values:
+          name: "Lead Read Student Identity"
+          student_id: "REC: student_contact.id"
+
+      - step: "Write birthdate and gender on the contact"
+        action: "write"
+        target: "student_contact"
+        values:
+          birthdate_date: 2011-09-01
+          gender: "male"
+
+      - step: "Assert the lead reflects the contact identity data"
+        action: "assert"
+        target: "lead"
+        refresh: true
+        asserts:
+          student_birthdate:
+            type: "value"
+            expected: 2011-09-01
+          student_gender:
+            type: "value"
+            expected: "male"
+
+  - name: "CRM Lead - Student identity stays empty without a prospective student"
+    steps:
+      - step: "Create lead without prospective student"
+        action: "create"
+        model: "crm.lead"
+        save_as: "lead"
+        values:
+          name: "Lead Without Student"
+
+      - step: "Assert lead exists with empty student identity"
+        action: "assert"
+        target: "lead"
+        refresh: true
+        asserts:
+          id:
+            type: "value"
+            operator: "is_truthy"
+          student_id:
+            type: "value"
+            operator: "is_falsy"
+          student_birthdate:
+            type: "value"
+            operator: "is_falsy"
+          student_gender:
+            type: "value"
+            operator: "is_falsy"
+
+  - name: "CRM Lead - Student gender without a prospective student is not stored"
+    steps:
+      - step: "Create lead with gender but without prospective student"
+        action: "create"
+        model: "crm.lead"
+        save_as: "lead"
+        values:
+          name: "Lead Gender Without Student"
+          student_gender: "female"
+
+      - step: "Assert no error and no student identity is kept"
+        action: "assert"
+        target: "lead"
+        refresh: true
+        asserts:
+          id:
+            type: "value"
+            operator: "is_truthy"
+          student_id:
+            type: "value"
+            operator: "is_falsy"
+          student_gender:
+            type: "value"
+            operator: "is_falsy"
+
+  - name: "CRM Lead - Grade type follows the school and restricts the grade"
+    steps:
+      - step: "Create lead with school"
+        action: "create"
+        model: "crm.lead"
+        save_as: "lead"
+        values:
+          name: "Lead Grade Type From School"
+          school_id: "REC: school.id"
+
+      - step: "Assert grade type is derived from the school"
+        action: "assert"
+        target: "lead"
+        refresh: true
+        asserts:
+          grade_type_id:
+            type: "m2o"
+            expected: "REC: grade_type"
+
+      - step: "Assign a grade belonging to that grade type"
+        action: "write"
+        target: "lead"
+        values:
+          grade_id: "REC: grade.id"
+
+      - step: "Assert grade is stored on the lead"
+        action: "assert"
+        target: "lead"
+        refresh: true
+        asserts:
+          grade_id:
+            type: "m2o"
+            expected: "REC: grade"
+
+  - name: "CRM Lead - Grade type stays empty without a school"
+    steps:
+      - step: "Create lead without school"
+        action: "create"
+        model: "crm.lead"
+        save_as: "lead"
+        values:
+          name: "Lead Without School"
+
+      - step: "Assert grade type is empty"
+        action: "assert"
+        target: "lead"
+        refresh: true
+        asserts:
+          school_id:
+            type: "value"
+            operator: "is_falsy"
+          grade_type_id:
+            type: "value"
+            operator: "is_falsy"

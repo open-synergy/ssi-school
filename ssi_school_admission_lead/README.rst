@@ -11,6 +11,14 @@ Glue module between School Admission and CRM Lead.
 Adds ``admission_form_id`` and ``admission_test_id`` fields to ``crm.lead``,
 and provides a wizard to create an admission form directly from a lead.
 
+It also carries the first layer of admission intake data on the lead itself:
+
+* ``student_birthdate`` and ``student_gender``: birthdate and gender of the
+  prospective student, related to the contact referenced by ``student_id``.
+  The identity data is stored on ``res.partner``, not duplicated on the lead.
+* ``grade_id``: the grade level the prospective student applies for, restricted
+  by ``grade_type_id`` which is derived from the selected school.
+
 Credits
 =======
 
