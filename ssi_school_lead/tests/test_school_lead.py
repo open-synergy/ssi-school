@@ -234,11 +234,17 @@ class TestSchoolLead(YamlTransactionCase):
         `school_lead_admission_document` — bukan lagi anak langsung dari group
         bawaan CRM `lead_partner`/`opportunity_partner`, yang tetap memuat
         `partner_id` dan berjudul `Parent/Guardian`.
+
+        Ketiga nama group ini adalah kontrak publik yang sengaja diperluas modul
+        lain (mis. `ssi_school_admission_lead`) lewat `xpath`, sehingga assertion
+        di sini memeriksa **keberadaan** (`assertIn`) field wajib milik
+        `ssi_school_lead`, bukan daftar tertutup — sesuai Skenario Uji #147
+        ("arch form memuat ...").
         """
         result = self.env["crm.lead"].fields_view_get(view_type="form")
         arch = etree.fromstring(result["arch"])
 
-        for group_name, expected_string, expected_fields in (
+        for group_name, expected_string, required_fields in (
             ("school_lead_prospective_student", "Prospective Student", ["student_id"]),
             ("school_lead_admission_target", "Admission Target", ["school_id"]),
             (
@@ -253,7 +259,12 @@ class TestSchoolLead(YamlTransactionCase):
             child_field_names = [
                 field.get("name") for field in group.findall("./field")
             ]
-            self.assertEqual(sorted(child_field_names), sorted(expected_fields))
+            for required_field in required_fields:
+                self.assertIn(
+                    required_field,
+                    child_field_names,
+                    "Group %s should contain field %s" % (group_name, required_field),
+                )
 
         school_field_names = {
             "school_id",
