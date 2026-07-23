@@ -29,6 +29,16 @@ msgid "Admission"
 msgstr ""
 
 #. module: ssi_school_lead
+#: model_terms:ir.ui.view,arch_db:ssi_school_lead.crm_lead_school_form_view
+msgid "Admission Document"
+msgstr ""
+
+#. module: ssi_school_lead
+#: model_terms:ir.ui.view,arch_db:ssi_school_lead.crm_lead_school_form_view
+msgid "Admission Target"
+msgstr ""
+
+#. module: ssi_school_lead
 #: model:ir.model,name:ssi_school_lead.model_crm_lead
 msgid "CRM Lead"
 msgstr ""
@@ -131,8 +141,18 @@ msgid "Lead"
 msgstr ""
 
 #. module: ssi_school_lead
+#: model_terms:ir.ui.view,arch_db:ssi_school_lead.crm_lead_school_form_view
+msgid "Parent/Guardian"
+msgstr ""
+
+#. module: ssi_school_lead
 #: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead_create_admission__payment_template_id
 msgid "Payment Template"
+msgstr ""
+
+#. module: ssi_school_lead
+#: model_terms:ir.ui.view,arch_db:ssi_school_lead.crm_lead_school_form_view
+msgid "Prospective Student"
 msgstr ""
 
 #. module: ssi_school_lead
