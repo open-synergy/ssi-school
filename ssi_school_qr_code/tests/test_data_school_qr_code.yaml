@@ -1,0 +1,101 @@
+scenarios:
+  - name: "Create Student With QR Code Image"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Student QR"
+          code: "GTSQR"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School for Student QR"
+          code: "SCHSQR"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+      - step: "Create contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student QR Contact"
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student QR"
+          code: "STUQR001"
+          contact_id: "EVAL: registry['contact'].id"
+          school_id: "EVAL: registry['school'].id"
+      - step: "Invalidate student cache before reading computed QR image"
+        action: "call"
+        target: "student"
+        method: "invalidate_cache"
+      - step: "Assert student created and qr_image computed"
+        action: "assert"
+        target: "student"
+        asserts:
+          id:
+            type: "value"
+            operator: "is_truthy"
+          name:
+            type: "value"
+            expected: "Student QR"
+          qr_image:
+            type: "value"
+            operator: "is_truthy"
+
+  - name: "Edit Student Master Data Preserved With QR Mixin"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Student QR Edit"
+          code: "GTSQRE"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School for Student QR Edit"
+          code: "SCHSQRE"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+      - step: "Create contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student QR Edit Contact"
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student QR Edit"
+          code: "STUQRE001"
+          contact_id: "EVAL: registry['contact'].id"
+          school_id: "EVAL: registry['school'].id"
+      - step: "Update student name and code"
+        action: "write"
+        target: "student"
+        values:
+          name: "Student QR Edit Updated"
+          code: "STUQRE002"
+      - step: "Assert master data changes saved"
+        action: "assert"
+        target: "student"
+        asserts:
+          name:
+            type: "value"
+            expected: "Student QR Edit Updated"
+          code:
+            type: "value"
+            expected: "STUQRE002"
