@@ -4,3 +4,4 @@
 
 from . import test_crm_lead_admission  # noqa: F401
 from . import test_crm_lead_student_identity  # noqa: F401
+from . import test_crm_lead_view_architecture  # noqa: F401

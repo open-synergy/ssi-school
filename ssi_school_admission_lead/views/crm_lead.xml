@@ -11,35 +11,26 @@
     <field name="arch" type="xml">
         <data>
             <xpath
-                    expr="//group[@name='opportunity_partner']//field[@name='student_id']"
+                    expr="//group[@name='school_lead_prospective_student']//field[@name='student_id']"
+                    position="after"
+                >
+                <field name="student_birthdate" />
+                <field name="student_gender" />
+            </xpath>
+            <xpath
+                    expr="//group[@name='school_lead_admission_target']//field[@name='school_id']"
+                    position="after"
+                >
+                <field name="grade_type_id" invisible="1" />
+                <field name="grade_id" domain="[('type_id', '=', grade_type_id)]" />
+            </xpath>
+            <xpath
+                    expr="//group[@name='school_lead_admission_document']//field[@name='admission_id']"
                     position="after"
                 >
                 <field name="admission_form_id" />
                 <field name="admission_test_id" />
                 <field name="create_admission_form_ok" invisible="1" />
-            </xpath>
-            <xpath
-                    expr="//group[@name='lead_partner']//field[@name='student_id']"
-                    position="after"
-                >
-                <field name="admission_form_id" />
-                <field name="admission_test_id" />
-            </xpath>
-            <xpath expr="//group[@name='opportunity_partner']" position="after">
-                <group
-                        name="school_admission_lead_student_identity"
-                        string="Prospective Student"
-                    >
-                    <field name="student_birthdate" />
-                    <field name="student_gender" />
-                </group>
-                <group
-                        name="school_admission_lead_target_grade"
-                        string="Admission Target"
-                    >
-                    <field name="grade_type_id" invisible="1" />
-                    <field name="grade_id" domain="[('type_id', '=', grade_type_id)]" />
-                </group>
             </xpath>
             <xpath
                     expr="//header/button[@name='action_create_admission']"
