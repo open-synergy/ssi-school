@@ -17,6 +17,7 @@ setuptools.setup(
         'odoo14-addon-ssi_school_incident_operating_unit',
         'odoo14-addon-ssi_school_lead',
         'odoo14-addon-ssi_school_operating_unit',
+        'odoo14-addon-ssi_school_qr_code',
         'odoo14-addon-ssi_school_student_graduation',
         'odoo14-addon-ssi_school_student_graduation_operating_unit',
         'odoo14-addon-ssi_school_student_leave',
