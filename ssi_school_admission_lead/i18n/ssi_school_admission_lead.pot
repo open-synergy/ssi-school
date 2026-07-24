@@ -45,6 +45,11 @@ msgid "Admission Test"
 msgstr ""
 
 #. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead__birth_city
+msgid "Birth City"
+msgstr ""
+
+#. module: ssi_school_admission_lead
 #: model:ir.model,name:ssi_school_admission_lead.model_crm_lead
 msgid "CRM Lead"
 msgstr ""
@@ -57,6 +62,14 @@ msgstr ""
 #. module: ssi_school_admission_lead
 #: model_terms:ir.ui.view,arch_db:ssi_school_admission_lead.crm_lead_create_admission_form_view_form
 msgid "Cancel"
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead__birth_city
+msgid ""
+"City of birth of the prospective student, synchronized from the contact "
+"referenced by the Student field. Writing this field updates the contact "
+"itself, so the identity data is not duplicated on the lead."
 msgstr ""
 
 #. module: ssi_school_admission_lead
@@ -170,6 +183,19 @@ msgid "Lead"
 msgstr ""
 
 #. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead__nationality_id
+msgid "Nationality"
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead__nationality_id
+msgid ""
+"Nationality of the prospective student, synchronized from the contact "
+"referenced by the Student field. Writing this field updates the contact "
+"itself, so the identity data is not duplicated on the lead."
+msgstr ""
+
+#. module: ssi_school_admission_lead
 #: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead_create_admission_form__parent_id
 msgid "Parent"
 msgstr ""
@@ -177,6 +203,19 @@ msgstr ""
 #. module: ssi_school_admission_lead
 #: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead_create_admission_form__pricelist_id
 msgid "Pricelist"
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead__religion_id
+msgid "Religion"
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead__religion_id
+msgid ""
+"Religion of the prospective student, synchronized from the contact "
+"referenced by the Student field. Writing this field updates the contact "
+"itself, so the identity data is not duplicated on the lead."
 msgstr ""
 
 #. module: ssi_school_admission_lead
