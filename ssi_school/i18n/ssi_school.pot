@@ -3142,7 +3142,6 @@ msgstr ""
 
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__product_summary_ids
-#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_form
 msgid "Payment Summary"
 msgstr ""
 
