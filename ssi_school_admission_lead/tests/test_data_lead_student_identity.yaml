@@ -139,6 +139,114 @@ scenarios:
         save_as: "leftover_contacts"
         expect_count: 0
 
+  - name: "CRM Lead - Birth city and religion written on the lead reach the contact"
+    steps:
+      - step: "Create religion"
+        action: "create"
+        model: "res_partner_religion"
+        save_as: "religion"
+        values:
+          name: "Religion Lead Write Identity"
+          code: "RELLWI"
+
+      - step: "Create prospective student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "student_contact"
+        values:
+          name: "Student Lead Write Birth City Religion"
+
+      - step: "Create lead pointing to the prospective student"
+        action: "create"
+        model: "crm.lead"
+        save_as: "lead"
+        values:
+          name: "Lead Write Birth City Religion"
+          student_id: "REC: student_contact.id"
+
+      - step: "Write birth city and religion on the lead"
+        action: "write"
+        target: "lead"
+        values:
+          birth_city: "Semarang"
+          religion_id: "REC: religion.id"
+
+      - step: "Assert the contact received the birth city and religion"
+        action: "assert"
+        target: "student_contact"
+        refresh: true
+        asserts:
+          birth_city:
+            type: "value"
+            expected: "Semarang"
+          religion_id:
+            type: "m2o"
+            expected: "REC: religion"
+
+  - name: "CRM Lead - Nationality written on the contact is read on the lead"
+    steps:
+      - step: "Create prospective student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "student_contact"
+        values:
+          name: "Student Lead Read Nationality"
+
+      - step: "Create lead pointing to the prospective student"
+        action: "create"
+        model: "crm.lead"
+        save_as: "lead"
+        values:
+          name: "Lead Read Nationality"
+          student_id: "REC: student_contact.id"
+
+      - step: "Write nationality on the contact"
+        action: "write"
+        target: "student_contact"
+        values:
+          nationality_id: "REF: base.id"
+
+      - step: "Assert the lead reflects the contact nationality"
+        action: "assert"
+        target: "lead"
+        refresh: true
+        asserts:
+          nationality_id:
+            type: "m2o"
+            expected: "REF: base.id"
+
+  - name:
+      "CRM Lead - Birth city, religion and nationality stay empty without a prospective
+      student"
+    steps:
+      - step: "Create lead without prospective student"
+        action: "create"
+        model: "crm.lead"
+        save_as: "lead"
+        values:
+          name: "Lead Without Student Extended Identity"
+
+      - step: "Assert lead exists with empty extended identity"
+        action: "assert"
+        target: "lead"
+        refresh: true
+        asserts:
+          id:
+            type: "value"
+            operator: "is_truthy"
+          student_id:
+            type: "value"
+            operator: "is_falsy"
+          birth_city:
+            type: "value"
+            operator: "is_falsy"
+          religion_id:
+            type: "value"
+            operator: "is_falsy"
+          nationality_id:
+            type: "value"
+            operator: "is_falsy"
+
   - name: "CRM Lead - Grade type follows the school and restricts the grade"
     steps:
       - step: "Create grade type"

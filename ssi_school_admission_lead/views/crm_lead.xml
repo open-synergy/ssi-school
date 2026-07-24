@@ -16,6 +16,9 @@
                 >
                 <field name="student_birthdate" />
                 <field name="student_gender" />
+                <field name="birth_city" />
+                <field name="religion_id" />
+                <field name="nationality_id" />
             </xpath>
             <xpath
                     expr="//group[@name='school_lead_admission_target']//field[@name='school_id']"

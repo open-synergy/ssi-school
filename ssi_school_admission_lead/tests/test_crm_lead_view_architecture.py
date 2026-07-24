@@ -33,9 +33,16 @@ class TestCrmLeadViewArchitecture(YamlTransactionCase):
         field_names = [f.get("name") for f in group.xpath(".//field")]
         self.assertEqual(
             field_names,
-            ["student_id", "student_birthdate", "student_gender"],
+            [
+                "student_id",
+                "student_birthdate",
+                "student_gender",
+                "birth_city",
+                "religion_id",
+                "nationality_id",
+            ],
             "Prospective Student group should list student_id, student_birthdate, "
-            "student_gender in that order",
+            "student_gender, birth_city, religion_id, nationality_id in that order",
         )
 
     def test_admission_target_group_contains_expected_fields_in_order(self):
