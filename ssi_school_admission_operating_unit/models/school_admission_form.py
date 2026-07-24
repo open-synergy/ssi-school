@@ -22,3 +22,13 @@ class SchoolAdmissionForm(models.Model):
         res = super()._prepare_standard_move()
         res["operating_unit_id"] = self.operating_unit_id.id
         return res
+
+    def action_create_admission_test(self):
+        self.ensure_one()
+        test_exists = bool(self.admission_test_id)
+        res = super().action_create_admission_test()
+        if not test_exists and self.operating_unit_id and res.get("res_id"):
+            self.env["school_admission_test"].browse(res["res_id"]).write(
+                {"operating_unit_id": self.operating_unit_id.id}
+            )
+        return res
