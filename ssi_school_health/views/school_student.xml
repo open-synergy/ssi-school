@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 OpenSynergy Indonesia
+     Copyright 2026 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+
+<record id="school_student_view_form_health" model="ir.ui.view">
+    <field name="name">school_student form - health</field>
+    <field name="model">school_student</field>
+    <field name="inherit_id" ref="ssi_school.school_student_view_form" />
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//notebook" position="inside">
+                <page name="health" string="Health">
+                    <group
+                            name="health_latest_measurement"
+                            string="Latest Measurements"
+                            colspan="4"
+                            col="2"
+                        >
+                        <field name="height" />
+                        <field name="weight" />
+                        <field name="head_circumference" />
+                    </group>
+                    <separator name="health_height" string="Height" />
+                    <field name="height_ids" nolabel="1" colspan="4">
+                        <tree editable="bottom">
+                            <field name="date" />
+                            <field name="value" />
+                        </tree>
+                    </field>
+                    <separator name="health_weight" string="Weight" />
+                    <field name="weight_ids" nolabel="1" colspan="4">
+                        <tree editable="bottom">
+                            <field name="date" />
+                            <field name="value" />
+                        </tree>
+                    </field>
+                    <separator
+                            name="health_head_circumference"
+                            string="Head Circumference"
+                        />
+                    <field name="head_circumference_ids" nolabel="1" colspan="4">
+                        <tree editable="bottom">
+                            <field name="date" />
+                            <field name="value" />
+                        </tree>
+                    </field>
+                    <separator name="health_allergy" string="Allergies" />
+                    <field name="allergy_ids" nolabel="1" colspan="4">
+                        <tree editable="bottom">
+                            <field name="allergen_id" />
+                            <field name="severity" />
+                            <field name="note" />
+                        </tree>
+                    </field>
+                    <separator name="health_disease_history" string="Disease History" />
+                    <field name="disease_history_ids" nolabel="1" colspan="4">
+                        <tree editable="bottom">
+                            <field name="disease_id" />
+                            <field name="date_diagnosed" />
+                            <field name="date_recovered" />
+                            <field name="note" />
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </data>
+    </field>
+</record>
+
+</odoo>

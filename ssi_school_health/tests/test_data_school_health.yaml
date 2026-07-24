@@ -1,0 +1,686 @@
+scenarios:
+  - name: "Height Created Via Student Belongs To Contact"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type School Health Height"
+          code: "GTSHHG"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Health Height"
+          code: "SCHSHHG"
+          grade_type_id: "REC: grade_type.id"
+      - step: "Create contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "School Health Height Contact"
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "School Health Height Student"
+          code: "STUSHHG"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+      - step: "Add height measurement via student"
+        action: "write"
+        target: "student"
+        values:
+          height_ids:
+            - - 0
+              - 0
+              - date: 2026-01-01
+                value: 140.0
+      - step: "Assert height line reflected on student"
+        action: "assert"
+        target: "student"
+        asserts:
+          height_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 1
+      - step: "Assert height line reflected on contact"
+        action: "assert"
+        target: "contact"
+        asserts:
+          height_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 1
+      - step: "Find height line owned by contact"
+        action: "search"
+        model: "partner.height"
+        domain:
+          - ["partner_id", "=", "REC: contact.id"]
+        save_as: "height_line"
+        expect_count: 1
+      - step: "Assert height line partner is the student contact"
+        action: "assert"
+        target: "height_line"
+        asserts:
+          partner_id:
+            type: "m2o"
+            expected: "REC: contact"
+          value:
+            type: "value"
+            expected: 140.0
+
+  - name: "Latest Height Wins On Student"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type School Health Latest Height"
+          code: "GTSHLH"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Health Latest Height"
+          code: "SCHSHLH"
+          grade_type_id: "REC: grade_type.id"
+      - step: "Create contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "School Health Latest Height Contact"
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "School Health Latest Height Student"
+          code: "STUSHLH"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+      - step: "Add two height measurements via student"
+        action: "write"
+        target: "student"
+        values:
+          height_ids:
+            - - 0
+              - 0
+              - date: 2026-01-01
+                value: 140.0
+            - - 0
+              - 0
+              - date: 2026-06-01
+                value: 150.0
+      - step: "Invalidate student cache before reading latest height"
+        action: "call"
+        target: "student"
+        method: "invalidate_cache"
+      - step: "Assert latest height on student and contact"
+        action: "assert"
+        target: "student"
+        asserts:
+          height_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 2
+          height:
+            type: "value"
+            expected: 150.0
+          contact_id.height:
+            type: "value"
+            expected: 150.0
+
+  - name: "Latest Weight Wins On Student"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type School Health Latest Weight"
+          code: "GTSHLW"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Health Latest Weight"
+          code: "SCHSHLW"
+          grade_type_id: "REC: grade_type.id"
+      - step: "Create contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "School Health Latest Weight Contact"
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "School Health Latest Weight Student"
+          code: "STUSHLW"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+      - step: "Add two weight measurements via student"
+        action: "write"
+        target: "student"
+        values:
+          weight_ids:
+            - - 0
+              - 0
+              - date: 2026-01-01
+                value: 30.5
+            - - 0
+              - 0
+              - date: 2026-06-01
+                value: 35.25
+      - step: "Invalidate student cache before reading latest weight"
+        action: "call"
+        target: "student"
+        method: "invalidate_cache"
+      - step: "Assert latest weight on student and contact"
+        action: "assert"
+        target: "student"
+        asserts:
+          weight_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 2
+          weight:
+            type: "value"
+            expected: 35.25
+          contact_id.weight:
+            type: "value"
+            expected: 35.25
+
+  - name: "Latest Head Circumference Wins On Student"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type School Health Latest Head"
+          code: "GTSHLC"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Health Latest Head"
+          code: "SCHSHLC"
+          grade_type_id: "REC: grade_type.id"
+      - step: "Create contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "School Health Latest Head Contact"
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "School Health Latest Head Student"
+          code: "STUSHLC"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+      - step: "Add two head circumference measurements via student"
+        action: "write"
+        target: "student"
+        values:
+          head_circumference_ids:
+            - - 0
+              - 0
+              - date: 2026-01-01
+                value: 48.5
+            - - 0
+              - 0
+              - date: 2026-06-01
+                value: 50.0
+      - step: "Invalidate student cache before reading latest head circumference"
+        action: "call"
+        target: "student"
+        method: "invalidate_cache"
+      - step: "Assert latest head circumference on student and contact"
+        action: "assert"
+        target: "student"
+        asserts:
+          head_circumference_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 2
+          head_circumference:
+            type: "value"
+            expected: 50.0
+          contact_id.head_circumference:
+            type: "value"
+            expected: 50.0
+
+  - name: "Allergy Created Via Student Reflects On Contact"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type School Health Allergy"
+          code: "GTSHAL"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Health Allergy"
+          code: "SCHSHAL"
+          grade_type_id: "REC: grade_type.id"
+      - step: "Create allergen category"
+        action: "create"
+        model: "health.allergen_category"
+        save_as: "allergen_category"
+        values:
+          name: "School Health Allergen Category"
+          code: "HACSHAL"
+      - step: "Create allergen"
+        action: "create"
+        model: "health.allergen"
+        save_as: "allergen"
+        values:
+          name: "School Health Allergen"
+          code: "HALSHAL"
+          category_id: "REC: allergen_category.id"
+      - step: "Create contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "School Health Allergy Contact"
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "School Health Allergy Student"
+          code: "STUSHAL"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+      - step: "Add allergy via student"
+        action: "write"
+        target: "student"
+        values:
+          allergy_ids:
+            - - 0
+              - 0
+              - allergen_id: "REC: allergen.id"
+                severity: "moderate"
+      - step: "Find allergy owned by contact"
+        action: "search"
+        model: "partner.allergy"
+        domain:
+          - ["partner_id", "=", "REC: contact.id"]
+        save_as: "allergy"
+        expect_count: 1
+      - step: "Assert allergy listed on student"
+        action: "assert"
+        target: "student"
+        asserts:
+          allergy_ids:
+            type: "o2m"
+            check: "contains"
+            expected_records:
+              - "REC: allergy"
+      - step: "Assert the same allergy listed on contact"
+        action: "assert"
+        target: "contact"
+        asserts:
+          allergy_ids:
+            type: "o2m"
+            check: "contains"
+            expected_records:
+              - "REC: allergy"
+
+  - name: "Disease History Created Via Student Reflects On Contact"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type School Health Disease"
+          code: "GTSHDS"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Health Disease"
+          code: "SCHSHDS"
+          grade_type_id: "REC: grade_type.id"
+      - step: "Create disease category"
+        action: "create"
+        model: "health.disease_category"
+        save_as: "disease_category"
+        values:
+          name: "School Health Disease Category"
+          code: "HDCSHDS"
+      - step: "Create disease"
+        action: "create"
+        model: "health.disease"
+        save_as: "disease"
+        values:
+          name: "School Health Disease Master"
+          code: "HDSSHDS"
+          category_id: "REC: disease_category.id"
+      - step: "Create contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "School Health Disease Contact"
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "School Health Disease Student"
+          code: "STUSHDS"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+      - step: "Add disease history via student"
+        action: "write"
+        target: "student"
+        values:
+          disease_history_ids:
+            - - 0
+              - 0
+              - disease_id: "REC: disease.id"
+                date_diagnosed: 2026-01-01
+                date_recovered: 2026-02-01
+      - step: "Find disease history owned by contact"
+        action: "search"
+        model: "partner.disease_history"
+        domain:
+          - ["partner_id", "=", "REC: contact.id"]
+        save_as: "disease_history"
+        expect_count: 1
+      - step: "Assert disease history listed on student"
+        action: "assert"
+        target: "student"
+        asserts:
+          disease_history_ids:
+            type: "o2m"
+            check: "contains"
+            expected_records:
+              - "REC: disease_history"
+      - step: "Assert the same disease history listed on contact"
+        action: "assert"
+        target: "contact"
+        asserts:
+          disease_history_ids:
+            type: "o2m"
+            check: "contains"
+            expected_records:
+              - "REC: disease_history"
+
+  - name: "Changing Contact Changes Student Health Value"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type School Health Switch"
+          code: "GTSHSW"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Health Switch"
+          code: "SCHSHSW"
+          grade_type_id: "REC: grade_type.id"
+      - step: "Create first contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_a"
+        values:
+          name: "School Health Switch Contact A"
+      - step: "Create second contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_b"
+        values:
+          name: "School Health Switch Contact B"
+      - step: "Create height for first contact"
+        action: "create"
+        model: "partner.height"
+        save_as: "height_a"
+        values:
+          partner_id: "REC: contact_a.id"
+          date: 2026-01-01
+          value: 140.0
+      - step: "Create height for second contact"
+        action: "create"
+        model: "partner.height"
+        save_as: "height_b"
+        values:
+          partner_id: "REC: contact_b.id"
+          date: 2026-01-01
+          value: 160.0
+      - step: "Create student on first contact"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "School Health Switch Student"
+          code: "STUSHSW"
+          contact_id: "REC: contact_a.id"
+          school_id: "REC: school.id"
+      - step: "Invalidate student cache before reading initial height"
+        action: "call"
+        target: "student"
+        method: "invalidate_cache"
+      - step: "Assert student height follows first contact"
+        action: "assert"
+        target: "student"
+        asserts:
+          height:
+            type: "value"
+            expected: 140.0
+      - step: "Move student to second contact"
+        action: "write"
+        target: "student"
+        values:
+          contact_id: "REC: contact_b.id"
+      - step: "Invalidate student cache before reading new height"
+        action: "call"
+        target: "student"
+        method: "invalidate_cache"
+      - step: "Assert student height follows second contact"
+        action: "assert"
+        target: "student"
+        asserts:
+          height:
+            type: "value"
+            expected: 160.0
+          contact_id.height:
+            type: "value"
+            expected: 160.0
+
+  - name: "Reject Zero Height Value Created Via Student"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type School Health Zero"
+          code: "GTSHZR"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Health Zero"
+          code: "SCHSHZR"
+          grade_type_id: "REC: grade_type.id"
+      - step: "Create contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "School Health Zero Contact"
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "School Health Zero Student"
+          code: "STUSHZR"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+      - step: "Zero height value must be rejected"
+        action: "write"
+        target: "student"
+        expect_error:
+          type: "UserError"
+          message_contains: "Value must be greater than zero"
+        values:
+          height_ids:
+            - - 0
+              - 0
+              - date: 2026-01-01
+                value: 0.0
+
+  - name: "Reject Duplicate Allergen Created Via Student"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type School Health Duplicate Allergen"
+          code: "GTSHDA"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Health Duplicate Allergen"
+          code: "SCHSHDA"
+          grade_type_id: "REC: grade_type.id"
+      - step: "Create allergen"
+        action: "create"
+        model: "health.allergen"
+        save_as: "allergen"
+        values:
+          name: "School Health Duplicate Allergen Master"
+          code: "HALSHDA"
+      - step: "Create contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "School Health Duplicate Allergen Contact"
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "School Health Duplicate Allergen Student"
+          code: "STUSHDA"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+      - step: "Add first allergy via student"
+        action: "write"
+        target: "student"
+        values:
+          allergy_ids:
+            - - 0
+              - 0
+              - allergen_id: "REC: allergen.id"
+                severity: "mild"
+      - step: "Adding the same allergen again must be rejected"
+        action: "write"
+        target: "student"
+        expect_error:
+          type: "UserError"
+          message_contains: "No duplicate allergen"
+        values:
+          allergy_ids:
+            - - 0
+              - 0
+              - allergen_id: "REC: allergen.id"
+                severity: "severe"
+
+  - name: "Reject Recovery Date Earlier Than Diagnosis Date Via Student"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type School Health Bad Date"
+          code: "GTSHBD"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Health Bad Date"
+          code: "SCHSHBD"
+          grade_type_id: "REC: grade_type.id"
+      - step: "Create disease"
+        action: "create"
+        model: "health.disease"
+        save_as: "disease"
+        values:
+          name: "School Health Bad Date Disease"
+          code: "HDSSHBD"
+      - step: "Create contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "School Health Bad Date Contact"
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "School Health Bad Date Student"
+          code: "STUSHBD"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+      - step: "Recovery date earlier than diagnosis date must be rejected"
+        action: "write"
+        target: "student"
+        expect_error:
+          type: "UserError"
+          message_contains: "Date recovered cannot be earlier than date diagnosed"
+        values:
+          disease_history_ids:
+            - - 0
+              - 0
+              - disease_id: "REC: disease.id"
+                date_diagnosed: 2026-02-01
+                date_recovered: 2026-01-01
