@@ -323,3 +323,349 @@ scenarios:
           operating_unit_id:
             type: "value"
             operator: "is_truthy"
+
+  - name:
+      "Admission Operating Unit - action_create_admission_test propagates operating unit
+      from form"
+    steps:
+      - step: "Get main company operating unit"
+        action: "search"
+        model: "operating.unit"
+        domain: [["company_id", "=", "REF: base.main_company"]]
+        save_as: "operating_unit"
+        limit: 1
+
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal"
+        limit: 1
+
+      - step: "Setup - get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "Admission Test Propagation Fee Income 1"
+          code: "ADMTPFI1"
+          user_type_id: "REC: account_type.id"
+
+      - step: "Setup - create pricelist"
+        action: "create"
+        model: "product.pricelist"
+        save_as: "pricelist"
+        values:
+          name: "Pricelist Admission Test Propagation 1"
+          currency_id: "EVAL: env.company.currency_id.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Admission Test Propagation 1"
+          code: "GTATP1"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Admission Test Propagation 1"
+          code: "SCHATP1"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade Admission Test Propagation 1"
+          code: "GATP1"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2025/2026 Admission Test Propagation 1"
+          code: "AYATP1"
+          date_start: "2025-07-01"
+          date_end: "2026-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester Admission Test Propagation 1"
+          code: "SMATP1"
+          date_start: "2025-07-01"
+          date_end: "2025-12-31"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "student_contact"
+        values:
+          name: "Student Admission Test Propagation 1"
+
+      - step: "Setup - create parent contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "parent_contact"
+        values:
+          name: "Parent Admission Test Propagation 1"
+
+      - step: "Setup - create fee template"
+        action: "create"
+        model: "school_admission_fee_template"
+        save_as: "fee_template"
+        values:
+          name: "Fee Template Admission Test Propagation 1"
+          code: "FTATP1"
+          journal_id: "REC: journal.id"
+          account_id: "REC: account.id"
+
+      - step: "Create school admission form with operating unit, no test yet"
+        action: "create"
+        model: "school_admission_form"
+        save_as: "admission_form"
+        as_user: "base.user_admin"
+        values:
+          date: "2025-07-15"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          student_id: "REC: student_contact.id"
+          parent_id: "REC: parent_contact.id"
+          pricelist_id: "REC: pricelist.id"
+          currency_id: "EVAL: env.company.currency_id.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          fee_template_id: "REC: fee_template.id"
+          journal_id: "REC: journal.id"
+          account_id: "REC: account.id"
+          operating_unit_id: "REC: operating_unit.id"
+
+      - step: "Call action_create_admission_test on the admission form"
+        action: "call"
+        target: "admission_form"
+        method: "action_create_admission_test"
+        as_user: "base.user_admin"
+
+      - step: "Fetch the admission test created for this form"
+        action: "search"
+        model: "school_admission_test"
+        domain: [["admission_form_id", "=", "REC: admission_form.id"]]
+        save_as: "created_test"
+        limit: 1
+
+      - step: "Assert admission test inherits the form's operating unit"
+        action: "assert"
+        target: "created_test"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: operating_unit"
+
+  - name:
+      "Admission Operating Unit - action_create_admission_test does not overwrite an
+      existing test's operating unit"
+    steps:
+      - step: "Setup - create partner for Operating Unit A"
+        action: "create"
+        model: "res.partner"
+        save_as: "ou_a_partner"
+        values:
+          name: "Admission Test Propagation OU A Partner"
+
+      - step: "Setup - create Operating Unit A"
+        action: "create"
+        model: "operating.unit"
+        save_as: "ou_a"
+        values:
+          name: "Admission Test Propagation OU A"
+          code: "OUATP2A"
+          company_id: "REF: base.main_company"
+          partner_id: "REC: ou_a_partner.id"
+
+      - step: "Setup - create partner for Operating Unit B"
+        action: "create"
+        model: "res.partner"
+        save_as: "ou_b_partner"
+        values:
+          name: "Admission Test Propagation OU B Partner"
+
+      - step: "Setup - create Operating Unit B"
+        action: "create"
+        model: "operating.unit"
+        save_as: "ou_b"
+        values:
+          name: "Admission Test Propagation OU B"
+          code: "OUATP2B"
+          company_id: "REF: base.main_company"
+          partner_id: "REC: ou_b_partner.id"
+
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal"
+        limit: 1
+
+      - step: "Setup - get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "Admission Test Propagation Fee Income 2"
+          code: "ADMTPFI2"
+          user_type_id: "REC: account_type.id"
+
+      - step: "Setup - create pricelist"
+        action: "create"
+        model: "product.pricelist"
+        save_as: "pricelist"
+        values:
+          name: "Pricelist Admission Test Propagation 2"
+          currency_id: "EVAL: env.company.currency_id.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Admission Test Propagation 2"
+          code: "GTATP2"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Admission Test Propagation 2"
+          code: "SCHATP2"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade Admission Test Propagation 2"
+          code: "GATP2"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2025/2026 Admission Test Propagation 2"
+          code: "AYATP2"
+          date_start: "2025-07-01"
+          date_end: "2026-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester Admission Test Propagation 2"
+          code: "SMATP2"
+          date_start: "2025-07-01"
+          date_end: "2025-12-31"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "student_contact"
+        values:
+          name: "Student Admission Test Propagation 2"
+
+      - step: "Setup - create parent contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "parent_contact"
+        values:
+          name: "Parent Admission Test Propagation 2"
+
+      - step: "Setup - create fee template"
+        action: "create"
+        model: "school_admission_fee_template"
+        save_as: "fee_template"
+        values:
+          name: "Fee Template Admission Test Propagation 2"
+          code: "FTATP2"
+          journal_id: "REC: journal.id"
+          account_id: "REC: account.id"
+
+      - step: "Create school admission form with Operating Unit A"
+        action: "create"
+        model: "school_admission_form"
+        save_as: "admission_form"
+        as_user: "base.user_admin"
+        values:
+          date: "2025-07-15"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          student_id: "REC: student_contact.id"
+          parent_id: "REC: parent_contact.id"
+          pricelist_id: "REC: pricelist.id"
+          currency_id: "EVAL: env.company.currency_id.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          fee_template_id: "REC: fee_template.id"
+          journal_id: "REC: journal.id"
+          account_id: "REC: account.id"
+          operating_unit_id: "REC: ou_a.id"
+
+      - step:
+          "Create pre-existing admission test with Operating Unit B, linked to the form"
+        action: "create"
+        model: "school_admission_test"
+        save_as: "existing_test"
+        as_user: "base.user_admin"
+        values:
+          date: "2025-07-15"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: student_contact.id"
+          admission_form_id: "REC: admission_form.id"
+          operating_unit_id: "REC: ou_b.id"
+
+      - step: "Call action_create_admission_test again on the admission form"
+        action: "call"
+        target: "admission_form"
+        method: "action_create_admission_test"
+        as_user: "base.user_admin"
+
+      - step: "Assert the existing admission test's operating unit is unchanged"
+        action: "assert"
+        target: "existing_test"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ou_b"
