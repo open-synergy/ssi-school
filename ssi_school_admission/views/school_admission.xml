@@ -232,11 +232,11 @@
                             <field name="amount_total" />
                         </tree>
                     </field>
-                    <group name="billing_account" colspan="4" col="2">
-                        <group name="billing_account_left" colspan="1" col="2">
-                            <field name="receivable_journal_id" />
-                            <field name="receivable_account_id" />
-                        </group>
+                </page>
+                <page name="accounting" string="Accounting">
+                    <group name="accounting_group" colspan="4" col="2">
+                        <field name="receivable_journal_id" />
+                        <field name="receivable_account_id" />
                     </group>
                 </page>
                 <page name="admission_source" string="Admission Source">
