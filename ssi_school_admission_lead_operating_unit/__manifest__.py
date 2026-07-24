@@ -23,6 +23,9 @@
         "ssi_school_admission_lead",
         "ssi_school_admission_operating_unit",
     ],
-    "data": [],
+    "data": [
+        "views/crm_lead_create_admission_form.xml",
+        "views/crm_lead_create_admission.xml",
+    ],
     "demo": [],
 }
