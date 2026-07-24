@@ -5,6 +5,7 @@
 from datetime import date as datetime_date
 
 from odoo import api, fields, models
+from odoo.tools import float_is_zero
 
 from odoo.addons.ssi_decorator import ssi_decorator
 
@@ -327,11 +328,27 @@ class SchoolAdmissionForm(models.Model):
         for record in self:
             record._recompute_standard_tax()  # pylint: disable=protected-access
 
+    def _is_free_admission_form(self):
+        """Return whether this admission form has zero total fee.
+
+        A free admission form has no fee to be billed, so no accounting
+        entry is relevant and the form can go straight to "done" once the
+        document number is created.
+        """
+        self.ensure_one()
+        return float_is_zero(
+            self.amount_total,
+            precision_rounding=self.currency_id.rounding,
+        )
+
     @ssi_decorator.post_open_action()
     def _10_create_accounting_entry(
         self,
     ):  # pylint: disable=inconsistent-return-statements
         self.ensure_one()
+
+        if self._is_free_admission_form():
+            return True
 
         if self.move_id:
             return True
@@ -360,6 +377,15 @@ class SchoolAdmissionForm(models.Model):
             tax._create_standard_ml()  # Mixin
 
         self._post_standard_move()  # Mixin
+
+    @ssi_decorator.post_open_action()
+    def _20_auto_done_if_free(self):
+        self.ensure_one()
+
+        if not self._is_free_admission_form():
+            return True
+
+        self.sudo().action_done()
 
     @ssi_decorator.post_cancel_action()
     def _delete_accounting_entry(self):
