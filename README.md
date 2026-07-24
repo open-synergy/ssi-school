@@ -21,7 +21,7 @@ addon | version | maintainers | summary
 [ssi_school](ssi_school/) | 14.0.5.7.0 |  | School
 [ssi_school_admission](ssi_school_admission/) | 14.0.2.19.0 |  | School Admission
 [ssi_school_admission_lead](ssi_school_admission_lead/) | 14.0.1.5.1 |  | School Admission Lead
-[ssi_school_admission_lead_operating_unit](ssi_school_admission_lead_operating_unit/) | 14.0.1.1.0 |  | School Admission Lead - Operating Unit
+[ssi_school_admission_lead_operating_unit](ssi_school_admission_lead_operating_unit/) | 14.0.1.1.1 |  | School Admission Lead - Operating Unit
 [ssi_school_admission_operating_unit](ssi_school_admission_operating_unit/) | 14.0.1.3.0 |  | School Admission - Operating Unit
 [ssi_school_health](ssi_school_health/) | 14.0.1.0.0 |  | School Health
 [ssi_school_incident](ssi_school_incident/) | 14.0.1.1.0 |  | School Incident
