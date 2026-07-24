@@ -18,7 +18,7 @@ Available addons
 ----------------
 addon | version | maintainers | summary
 --- | --- | --- | ---
-[ssi_school](ssi_school/) | 14.0.5.7.0 |  | School
+[ssi_school](ssi_school/) | 14.0.5.7.1 |  | School
 [ssi_school_admission](ssi_school_admission/) | 14.0.2.19.1 |  | School Admission
 [ssi_school_admission_lead](ssi_school_admission_lead/) | 14.0.1.5.1 |  | School Admission Lead
 [ssi_school_admission_lead_operating_unit](ssi_school_admission_lead_operating_unit/) | 14.0.1.1.1 |  | School Admission Lead - Operating Unit
