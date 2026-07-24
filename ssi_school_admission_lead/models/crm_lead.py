@@ -41,6 +41,47 @@ class CrmLead(models.Model):  # pylint: disable=too-few-public-methods
             "duplicated on the lead."
         ),
     )
+    birth_city = fields.Char(
+        string="Birth City",
+        related="student_id.birth_city",
+        store=True,
+        readonly=False,
+        compute_sudo=True,
+        help=(
+            "City of birth of the prospective student, synchronized from "
+            "the contact referenced by the Student field. Writing this "
+            "field updates the contact itself, so the identity data is not "
+            "duplicated on the lead."
+        ),
+    )
+    religion_id = fields.Many2one(
+        string="Religion",
+        comodel_name="res_partner_religion",
+        related="student_id.religion_id",
+        store=True,
+        readonly=False,
+        compute_sudo=True,
+        help=(
+            "Religion of the prospective student, synchronized from the "
+            "contact referenced by the Student field. Writing this field "
+            "updates the contact itself, so the identity data is not "
+            "duplicated on the lead."
+        ),
+    )
+    nationality_id = fields.Many2one(
+        string="Nationality",
+        comodel_name="res.country",
+        related="student_id.nationality_id",
+        store=True,
+        readonly=False,
+        compute_sudo=True,
+        help=(
+            "Nationality of the prospective student, synchronized from the "
+            "contact referenced by the Student field. Writing this field "
+            "updates the contact itself, so the identity data is not "
+            "duplicated on the lead."
+        ),
+    )
     grade_type_id = fields.Many2one(
         string="Grade Type",
         comodel_name="school_grade_type",
