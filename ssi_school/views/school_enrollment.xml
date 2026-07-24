@@ -274,14 +274,6 @@
                                 />
                         </tree>
                     </field>
-                </page>
-                <page name="accounting" string="Accounting">
-                    <group name="accounting_group" colspan="4" col="2">
-                        <field name="receivable_journal_id" />
-                        <field name="receivable_account_id" />
-                    </group>
-                </page>
-                <page name="payment_summary" string="Payment Summary">
                     <field name="product_summary_ids" nolabel="1" colspan="4">
                         <tree create="false" edit="false" delete="false">
                             <field name="product_id" />
@@ -292,6 +284,12 @@
                             <field name="amount_total" />
                         </tree>
                     </field>
+                </page>
+                <page name="accounting" string="Accounting">
+                    <group name="accounting_group" colspan="4" col="2">
+                        <field name="receivable_journal_id" />
+                        <field name="receivable_account_id" />
+                    </group>
                 </page>
             </xpath>
             <xpath expr="//group[@name='policy_2']" position="inside">
