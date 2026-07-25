@@ -24,6 +24,13 @@ msgid "Academic Year"
 msgstr ""
 
 #. module: ssi_school_lead
+#: model:ir.model.fields,help:ssi_school_lead.field_crm_lead__parent_street2
+msgid ""
+"Additional street address of the parent/guardian, mirrored from their "
+"contact record."
+msgstr ""
+
+#. module: ssi_school_lead
 #: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead__admission_id
 msgid "Admission"
 msgstr ""
@@ -51,6 +58,16 @@ msgstr ""
 #. module: ssi_school_lead
 #: model_terms:ir.ui.view,arch_db:ssi_school_lead.crm_lead_create_admission_view_form
 msgid "Cancel"
+msgstr ""
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,help:ssi_school_lead.field_crm_lead__parent_city
+msgid "City of the parent/guardian, mirrored from their contact record."
+msgstr ""
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,help:ssi_school_lead.field_crm_lead__parent_country_id
+msgid "Country of the parent/guardian, mirrored from their contact record."
 msgstr ""
 
 #. module: ssi_school_lead
@@ -89,6 +106,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead_create_admission__display_name
 #: model:ir.model.fields,field_description:ssi_school_lead.field_school__display_name
 msgid "Display Name"
+msgstr ""
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,help:ssi_school_lead.field_crm_lead__parent_email
+msgid ""
+"Email address of the parent/guardian, mirrored from their contact record."
 msgstr ""
 
 #. module: ssi_school_lead
@@ -141,13 +164,81 @@ msgid "Lead"
 msgstr ""
 
 #. module: ssi_school_lead
+#: model:ir.model.fields,help:ssi_school_lead.field_crm_lead__parent_mobile
+msgid ""
+"Mobile number of the parent/guardian, mirrored from their contact record."
+msgstr ""
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead__parent_city
+msgid "Parent City"
+msgstr ""
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead__parent_country_id
+msgid "Parent Country"
+msgstr ""
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead__parent_email
+msgid "Parent Email"
+msgstr ""
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead__parent_mobile
+msgid "Parent Mobile"
+msgstr ""
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead__parent_phone
+msgid "Parent Phone"
+msgstr ""
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead__parent_state_id
+msgid "Parent State"
+msgstr ""
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead__parent_street
+msgid "Parent Street"
+msgstr ""
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead__parent_street2
+msgid "Parent Street2"
+msgstr ""
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead__parent_zip
+msgid "Parent Zip"
+msgstr ""
+
+#. module: ssi_school_lead
 #: model_terms:ir.ui.view,arch_db:ssi_school_lead.crm_lead_school_form_view
 msgid "Parent/Guardian"
 msgstr ""
 
 #. module: ssi_school_lead
+#: model_terms:ir.ui.view,arch_db:ssi_school_lead.crm_lead_school_form_view
+msgid "Parent/Guardian Contact"
+msgstr ""
+
+#. module: ssi_school_lead
 #: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead_create_admission__payment_template_id
 msgid "Payment Template"
+msgstr ""
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,help:ssi_school_lead.field_crm_lead__parent_phone
+msgid ""
+"Phone number of the parent/guardian, mirrored from their contact record."
+msgstr ""
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,help:ssi_school_lead.field_crm_lead__parent_zip
+msgid ""
+"Postal/zip code of the parent/guardian, mirrored from their contact record."
 msgstr ""
 
 #. module: ssi_school_lead
@@ -160,6 +251,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead__school_id
 #: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead_create_admission__school_id
 msgid "School"
+msgstr ""
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,help:ssi_school_lead.field_crm_lead__parent_state_id
+msgid ""
+"State/province of the parent/guardian, mirrored from their contact record."
+msgstr ""
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,help:ssi_school_lead.field_crm_lead__parent_street
+msgid ""
+"Street address of the parent/guardian, mirrored from their contact record."
 msgstr ""
 
 #. module: ssi_school_lead
