@@ -2,12 +2,8 @@
 # Copyright 2026 PT. Simetri Sinergi Indonesia
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-import logging
-
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
-
-_logger = logging.getLogger(__name__)
 
 
 class SchoolAdmissionWizardCreateDueInvoice(models.TransientModel):
@@ -113,22 +109,6 @@ by the create due invoice policy
     def _check_date_range(self):
         self.ensure_one()
         effective_end = self.date_end or fields.Date.context_today(self)
-        # TEMP DEBUG #168 - remove before merge
-        _logger.warning(
-            "TEMP DEBUG #168: id=%s date_start=%r (%s) date_end=%r "
-            "effective_end=%r (%s) context_tz=%r user_tz=%r uid=%s "
-            "context=%r",
-            self.id,
-            self.date_start,
-            type(self.date_start),
-            self.date_end,
-            effective_end,
-            type(effective_end),
-            self._context.get("tz"),
-            self.env.user.tz,
-            self.env.uid,
-            self._context,
-        )
         if self.date_start and self.date_start > effective_end:
             error_message = (
                 _(
