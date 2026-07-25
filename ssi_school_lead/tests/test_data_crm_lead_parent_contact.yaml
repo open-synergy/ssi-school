@@ -1,0 +1,276 @@
+options:
+  auto_refresh: true
+
+scenarios:
+  - name: "CRM Lead Parent Contact - Create with full partner contact info"
+    steps:
+      - step: "Create parent partner with full contact info"
+        action: "create"
+        model: "res.partner"
+        save_as: "parent"
+        values:
+          name: "Parent Contact Full PC1"
+          street: "Jl. Merdeka No. 1"
+          street2: "Building A"
+          city: "Jakarta"
+          state_id: "REF: base.state_id_jk"
+          zip: "10110"
+          country_id: "REF: base.id"
+          mobile: "081234567890"
+          phone: "0213456789"
+          email: "parent.full.pc1@example.com"
+
+      - step: "Create CRM lead with partner_id"
+        action: "create"
+        model: "crm.lead"
+        save_as: "lead"
+        as_user: "base.user_admin"
+        values:
+          name: "Lead Parent Contact Full PC1"
+          partner_id: "REC: parent.id"
+
+      - step: "Assert parent_* fields mirror partner contact info"
+        action: "assert"
+        target: "lead"
+        asserts:
+          parent_street:
+            type: "value"
+            expected: "Jl. Merdeka No. 1"
+          parent_street2:
+            type: "value"
+            expected: "Building A"
+          parent_city:
+            type: "value"
+            expected: "Jakarta"
+          parent_state_id:
+            type: "m2o"
+            expected_xml_id: "base.state_id_jk"
+          parent_zip:
+            type: "value"
+            expected: "10110"
+          parent_country_id:
+            type: "m2o"
+            expected_xml_id: "base.id"
+          parent_mobile:
+            type: "value"
+            expected: "081234567890"
+          parent_phone:
+            type: "value"
+            expected: "0213456789"
+          parent_email:
+            type: "value"
+            expected: "parent.full.pc1@example.com"
+
+  - name: "CRM Lead Parent Contact - Propagates when partner is updated"
+    steps:
+      - step: "Create parent partner with initial contact info"
+        action: "create"
+        model: "res.partner"
+        save_as: "parent"
+        values:
+          name: "Parent Contact Initial PC2"
+          street: "Jl. Awal No. 1"
+          mobile: "081100000000"
+
+      - step: "Create CRM lead with partner_id"
+        action: "create"
+        model: "crm.lead"
+        save_as: "lead"
+        as_user: "base.user_admin"
+        values:
+          name: "Lead Parent Contact Propagation PC2"
+          partner_id: "REC: parent.id"
+
+      - step: "Assert parent_* fields mirror initial partner contact info"
+        action: "assert"
+        target: "lead"
+        asserts:
+          parent_street:
+            type: "value"
+            expected: "Jl. Awal No. 1"
+          parent_mobile:
+            type: "value"
+            expected: "081100000000"
+
+      - step: "Update partner street and mobile"
+        action: "write"
+        target: "parent"
+        values:
+          street: "Jl. Baru No. 99"
+          mobile: "081199999999"
+
+      - step: "Assert parent_* fields on lead follow updated partner values"
+        action: "assert"
+        target: "lead"
+        asserts:
+          parent_street:
+            type: "value"
+            expected: "Jl. Baru No. 99"
+          parent_mobile:
+            type: "value"
+            expected: "081199999999"
+
+  - name: "CRM Lead Parent Contact - Propagates when partner_id is changed"
+    steps:
+      - step: "Create first parent partner"
+        action: "create"
+        model: "res.partner"
+        save_as: "parent_a"
+        values:
+          name: "Parent Contact A PC3"
+          street: "Jl. Partner A"
+          city: "Jakarta"
+          email: "parent.a.pc3@example.com"
+
+      - step: "Create second parent partner with different address and email"
+        action: "create"
+        model: "res.partner"
+        save_as: "parent_b"
+        values:
+          name: "Parent Contact B PC3"
+          street: "Jl. Partner B"
+          city: "Bandung"
+          email: "parent.b.pc3@example.com"
+
+      - step: "Create CRM lead with first partner_id"
+        action: "create"
+        model: "crm.lead"
+        save_as: "lead"
+        as_user: "base.user_admin"
+        values:
+          name: "Lead Parent Contact Change Partner PC3"
+          partner_id: "REC: parent_a.id"
+
+      - step: "Assert parent_* fields mirror first partner"
+        action: "assert"
+        target: "lead"
+        asserts:
+          parent_street:
+            type: "value"
+            expected: "Jl. Partner A"
+          parent_city:
+            type: "value"
+            expected: "Jakarta"
+          parent_email:
+            type: "value"
+            expected: "parent.a.pc3@example.com"
+
+      - step: "Change lead partner_id to second partner"
+        action: "write"
+        target: "lead"
+        values:
+          partner_id: "REC: parent_b.id"
+
+      - step: "Assert parent_* fields now mirror second partner"
+        action: "assert"
+        target: "lead"
+        asserts:
+          parent_street:
+            type: "value"
+            expected: "Jl. Partner B"
+          parent_city:
+            type: "value"
+            expected: "Bandung"
+          parent_email:
+            type: "value"
+            expected: "parent.b.pc3@example.com"
+
+  - name: "CRM Lead Parent Contact - Negative, no partner_id"
+    steps:
+      - step: "Create CRM lead without partner_id"
+        action: "create"
+        model: "crm.lead"
+        save_as: "lead"
+        as_user: "base.user_admin"
+        values:
+          name: "Lead Parent Contact No Partner PC4"
+
+      - step: "Assert all parent_* fields are falsy"
+        action: "assert"
+        target: "lead"
+        asserts:
+          parent_street:
+            type: "value"
+            operator: "is_falsy"
+          parent_street2:
+            type: "value"
+            operator: "is_falsy"
+          parent_city:
+            type: "value"
+            operator: "is_falsy"
+          parent_state_id:
+            type: "value"
+            operator: "is_falsy"
+          parent_zip:
+            type: "value"
+            operator: "is_falsy"
+          parent_country_id:
+            type: "value"
+            operator: "is_falsy"
+          parent_mobile:
+            type: "value"
+            operator: "is_falsy"
+          parent_phone:
+            type: "value"
+            operator: "is_falsy"
+          parent_email:
+            type: "value"
+            operator: "is_falsy"
+
+  - name: "CRM Lead Parent Contact - Negative, partner with empty contact info"
+    steps:
+      - step: "Create parent partner without any contact info"
+        action: "create"
+        model: "res.partner"
+        save_as: "parent"
+        values:
+          name: "Parent Contact Empty PC5"
+
+      - step: "Create CRM lead with partner having empty contact info"
+        action: "create"
+        model: "crm.lead"
+        save_as: "lead"
+        as_user: "base.user_admin"
+        values:
+          name: "Lead Parent Contact Empty Partner PC5"
+          partner_id: "REC: parent.id"
+
+      - step: "Assert lead was created successfully"
+        action: "assert"
+        target: "lead"
+        asserts:
+          id:
+            type: "value"
+            operator: "is_truthy"
+
+      - step: "Assert all parent_* fields are falsy"
+        action: "assert"
+        target: "lead"
+        asserts:
+          parent_street:
+            type: "value"
+            operator: "is_falsy"
+          parent_street2:
+            type: "value"
+            operator: "is_falsy"
+          parent_city:
+            type: "value"
+            operator: "is_falsy"
+          parent_state_id:
+            type: "value"
+            operator: "is_falsy"
+          parent_zip:
+            type: "value"
+            operator: "is_falsy"
+          parent_country_id:
+            type: "value"
+            operator: "is_falsy"
+          parent_mobile:
+            type: "value"
+            operator: "is_falsy"
+          parent_phone:
+            type: "value"
+            operator: "is_falsy"
+          parent_email:
+            type: "value"
+            operator: "is_falsy"

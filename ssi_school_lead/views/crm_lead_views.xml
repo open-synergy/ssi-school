@@ -18,6 +18,20 @@
             </xpath>
             <xpath expr="//group[@name='opportunity_partner']" position="after">
                 <group
+                        name="school_lead_parent_contact"
+                        string="Parent/Guardian Contact"
+                    >
+                    <field name="parent_street" />
+                    <field name="parent_street2" />
+                    <field name="parent_city" />
+                    <field name="parent_state_id" />
+                    <field name="parent_zip" />
+                    <field name="parent_country_id" />
+                    <field name="parent_phone" />
+                    <field name="parent_mobile" />
+                    <field name="parent_email" />
+                </group>
+                <group
                         name="school_lead_prospective_student"
                         string="Prospective Student"
                     >
