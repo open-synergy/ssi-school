@@ -39,6 +39,63 @@ class CrmLead(models.Model):
         compute_sudo=True,
         help="Indicates whether an admission can still be created for this lead.",
     )
+    parent_street = fields.Char(
+        string="Parent Street",
+        related="partner_id.street",
+        store=True,
+        help="Street address of the parent/guardian, mirrored from their contact record.",
+    )
+    parent_street2 = fields.Char(
+        string="Parent Street2",
+        related="partner_id.street2",
+        store=True,
+        help="Additional street address of the parent/guardian, mirrored from their "
+        "contact record.",
+    )
+    parent_city = fields.Char(
+        string="Parent City",
+        related="partner_id.city",
+        store=True,
+        help="City of the parent/guardian, mirrored from their contact record.",
+    )
+    parent_state_id = fields.Many2one(
+        comodel_name="res.country.state",
+        string="Parent State",
+        related="partner_id.state_id",
+        store=True,
+        help="State/province of the parent/guardian, mirrored from their contact record.",
+    )
+    parent_zip = fields.Char(
+        string="Parent Zip",
+        related="partner_id.zip",
+        store=True,
+        help="Postal/zip code of the parent/guardian, mirrored from their contact record.",
+    )
+    parent_country_id = fields.Many2one(
+        comodel_name="res.country",
+        string="Parent Country",
+        related="partner_id.country_id",
+        store=True,
+        help="Country of the parent/guardian, mirrored from their contact record.",
+    )
+    parent_mobile = fields.Char(
+        string="Parent Mobile",
+        related="partner_id.mobile",
+        store=True,
+        help="Mobile number of the parent/guardian, mirrored from their contact record.",
+    )
+    parent_phone = fields.Char(
+        string="Parent Phone",
+        related="partner_id.phone",
+        store=True,
+        help="Phone number of the parent/guardian, mirrored from their contact record.",
+    )
+    parent_email = fields.Char(
+        string="Parent Email",
+        related="partner_id.email",
+        store=True,
+        help="Email address of the parent/guardian, mirrored from their contact record.",
+    )
 
     @api.depends("admission_id")
     def _compute_create_admission_ok(self):
