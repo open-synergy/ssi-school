@@ -1,0 +1,431 @@
+scenarios:
+  - name: "Create Student From Contact Already Carrying Family Data"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Family Create"
+          code: "GTFAMC"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Family Create"
+          code: "SCHFAMC"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+      - step: "Create father"
+        action: "create"
+        model: "res.partner"
+        save_as: "father"
+        values:
+          name: "Family Create Father"
+      - step: "Create mother"
+        action: "create"
+        model: "res.partner"
+        save_as: "mother"
+        values:
+          name: "Family Create Mother"
+      - step: "Create guardian"
+        action: "create"
+        model: "res.partner"
+        save_as: "guardian"
+        values:
+          name: "Family Create Guardian"
+      - step: "Create contact already carrying family data"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Family Create Contact"
+          father_id: "EVAL: registry['father'].id"
+          mother_id: "EVAL: registry['mother'].id"
+          guardian_id: "EVAL: registry['guardian'].id"
+      - step: "Create student from that contact"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Family Create Student"
+          code: "STUFAMC"
+          contact_id: "EVAL: registry['contact'].id"
+          school_id: "EVAL: registry['school'].id"
+      - step: "Assert student.father_id matches contact.father_id"
+        action: "assert"
+        target: "student"
+        asserts:
+          father_id:
+            type: "m2o"
+            expected: "REC: father"
+      - step: "Assert student.mother_id matches contact.mother_id"
+        action: "assert"
+        target: "student"
+        asserts:
+          mother_id:
+            type: "m2o"
+            expected: "REC: mother"
+      - step: "Assert student.guardian_id matches contact.guardian_id"
+        action: "assert"
+        target: "student"
+        asserts:
+          guardian_id:
+            type: "m2o"
+            expected: "REC: guardian"
+
+  - name: "Write Mother On Contact Propagates To Existing Student"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Family WriteContact"
+          code: "GTFAMWC"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Family WriteContact"
+          code: "SCHFAMWC"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+      - step: "Create contact without family data"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Family WriteContact Contact"
+      - step: "Create student from that contact"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Family WriteContact Student"
+          code: "STUFAMWC"
+          contact_id: "EVAL: registry['contact'].id"
+          school_id: "EVAL: registry['school'].id"
+      - step: "Create mother"
+        action: "create"
+        model: "res.partner"
+        save_as: "mother"
+        values:
+          name: "Family WriteContact Mother"
+      - step: "Write mother_id on contact"
+        action: "write"
+        target: "contact"
+        values:
+          mother_id: "EVAL: registry['mother'].id"
+      - step: "Assert student.mother_id follows contact.mother_id"
+        action: "assert"
+        target: "student"
+        asserts:
+          mother_id:
+            type: "m2o"
+            expected: "REC: mother"
+
+  - name: "Write Guardian On Student Writes Through To Contact"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Family WriteStudent"
+          code: "GTFAMWS"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Family WriteStudent"
+          code: "SCHFAMWS"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+      - step: "Create contact without family data"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Family WriteStudent Contact"
+      - step: "Create student from that contact"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Family WriteStudent Student"
+          code: "STUFAMWS"
+          contact_id: "EVAL: registry['contact'].id"
+          school_id: "EVAL: registry['school'].id"
+      - step: "Create guardian"
+        action: "create"
+        model: "res.partner"
+        save_as: "guardian"
+        values:
+          name: "Family WriteStudent Guardian"
+      - step: "Write guardian_id on student"
+        action: "write"
+        target: "student"
+        values:
+          guardian_id: "EVAL: registry['guardian'].id"
+      - step: "Assert contact.guardian_id written through from student"
+        action: "assert"
+        target: "contact"
+        asserts:
+          guardian_id:
+            type: "m2o"
+            expected: "REC: guardian"
+
+  - name: "Change Father On Contact Reflects New Value On Student"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Family Change"
+          code: "GTFAMCH"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Family Change"
+          code: "SCHFAMCH"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+      - step: "Create first father"
+        action: "create"
+        model: "res.partner"
+        save_as: "father"
+        values:
+          name: "Family Change Father"
+      - step: "Create replacement father"
+        action: "create"
+        model: "res.partner"
+        save_as: "other_father"
+        values:
+          name: "Family Change Other Father"
+      - step: "Create contact with first father"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Family Change Contact"
+          father_id: "EVAL: registry['father'].id"
+      - step: "Create student from that contact"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Family Change Student"
+          code: "STUFAMCH"
+          contact_id: "EVAL: registry['contact'].id"
+          school_id: "EVAL: registry['school'].id"
+      - step: "Assert student.father_id matches first father"
+        action: "assert"
+        target: "student"
+        asserts:
+          father_id:
+            type: "m2o"
+            expected: "REC: father"
+      - step: "Change father_id on contact to the replacement father"
+        action: "write"
+        target: "contact"
+        values:
+          father_id: "EVAL: registry['other_father'].id"
+      - step: "Assert student.father_id follows the replacement father"
+        action: "assert"
+        target: "student"
+        asserts:
+          father_id:
+            type: "m2o"
+            expected: "REC: other_father"
+
+  - name: "Student From Contact Without Family Data Has Falsy Family Fields"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Family Empty"
+          code: "GTFAMEM"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Family Empty"
+          code: "SCHFAMEM"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+      - step: "Create contact without family data"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Family Empty Contact"
+      - step: "Create student from that contact"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Family Empty Student"
+          code: "STUFAMEM"
+          contact_id: "EVAL: registry['contact'].id"
+          school_id: "EVAL: registry['school'].id"
+      - step: "Assert student family fields are falsy"
+        action: "assert"
+        target: "student"
+        asserts:
+          father_id:
+            type: "value"
+            operator: "is_falsy"
+          mother_id:
+            type: "value"
+            operator: "is_falsy"
+          guardian_id:
+            type: "value"
+            operator: "is_falsy"
+
+  - name: "Clearing Father On Contact Clears It On Student Too"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Family Clear"
+          code: "GTFAMCL"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Family Clear"
+          code: "SCHFAMCL"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+      - step: "Create father"
+        action: "create"
+        model: "res.partner"
+        save_as: "father"
+        values:
+          name: "Family Clear Father"
+      - step: "Create contact with father"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Family Clear Contact"
+          father_id: "EVAL: registry['father'].id"
+      - step: "Create student from that contact"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Family Clear Student"
+          code: "STUFAMCL"
+          contact_id: "EVAL: registry['contact'].id"
+          school_id: "EVAL: registry['school'].id"
+      - step: "Assert student.father_id is set before clearing"
+        action: "assert"
+        target: "student"
+        asserts:
+          father_id:
+            type: "m2o"
+            expected: "REC: father"
+      - step: "Clear father_id on contact"
+        action: "write"
+        target: "contact"
+        values:
+          father_id: false
+      - step: "Assert student.father_id is falsy too, proving live derivation"
+        action: "assert"
+        target: "student"
+        asserts:
+          father_id:
+            type: "value"
+            operator: "is_falsy"
+
+  - name:
+      "Second Student With A Different Empty Contact Does Not Inherit Sibling Family
+      Data"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Family Sibling"
+          code: "GTFAMSI"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Family Sibling"
+          code: "SCHFAMSI"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+      - step: "Create father"
+        action: "create"
+        model: "res.partner"
+        save_as: "father"
+        values:
+          name: "Family Sibling Father"
+      - step: "Create first contact with family data"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_one"
+        values:
+          name: "Family Sibling Contact One"
+          father_id: "EVAL: registry['father'].id"
+      - step: "Create second contact without family data"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_two"
+        values:
+          name: "Family Sibling Contact Two"
+      - step: "Create first student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_one"
+        values:
+          name: "Family Sibling Student One"
+          code: "STUFAMS1"
+          contact_id: "EVAL: registry['contact_one'].id"
+          school_id: "EVAL: registry['school'].id"
+      - step: "Create second student from the empty contact"
+        action: "create"
+        model: "school_student"
+        save_as: "student_two"
+        values:
+          name: "Family Sibling Student Two"
+          code: "STUFAMS2"
+          contact_id: "EVAL: registry['contact_two'].id"
+          school_id: "EVAL: registry['school'].id"
+      - step: "Assert first student kept its own father"
+        action: "assert"
+        target: "student_one"
+        asserts:
+          father_id:
+            type: "m2o"
+            expected: "REC: father"
+      - step: "Assert second student family fields stay falsy"
+        action: "assert"
+        target: "student_two"
+        asserts:
+          father_id:
+            type: "value"
+            operator: "is_falsy"
+          mother_id:
+            type: "value"
+            operator: "is_falsy"
+          guardian_id:
+            type: "value"
+            operator: "is_falsy"

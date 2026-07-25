@@ -255,17 +255,26 @@ class SchoolStudent(models.Model):
     # Family
     father_id = fields.Many2one(
         string="Father",
-        comodel_name="res.partner",
+        related="contact_id.father_id",
+        store=True,
+        readonly=False,
+        domain=[("is_company", "=", False)],
         help="Contact data of the student's father.",
     )
     mother_id = fields.Many2one(
         string="Mother",
-        comodel_name="res.partner",
+        related="contact_id.mother_id",
+        store=True,
+        readonly=False,
+        domain=[("is_company", "=", False)],
         help="Contact data of the student's mother.",
     )
     guardian_id = fields.Many2one(
         string="Guardian",
-        comodel_name="res.partner",
+        related="contact_id.guardian_id",
+        store=True,
+        readonly=False,
+        domain=[("is_company", "=", False)],
         help="Contact data of the student's guardian if parents cannot be reached.",
     )
     state = fields.Selection(
