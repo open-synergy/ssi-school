@@ -159,6 +159,27 @@ scenarios:
         method: "action_confirm"
         as_user: "base.user_admin"
         refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Diagnostic - inspect approval state right after confirm"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          approval_template_id:
+            type: "value"
+            operator: "is_truthy"
+          need_validation:
+            type: "value"
+            operator: "is_truthy"
+          approval_ids:
+            type: "value"
+            operator: "is_truthy"
+          active_approver_user_ids:
+            type: "value"
+            operator: "is_truthy"
 
       - step: "Approve enrollment"
         action: "call"
