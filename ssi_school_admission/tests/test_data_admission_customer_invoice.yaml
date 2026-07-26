@@ -1,5 +1,3 @@
-options:
-  auto_refresh: true
 scenarios:
   - name: "Create Customer Invoice From Payment Term"
     steps:
@@ -210,6 +208,15 @@ scenarios:
         target: "admission"
         method: "action_approve_approval"
         as_user: "base.user_admin"
+
+      - step: "Invalidate admission cache after approve"
+        action: "call"
+        target: "admission"
+        method: "invalidate_cache"
+
+      - step: "Assert the admission is open"
+        action: "assert"
+        target: "admission"
         asserts:
           state:
             type: "value"
@@ -220,6 +227,11 @@ scenarios:
         target: "term"
         method: "action_create_invoice"
         as_user: "base.user_admin"
+
+      - step: "Invalidate cache after creating the customer invoice"
+        action: "call"
+        target: "term"
+        method: "invalidate_cache"
 
       - step: "Assert term is invoiced and linked to a customer invoice"
         action: "assert"
@@ -490,6 +502,15 @@ scenarios:
         target: "admission"
         method: "action_approve_approval"
         as_user: "base.user_admin"
+
+      - step: "Invalidate admission cache after approve"
+        action: "call"
+        target: "admission"
+        method: "invalidate_cache"
+
+      - step: "Assert the admission is open"
+        action: "assert"
+        target: "admission"
         asserts:
           state:
             type: "value"
@@ -500,6 +521,11 @@ scenarios:
         target: "term"
         method: "action_create_invoice"
         as_user: "base.user_admin"
+
+      - step: "Invalidate cache after creating the customer invoice"
+        action: "call"
+        target: "term"
+        method: "invalidate_cache"
 
       - step: "Assert the admission asks for an automatic confirmation"
         action: "assert"
@@ -729,6 +755,15 @@ scenarios:
         target: "admission"
         method: "action_approve_approval"
         as_user: "base.user_admin"
+
+      - step: "Invalidate admission cache after approve"
+        action: "call"
+        target: "admission"
+        method: "invalidate_cache"
+
+      - step: "Assert the admission is open"
+        action: "assert"
+        target: "admission"
         asserts:
           state:
             type: "value"
@@ -740,11 +775,21 @@ scenarios:
         method: "action_create_invoice"
         as_user: "base.user_admin"
 
+      - step: "Invalidate cache after creating the customer invoice"
+        action: "call"
+        target: "term"
+        method: "invalidate_cache"
+
       - step: "Disconnect the customer invoice from the payment term"
         action: "call"
         target: "term"
         method: "action_disconnect_invoice"
         as_user: "base.user_admin"
+
+      - step: "Invalidate cache after disconnecting the customer invoice"
+        action: "call"
+        target: "term"
+        method: "invalidate_cache"
 
       - step: "Assert the term is uninvoiced again"
         action: "assert"
@@ -973,6 +1018,15 @@ scenarios:
         target: "admission"
         method: "action_approve_approval"
         as_user: "base.user_admin"
+
+      - step: "Invalidate admission cache after approve"
+        action: "call"
+        target: "admission"
+        method: "invalidate_cache"
+
+      - step: "Assert the admission is open"
+        action: "assert"
+        target: "admission"
         asserts:
           state:
             type: "value"
@@ -984,11 +1038,21 @@ scenarios:
         method: "action_create_invoice"
         as_user: "base.user_admin"
 
+      - step: "Invalidate cache after creating the customer invoice"
+        action: "call"
+        target: "term"
+        method: "invalidate_cache"
+
       - step: "Delete the draft customer invoice"
         action: "call"
         target: "term"
         method: "action_delete_invoice"
         as_user: "base.user_admin"
+
+      - step: "Invalidate cache after deleting the customer invoice"
+        action: "call"
+        target: "term"
+        method: "invalidate_cache"
 
       - step: "Assert the term is uninvoiced again"
         action: "assert"
@@ -1233,6 +1297,15 @@ scenarios:
         target: "admission"
         method: "action_approve_approval"
         as_user: "base.user_admin"
+
+      - step: "Invalidate admission cache after approve"
+        action: "call"
+        target: "admission"
+        method: "invalidate_cache"
+
+      - step: "Assert the admission is open"
+        action: "assert"
+        target: "admission"
         asserts:
           state:
             type: "value"
@@ -1243,6 +1316,11 @@ scenarios:
         target: "term"
         method: "action_create_invoice"
         as_user: "base.user_admin"
+
+      - step: "Invalidate cache after creating the customer invoice"
+        action: "call"
+        target: "term"
+        method: "invalidate_cache"
 
       - step: "Get the generated customer invoice"
         action: "search"
@@ -1269,6 +1347,11 @@ scenarios:
         expect_error:
           type: "UserError"
           message_contains: "not draft anymore"
+
+      - step: "Invalidate cache after the rejected deletion"
+        action: "call"
+        target: "term"
+        method: "invalidate_cache"
 
       - step: "Assert the term is still linked to the customer invoice"
         action: "assert"
@@ -1490,6 +1573,15 @@ scenarios:
         target: "admission"
         method: "action_approve_approval"
         as_user: "base.user_admin"
+
+      - step: "Invalidate admission cache after approve"
+        action: "call"
+        target: "admission"
+        method: "invalidate_cache"
+
+      - step: "Assert the admission is open"
+        action: "assert"
+        target: "admission"
         asserts:
           state:
             type: "value"
@@ -1501,6 +1593,11 @@ scenarios:
         method: "action_create_invoice"
         as_user: "base.user_admin"
 
+      - step: "Invalidate cache after creating the customer invoice"
+        action: "call"
+        target: "term"
+        method: "invalidate_cache"
+
       - step: "Cancelling the admission must be rejected"
         action: "call"
         target: "admission"
@@ -1508,6 +1605,11 @@ scenarios:
         as_user: "base.user_admin"
         expect_error:
           type: "UserError"
+
+      - step: "Invalidate cache after the rejected cancellation"
+        action: "call"
+        target: "admission"
+        method: "invalidate_cache"
 
       - step: "Assert the admission is still open"
         action: "assert"
