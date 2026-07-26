@@ -115,6 +115,11 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_lead
+#: model:ir.model.fields.selection,name:ssi_school_lead.selection__crm_lead__parent_relationship__father
+msgid "Father"
+msgstr ""
+
+#. module: ssi_school_lead
 #: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead_create_admission__grade_id
 msgid "Grade"
 msgstr ""
@@ -127,6 +132,11 @@ msgstr ""
 #. module: ssi_school_lead
 #: model:ir.model.fields,help:ssi_school_lead.field_crm_lead_create_admission__grade_type_id
 msgid "Grade type derived from the selected school."
+msgstr ""
+
+#. module: ssi_school_lead
+#: model:ir.model.fields.selection,name:ssi_school_lead.selection__crm_lead__parent_relationship__guardian
+msgid "Guardian"
 msgstr ""
 
 #. module: ssi_school_lead
@@ -170,6 +180,11 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_lead
+#: model:ir.model.fields.selection,name:ssi_school_lead.selection__crm_lead__parent_relationship__mother
+msgid "Mother"
+msgstr ""
+
+#. module: ssi_school_lead
 #: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead__parent_city
 msgid "Parent City"
 msgstr ""
@@ -192,6 +207,11 @@ msgstr ""
 #. module: ssi_school_lead
 #: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead__parent_phone
 msgid "Parent Phone"
+msgstr ""
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead__parent_relationship
+msgid "Parent Relationship"
 msgstr ""
 
 #. module: ssi_school_lead
@@ -244,6 +264,13 @@ msgstr ""
 #. module: ssi_school_lead
 #: model_terms:ir.ui.view,arch_db:ssi_school_lead.crm_lead_school_form_view
 msgid "Prospective Student"
+msgstr ""
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,help:ssi_school_lead.field_crm_lead__parent_relationship
+msgid ""
+"Relationship of the parent/guardian contact to the prospective student. Used"
+" to link the student as a child or ward of the parent/guardian contact."
 msgstr ""
 
 #. module: ssi_school_lead
