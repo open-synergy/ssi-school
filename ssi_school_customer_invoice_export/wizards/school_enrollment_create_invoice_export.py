@@ -144,6 +144,16 @@ class SchoolEnrollmentWizardCreateInvoiceExport(models.TransientModel):
     def _prepare_invoice_export_data(self, moves):
         """Build the ``customer_invoice_export`` creation values.
 
+        ``user_id`` is set explicitly to this wizard's own creator
+        (``create_uid``) rather than left to its default. The document
+        is created while this wizard is running under ``sudo()``
+        (see ``action_create_invoice_export``), so the default
+        ``user_id`` -- which falls back to ``self.env.user`` -- would
+        otherwise resolve to the superuser instead of whoever actually
+        launched the wizard, causing the standard ``customer_invoice_export``
+        record rules (scoped by ``user_id``/company) to reject that
+        person when they later access the document.
+
         :param moves: ``account.move`` recordset collected from the
             selected enrollments
         :return: dict of ``customer_invoice_export`` values
@@ -156,6 +166,7 @@ class SchoolEnrollmentWizardCreateInvoiceExport(models.TransientModel):
             "date_start": self.date_start,
             "date_end": self.date_end,
             "source_move_ids": [(6, 0, moves.ids)],
+            "user_id": self.create_uid.id,
         }
 
     def _check_enrollments(self):

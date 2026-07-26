@@ -413,6 +413,7 @@ scenarios:
         action: "create"
         model: "school_enrollment.wizard_create_invoice_export"
         save_as: "wizard"
+        as_user: "base.user_admin"
         values:
           enrollment_ids:
             - - 6
@@ -837,6 +838,7 @@ scenarios:
         action: "create"
         model: "school_enrollment.wizard_create_invoice_export"
         save_as: "wizard"
+        as_user: "base.user_admin"
         values:
           enrollment_ids:
             - - 6
@@ -885,6 +887,7 @@ scenarios:
         action: "create"
         model: "school_enrollment.wizard_create_invoice_export"
         save_as: "wizard"
+        as_user: "base.user_admin"
         values:
           type_id: "REC: export_type.id"
           date: "2024-07-01"
@@ -1047,6 +1050,7 @@ scenarios:
         action: "create"
         model: "school_enrollment.wizard_create_invoice_export"
         save_as: "wizard"
+        as_user: "base.user_admin"
         values:
           enrollment_ids:
             - - 6
@@ -1241,6 +1245,7 @@ scenarios:
         action: "create"
         model: "school_enrollment.wizard_create_invoice_export"
         save_as: "wizard"
+        as_user: "base.user_admin"
         values:
           enrollment_ids:
             - - 6
@@ -1528,6 +1533,7 @@ scenarios:
         action: "create"
         model: "school_enrollment.wizard_create_invoice_export"
         save_as: "wizard"
+        as_user: "base.user_admin"
         values:
           enrollment_ids:
             - - 6
