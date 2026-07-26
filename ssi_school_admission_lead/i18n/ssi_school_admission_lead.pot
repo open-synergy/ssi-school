@@ -45,6 +45,11 @@ msgid "Admission Test"
 msgstr ""
 
 #. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead__allowed_previous_school_ids
+msgid "Allowed Previous Schools"
+msgstr ""
+
+#. module: ssi_school_admission_lead
 #: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead__birth_city
 msgid "Birth City"
 msgstr ""
@@ -70,6 +75,16 @@ msgid ""
 "City of birth of the prospective student, synchronized from the contact "
 "referenced by the Student field. Writing this field updates the contact "
 "itself, so the identity data is not duplicated on the lead."
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model,name:ssi_school_admission_lead.model_res_company
+msgid "Companies"
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model,name:ssi_school_admission_lead.model_res_config_settings
+msgid "Config Settings"
 msgstr ""
 
 #. module: ssi_school_admission_lead
@@ -109,7 +124,14 @@ msgstr ""
 #. module: ssi_school_admission_lead
 #: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead__display_name
 #: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead_create_admission_form__display_name
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_res_company__display_name
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_res_config_settings__display_name
 msgid "Display Name"
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields.selection,name:ssi_school_admission_lead.selection__res_company__previous_school_selection_method__domain
+msgid "Domain"
 msgstr ""
 
 #. module: ssi_school_admission_lead
@@ -152,6 +174,8 @@ msgstr ""
 #. module: ssi_school_admission_lead
 #: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead__id
 #: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead_create_admission_form__id
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_res_company__id
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_res_config_settings__id
 msgid "ID"
 msgstr ""
 
@@ -164,6 +188,8 @@ msgstr ""
 #. module: ssi_school_admission_lead
 #: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead____last_update
 #: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead_create_admission_form____last_update
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_res_company____last_update
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_res_config_settings____last_update
 msgid "Last Modified on"
 msgstr ""
 
@@ -183,6 +209,21 @@ msgid "Lead"
 msgstr ""
 
 #. module: ssi_school_admission_lead
+#: model:ir.model.fields.selection,name:ssi_school_admission_lead.selection__res_company__previous_school_selection_method__manual
+msgid "Manual"
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_res_company__previous_school_selection_method
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_res_config_settings__previous_school_selection_method
+msgid ""
+"Method used to filter the partners that can be selected as the previous "
+"school of a prospective student on a CRM lead. Manual: select from a fixed "
+"list. Domain: filter using an Odoo domain expression. Python Code: compute "
+"the allowed partners programmatically."
+msgstr ""
+
+#. module: ssi_school_admission_lead
 #: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead__nationality_id
 msgid "Nationality"
 msgstr ""
@@ -196,13 +237,84 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_res_company__previous_school_domain
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_res_config_settings__previous_school_domain
+msgid ""
+"Odoo domain expression used to filter the partners allowed as the previous "
+"school of a prospective student when the selection method is Domain."
+msgstr ""
+
+#. module: ssi_school_admission_lead
 #: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead_create_admission_form__parent_id
 msgid "Parent"
 msgstr ""
 
 #. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_res_company__previous_school_ids
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_res_config_settings__previous_school_ids
+msgid ""
+"Partners allowed as the previous school of a prospective student when the "
+"selection method is set to Manual."
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead__allowed_previous_school_ids
+msgid ""
+"Partners that can be selected on the Previous School field, computed from "
+"the company's Previous School Selection Method (manual/domain/code)."
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead__previous_school_id
+msgid "Previous School"
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission_lead.res_config_settings_view_form
+msgid "Previous School Configuration"
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_res_company__previous_school_domain
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_res_config_settings__previous_school_domain
+msgid "Previous School Domain"
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_res_company__previous_school_python_code
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_res_config_settings__previous_school_python_code
+msgid "Previous School Python Code"
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_res_company__previous_school_selection_method
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_res_config_settings__previous_school_selection_method
+msgid "Previous School Selection Method"
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_res_company__previous_school_ids
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_res_config_settings__previous_school_ids
+msgid "Previous Schools"
+msgstr ""
+
+#. module: ssi_school_admission_lead
 #: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead_create_admission_form__pricelist_id
 msgid "Pricelist"
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields.selection,name:ssi_school_admission_lead.selection__res_company__previous_school_selection_method__code
+msgid "Python Code"
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_res_company__previous_school_python_code
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_res_config_settings__previous_school_python_code
+msgid ""
+"Python code that returns a recordset (or list of IDs) of partners allowed as"
+" the previous school of a prospective student when the selection method is "
+"Python Code."
 msgstr ""
 
 #. module: ssi_school_admission_lead
@@ -221,6 +333,17 @@ msgstr ""
 #. module: ssi_school_admission_lead
 #: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead_create_admission_form__school_id
 msgid "School"
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission_lead.res_config_settings_view_form
+msgid "School Admission Lead"
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.actions.act_window,name:ssi_school_admission_lead.res_config_settings_action
+#: model:ir.ui.menu,name:ssi_school_admission_lead.res_config_settings_menu
+msgid "Settings"
 msgstr ""
 
 #. module: ssi_school_admission_lead
@@ -294,6 +417,14 @@ msgstr ""
 #. module: ssi_school_admission_lead
 #: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead_create_admission_form__pricelist_id
 msgid "The pricelist applied to the admission fees."
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead__previous_school_id
+msgid ""
+"The prospective student's previous school, restricted to the partners "
+"allowed by the company's Previous School configuration (see Allowed Previous"
+" Schools)."
 msgstr ""
 
 #. module: ssi_school_admission_lead
