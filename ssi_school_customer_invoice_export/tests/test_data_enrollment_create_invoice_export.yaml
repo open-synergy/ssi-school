@@ -1,0 +1,1409 @@
+options:
+  auto_refresh: true
+scenarios:
+  - name: "Wizard Exports Only Open Invoiced Moves, Excludes Done And Uninvoiced"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable IE1"
+          code: "RECIE1"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type IE1"
+          code: "CITIE1"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
+      - step: "Setup - get income account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "School Fee Income IE1"
+          code: "INCIE1"
+          user_type_id: "REC: account_type.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Fee IE1"
+          type: "service"
+          list_price: 500000.0
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type IE1"
+          code: "GTIE1"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 IE1"
+          code: "AYIE1"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester IE1"
+          code: "SMIE1"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School IE1"
+          code: "SCIE1"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade IE1"
+          code: "GRIE1"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class IE1"
+          code: "CLIE1"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact IE1"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student IE1"
+          code: "STUIE1"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          customer_invoice_type_id: "REC: ci_type.id"
+          receivable_account_id: "REC: ci_account.id"
+          pricelist_id: "REF: product.list0"
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+          receivable_journal_id: "REC: ci_journal.id"
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Assert enrollment is allowed to create invoice export"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          create_invoice_export_ok:
+            type: "value"
+            expected: true
+
+      - step: "Setup - create export type matching every journal/partner/product"
+        action: "create"
+        model: "customer_invoice_export_type"
+        save_as: "export_type"
+        values:
+          name: "Export Type IE1"
+          code: "ETYIE1"
+          default_output_format: "csv"
+
+      - step: "Create term Open A"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_open_a"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term Open A IE1"
+          sequence: 10
+          detail_ids:
+            - - 0
+              - 0
+              - product_id: "REC: product.id"
+                name: "Fee Open A IE1"
+                account_id: "REC: account.id"
+                uom_quantity: 1.0
+                uom_id: "REF: uom.product_uom_unit"
+                price_unit: 500000.0
+
+      - step: "Generate invoice for term Open A"
+        action: "call"
+        target: "term_open_a"
+        method: "action_create_invoice"
+
+      - step: "Fetch invoice generated for term Open A"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["id", "=", "REC: term_open_a.customer_invoice_id.id"]]
+        save_as: "invoice_open_a"
+        expect_count: 1
+
+      - step: "Confirm invoice Open A"
+        action: "call"
+        target: "invoice_open_a"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Approve invoice Open A"
+        action: "call"
+        target: "invoice_open_a"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create term Open B"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_open_b"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term Open B IE1"
+          sequence: 20
+          detail_ids:
+            - - 0
+              - 0
+              - product_id: "REC: product.id"
+                name: "Fee Open B IE1"
+                account_id: "REC: account.id"
+                uom_quantity: 1.0
+                uom_id: "REF: uom.product_uom_unit"
+                price_unit: 500000.0
+
+      - step: "Generate invoice for term Open B"
+        action: "call"
+        target: "term_open_b"
+        method: "action_create_invoice"
+
+      - step: "Fetch invoice generated for term Open B"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["id", "=", "REC: term_open_b.customer_invoice_id.id"]]
+        save_as: "invoice_open_b"
+        expect_count: 1
+
+      - step: "Confirm invoice Open B"
+        action: "call"
+        target: "invoice_open_b"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Approve invoice Open B"
+        action: "call"
+        target: "invoice_open_b"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create term Done (will be fully paid)"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_done"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term Done IE1"
+          sequence: 30
+          detail_ids:
+            - - 0
+              - 0
+              - product_id: "REC: product.id"
+                name: "Fee Done IE1"
+                account_id: "REC: account.id"
+                uom_quantity: 1.0
+                uom_id: "REF: uom.product_uom_unit"
+                price_unit: 500000.0
+
+      - step: "Generate invoice for term Done"
+        action: "call"
+        target: "term_done"
+        method: "action_create_invoice"
+
+      - step: "Fetch invoice generated for term Done"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["id", "=", "REC: term_done.customer_invoice_id.id"]]
+        save_as: "invoice_done"
+        expect_count: 1
+
+      - step: "Confirm invoice Done"
+        action: "call"
+        target: "invoice_done"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Approve invoice Done"
+        action: "call"
+        target: "invoice_done"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Mark invoice Done as fully paid"
+        action: "call"
+        target: "invoice_done"
+        method: "action_done"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+      - step: "Create term Uninvoiced (never invoiced)"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_uninvoiced"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term Uninvoiced IE1"
+          sequence: 40
+
+      - step: "Create wizard for the enrollment"
+        action: "create"
+        model: "school_enrollment.wizard_create_invoice_export"
+        save_as: "wizard"
+        values:
+          enrollment_ids:
+            - - 6
+              - 0
+              - - "REC: enrollment.id"
+          type_id: "REC: export_type.id"
+          date: "2024-07-01"
+          output_format: "csv"
+
+      - step: "Run create invoice export"
+        action: "call"
+        target: "wizard"
+        method: "action_create_invoice_export"
+
+      - step: "Fetch the created customer invoice export document"
+        action: "search"
+        model: "customer_invoice_export"
+        domain: [["type_id", "=", "REC: export_type.id"]]
+        save_as: "export_doc"
+        expect_count: 1
+
+      - step: "Assert export document is draft with only the two open moves"
+        action: "assert"
+        target: "export_doc"
+        asserts:
+          state:
+            type: "value"
+            expected: "draft"
+          source_move_ids:
+            type: "m2m"
+            check: "exact"
+            expected_records:
+              - "REC: invoice_open_a.move_id"
+              - "REC: invoice_open_b.move_id"
+          move_ids:
+            type: "m2m"
+            check: "exact"
+            expected_records:
+              - "REC: invoice_open_a.move_id"
+              - "REC: invoice_open_b.move_id"
+          summary_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 2
+
+      - step: "Confirm the export document right away, no extra manual step"
+        action: "call"
+        target: "export_doc"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+  - name: "Wizard Run Over Two Enrollments Merges Moves Without Duplicates"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable IE2"
+          code: "RECIE2"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type IE2"
+          code: "CITIE2"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
+      - step: "Setup - get income account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "School Fee Income IE2"
+          code: "INCIE2"
+          user_type_id: "REC: account_type.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Fee IE2"
+          type: "service"
+          list_price: 500000.0
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type IE2"
+          code: "GTIE2"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 IE2"
+          code: "AYIE2"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester IE2"
+          code: "SMIE2"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School IE2"
+          code: "SCIE2"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade IE2"
+          code: "GRIE2"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class IE2"
+          code: "CLIE2"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Setup - create first student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_a"
+        values:
+          name: "Student Contact IE2A"
+
+      - step: "Setup - create first student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_a"
+        values:
+          name: "Student IE2A"
+          code: "STUIE2A"
+          contact_id: "REC: contact_a.id"
+          school_id: "REC: school.id"
+
+      - step: "Setup - create second student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_b"
+        values:
+          name: "Student Contact IE2B"
+
+      - step: "Setup - create second student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_b"
+        values:
+          name: "Student IE2B"
+          code: "STUIE2B"
+          contact_id: "REC: contact_b.id"
+          school_id: "REC: school.id"
+
+      - step: "Create first enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_a"
+        values:
+          customer_invoice_type_id: "REC: ci_type.id"
+          receivable_account_id: "REC: ci_account.id"
+          pricelist_id: "REF: product.list0"
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student_a.id"
+          currency_id: "REC: company.currency_id.id"
+          receivable_journal_id: "REC: ci_journal.id"
+
+      - step: "Confirm first enrollment"
+        action: "call"
+        target: "enrollment_a"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Approve first enrollment"
+        action: "call"
+        target: "enrollment_a"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create second enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_b"
+        values:
+          customer_invoice_type_id: "REC: ci_type.id"
+          receivable_account_id: "REC: ci_account.id"
+          pricelist_id: "REF: product.list0"
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student_b.id"
+          currency_id: "REC: company.currency_id.id"
+          receivable_journal_id: "REC: ci_journal.id"
+
+      - step: "Confirm second enrollment"
+        action: "call"
+        target: "enrollment_b"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Approve second enrollment"
+        action: "call"
+        target: "enrollment_b"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Setup - create export type matching every journal/partner/product"
+        action: "create"
+        model: "customer_invoice_export_type"
+        save_as: "export_type"
+        values:
+          name: "Export Type IE2"
+          code: "ETYIE2"
+          default_output_format: "csv"
+
+      - step: "Create term on first enrollment"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_a"
+        values:
+          enrollment_id: "REC: enrollment_a.id"
+          name: "Term IE2A"
+          sequence: 10
+          detail_ids:
+            - - 0
+              - 0
+              - product_id: "REC: product.id"
+                name: "Fee IE2A"
+                account_id: "REC: account.id"
+                uom_quantity: 1.0
+                uom_id: "REF: uom.product_uom_unit"
+                price_unit: 500000.0
+
+      - step: "Generate invoice for term on first enrollment"
+        action: "call"
+        target: "term_a"
+        method: "action_create_invoice"
+
+      - step: "Fetch invoice generated for first enrollment's term"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["id", "=", "REC: term_a.customer_invoice_id.id"]]
+        save_as: "invoice_a"
+        expect_count: 1
+
+      - step: "Confirm and approve invoice of first enrollment"
+        action: "call"
+        target: "invoice_a"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Approve invoice of first enrollment"
+        action: "call"
+        target: "invoice_a"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create term on second enrollment"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_b"
+        values:
+          enrollment_id: "REC: enrollment_b.id"
+          name: "Term IE2B"
+          sequence: 10
+          detail_ids:
+            - - 0
+              - 0
+              - product_id: "REC: product.id"
+                name: "Fee IE2B"
+                account_id: "REC: account.id"
+                uom_quantity: 1.0
+                uom_id: "REF: uom.product_uom_unit"
+                price_unit: 500000.0
+
+      - step: "Generate invoice for term on second enrollment"
+        action: "call"
+        target: "term_b"
+        method: "action_create_invoice"
+
+      - step: "Fetch invoice generated for second enrollment's term"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["id", "=", "REC: term_b.customer_invoice_id.id"]]
+        save_as: "invoice_b"
+        expect_count: 1
+
+      - step: "Confirm invoice of second enrollment"
+        action: "call"
+        target: "invoice_b"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Approve invoice of second enrollment"
+        action: "call"
+        target: "invoice_b"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create wizard selecting both enrollments"
+        action: "create"
+        model: "school_enrollment.wizard_create_invoice_export"
+        save_as: "wizard"
+        values:
+          enrollment_ids:
+            - - 6
+              - 0
+              - - "REC: enrollment_a.id"
+                - "REC: enrollment_b.id"
+          type_id: "REC: export_type.id"
+          date: "2024-07-01"
+          output_format: "csv"
+
+      - step: "Run create invoice export over both enrollments"
+        action: "call"
+        target: "wizard"
+        method: "action_create_invoice_export"
+
+      - step: "Fetch the created customer invoice export document"
+        action: "search"
+        model: "customer_invoice_export"
+        domain: [["type_id", "=", "REC: export_type.id"]]
+        save_as: "export_doc"
+        expect_count: 1
+
+      - step: "Assert export document merges both moves without duplicates"
+        action: "assert"
+        target: "export_doc"
+        asserts:
+          source_move_ids:
+            type: "m2m"
+            check: "exact"
+            expected_records:
+              - "REC: invoice_a.move_id"
+              - "REC: invoice_b.move_id"
+
+  - name: "Wizard Without Enrollment Selected Raises UserError"
+    steps:
+      - step: "Setup - create export type"
+        action: "create"
+        model: "customer_invoice_export_type"
+        save_as: "export_type"
+        values:
+          name: "Export Type IE3"
+          code: "ETYIE3"
+          default_output_format: "csv"
+
+      - step: "Create wizard without any enrollment selected"
+        action: "create"
+        model: "school_enrollment.wizard_create_invoice_export"
+        save_as: "wizard"
+        values:
+          type_id: "REC: export_type.id"
+          date: "2024-07-01"
+          output_format: "csv"
+
+      - step: "Running the wizard must fail because no enrollment was selected"
+        action: "call"
+        target: "wizard"
+        method: "action_create_invoice_export"
+        expect_error:
+          type: "UserError"
+
+  - name: "Wizard On Enrollment Not Allowed By Policy Raises UserError"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable IE4"
+          code: "RECIE4"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type IE4"
+          code: "CITIE4"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type IE4"
+          code: "GTIE4"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 IE4"
+          code: "AYIE4"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester IE4"
+          code: "SMIE4"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School IE4"
+          code: "SCIE4"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade IE4"
+          code: "GRIE4"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class IE4"
+          code: "CLIE4"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact IE4"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student IE4"
+          code: "STUIE4"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Create enrollment, left in draft"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_draft"
+        values:
+          customer_invoice_type_id: "REC: ci_type.id"
+          receivable_account_id: "REC: ci_account.id"
+          pricelist_id: "REF: product.list0"
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+          receivable_journal_id: "REC: ci_journal.id"
+
+      - step: "Assert draft enrollment is not allowed to create invoice export"
+        action: "assert"
+        target: "enrollment_draft"
+        asserts:
+          create_invoice_export_ok:
+            type: "value"
+            expected: false
+
+      - step: "Setup - create export type"
+        action: "create"
+        model: "customer_invoice_export_type"
+        save_as: "export_type"
+        values:
+          name: "Export Type IE4"
+          code: "ETYIE4"
+          default_output_format: "csv"
+
+      - step: "Create wizard selecting the draft enrollment"
+        action: "create"
+        model: "school_enrollment.wizard_create_invoice_export"
+        save_as: "wizard"
+        values:
+          enrollment_ids:
+            - - 6
+              - 0
+              - - "REC: enrollment_draft.id"
+          type_id: "REC: export_type.id"
+          date: "2024-07-01"
+          output_format: "csv"
+
+      - step: "Running the wizard must fail because the enrollment is draft"
+        action: "call"
+        target: "wizard"
+        method: "action_create_invoice_export"
+        expect_error:
+          type: "UserError"
+
+  - name: "Wizard On Enrollment With No Invoiced Term Raises UserError"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable IE5"
+          code: "RECIE5"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type IE5"
+          code: "CITIE5"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type IE5"
+          code: "GTIE5"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 IE5"
+          code: "AYIE5"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester IE5"
+          code: "SMIE5"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School IE5"
+          code: "SCIE5"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade IE5"
+          code: "GRIE5"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class IE5"
+          code: "CLIE5"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact IE5"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student IE5"
+          code: "STUIE5"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          customer_invoice_type_id: "REC: ci_type.id"
+          receivable_account_id: "REC: ci_account.id"
+          pricelist_id: "REF: product.list0"
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+          receivable_journal_id: "REC: ci_journal.id"
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create term, left uninvoiced"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term IE5"
+          sequence: 10
+
+      - step: "Setup - create export type"
+        action: "create"
+        model: "customer_invoice_export_type"
+        save_as: "export_type"
+        values:
+          name: "Export Type IE5"
+          code: "ETYIE5"
+          default_output_format: "csv"
+
+      - step: "Create wizard selecting the enrollment"
+        action: "create"
+        model: "school_enrollment.wizard_create_invoice_export"
+        save_as: "wizard"
+        values:
+          enrollment_ids:
+            - - 6
+              - 0
+              - - "REC: enrollment.id"
+          type_id: "REC: export_type.id"
+          date: "2024-07-01"
+          output_format: "csv"
+
+      - step: "Running the wizard must fail because no term is invoiced yet"
+        action: "call"
+        target: "wizard"
+        method: "action_create_invoice_export"
+        expect_error:
+          type: "UserError"
+
+      - step: "Assert no customer invoice export document was created"
+        action: "search"
+        model: "customer_invoice_export"
+        domain: [["type_id", "=", "REC: export_type.id"]]
+        save_as: "no_export_doc"
+        expect_count: 0
+
+  - name: "Wizard With Type Excluding Term Product Raises UserError And Rolls Back"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable IE6"
+          code: "RECIE6"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type IE6"
+          code: "CITIE6"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
+      - step: "Setup - get income account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "School Fee Income IE6"
+          code: "INCIE6"
+          user_type_id: "REC: account_type.id"
+
+      - step: "Setup - create the term's product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Fee IE6"
+          type: "service"
+          list_price: 500000.0
+
+      - step: "Setup - create an unrelated product allowed by the Type instead"
+        action: "create"
+        model: "product.product"
+        save_as: "other_product"
+        values:
+          name: "Unrelated Product IE6"
+          type: "service"
+          list_price: 100000.0
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type IE6"
+          code: "GTIE6"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 IE6"
+          code: "AYIE6"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester IE6"
+          code: "SMIE6"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School IE6"
+          code: "SCIE6"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade IE6"
+          code: "GRIE6"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class IE6"
+          code: "CLIE6"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact IE6"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student IE6"
+          code: "STUIE6"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          customer_invoice_type_id: "REC: ci_type.id"
+          receivable_account_id: "REC: ci_account.id"
+          pricelist_id: "REF: product.list0"
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+          receivable_journal_id: "REC: ci_journal.id"
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create term with the product that will be excluded by the Type"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term IE6"
+          sequence: 10
+          detail_ids:
+            - - 0
+              - 0
+              - product_id: "REC: product.id"
+                name: "Fee IE6"
+                account_id: "REC: account.id"
+                uom_quantity: 1.0
+                uom_id: "REF: uom.product_uom_unit"
+                price_unit: 500000.0
+
+      - step: "Generate invoice for the term"
+        action: "call"
+        target: "term"
+        method: "action_create_invoice"
+
+      - step: "Fetch the generated invoice"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["id", "=", "REC: term.customer_invoice_id.id"]]
+        save_as: "invoice"
+        expect_count: 1
+
+      - step: "Confirm the invoice"
+        action: "call"
+        target: "invoice"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Approve the invoice"
+        action: "call"
+        target: "invoice"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step:
+          "Setup - create export type whose product criteria excludes the term's product"
+        action: "create"
+        model: "customer_invoice_export_type"
+        save_as: "export_type"
+        values:
+          name: "Export Type IE6"
+          code: "ETYIE6"
+          default_output_format: "csv"
+          product_selection_method: "manual"
+          product_ids:
+            - - 6
+              - 0
+              - - "REC: other_product.id"
+
+      - step: "Create wizard selecting the enrollment"
+        action: "create"
+        model: "school_enrollment.wizard_create_invoice_export"
+        save_as: "wizard"
+        values:
+          enrollment_ids:
+            - - 6
+              - 0
+              - - "REC: enrollment.id"
+          type_id: "REC: export_type.id"
+          date: "2024-07-01"
+          output_format: "csv"
+
+      - step: "Running the wizard must fail because summary stays empty"
+        action: "call"
+        target: "wizard"
+        method: "action_create_invoice_export"
+        expect_error:
+          type: "UserError"
+          message_contains: "criteria"
+
+      - step: "Assert the export document was rolled back, none survives"
+        action: "search"
+        model: "customer_invoice_export"
+        domain: [["type_id", "=", "REC: export_type.id"]]
+        save_as: "no_export_doc"
+        expect_count: 0
