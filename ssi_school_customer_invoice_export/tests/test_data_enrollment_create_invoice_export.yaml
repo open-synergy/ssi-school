@@ -171,15 +171,16 @@ scenarios:
           approval_template_id:
             type: "value"
             operator: "is_truthy"
-          need_validation:
-            type: "value"
-            operator: "is_truthy"
           approval_ids:
-            type: "value"
-            operator: "is_truthy"
+            type: "o2m"
+            check: "count"
+            expected_count: 1
           active_approver_user_ids:
             type: "value"
             operator: "is_truthy"
+          approve_ok:
+            type: "value"
+            expected: true
 
       - step: "Approve enrollment"
         action: "call"
