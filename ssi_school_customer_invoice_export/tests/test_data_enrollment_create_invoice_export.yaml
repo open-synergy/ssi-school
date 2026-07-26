@@ -168,16 +168,14 @@ scenarios:
         action: "assert"
         target: "enrollment"
         asserts:
-          approval_template_id:
+          state:
             type: "value"
-            operator: "is_truthy"
-          approval_ids:
-            type: "o2m"
-            check: "count"
-            expected_count: 1
+            expected: "confirm"
           active_approver_user_ids:
-            type: "value"
-            operator: "is_truthy"
+            type: "m2m"
+            check: "contains_xml_ids"
+            expected_xml_ids:
+              - "base.user_admin"
           approve_ok:
             type: "value"
             expected: true
