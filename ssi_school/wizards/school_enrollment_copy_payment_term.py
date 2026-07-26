@@ -90,10 +90,10 @@ Solution: Select at least one draft enrollment from the list view before running
                 new_term = term.copy(
                     {
                         "enrollment_id": target.id,
-                        "invoice_id": False,
+                        "customer_invoice_id": False,
                     }
                 )
-                new_term.detail_ids.write({"invoice_line_id": False})
+                new_term.detail_ids.write({"customer_invoice_line_id": False})
 
     def _check_target_enrollments(self):
         self.ensure_one()

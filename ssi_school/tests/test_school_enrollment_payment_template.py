@@ -12,6 +12,27 @@ class TestSchoolEnrollmentPaymentTemplate(YamlTransactionCase):
     def test_enrollment_payment_template(self):
         self.run_yaml_scenario("test_data_enrollment_payment_template.yaml")
 
+    def _create_customer_invoice_type(self, suffix):
+        """Create the customer invoice type required by every template."""
+        journal = self.env["account.journal"].search([("type", "=", "sale")], limit=1)
+        receivable_type = self.env.ref("account.data_account_type_receivable")
+        account = self.env["account.account"].create(
+            {
+                "name": "Receivable %s" % suffix,
+                "code": "RCVPMT%s" % suffix,
+                "user_type_id": receivable_type.id,
+                "reconcile": True,
+            }
+        )
+        return self.env["customer_invoice_type"].create(
+            {
+                "name": "Customer Invoice Type %s" % suffix,
+                "code": "CITPMT%s" % suffix,
+                "journal_id": journal.id,
+                "receivable_account_id": account.id,
+            }
+        )
+
     def test_onchange_school_id_clears_grade(self):
         """Mengganti school_id harus mengosongkan grade_id."""
         grade_type = self.env["school_grade_type"].create(
@@ -66,7 +87,13 @@ class TestSchoolEnrollmentPaymentTemplate(YamlTransactionCase):
             }
         )
         template = self.env["school_enrollment_payment_template"].create(
-            {"name": "Template OC", "code": "PMTOC2"}
+            {
+                "name": "Template OC",
+                "code": "PMTOC2",
+                "customer_invoice_type_id": self._create_customer_invoice_type(
+                    "OC2"
+                ).id,
+            }
         )
         term = self.env["school_enrollment_payment_template.term"].create(
             {"name": "Term OC", "sequence": 10, "template_id": template.id}
@@ -98,7 +125,13 @@ class TestSchoolEnrollmentPaymentTemplate(YamlTransactionCase):
             }
         )
         template = self.env["school_enrollment_payment_template"].create(
-            {"name": "Template UOM OC", "code": "PMTOCUOM"}
+            {
+                "name": "Template UOM OC",
+                "code": "PMTOCUOM",
+                "customer_invoice_type_id": self._create_customer_invoice_type(
+                    "UOM"
+                ).id,
+            }
         )
         term = self.env["school_enrollment_payment_template.term"].create(
             {"name": "Term UOM OC", "sequence": 10, "template_id": template.id}
@@ -130,7 +163,13 @@ class TestSchoolEnrollmentPaymentTemplate(YamlTransactionCase):
             }
         )
         template = self.env["school_enrollment_payment_template"].create(
-            {"name": "Template ACC OC", "code": "PMTOCACC"}
+            {
+                "name": "Template ACC OC",
+                "code": "PMTOCACC",
+                "customer_invoice_type_id": self._create_customer_invoice_type(
+                    "ACC"
+                ).id,
+            }
         )
         term = self.env["school_enrollment_payment_template.term"].create(
             {"name": "Term ACC OC", "sequence": 10, "template_id": template.id}

@@ -67,7 +67,7 @@ class SchoolEnrollmentPaymentTermWizardDuplicate(models.TransientModel):
     def _duplicate_term(self):
         self.ensure_one()
         new_term = self.term_id.copy(self._prepare_duplicate_defaults())
-        new_term.detail_ids.write({"invoice_line_id": False})
+        new_term.detail_ids.write({"customer_invoice_line_id": False})
         return {"type": "ir.actions.act_window_close"}
 
     def _prepare_duplicate_defaults(self):
@@ -77,5 +77,5 @@ class SchoolEnrollmentPaymentTermWizardDuplicate(models.TransientModel):
             "sequence": self.sequence,
             "date_invoice": self.date_invoice,
             "date_due": self.date_due,
-            "invoice_id": False,
+            "customer_invoice_id": False,
         }

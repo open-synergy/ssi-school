@@ -5,7 +5,7 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
-ADDENDUM_LOCK_ALLOWED_FIELDS = {"invoice_line_id", "locked", "sequence"}
+ADDENDUM_LOCK_ALLOWED_FIELDS = {"customer_invoice_line_id", "locked", "sequence"}
 
 
 class SchoolEnrollmentPaymentTermDetail(
@@ -15,9 +15,9 @@ class SchoolEnrollmentPaymentTermDetail(
     Represents a product/fee line detail on an actual enrollment payment term.
     Inherits mixin.product_line_account which provides standard product line fields
     such as name, account_id, uom_id, uom_quantity, price_unit, tax_ids,
-    price_subtotal, price_tax, and price_total. If the term is linked to an invoice,
-    each detail line will reference the corresponding invoice line (invoice_line_id)
-    created when the invoice is generated.
+    price_subtotal, price_tax, and price_total. If the term is linked to a customer
+    invoice, each detail line will reference the corresponding customer invoice line
+    (customer_invoice_line_id) created when the customer invoice is generated.
     """
 
     _name = "school_enrollment_payment_term_detail"
@@ -50,14 +50,14 @@ class SchoolEnrollmentPaymentTermDetail(
         store=True,
         help="The pricelist used, automatically taken from the enrollment.",
     )
-    invoice_line_id = fields.Many2one(
-        string="Invoice Line",
-        comodel_name="account.move.line",
+    customer_invoice_line_id = fields.Many2one(
+        string="Customer Invoice Line",
+        comodel_name="customer_invoice.line",
         readonly=True,
         ondelete="restrict",
         help=(
-            "The invoice line linked to this detail, "
-            "automatically populated when the invoice is generated."
+            "The customer invoice line linked to this detail, "
+            "automatically populated when the customer invoice is generated."
         ),
     )
     allowed_product_ids = fields.Many2many(
@@ -143,6 +143,16 @@ Solution: Locked detail lines are permanent; create a new one via the addendum m
             record.allowed_product_ids = result
 
     def _prepare_invoice_line(self):
+        """Build the ``customer_invoice.line`` values for this fee line.
+
+        Extension point: override in a glue module to add extra line
+        values. The link to the parent document
+        (``customer_invoice_id``) is intentionally left out -- it is
+        added by ``school_enrollment_payment_term._create_invoice``,
+        which owns the newly created header.
+
+        :return: dict of ``customer_invoice.line`` values
+        """
         self.ensure_one()
         aa = (  # pylint: disable=invalid-name,consider-using-ternary
             self.analytic_account_id and self.analytic_account_id.id or False
@@ -151,8 +161,8 @@ Solution: Locked detail lines are permanent; create a new one via the addendum m
             "product_id": self.product_id.id,
             "name": self.name,
             "account_id": self.account_id.id,
-            "quantity": self.uom_quantity,
-            "product_uom_id": self.uom_id.id,
+            "uom_id": self.uom_id.id,
+            "uom_quantity": self.uom_quantity,
             "price_unit": self.price_unit,
             "tax_ids": [(6, 0, self.tax_ids.ids)],
             "analytic_account_id": aa or False,

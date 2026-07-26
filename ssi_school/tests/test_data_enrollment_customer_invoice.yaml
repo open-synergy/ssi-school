@@ -1,0 +1,1815 @@
+options:
+  auto_refresh: true
+scenarios:
+  - name: "Create Customer Invoice From Payment Term"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal"
+        limit: 1
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type"
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account"
+        values:
+          name: "School Fee Income SCI1"
+          code: "SCI14200"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          name: "School Receivable SCI1"
+          code: "SCI11100"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type SCI1"
+          code: "CITSCI1"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Fee SCI1"
+          type: "service"
+          list_price: 1000000.0
+
+      - step: "Setup - create pricelist"
+        action: "create"
+        model: "product.pricelist"
+        save_as: "pricelist"
+        values:
+          name: "School Pricelist SCI1"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type SCI1"
+          code: "GTSCI1"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 SCI1"
+          code: "AYSCI1"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester SCI1"
+          code: "SMSCI1"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School SCI1"
+          code: "SCHSCI1"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade SCI1"
+          code: "GSCI1"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class SCI1"
+          code: "CLASCI1"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact SCI1"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student SCI1"
+          code: "STUSCI1"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Setup - create payment template"
+        action: "create"
+        model: "school_enrollment_payment_template"
+        save_as: "payment_template"
+        values:
+          name: "Payment Template SCI1"
+          code: "PMTSCI1"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          academic_term_id: "REC: academic_term.id"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+          auto_confirm_customer_invoice: false
+
+      - step: "Create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+          pricelist_id: "REC: pricelist.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: payment_template.customer_invoice_type_id.id"
+          auto_confirm_customer_invoice:
+            "REC: payment_template.auto_confirm_customer_invoice"
+
+      - step: "Create payment term"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term SCI1"
+          sequence: 10
+          date_invoice: "2024-07-05"
+          date_due: "2024-07-20"
+
+      - step: "Create first payment term detail"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        save_as: "detail_1"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Registration Fee SCI1"
+          account_id: "REC: income_account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+
+      - step: "Create second payment term detail"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        save_as: "detail_2"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Monthly Tuition SCI1"
+          account_id: "REC: income_account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 500000.0
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate enrollment cache before approve"
+        action: "call"
+        target: "enrollment"
+        method: "invalidate_cache"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create customer invoice from the payment term"
+        action: "call"
+        target: "term"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Assert term is invoiced and linked to a customer invoice"
+        action: "assert"
+        target: "term"
+        asserts:
+          state:
+            type: "value"
+            expected: "invoiced"
+          customer_invoice_id:
+            type: "value"
+            operator: "is_truthy"
+          customer_invoice_id.state:
+            type: "value"
+            expected: "draft"
+          customer_invoice_id.type_id.id:
+            type: "value"
+            expected: "REC: ci_type.id"
+          customer_invoice_id.partner_id.id:
+            type: "value"
+            expected: "REC: contact.id"
+          customer_invoice_id.customer_document_number:
+            type: "value"
+            expected: "REC: enrollment.name"
+          customer_invoice_id.amount_untaxed:
+            type: "value"
+            expected: 1500000.0
+
+      - step: "Assert first detail is linked to its own customer invoice line"
+        action: "assert"
+        target: "detail_1"
+        asserts:
+          customer_invoice_line_id:
+            type: "value"
+            operator: "is_truthy"
+          customer_invoice_line_id.name:
+            type: "value"
+            expected: "Registration Fee SCI1"
+          customer_invoice_line_id.price_unit:
+            type: "value"
+            expected: 1000000.0
+          customer_invoice_line_id.customer_invoice_id.id:
+            type: "value"
+            expected: "REC: term.customer_invoice_id.id"
+
+      - step: "Assert second detail is linked to its own customer invoice line"
+        action: "assert"
+        target: "detail_2"
+        asserts:
+          customer_invoice_line_id:
+            type: "value"
+            operator: "is_truthy"
+          customer_invoice_line_id.name:
+            type: "value"
+            expected: "Monthly Tuition SCI1"
+          customer_invoice_line_id.price_unit:
+            type: "value"
+            expected: 500000.0
+          customer_invoice_line_id.customer_invoice_id.id:
+            type: "value"
+            expected: "REC: term.customer_invoice_id.id"
+
+  - name: "Auto Confirm Customer Invoice From Payment Template"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal"
+        limit: 1
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type"
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account"
+        values:
+          name: "School Fee Income SCI2"
+          code: "SCI24200"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          name: "School Receivable SCI2"
+          code: "SCI21100"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type SCI2"
+          code: "CITSCI2"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Fee SCI2"
+          type: "service"
+          list_price: 1000000.0
+
+      - step: "Setup - create pricelist"
+        action: "create"
+        model: "product.pricelist"
+        save_as: "pricelist"
+        values:
+          name: "School Pricelist SCI2"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type SCI2"
+          code: "GTSCI2"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 SCI2"
+          code: "AYSCI2"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester SCI2"
+          code: "SMSCI2"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School SCI2"
+          code: "SCHSCI2"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade SCI2"
+          code: "GSCI2"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class SCI2"
+          code: "CLASCI2"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact SCI2"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student SCI2"
+          code: "STUSCI2"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Setup - create payment template"
+        action: "create"
+        model: "school_enrollment_payment_template"
+        save_as: "payment_template"
+        values:
+          name: "Payment Template SCI2"
+          code: "PMTSCI2"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          academic_term_id: "REC: academic_term.id"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+          auto_confirm_customer_invoice: true
+
+      - step: "Create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+          pricelist_id: "REC: pricelist.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: payment_template.customer_invoice_type_id.id"
+          auto_confirm_customer_invoice:
+            "REC: payment_template.auto_confirm_customer_invoice"
+
+      - step: "Create payment term"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term SCI2"
+          sequence: 10
+          date_invoice: "2024-07-05"
+          date_due: "2024-07-20"
+
+      - step: "Create first payment term detail"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        save_as: "detail_1"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Registration Fee SCI2"
+          account_id: "REC: income_account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+
+      - step: "Create second payment term detail"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        save_as: "detail_2"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Monthly Tuition SCI2"
+          account_id: "REC: income_account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 500000.0
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate enrollment cache before approve"
+        action: "call"
+        target: "enrollment"
+        method: "invalidate_cache"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create customer invoice from the payment term"
+        action: "call"
+        target: "term"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Assert the customer invoice was confirmed automatically"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          auto_confirm_customer_invoice:
+            type: "value"
+            expected: true
+
+      - step: "Assert customer invoice state is confirm"
+        action: "assert"
+        target: "term"
+        asserts:
+          state:
+            type: "value"
+            expected: "invoiced"
+          customer_invoice_id.state:
+            type: "value"
+            expected: "confirm"
+
+  - name: "Disconnect Customer Invoice From Payment Term"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal"
+        limit: 1
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type"
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account"
+        values:
+          name: "School Fee Income SCI3"
+          code: "SCI34200"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          name: "School Receivable SCI3"
+          code: "SCI31100"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type SCI3"
+          code: "CITSCI3"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Fee SCI3"
+          type: "service"
+          list_price: 1000000.0
+
+      - step: "Setup - create pricelist"
+        action: "create"
+        model: "product.pricelist"
+        save_as: "pricelist"
+        values:
+          name: "School Pricelist SCI3"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type SCI3"
+          code: "GTSCI3"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 SCI3"
+          code: "AYSCI3"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester SCI3"
+          code: "SMSCI3"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School SCI3"
+          code: "SCHSCI3"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade SCI3"
+          code: "GSCI3"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class SCI3"
+          code: "CLASCI3"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact SCI3"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student SCI3"
+          code: "STUSCI3"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Setup - create payment template"
+        action: "create"
+        model: "school_enrollment_payment_template"
+        save_as: "payment_template"
+        values:
+          name: "Payment Template SCI3"
+          code: "PMTSCI3"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          academic_term_id: "REC: academic_term.id"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+          auto_confirm_customer_invoice: false
+
+      - step: "Create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+          pricelist_id: "REC: pricelist.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: payment_template.customer_invoice_type_id.id"
+          auto_confirm_customer_invoice:
+            "REC: payment_template.auto_confirm_customer_invoice"
+
+      - step: "Create payment term"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term SCI3"
+          sequence: 10
+          date_invoice: "2024-07-05"
+          date_due: "2024-07-20"
+
+      - step: "Create first payment term detail"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        save_as: "detail_1"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Registration Fee SCI3"
+          account_id: "REC: income_account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+
+      - step: "Create second payment term detail"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        save_as: "detail_2"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Monthly Tuition SCI3"
+          account_id: "REC: income_account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 500000.0
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate enrollment cache before approve"
+        action: "call"
+        target: "enrollment"
+        method: "invalidate_cache"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create customer invoice from the payment term"
+        action: "call"
+        target: "term"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Disconnect the customer invoice from the payment term"
+        action: "call"
+        target: "term"
+        method: "action_disconnect_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Assert the term is uninvoiced again"
+        action: "assert"
+        target: "term"
+        asserts:
+          customer_invoice_id:
+            type: "value"
+            operator: "is_falsy"
+          state:
+            type: "value"
+            expected: "uninvoiced"
+
+      - step: "Assert the customer invoice document still exists"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["customer_document_number", "=", "REC: enrollment.name"]]
+        save_as: "kept_invoices"
+        expect_count: 1
+
+  - name: "Delete Draft Customer Invoice Of Payment Term"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal"
+        limit: 1
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type"
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account"
+        values:
+          name: "School Fee Income SCI4"
+          code: "SCI44200"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          name: "School Receivable SCI4"
+          code: "SCI41100"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type SCI4"
+          code: "CITSCI4"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Fee SCI4"
+          type: "service"
+          list_price: 1000000.0
+
+      - step: "Setup - create pricelist"
+        action: "create"
+        model: "product.pricelist"
+        save_as: "pricelist"
+        values:
+          name: "School Pricelist SCI4"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type SCI4"
+          code: "GTSCI4"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 SCI4"
+          code: "AYSCI4"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester SCI4"
+          code: "SMSCI4"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School SCI4"
+          code: "SCHSCI4"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade SCI4"
+          code: "GSCI4"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class SCI4"
+          code: "CLASCI4"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact SCI4"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student SCI4"
+          code: "STUSCI4"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Setup - create payment template"
+        action: "create"
+        model: "school_enrollment_payment_template"
+        save_as: "payment_template"
+        values:
+          name: "Payment Template SCI4"
+          code: "PMTSCI4"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          academic_term_id: "REC: academic_term.id"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+          auto_confirm_customer_invoice: false
+
+      - step: "Create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+          pricelist_id: "REC: pricelist.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: payment_template.customer_invoice_type_id.id"
+          auto_confirm_customer_invoice:
+            "REC: payment_template.auto_confirm_customer_invoice"
+
+      - step: "Create payment term"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term SCI4"
+          sequence: 10
+          date_invoice: "2024-07-05"
+          date_due: "2024-07-20"
+
+      - step: "Create first payment term detail"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        save_as: "detail_1"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Registration Fee SCI4"
+          account_id: "REC: income_account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+
+      - step: "Create second payment term detail"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        save_as: "detail_2"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Monthly Tuition SCI4"
+          account_id: "REC: income_account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 500000.0
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate enrollment cache before approve"
+        action: "call"
+        target: "enrollment"
+        method: "invalidate_cache"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create customer invoice from the payment term"
+        action: "call"
+        target: "term"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Delete the draft customer invoice"
+        action: "call"
+        target: "term"
+        method: "action_delete_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Assert the term is uninvoiced again"
+        action: "assert"
+        target: "term"
+        asserts:
+          customer_invoice_id:
+            type: "value"
+            operator: "is_falsy"
+          state:
+            type: "value"
+            expected: "uninvoiced"
+
+      - step: "Assert first detail is no longer linked to a line"
+        action: "assert"
+        target: "detail_1"
+        asserts:
+          customer_invoice_line_id:
+            type: "value"
+            operator: "is_falsy"
+
+      - step: "Assert second detail is no longer linked to a line"
+        action: "assert"
+        target: "detail_2"
+        asserts:
+          customer_invoice_line_id:
+            type: "value"
+            operator: "is_falsy"
+
+      - step: "Assert the customer invoice document is gone"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["customer_document_number", "=", "REC: enrollment.name"]]
+        save_as: "remaining_invoices"
+        expect_count: 0
+
+  - name: "Delete Non Draft Customer Invoice Is Rejected"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal"
+        limit: 1
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type"
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account"
+        values:
+          name: "School Fee Income SCI5"
+          code: "SCI54200"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          name: "School Receivable SCI5"
+          code: "SCI51100"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type SCI5"
+          code: "CITSCI5"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Fee SCI5"
+          type: "service"
+          list_price: 1000000.0
+
+      - step: "Setup - create pricelist"
+        action: "create"
+        model: "product.pricelist"
+        save_as: "pricelist"
+        values:
+          name: "School Pricelist SCI5"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type SCI5"
+          code: "GTSCI5"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 SCI5"
+          code: "AYSCI5"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester SCI5"
+          code: "SMSCI5"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School SCI5"
+          code: "SCHSCI5"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade SCI5"
+          code: "GSCI5"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class SCI5"
+          code: "CLASCI5"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact SCI5"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student SCI5"
+          code: "STUSCI5"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Setup - create payment template"
+        action: "create"
+        model: "school_enrollment_payment_template"
+        save_as: "payment_template"
+        values:
+          name: "Payment Template SCI5"
+          code: "PMTSCI5"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          academic_term_id: "REC: academic_term.id"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+          auto_confirm_customer_invoice: false
+
+      - step: "Create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+          pricelist_id: "REC: pricelist.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: payment_template.customer_invoice_type_id.id"
+          auto_confirm_customer_invoice:
+            "REC: payment_template.auto_confirm_customer_invoice"
+
+      - step: "Create payment term"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term SCI5"
+          sequence: 10
+          date_invoice: "2024-07-05"
+          date_due: "2024-07-20"
+
+      - step: "Create first payment term detail"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        save_as: "detail_1"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Registration Fee SCI5"
+          account_id: "REC: income_account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+
+      - step: "Create second payment term detail"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        save_as: "detail_2"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Monthly Tuition SCI5"
+          account_id: "REC: income_account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 500000.0
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate enrollment cache before approve"
+        action: "call"
+        target: "enrollment"
+        method: "invalidate_cache"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create customer invoice from the payment term"
+        action: "call"
+        target: "term"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Get the generated customer invoice"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["customer_document_number", "=", "REC: enrollment.name"]]
+        save_as: "invoice"
+        expect_count: 1
+
+      - step: "Confirm the customer invoice"
+        action: "call"
+        target: "invoice"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Deleting a non-draft customer invoice must be rejected"
+        action: "call"
+        target: "term"
+        method: "action_delete_invoice"
+        as_user: "base.user_admin"
+        expect_error:
+          type: "UserError"
+          message_contains: "not draft anymore"
+
+      - step: "Assert the term is still linked to the customer invoice"
+        action: "assert"
+        target: "term"
+        asserts:
+          customer_invoice_id:
+            type: "value"
+            operator: "is_truthy"
+          state:
+            type: "value"
+            expected: "invoiced"
+
+  - name: "Cancel Enrollment With Invoiced Payment Term Is Rejected"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal"
+        limit: 1
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type"
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account"
+        values:
+          name: "School Fee Income SCI6"
+          code: "SCI64200"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          name: "School Receivable SCI6"
+          code: "SCI61100"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type SCI6"
+          code: "CITSCI6"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Fee SCI6"
+          type: "service"
+          list_price: 1000000.0
+
+      - step: "Setup - create pricelist"
+        action: "create"
+        model: "product.pricelist"
+        save_as: "pricelist"
+        values:
+          name: "School Pricelist SCI6"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type SCI6"
+          code: "GTSCI6"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 SCI6"
+          code: "AYSCI6"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester SCI6"
+          code: "SMSCI6"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School SCI6"
+          code: "SCHSCI6"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade SCI6"
+          code: "GSCI6"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class SCI6"
+          code: "CLASCI6"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact SCI6"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student SCI6"
+          code: "STUSCI6"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Setup - create payment template"
+        action: "create"
+        model: "school_enrollment_payment_template"
+        save_as: "payment_template"
+        values:
+          name: "Payment Template SCI6"
+          code: "PMTSCI6"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          academic_term_id: "REC: academic_term.id"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+          auto_confirm_customer_invoice: false
+
+      - step: "Create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+          pricelist_id: "REC: pricelist.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: payment_template.customer_invoice_type_id.id"
+          auto_confirm_customer_invoice:
+            "REC: payment_template.auto_confirm_customer_invoice"
+
+      - step: "Create payment term"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term SCI6"
+          sequence: 10
+          date_invoice: "2024-07-05"
+          date_due: "2024-07-20"
+
+      - step: "Create first payment term detail"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        save_as: "detail_1"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Registration Fee SCI6"
+          account_id: "REC: income_account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+
+      - step: "Create second payment term detail"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        save_as: "detail_2"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Monthly Tuition SCI6"
+          account_id: "REC: income_account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 500000.0
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate enrollment cache before approve"
+        action: "call"
+        target: "enrollment"
+        method: "invalidate_cache"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create customer invoice from the payment term"
+        action: "call"
+        target: "term"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Cancelling the enrollment must be rejected"
+        action: "call"
+        target: "enrollment"
+        method: "action_cancel"
+        as_user: "base.user_admin"
+        expect_error:
+          type: "UserError"
+
+      - step: "Assert the enrollment is still open"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+  - name: "Payment Template Onchange Fills Customer Invoice Fields"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal"
+        limit: 1
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type"
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account"
+        values:
+          name: "School Fee Income SCI7"
+          code: "SCI74200"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          name: "School Receivable SCI7"
+          code: "SCI71100"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type SCI7"
+          code: "CITSCI7"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Fee SCI7"
+          type: "service"
+          list_price: 1000000.0
+
+      - step: "Setup - create pricelist"
+        action: "create"
+        model: "product.pricelist"
+        save_as: "pricelist"
+        values:
+          name: "School Pricelist SCI7"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type SCI7"
+          code: "GTSCI7"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 SCI7"
+          code: "AYSCI7"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester SCI7"
+          code: "SMSCI7"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School SCI7"
+          code: "SCHSCI7"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade SCI7"
+          code: "GSCI7"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class SCI7"
+          code: "CLASCI7"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact SCI7"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student SCI7"
+          code: "STUSCI7"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Setup - create payment template"
+        action: "create"
+        model: "school_enrollment_payment_template"
+        save_as: "payment_template"
+        values:
+          name: "Payment Template SCI7"
+          code: "PMTSCI7"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          academic_term_id: "REC: academic_term.id"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+          auto_confirm_customer_invoice: true
+
+      - step: "Selecting the payment template fills the customer invoice fields"
+        action: "form"
+        model: "school_enrollment"
+        save: false
+        values:
+          payment_template_id: "REC: payment_template"
+        asserts:
+          customer_invoice_type_id.id:
+            type: "value"
+            expected: "REC: ci_type.id"
+          auto_confirm_customer_invoice:
+            type: "value"
+            expected: true

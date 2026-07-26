@@ -3,6 +3,38 @@ options:
 scenarios:
   - name: "Create Payment Template"
     steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable PTPCI01"
+          code: "PTPCI01"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type PTPCI01"
+          code: "PTPCI01"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
       - step: "Create grade type"
         action: "create"
         model: "school_grade_type"
@@ -33,6 +65,7 @@ scenarios:
         model: "school_enrollment_payment_template"
         save_as: "template"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
           name: "New Payment Template"
           code: "PMT002"
           school_id: "EVAL: registry['school'].id"
@@ -56,11 +89,44 @@ scenarios:
 
   - name: "Create Payment Template Without School And Grade"
     steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable PTPCI02"
+          code: "PTPCI02"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type PTPCI02"
+          code: "PTPCI02"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
       - step: "Create payment template without school and grade"
         action: "create"
         model: "school_enrollment_payment_template"
         save_as: "template"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
           name: "Generic Payment Template"
           code: "PMT003"
       - step: "Assert created with falsy school and grade"
@@ -79,6 +145,38 @@ scenarios:
 
   - name: "Create Payment Template With Term Lines"
     steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable PTPCI03"
+          code: "PTPCI03"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type PTPCI03"
+          code: "PTPCI03"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
       - step: "Create grade type"
         action: "create"
         model: "school_grade_type"
@@ -100,6 +198,7 @@ scenarios:
         model: "school_enrollment_payment_template"
         save_as: "template"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
           name: "Template With Terms"
           code: "PMTWT"
           school_id: "EVAL: registry['school'].id"
@@ -116,6 +215,38 @@ scenarios:
 
   - name: "Create Payment Template With Receivable Journal And Account"
     steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable PTPCI04"
+          code: "PTPCI04"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type PTPCI04"
+          code: "PTPCI04"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
       - step: "Get sale journal"
         action: "search"
         model: "account.journal"
@@ -139,6 +270,7 @@ scenarios:
         model: "school_enrollment_payment_template"
         save_as: "template"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
           name: "Template Receivable Fields"
           code: "PMTRECV"
           journal_id: "EVAL: registry['journal'].id"
@@ -156,6 +288,38 @@ scenarios:
 
   - name: "Edit Payment Template Receivable Journal"
     steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable PTPCI05"
+          code: "PTPCI05"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type PTPCI05"
+          code: "PTPCI05"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
       - step: "Get sale journal"
         action: "search"
         model: "account.journal"
@@ -167,6 +331,7 @@ scenarios:
         model: "school_enrollment_payment_template"
         save_as: "template"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
           name: "Template Journal Edit"
           code: "PMTJED"
       - step: "Set receivable journal"
@@ -184,6 +349,38 @@ scenarios:
 
   - name: "Edit Payment Template Receivable Account"
     steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable PTPCI06"
+          code: "PTPCI06"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type PTPCI06"
+          code: "PTPCI06"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
       - step: "Get account type ref"
         action: "ref"
         xml_id: "account.data_account_type_revenue"
@@ -201,6 +398,7 @@ scenarios:
         model: "school_enrollment_payment_template"
         save_as: "template"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
           name: "Template Account Edit"
           code: "PMTAED"
       - step: "Set receivable account"
@@ -218,11 +416,44 @@ scenarios:
 
   - name: "Edit Payment Template Name"
     steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable PTPCI07"
+          code: "PTPCI07"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type PTPCI07"
+          code: "PTPCI07"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
       - step: "Create payment template"
         action: "create"
         model: "school_enrollment_payment_template"
         save_as: "template"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
           name: "Payment Template Test Edit"
           code: "PMTED"
       - step: "Write new name"
@@ -240,6 +471,38 @@ scenarios:
 
   - name: "Edit Payment Template Academic Term"
     steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable PTPCI08"
+          code: "PTPCI08"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type PTPCI08"
+          code: "PTPCI08"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
       - step: "Create academic year"
         action: "create"
         model: "school_academic_year"
@@ -274,6 +537,7 @@ scenarios:
         model: "school_enrollment_payment_template"
         save_as: "template"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
           name: "Template Term Edit"
           code: "PMTTE"
           academic_term_id: "EVAL: registry['term'].id"
@@ -295,11 +559,44 @@ scenarios:
 
   - name: "Edit Payment Template Add Term Line"
     steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable PTPCI09"
+          code: "PTPCI09"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type PTPCI09"
+          code: "PTPCI09"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
       - step: "Create payment template"
         action: "create"
         model: "school_enrollment_payment_template"
         save_as: "template"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
           name: "Template Add Term"
           code: "PMTAT"
       - step: "Add a term line"
@@ -319,11 +616,44 @@ scenarios:
 
   - name: "Delete Payment Template"
     steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable PTPCI10"
+          code: "PTPCI10"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type PTPCI10"
+          code: "PTPCI10"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
       - step: "Create payment template"
         action: "create"
         model: "school_enrollment_payment_template"
         save_as: "template"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
           name: "Template To Delete"
           code: "PMTDEL"
       - step: "Delete template"
@@ -339,11 +669,44 @@ scenarios:
 
   - name: "Delete Payment Template Cascades Terms"
     steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable PTPCI11"
+          code: "PTPCI11"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type PTPCI11"
+          code: "PTPCI11"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
       - step: "Create payment template with terms"
         action: "create"
         model: "school_enrollment_payment_template"
         save_as: "template"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
           name: "Template Cascade Delete"
           code: "PMTCSC"
           term_ids:
@@ -361,6 +724,38 @@ scenarios:
 
   - name: "Compute Grade Type From School"
     steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable PTPCI12"
+          code: "PTPCI12"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type PTPCI12"
+          code: "PTPCI12"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
       - step: "Create grade type"
         action: "create"
         model: "school_grade_type"
@@ -382,6 +777,7 @@ scenarios:
         model: "school_enrollment_payment_template"
         save_as: "template"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
           name: "Template Grade Type Compute"
           code: "PMTGTC"
           school_id: "EVAL: registry['school'].id"
@@ -395,11 +791,44 @@ scenarios:
 
   - name: "Compute Grade Type Empty When No School"
     steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable PTPCI13"
+          code: "PTPCI13"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type PTPCI13"
+          code: "PTPCI13"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
       - step: "Create payment template without school"
         action: "create"
         model: "school_enrollment_payment_template"
         save_as: "template"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
           name: "Template No School"
           code: "PMTNS"
       - step: "Assert grade_type_id is falsy"
@@ -412,11 +841,44 @@ scenarios:
 
   - name: "Create Term"
     steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable PTPCI14"
+          code: "PTPCI14"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type PTPCI14"
+          code: "PTPCI14"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
       - step: "Create payment template"
         action: "create"
         model: "school_enrollment_payment_template"
         save_as: "template"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
           name: "Template for Term Test"
           code: "PMTTRM"
       - step: "Create term"
@@ -443,11 +905,44 @@ scenarios:
 
   - name: "Edit Term Name"
     steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable PTPCI15"
+          code: "PTPCI15"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type PTPCI15"
+          code: "PTPCI15"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
       - step: "Create payment template"
         action: "create"
         model: "school_enrollment_payment_template"
         save_as: "template"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
           name: "Template Term Edit Name"
           code: "PMTTEN"
       - step: "Create term"
@@ -473,11 +968,44 @@ scenarios:
 
   - name: "Edit Term Sequence"
     steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable PTPCI16"
+          code: "PTPCI16"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type PTPCI16"
+          code: "PTPCI16"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
       - step: "Create payment template"
         action: "create"
         model: "school_enrollment_payment_template"
         save_as: "template"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
           name: "Template Term Edit Seq"
           code: "PMTTESEQ"
       - step: "Create term"
@@ -503,11 +1031,44 @@ scenarios:
 
   - name: "Delete Term"
     steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable PTPCI17"
+          code: "PTPCI17"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type PTPCI17"
+          code: "PTPCI17"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
       - step: "Create payment template"
         action: "create"
         model: "school_enrollment_payment_template"
         save_as: "template"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
           name: "Template Term Delete"
           code: "PMTTDEL"
       - step: "Create term"
@@ -533,6 +1094,38 @@ scenarios:
 
   - name: "Create Term Detail"
     steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable PTPCI18"
+          code: "PTPCI18"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type PTPCI18"
+          code: "PTPCI18"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
       - step: "Create account type ref"
         action: "ref"
         xml_id: "account.data_account_type_revenue"
@@ -558,6 +1151,7 @@ scenarios:
         model: "school_enrollment_payment_template"
         save_as: "template"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
           name: "Template for Detail Create"
           code: "PMTDETCR"
       - step: "Create term"
@@ -596,6 +1190,38 @@ scenarios:
 
   - name: "Edit Term Detail Name"
     steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable PTPCI19"
+          code: "PTPCI19"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type PTPCI19"
+          code: "PTPCI19"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
       - step: "Create account type ref"
         action: "ref"
         xml_id: "account.data_account_type_revenue"
@@ -620,6 +1246,7 @@ scenarios:
         model: "school_enrollment_payment_template"
         save_as: "template"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
           name: "Template Detail Edit Name"
           code: "PMTDETEN"
       - step: "Create term"
@@ -657,6 +1284,38 @@ scenarios:
 
   - name: "Edit Term Detail Price"
     steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable PTPCI20"
+          code: "PTPCI20"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type PTPCI20"
+          code: "PTPCI20"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
       - step: "Create account type ref"
         action: "ref"
         xml_id: "account.data_account_type_revenue"
@@ -681,6 +1340,7 @@ scenarios:
         model: "school_enrollment_payment_template"
         save_as: "template"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
           name: "Template Detail Price Edit"
           code: "PMTDETPE"
       - step: "Create term"
@@ -718,6 +1378,38 @@ scenarios:
 
   - name: "Delete Term Detail"
     steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable PTPCI21"
+          code: "PTPCI21"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type PTPCI21"
+          code: "PTPCI21"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
       - step: "Create account type ref"
         action: "ref"
         xml_id: "account.data_account_type_revenue"
@@ -742,6 +1434,7 @@ scenarios:
         model: "school_enrollment_payment_template"
         save_as: "template"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
           name: "Template Detail Delete"
           code: "PMTDETDEL"
       - step: "Create term"

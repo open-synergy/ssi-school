@@ -3,6 +3,38 @@ options:
 scenarios:
   - name: "Homeroom Fill Random And Generate Enrollments"
     steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable HRGCI01"
+          code: "HRGCI01"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type HRGCI01"
+          code: "HRGCI01"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
       - step: "Setup - get account type ref"
         action: "ref"
         xml_id: "account.data_account_type_revenue"
@@ -92,6 +124,7 @@ scenarios:
         model: "school_enrollment_payment_template"
         save_as: "payment_template"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
           name: "Homeroom Generate Payment Template 1"
           code: "HGPMT1"
           school_id: "EVAL: registry['school'].id"
@@ -297,6 +330,38 @@ scenarios:
 
   - name: "Homeroom Non First Term Eligibility"
     steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable HRGCI02"
+          code: "HRGCI02"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type HRGCI02"
+          code: "HRGCI02"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
       - step: "Setup - create grade type"
         action: "create"
         model: "school_grade_type"
@@ -459,6 +524,38 @@ scenarios:
 
   - name: "Homeroom Fill Random Respects Remaining Capacity"
     steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable HRGCI03"
+          code: "HRGCI03"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type HRGCI03"
+          code: "HRGCI03"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
       - step: "Setup - create grade type"
         action: "create"
         model: "school_grade_type"
@@ -616,6 +713,38 @@ scenarios:
 
   - name: "Homeroom Regenerate Reconciles Draft Enrollments With Candidates"
     steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable HRGCI04"
+          code: "HRGCI04"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type HRGCI04"
+          code: "HRGCI04"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
       - step: "Setup - create grade type"
         action: "create"
         model: "school_grade_type"
@@ -805,6 +934,38 @@ scenarios:
       "Homeroom Generate Enrollment Copies Receivable Journal And Account From Default
       Template"
     steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable HRGCI05"
+          code: "HRGCI05"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type HRGCI05"
+          code: "HRGCI05"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
       - step: "Get sale journal"
         action: "search"
         model: "account.journal"
@@ -892,6 +1053,7 @@ scenarios:
         model: "school_enrollment_payment_template"
         save_as: "payment_template"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
           name: "Homeroom Generate Payment Template 6"
           code: "HGPMT6"
           school_id: "EVAL: registry['school'].id"

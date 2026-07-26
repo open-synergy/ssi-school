@@ -3,6 +3,38 @@ options:
 scenarios:
   - name: "Addendum - Existing Payment Term Is Locked After Enrollment Opens"
     steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable ADDCI01"
+          code: "ADDCI01"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type ADDCI01"
+          code: "ADDCI01"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
       - step: "Setup - get receivable journal"
         action: "search"
         model: "account.journal"
@@ -123,6 +155,7 @@ scenarios:
         model: "school_enrollment_payment_template"
         save_as: "payment_template"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
           name: "Payment Template ADDEN1"
           code: "PMTADDEN1"
           school_id: "EVAL: registry['school'].id"
@@ -149,6 +182,8 @@ scenarios:
         save_as: "enrollment"
         as_user: "base.user_admin"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
+          receivable_account_id: "REC: ci_account.id"
           date: "2024-07-01"
           academic_year_id: "EVAL: registry['academic_year'].id"
           academic_term_id: "EVAL: registry['academic_term'].id"

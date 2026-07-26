@@ -103,11 +103,11 @@ class SchoolEnrollmentFeeAnalysis(models.Model):
         readonly=True,
         help="The payment template used to auto-populate billing, if any.",
     )
-    invoice_id = fields.Many2one(
-        string="Invoice",
-        comodel_name="account.move",
+    customer_invoice_id = fields.Many2one(
+        string="Customer Invoice",
+        comodel_name="customer_invoice",
         readonly=True,
-        help="The invoice linked to the payment term, if already generated.",
+        help="The customer invoice linked to the payment term, if generated.",
     )
     term_name = fields.Char(
         string="Term",
@@ -127,8 +127,8 @@ class SchoolEnrollmentFeeAnalysis(models.Model):
         help=(
             "Billing status of the payment term: "
             "Draft = enrollment still in draft/confirm, "
-            "Uninvoiced = enrollment open/done but no invoice yet, "
-            "Invoiced = invoice created, "
+            "Uninvoiced = enrollment open/done but no customer invoice yet, "
+            "Invoiced = customer invoice created, "
             "Manually Controlled = managed manually, "
             "Cancelled = enrollment cancelled."
         ),
@@ -232,7 +232,7 @@ class SchoolEnrollmentFeeAnalysis(models.Model):
                 enr.grade_id AS grade_id,
                 enr.grade_class_id AS grade_class_id,
                 enr.payment_template_id AS payment_template_id,
-                term.invoice_id AS invoice_id,
+                term.customer_invoice_id AS customer_invoice_id,
                 term.name AS term_name,
                 term.state AS term_state,
                 enr.state AS enrollment_state,
