@@ -61,8 +61,18 @@ msgid "Cancel"
 msgstr ""
 
 #. module: ssi_school_lead
+#: model_terms:ir.ui.view,arch_db:ssi_school_lead.crm_lead_school_form_view
+msgid "City"
+msgstr ""
+
+#. module: ssi_school_lead
 #: model:ir.model.fields,help:ssi_school_lead.field_crm_lead__parent_city
 msgid "City of the parent/guardian, mirrored from their contact record."
+msgstr ""
+
+#. module: ssi_school_lead
+#: model_terms:ir.ui.view,arch_db:ssi_school_lead.crm_lead_school_form_view
+msgid "Country"
 msgstr ""
 
 #. module: ssi_school_lead
@@ -281,15 +291,30 @@ msgid "School"
 msgstr ""
 
 #. module: ssi_school_lead
+#: model_terms:ir.ui.view,arch_db:ssi_school_lead.crm_lead_school_form_view
+msgid "State"
+msgstr ""
+
+#. module: ssi_school_lead
 #: model:ir.model.fields,help:ssi_school_lead.field_crm_lead__parent_state_id
 msgid ""
 "State/province of the parent/guardian, mirrored from their contact record."
 msgstr ""
 
 #. module: ssi_school_lead
+#: model_terms:ir.ui.view,arch_db:ssi_school_lead.crm_lead_school_form_view
+msgid "Street 2..."
+msgstr ""
+
+#. module: ssi_school_lead
 #: model:ir.model.fields,help:ssi_school_lead.field_crm_lead__parent_street
 msgid ""
 "Street address of the parent/guardian, mirrored from their contact record."
+msgstr ""
+
+#. module: ssi_school_lead
+#: model_terms:ir.ui.view,arch_db:ssi_school_lead.crm_lead_school_form_view
+msgid "Street..."
 msgstr ""
 
 #. module: ssi_school_lead
@@ -372,4 +397,9 @@ msgstr ""
 #. module: ssi_school_lead
 #: model_terms:ir.ui.view,arch_db:ssi_school_lead.crm_lead_create_admission_view_form
 msgid "Year/Term"
+msgstr ""
+
+#. module: ssi_school_lead
+#: model_terms:ir.ui.view,arch_db:ssi_school_lead.crm_lead_school_form_view
+msgid "ZIP"
 msgstr ""
