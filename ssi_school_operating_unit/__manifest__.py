@@ -4,7 +4,7 @@
 
 {
     "name": "School - Operating Unit",
-    "version": "14.0.1.5.0",
+    "version": "14.0.1.6.0",
     "website": "https://simetri-sinergi.id",
     "author": (
         "OpenSynergy Indonesia, "
