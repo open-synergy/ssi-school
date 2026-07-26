@@ -14,6 +14,7 @@
     "installable": True,
     "depends": [
         "ssi_lead",
+        "ssi_partner",
         "ssi_school",
         "ssi_school_admission",
     ],

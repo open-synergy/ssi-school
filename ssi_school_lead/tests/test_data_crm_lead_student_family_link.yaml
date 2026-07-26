@@ -1,0 +1,493 @@
+options:
+  auto_refresh: true
+
+scenarios:
+  - name: "Student Family Link - Default relationship links children_ids only"
+    steps:
+      - step: "Create parent partner"
+        action: "create"
+        model: "res.partner"
+        save_as: "parent"
+        values:
+          name: "Parent SFL1"
+
+      - step: "Create student partner"
+        action: "create"
+        model: "res.partner"
+        save_as: "student"
+        values:
+          name: "Student SFL1"
+
+      - step: "Create lead with partner_id and student_id, no parent_relationship"
+        action: "create"
+        model: "crm.lead"
+        save_as: "lead"
+        as_user: "base.user_admin"
+        values:
+          name: "Lead SFL1"
+          partner_id: "REC: parent.id"
+          student_id: "REC: student.id"
+
+      - step: "Assert parent children_ids contains student"
+        action: "assert"
+        target: "parent"
+        asserts:
+          children_ids:
+            type: "m2m"
+            check: "contains"
+            expected_records:
+              - "REC: student"
+
+      - step: "Assert student father/mother/guardian remain falsy"
+        action: "assert"
+        target: "student"
+        asserts:
+          father_id:
+            type: "value"
+            operator: "is_falsy"
+          mother_id:
+            type: "value"
+            operator: "is_falsy"
+          guardian_id:
+            type: "value"
+            operator: "is_falsy"
+
+  - name: "Student Family Link - Father relationship sets father_id and children_ids"
+    steps:
+      - step: "Create parent partner"
+        action: "create"
+        model: "res.partner"
+        save_as: "parent"
+        values:
+          name: "Parent SFL2"
+
+      - step: "Create student partner"
+        action: "create"
+        model: "res.partner"
+        save_as: "student"
+        values:
+          name: "Student SFL2"
+
+      - step: "Create lead with parent_relationship father"
+        action: "create"
+        model: "crm.lead"
+        save_as: "lead"
+        as_user: "base.user_admin"
+        values:
+          name: "Lead SFL2"
+          partner_id: "REC: parent.id"
+          student_id: "REC: student.id"
+          parent_relationship: "father"
+
+      - step: "Assert student father_id is parent"
+        action: "assert"
+        target: "student"
+        asserts:
+          father_id:
+            type: "m2o"
+            expected: "REC: parent"
+
+      - step: "Assert parent children_ids contains student"
+        action: "assert"
+        target: "parent"
+        asserts:
+          children_ids:
+            type: "m2m"
+            check: "contains"
+            expected_records:
+              - "REC: student"
+
+  - name:
+      "Student Family Link - Guardian relationship sets guardian_id and ward_ids only"
+    steps:
+      - step: "Create parent partner"
+        action: "create"
+        model: "res.partner"
+        save_as: "parent"
+        values:
+          name: "Parent SFL3"
+
+      - step: "Create student partner"
+        action: "create"
+        model: "res.partner"
+        save_as: "student"
+        values:
+          name: "Student SFL3"
+
+      - step: "Create lead with parent_relationship guardian"
+        action: "create"
+        model: "crm.lead"
+        save_as: "lead"
+        as_user: "base.user_admin"
+        values:
+          name: "Lead SFL3"
+          partner_id: "REC: parent.id"
+          student_id: "REC: student.id"
+          parent_relationship: "guardian"
+
+      - step: "Assert student guardian_id is parent"
+        action: "assert"
+        target: "student"
+        asserts:
+          guardian_id:
+            type: "m2o"
+            expected: "REC: parent"
+
+      - step: "Assert parent ward_ids contains student"
+        action: "assert"
+        target: "parent"
+        asserts:
+          ward_ids:
+            type: "o2m"
+            check: "contains"
+            expected_records:
+              - "REC: student"
+
+      - step: "Assert parent children_ids count is zero"
+        action: "assert"
+        target: "parent"
+        asserts:
+          children_ids:
+            type: "m2m"
+            check: "count"
+            expected_count: 0
+
+  - name: "Student Family Link - Only partner_id set, no link created"
+    steps:
+      - step: "Create parent partner"
+        action: "create"
+        model: "res.partner"
+        save_as: "parent"
+        values:
+          name: "Parent SFL4"
+
+      - step: "Create lead with only partner_id"
+        action: "create"
+        model: "crm.lead"
+        save_as: "lead"
+        as_user: "base.user_admin"
+        values:
+          name: "Lead SFL4"
+          partner_id: "REC: parent.id"
+
+      - step: "Assert parent children_ids count is zero"
+        action: "assert"
+        target: "parent"
+        asserts:
+          children_ids:
+            type: "m2m"
+            check: "count"
+            expected_count: 0
+
+  - name: "Student Family Link - Setting partner_id on student-only lead links family"
+    steps:
+      - step: "Create parent partner"
+        action: "create"
+        model: "res.partner"
+        save_as: "parent"
+        values:
+          name: "Parent SFL5"
+
+      - step: "Create student partner"
+        action: "create"
+        model: "res.partner"
+        save_as: "student"
+        values:
+          name: "Student SFL5"
+
+      - step: "Create lead with only student_id"
+        action: "create"
+        model: "crm.lead"
+        save_as: "lead"
+        as_user: "base.user_admin"
+        values:
+          name: "Lead SFL5"
+          student_id: "REC: student.id"
+
+      - step: "Write partner_id on the lead"
+        action: "write"
+        target: "lead"
+        as_user: "base.user_admin"
+        values:
+          partner_id: "REC: parent.id"
+
+      - step: "Assert parent children_ids contains student"
+        action: "assert"
+        target: "parent"
+        asserts:
+          children_ids:
+            type: "m2m"
+            check: "contains"
+            expected_records:
+              - "REC: student"
+
+  - name: "Student Family Link - Changing student_id preserves old link"
+    steps:
+      - step: "Create parent partner"
+        action: "create"
+        model: "res.partner"
+        save_as: "parent"
+        values:
+          name: "Parent SFL6"
+
+      - step: "Create first student partner"
+        action: "create"
+        model: "res.partner"
+        save_as: "student_1"
+        values:
+          name: "Student SFL6 First"
+
+      - step: "Create second student partner"
+        action: "create"
+        model: "res.partner"
+        save_as: "student_2"
+        values:
+          name: "Student SFL6 Second"
+
+      - step: "Create lead linking first student"
+        action: "create"
+        model: "crm.lead"
+        save_as: "lead"
+        as_user: "base.user_admin"
+        values:
+          name: "Lead SFL6"
+          partner_id: "REC: parent.id"
+          student_id: "REC: student_1.id"
+
+      - step: "Change lead student_id to second student"
+        action: "write"
+        target: "lead"
+        as_user: "base.user_admin"
+        values:
+          student_id: "REC: student_2.id"
+
+      - step: "Assert parent children_ids contains both students"
+        action: "assert"
+        target: "parent"
+        asserts:
+          children_ids:
+            type: "m2m"
+            check: "contains"
+            expected_records:
+              - "REC: student_1"
+              - "REC: student_2"
+
+      - step: "Assert parent children_ids count is two"
+        action: "assert"
+        target: "parent"
+        asserts:
+          children_ids:
+            type: "m2m"
+            check: "count"
+            expected_count: 2
+
+  - name: "Student Family Link - Existing father_id is not overwritten"
+    steps:
+      - step: "Create other partner already set as father"
+        action: "create"
+        model: "res.partner"
+        save_as: "other"
+        values:
+          name: "Other Father SFL7"
+
+      - step: "Create student partner with existing father_id"
+        action: "create"
+        model: "res.partner"
+        save_as: "student"
+        values:
+          name: "Student SFL7"
+          father_id: "REC: other.id"
+
+      - step: "Create parent partner"
+        action: "create"
+        model: "res.partner"
+        save_as: "parent"
+        values:
+          name: "Parent SFL7"
+
+      - step: "Create lead with parent_relationship father"
+        action: "create"
+        model: "crm.lead"
+        save_as: "lead"
+        as_user: "base.user_admin"
+        values:
+          name: "Lead SFL7"
+          partner_id: "REC: parent.id"
+          student_id: "REC: student.id"
+          parent_relationship: "father"
+
+      - step: "Assert student father_id remains the other partner"
+        action: "assert"
+        target: "student"
+        asserts:
+          father_id:
+            type: "m2o"
+            expected: "REC: other"
+
+      - step: "Assert parent children_ids contains student"
+        action: "assert"
+        target: "parent"
+        asserts:
+          children_ids:
+            type: "m2m"
+            check: "contains"
+            expected_records:
+              - "REC: student"
+
+  - name: "Student Family Link - Wizard writes back changed student and links it"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type SFL8"
+          code: "GTSFL8"
+          sequence: 10
+
+      - step: "Create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 SFL8"
+          code: "AYSFL8"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester SFL8"
+          code: "SMSFL8"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          is_open_admission: true
+
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School SFL8"
+          code: "SCHSFL8"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade SFL8"
+          code: "GSFL8"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Create parent partner"
+        action: "create"
+        model: "res.partner"
+        save_as: "parent"
+        values:
+          name: "Parent SFL8"
+
+      - step: "Create first student partner"
+        action: "create"
+        model: "res.partner"
+        save_as: "student_1"
+        values:
+          name: "Student SFL8 First"
+
+      - step: "Create second student partner"
+        action: "create"
+        model: "res.partner"
+        save_as: "student_2"
+        values:
+          name: "Student SFL8 Second"
+
+      - step: "Create lead linking first student"
+        action: "create"
+        model: "crm.lead"
+        save_as: "lead"
+        as_user: "base.user_admin"
+        values:
+          name: "Lead SFL8"
+          partner_id: "REC: parent.id"
+          student_id: "REC: student_1.id"
+
+      - step: "Create wizard selecting second student"
+        action: "create"
+        model: "crm.lead.create_admission"
+        save_as: "wizard"
+        values:
+          lead_id: "REC: lead.id"
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: student_2.id"
+
+      - step: "Confirm wizard"
+        action: "call"
+        target: "wizard"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert lead student_id is now the second student"
+        action: "assert"
+        target: "lead"
+        asserts:
+          student_id:
+            type: "m2o"
+            expected: "REC: student_2"
+
+      - step: "Assert parent children_ids contains second student"
+        action: "assert"
+        target: "parent"
+        asserts:
+          children_ids:
+            type: "m2m"
+            check: "contains"
+            expected_records:
+              - "REC: student_2"
+
+  - name: "Student Family Link - Negative, partner_id same as student_id"
+    steps:
+      - step: "Create shared contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "shared_contact"
+        values:
+          name: "Shared Contact SFL9"
+
+      - step: "Create lead with partner_id equal to student_id must fail"
+        action: "create"
+        model: "crm.lead"
+        as_user: "base.user_admin"
+        expect_error:
+          type: "ValidationError"
+        values:
+          name: "Lead SFL9"
+          partner_id: "REC: shared_contact.id"
+          student_id: "REC: shared_contact.id"
+
+  - name: "Student Family Link - Negative, no partner_id nor student_id"
+    steps:
+      - step: "Create lead without partner_id and student_id"
+        action: "create"
+        model: "crm.lead"
+        save_as: "lead"
+        as_user: "base.user_admin"
+        values:
+          name: "Lead SFL10"
+
+      - step: "Assert lead was created successfully"
+        action: "assert"
+        target: "lead"
+        asserts:
+          id:
+            type: "value"
+            operator: "is_truthy"

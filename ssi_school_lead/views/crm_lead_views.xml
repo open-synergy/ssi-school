@@ -36,6 +36,7 @@
                         string="Prospective Student"
                     >
                     <field name="student_id" />
+                    <field name="parent_relationship" />
                 </group>
                 <group name="school_lead_admission_target" string="Admission Target">
                     <field name="school_id" />

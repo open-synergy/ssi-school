@@ -4,6 +4,12 @@
 
 from odoo import api, fields, models
 
+_SYNC_STUDENT_FAMILY_LINK_TRIGGER_FIELDS = [
+    "partner_id",
+    "student_id",
+    "parent_relationship",
+]
+
 
 class CrmLead(models.Model):
     """
@@ -25,7 +31,19 @@ class CrmLead(models.Model):
         comodel_name="res.partner",
         string="Student",
         ondelete="restrict",
+        domain=[("is_company", "=", False)],
         help="The prospective student associated with this lead.",
+    )
+    parent_relationship = fields.Selection(
+        string="Parent Relationship",
+        selection=[
+            ("father", "Father"),
+            ("mother", "Mother"),
+            ("guardian", "Guardian"),
+        ],
+        help="Relationship of the parent/guardian contact to the prospective "
+        "student. Used to link the student as a child or ward of the "
+        "parent/guardian contact.",
     )
     admission_id = fields.Many2one(
         comodel_name="school_admission",
@@ -101,6 +119,26 @@ class CrmLead(models.Model):
     def _compute_create_admission_ok(self):
         for record in self:
             record.create_admission_ok = not record.admission_id
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        records._sync_student_family_link()
+        return records
+
+    def write(self, vals):
+        res = super().write(vals)
+        if any(field in vals for field in _SYNC_STUDENT_FAMILY_LINK_TRIGGER_FIELDS):
+            self._sync_student_family_link()
+        return res
+
+    def _sync_student_family_link(self):
+        for record in self:
+            if not record.partner_id or not record.student_id:
+                continue
+            record.partner_id.sudo().link_child(
+                record.student_id, record.parent_relationship
+            )
 
     def action_create_admission(self):
         for record in self.sudo():
