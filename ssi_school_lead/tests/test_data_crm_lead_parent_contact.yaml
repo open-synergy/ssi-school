@@ -175,6 +175,47 @@ scenarios:
             type: "value"
             expected: "parent.b.pc3@example.com"
 
+  - name: "CRM Lead Parent Contact - Write on lead writes through to partner"
+    steps:
+      - step: "Create parent partner with initial street"
+        action: "create"
+        model: "res.partner"
+        save_as: "parent"
+        values:
+          name: "Parent Contact Write-Through PC6"
+          street: "Jl. Lama No. 1"
+
+      - step: "Create CRM lead with partner_id"
+        action: "create"
+        model: "crm.lead"
+        save_as: "lead"
+        as_user: "base.user_admin"
+        values:
+          name: "Lead Parent Contact Write-Through PC6"
+          partner_id: "REC: parent.id"
+
+      - step: "Write new parent_street value on the lead"
+        action: "write"
+        target: "lead"
+        values:
+          parent_street: "Jl. Baru Write-Through No. 2"
+
+      - step: "Assert parent_street on lead is updated"
+        action: "assert"
+        target: "lead"
+        asserts:
+          parent_street:
+            type: "value"
+            expected: "Jl. Baru Write-Through No. 2"
+
+      - step: "Assert partner_id.street is updated by the related inverse"
+        action: "assert"
+        target: "parent"
+        asserts:
+          street:
+            type: "value"
+            expected: "Jl. Baru Write-Through No. 2"
+
   - name: "CRM Lead Parent Contact - Negative, no partner_id"
     steps:
       - step: "Create CRM lead without partner_id"
@@ -216,6 +257,20 @@ scenarios:
           parent_email:
             type: "value"
             operator: "is_falsy"
+
+      - step: "Write parent_zip on lead without partner_id"
+        action: "write"
+        target: "lead"
+        values:
+          parent_zip: "99999"
+
+      - step: "Assert write does not raise and parent_zip keeps the written value"
+        action: "assert"
+        target: "lead"
+        asserts:
+          parent_zip:
+            type: "value"
+            expected: "99999"
 
   - name: "CRM Lead Parent Contact - Negative, partner with empty contact info"
     steps:
