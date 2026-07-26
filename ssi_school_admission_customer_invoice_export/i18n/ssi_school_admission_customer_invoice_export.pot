@@ -1,0 +1,233 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* ssi_school_admission_customer_invoice_export
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: ssi_school_admission_customer_invoice_export
+#: code:addons/ssi_school_admission_customer_invoice_export/models/school_admission.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Create invoice export\n"
+"Database ID: %s\n"
+"Problem: Document is not allowed to create invoice export\n"
+"Solution: Check create invoice export policy prerequisite\n"
+msgstr ""
+
+#. module: ssi_school_admission_customer_invoice_export
+#: code:addons/ssi_school_admission_customer_invoice_export/wizards/school_admission_create_invoice_export.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Create invoice export for admissions\n"
+"Database ID: %s\n"
+"Problem: No admission selected\n"
+"Solution: Select at least one admission from the list view before running this wizard\n"
+msgstr ""
+
+#. module: ssi_school_admission_customer_invoice_export
+#: code:addons/ssi_school_admission_customer_invoice_export/wizards/school_admission_create_invoice_export.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Create invoice export for admissions\n"
+"Database ID: %s\n"
+"Problem: No exportable move found on the selected admission(s)\n"
+"Solution: Select admission(s) that have at least one payment term with an unpaid (open) customer invoice\n"
+msgstr ""
+
+#. module: ssi_school_admission_customer_invoice_export
+#: code:addons/ssi_school_admission_customer_invoice_export/wizards/school_admission_create_invoice_export.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Create invoice export for admissions\n"
+"Database ID: %s\n"
+"Problem: No summary row was produced for the exported invoices\n"
+"Solution: Check the Journal/Partner/Product criteria on Type '%s'\n"
+msgstr ""
+
+#. module: ssi_school_admission_customer_invoice_export
+#: code:addons/ssi_school_admission_customer_invoice_export/wizards/school_admission_create_invoice_export.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Create invoice export for admissions\n"
+"Database ID: %s\n"
+"Problem: The following admission(s) are not allowed to create invoice export:\n"
+"%s\n"
+"Solution: Deselect the listed admission(s), or make sure they are open/done and allowed\n"
+"by the create invoice export policy\n"
+msgstr ""
+
+#. module: ssi_school_admission_customer_invoice_export
+#: code:addons/ssi_school_admission_customer_invoice_export/wizards/school_admission_create_invoice_export.py:0
+#, python-format
+msgid "- %s: not allowed to create invoice export (check state/policy)"
+msgstr ""
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.model.fields,field_description:ssi_school_admission_customer_invoice_export.field_school_admission_wizard_create_invoice_export__admission_ids
+msgid "Admissions"
+msgstr ""
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.model.fields,help:ssi_school_admission_customer_invoice_export.field_school_admission_wizard_create_invoice_export__admission_ids
+msgid "Admissions whose unpaid invoices will be exported."
+msgstr ""
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.model.fields.selection,name:ssi_school_admission_customer_invoice_export.selection__school_admission_wizard_create_invoice_export__output_format__csv
+msgid "CSV"
+msgstr ""
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.model.fields,field_description:ssi_school_admission_customer_invoice_export.field_school_admission__create_invoice_export_ok
+msgid "Can Create Invoice Export"
+msgstr ""
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission_customer_invoice_export.school_admission_wizard_create_invoice_export_view_form
+msgid "Cancel"
+msgstr ""
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.actions.act_window,name:ssi_school_admission_customer_invoice_export.school_admission_wizard_create_invoice_export_action
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission_customer_invoice_export.school_admission_view_form_invoice_export
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission_customer_invoice_export.school_admission_wizard_create_invoice_export_view_form
+msgid "Create Invoice Export"
+msgstr ""
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.model,name:ssi_school_admission_customer_invoice_export.model_school_admission_wizard_create_invoice_export
+msgid "Create Invoice Export for Admission Payment Terms"
+msgstr ""
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.model.fields,field_description:ssi_school_admission_customer_invoice_export.field_school_admission_wizard_create_invoice_export__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.model.fields,field_description:ssi_school_admission_customer_invoice_export.field_school_admission_wizard_create_invoice_export__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.model.fields,field_description:ssi_school_admission_customer_invoice_export.field_school_admission_wizard_create_invoice_export__date
+msgid "Date"
+msgstr ""
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.model.fields,field_description:ssi_school_admission_customer_invoice_export.field_school_admission_wizard_create_invoice_export__date_end
+msgid "Date End"
+msgstr ""
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.model.fields,field_description:ssi_school_admission_customer_invoice_export.field_school_admission_wizard_create_invoice_export__date_start
+msgid "Date Start"
+msgstr ""
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.model.fields,help:ssi_school_admission_customer_invoice_export.field_school_admission_wizard_create_invoice_export__date
+msgid "Date of the resulting customer invoice export document."
+msgstr ""
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.model.fields,field_description:ssi_school_admission_customer_invoice_export.field_school_admission__display_name
+#: model:ir.model.fields,field_description:ssi_school_admission_customer_invoice_export.field_school_admission_wizard_create_invoice_export__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.model.fields,help:ssi_school_admission_customer_invoice_export.field_school_admission_wizard_create_invoice_export__type_id
+msgid ""
+"Export type that determines the product criteria, the parser code, and the "
+"default output format of the resulting document."
+msgstr ""
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.model.fields,help:ssi_school_admission_customer_invoice_export.field_school_admission_wizard_create_invoice_export__output_format
+msgid ""
+"File format of the resulting document. Automatically proposed from the "
+"selected Type."
+msgstr ""
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.model.fields,field_description:ssi_school_admission_customer_invoice_export.field_school_admission__id
+#: model:ir.model.fields,field_description:ssi_school_admission_customer_invoice_export.field_school_admission_wizard_create_invoice_export__id
+msgid "ID"
+msgstr ""
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.model.fields,field_description:ssi_school_admission_customer_invoice_export.field_school_admission____last_update
+#: model:ir.model.fields,field_description:ssi_school_admission_customer_invoice_export.field_school_admission_wizard_create_invoice_export____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.model.fields,field_description:ssi_school_admission_customer_invoice_export.field_school_admission_wizard_create_invoice_export__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.model.fields,field_description:ssi_school_admission_customer_invoice_export.field_school_admission_wizard_create_invoice_export__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.model.fields,help:ssi_school_admission_customer_invoice_export.field_school_admission_wizard_create_invoice_export__date_start
+msgid ""
+"Lower bound (inclusive) on invoice date, passed as-is to the resulting "
+"document. Leave empty for no lower bound."
+msgstr ""
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.model.fields,field_description:ssi_school_admission_customer_invoice_export.field_school_admission_wizard_create_invoice_export__output_format
+msgid "Output Format"
+msgstr ""
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.model.fields,help:ssi_school_admission_customer_invoice_export.field_school_admission__create_invoice_export_ok
+msgid ""
+"Policy that determines whether the unpaid invoices generated from this "
+"admission's payment terms may be exported via the Create Invoice Export "
+"wizard."
+msgstr ""
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.model,name:ssi_school_admission_customer_invoice_export.model_school_admission
+msgid "School Admission"
+msgstr ""
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.model.fields.selection,name:ssi_school_admission_customer_invoice_export.selection__school_admission_wizard_create_invoice_export__output_format__txt
+msgid "TXT"
+msgstr ""
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.model.fields,field_description:ssi_school_admission_customer_invoice_export.field_school_admission_wizard_create_invoice_export__type_id
+msgid "Type"
+msgstr ""
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.model.fields,help:ssi_school_admission_customer_invoice_export.field_school_admission_wizard_create_invoice_export__date_end
+msgid ""
+"Upper bound (inclusive) on invoice date, passed as-is to the resulting "
+"document. Leave empty for no upper bound."
+msgstr ""
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.model.fields.selection,name:ssi_school_admission_customer_invoice_export.selection__school_admission_wizard_create_invoice_export__output_format__xlsx
+msgid "XLSX"
+msgstr ""
