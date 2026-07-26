@@ -1,6 +1,38 @@
 scenarios:
   - name: "Create Due Invoice - No Range Invoices Only Due Terms"
     steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable ADMCI17"
+          code: "ADMCI17"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type ADMCI17"
+          code: "ADMCI17"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
       - step: "Setup - get account type ref"
         action: "ref"
         xml_id: "account.data_account_type_revenue"
@@ -93,6 +125,9 @@ scenarios:
         model: "school_admission"
         save_as: "admission"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
+          receivable_account_id: "REC: ci_account.id"
+          pricelist_id: "REF: product.list0"
           date: "2024-07-01"
           academic_year_id: "REC: academic_year.id"
           academic_term_id: "REC: academic_term.id"
@@ -235,7 +270,7 @@ scenarios:
           state:
             type: "value"
             expected: "invoiced"
-          invoice_id:
+          customer_invoice_id:
             type: "value"
             operator: "is_truthy"
 
@@ -246,7 +281,7 @@ scenarios:
           state:
             type: "value"
             expected: "invoiced"
-          invoice_id:
+          customer_invoice_id:
             type: "value"
             operator: "is_truthy"
 
@@ -257,7 +292,7 @@ scenarios:
           state:
             type: "value"
             expected: "uninvoiced"
-          invoice_id:
+          customer_invoice_id:
             type: "value"
             operator: "is_falsy"
 
@@ -268,7 +303,7 @@ scenarios:
           state:
             type: "value"
             expected: "manual"
-          invoice_id:
+          customer_invoice_id:
             type: "value"
             operator: "is_falsy"
 
@@ -279,12 +314,44 @@ scenarios:
           state:
             type: "value"
             expected: "uninvoiced"
-          invoice_id:
+          customer_invoice_id:
             type: "value"
             operator: "is_falsy"
 
   - name: "Create Due Invoice - Future Date End Includes Term C"
     steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable ADMCI18"
+          code: "ADMCI18"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type ADMCI18"
+          code: "ADMCI18"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
       - step: "Setup - get account type ref"
         action: "ref"
         xml_id: "account.data_account_type_revenue"
@@ -377,6 +444,9 @@ scenarios:
         model: "school_admission"
         save_as: "admission"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
+          receivable_account_id: "REC: ci_account.id"
+          pricelist_id: "REF: product.list0"
           date: "2024-07-01"
           academic_year_id: "REC: academic_year.id"
           academic_term_id: "REC: academic_term.id"
@@ -523,7 +593,7 @@ scenarios:
           state:
             type: "value"
             expected: "invoiced"
-          invoice_id:
+          customer_invoice_id:
             type: "value"
             operator: "is_truthy"
 
@@ -545,6 +615,38 @@ scenarios:
 
   - name: "Create Due Invoice - Date Start Only Excludes Past And Future Terms"
     steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable ADMCI19"
+          code: "ADMCI19"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type ADMCI19"
+          code: "ADMCI19"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
       - step: "Setup - get account type ref"
         action: "ref"
         xml_id: "account.data_account_type_revenue"
@@ -637,6 +739,9 @@ scenarios:
         model: "school_admission"
         save_as: "admission"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
+          receivable_account_id: "REC: ci_account.id"
+          pricelist_id: "REF: product.list0"
           date: "2024-07-01"
           academic_year_id: "REC: academic_year.id"
           academic_term_id: "REC: academic_term.id"
@@ -775,7 +880,7 @@ scenarios:
           state:
             type: "value"
             expected: "invoiced"
-          invoice_id:
+          customer_invoice_id:
             type: "value"
             operator: "is_truthy"
 
@@ -805,6 +910,38 @@ scenarios:
 
   - name: "Create Due Invoice - Both Dates Set Narrows To Term A Only"
     steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable ADMCI20"
+          code: "ADMCI20"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type ADMCI20"
+          code: "ADMCI20"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
       - step: "Setup - get account type ref"
         action: "ref"
         xml_id: "account.data_account_type_revenue"
@@ -897,6 +1034,9 @@ scenarios:
         model: "school_admission"
         save_as: "admission"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
+          receivable_account_id: "REC: ci_account.id"
+          pricelist_id: "REF: product.list0"
           date: "2024-07-01"
           academic_year_id: "REC: academic_year.id"
           academic_term_id: "REC: academic_term.id"
@@ -1028,7 +1168,7 @@ scenarios:
           state:
             type: "value"
             expected: "invoiced"
-          invoice_id:
+          customer_invoice_id:
             type: "value"
             operator: "is_truthy"
 
@@ -1066,6 +1206,38 @@ scenarios:
 
   - name: "Create Due Invoice - Idempotent On Repeated Run"
     steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable ADMCI21"
+          code: "ADMCI21"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type ADMCI21"
+          code: "ADMCI21"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
       - step: "Setup - get account type ref"
         action: "ref"
         xml_id: "account.data_account_type_revenue"
@@ -1158,6 +1330,9 @@ scenarios:
         model: "school_admission"
         save_as: "admission"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
+          receivable_account_id: "REC: ci_account.id"
+          pricelist_id: "REF: product.list0"
           date: "2024-07-01"
           academic_year_id: "REC: academic_year.id"
           academic_term_id: "REC: academic_term.id"
@@ -1243,8 +1418,8 @@ scenarios:
 
       - step: "Assert two invoices exist after the first run"
         action: "search"
-        model: "account.move"
-        domain: [["invoice_origin", "=", "REC: admission.name"]]
+        model: "customer_invoice"
+        domain: [["customer_document_number", "=", "REC: admission.name"]]
         save_as: "invoices_after_run1"
         expect_count: 2
 
@@ -1255,8 +1430,8 @@ scenarios:
 
       - step: "Assert invoice count is unchanged after the second run"
         action: "search"
-        model: "account.move"
-        domain: [["invoice_origin", "=", "REC: admission.name"]]
+        model: "customer_invoice"
+        domain: [["customer_document_number", "=", "REC: admission.name"]]
         save_as: "invoices_after_run2"
         expect_count: 2
 
@@ -1267,7 +1442,7 @@ scenarios:
           state:
             type: "value"
             expected: "invoiced"
-          invoice_id:
+          customer_invoice_id:
             type: "value"
             operator: "is_truthy"
 
@@ -1278,12 +1453,44 @@ scenarios:
           state:
             type: "value"
             expected: "invoiced"
-          invoice_id:
+          customer_invoice_id:
             type: "value"
             operator: "is_truthy"
 
   - name: "Create Due Invoice - Blocked When Selection Includes A Non-Open Admission"
     steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable ADMCI22"
+          code: "ADMCI22"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type ADMCI22"
+          code: "ADMCI22"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
       - step: "Setup - get account type ref"
         action: "ref"
         xml_id: "account.data_account_type_revenue"
@@ -1376,6 +1583,9 @@ scenarios:
         model: "school_admission"
         save_as: "admission"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
+          receivable_account_id: "REC: ci_account.id"
+          pricelist_id: "REF: product.list0"
           date: "2024-07-01"
           academic_year_id: "REC: academic_year.id"
           academic_term_id: "REC: academic_term.id"
@@ -1437,6 +1647,9 @@ scenarios:
         model: "school_admission"
         save_as: "admission_draft"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
+          receivable_account_id: "REC: ci_account.id"
+          pricelist_id: "REF: product.list0"
           date: "2024-07-01"
           academic_year_id: "REC: academic_year.id"
           academic_term_id: "REC: academic_term.id"
@@ -1478,19 +1691,51 @@ scenarios:
           state:
             type: "value"
             expected: "uninvoiced"
-          invoice_id:
+          customer_invoice_id:
             type: "value"
             operator: "is_falsy"
 
       - step: "Assert no invoice was created for the valid admission either"
         action: "search"
-        model: "account.move"
-        domain: [["invoice_origin", "=", "REC: admission.name"]]
+        model: "customer_invoice"
+        domain: [["customer_document_number", "=", "REC: admission.name"]]
         save_as: "invoices_after_failed_run"
         expect_count: 0
 
   - name: "Create Due Invoice - Blocked When Date Start Is Later Than Date End"
     steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable ADMCI23"
+          code: "ADMCI23"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type ADMCI23"
+          code: "ADMCI23"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
       - step: "Setup - get account type ref"
         action: "ref"
         xml_id: "account.data_account_type_revenue"
@@ -1583,6 +1828,9 @@ scenarios:
         model: "school_admission"
         save_as: "admission"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
+          receivable_account_id: "REC: ci_account.id"
+          pricelist_id: "REF: product.list0"
           date: "2024-07-01"
           academic_year_id: "REC: academic_year.id"
           academic_term_id: "REC: academic_term.id"
@@ -1659,13 +1907,13 @@ scenarios:
           state:
             type: "value"
             expected: "uninvoiced"
-          invoice_id:
+          customer_invoice_id:
             type: "value"
             operator: "is_falsy"
 
       - step: "Assert no invoice was created"
         action: "search"
-        model: "account.move"
-        domain: [["invoice_origin", "=", "REC: admission.name"]]
+        model: "customer_invoice"
+        domain: [["customer_document_number", "=", "REC: admission.name"]]
         save_as: "invoices_after_failed_range"
         expect_count: 0

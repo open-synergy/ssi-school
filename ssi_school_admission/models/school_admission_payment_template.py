@@ -61,6 +61,26 @@ class SchoolAdmissionPaymentTemplate(
             "when this template is selected."
         ),
     )
+    customer_invoice_type_id = fields.Many2one(
+        string="Customer Invoice Type",
+        comodel_name="customer_invoice_type",
+        required=True,
+        ondelete="restrict",
+        help=(
+            "Customer invoice type used for every customer invoice "
+            "generated from the payment terms of an admission that "
+            "uses this template."
+        ),
+    )
+    auto_confirm_customer_invoice = fields.Boolean(
+        string="Auto Confirm Customer Invoice",
+        default=False,
+        help=(
+            "If enabled, the customer invoice created from a payment "
+            "term is immediately confirmed instead of being left in "
+            "draft."
+        ),
+    )
     term_ids = fields.One2many(
         string="Payment Terms",
         comodel_name="school_admission_payment_template.term",

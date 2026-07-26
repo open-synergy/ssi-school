@@ -1,6 +1,38 @@
 scenarios:
   - name: "Admission Full Workflow: Confirm Approve Done With Payment Template"
     steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable ADMCI01"
+          code: "ADMCI01"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type ADMCI01"
+          code: "ADMCI01"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
       - step: "Setup - get receivable journal"
         action: "search"
         model: "account.journal"
@@ -103,6 +135,7 @@ scenarios:
         model: "school_admission_payment_template"
         save_as: "payment_template"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
           name: "Admission Payment Template Test ADM1"
           code: "ADMPMT001"
           school_id: "EVAL: registry['school'].id"

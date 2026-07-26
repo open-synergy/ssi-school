@@ -14,6 +14,7 @@
     "installable": True,
     "depends": [
         "ssi_school",
+        "ssi_customer_invoice",
         "ssi_master_data_mixin",
         "ssi_transaction_confirm_mixin",
         "ssi_transaction_open_mixin",
@@ -81,6 +82,7 @@
         "demo/account_account_demo.xml",
         "demo/account_journal_demo.xml",
         "demo/product_product_demo.xml",
+        "demo/customer_invoice_type_demo.xml",
         "demo/school_admission_fee_template_demo.xml",
         "demo/school_admission_payment_template_demo.xml",
     ],

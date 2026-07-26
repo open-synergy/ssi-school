@@ -1,6 +1,38 @@
 scenarios:
   - name: "Admission Payment Term - Create and Delete Invoice"
     steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable ADMCI12"
+          code: "ADMCI12"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type ADMCI12"
+          code: "ADMCI12"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
       - step: "Setup - get sale journal"
         action: "search"
         model: "account.journal"
@@ -101,6 +133,7 @@ scenarios:
         model: "school_admission_payment_template"
         save_as: "payment_template"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
           name: "Admission Payment Template ADPTDEL"
           code: "ADPTDEL001"
           school_id: "EVAL: registry['school'].id"
@@ -126,6 +159,8 @@ scenarios:
         model: "school_admission"
         save_as: "admission"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
+          receivable_account_id: "REC: ci_account.id"
           date: "2024-07-01"
           academic_year_id: "EVAL: registry['academic_year'].id"
           academic_term_id: "EVAL: registry['academic_term'].id"
@@ -193,7 +228,7 @@ scenarios:
         action: "assert"
         target: "term"
         asserts:
-          invoice_id:
+          customer_invoice_id:
             type: "value"
             operator: "is_truthy"
           state:
@@ -214,7 +249,7 @@ scenarios:
         action: "assert"
         target: "term"
         asserts:
-          invoice_id:
+          customer_invoice_id:
             type: "value"
             operator: "is_falsy"
           state:
@@ -223,6 +258,70 @@ scenarios:
 
   - name: "Admission Payment Term - Disconnect Invoice"
     steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable ADMCI14"
+          code: "ADMCI14"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type ADMCI14"
+          code: "ADMCI14"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable ADMCI13"
+          code: "ADMCI13"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type ADMCI13"
+          code: "ADMCI13"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
       - step: "Setup - get sale journal"
         action: "search"
         model: "account.journal"
@@ -323,6 +422,7 @@ scenarios:
         model: "school_admission_payment_template"
         save_as: "payment_template"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
           name: "Admission Payment Template ADPTDC"
           code: "ADPTDC001"
           school_id: "EVAL: registry['school'].id"
@@ -348,6 +448,8 @@ scenarios:
         model: "school_admission"
         save_as: "admission"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
+          receivable_account_id: "REC: ci_account.id"
           date: "2024-07-01"
           academic_year_id: "EVAL: registry['academic_year'].id"
           academic_term_id: "EVAL: registry['academic_term'].id"
@@ -403,7 +505,7 @@ scenarios:
         action: "assert"
         target: "term"
         asserts:
-          invoice_id:
+          customer_invoice_id:
             type: "value"
             operator: "is_truthy"
 
@@ -421,7 +523,7 @@ scenarios:
         action: "assert"
         target: "term"
         asserts:
-          invoice_id:
+          customer_invoice_id:
             type: "value"
             operator: "is_falsy"
           state:
@@ -430,6 +532,70 @@ scenarios:
 
   - name: "Admission Payment Term - Mark and Unmark as Manual"
     steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable ADMCI16"
+          code: "ADMCI16"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type ADMCI16"
+          code: "ADMCI16"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable ADMCI15"
+          code: "ADMCI15"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type ADMCI15"
+          code: "ADMCI15"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
       - step: "Setup - get sale journal"
         action: "search"
         model: "account.journal"
@@ -530,6 +696,7 @@ scenarios:
         model: "school_admission_payment_template"
         save_as: "payment_template"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
           name: "Admission Payment Template ADPTMM"
           code: "ADPTMM001"
           school_id: "EVAL: registry['school'].id"
@@ -555,6 +722,8 @@ scenarios:
         model: "school_admission"
         save_as: "admission"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
+          receivable_account_id: "REC: ci_account.id"
           date: "2024-07-01"
           academic_year_id: "EVAL: registry['academic_year'].id"
           academic_term_id: "EVAL: registry['academic_term'].id"

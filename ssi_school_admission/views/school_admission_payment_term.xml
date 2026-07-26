@@ -44,7 +44,7 @@
             <field name="amount_untaxed" />
             <field name="amount_tax" />
             <field name="amount_total" />
-            <field name="invoice_id" />
+            <field name="customer_invoice_id" />
             <field name="state" />
             <button
                     name="action_create_invoice"
@@ -122,7 +122,7 @@
                                 attrs="{'readonly': [('locked','=',True)]}"
                             />
                         <field name="state" />
-                        <field name="invoice_id" />
+                        <field name="customer_invoice_id" />
                         <field name="currency_id" invisible="1" />
                         <field name="locked" invisible="1" />
                         <field name="admission_state" invisible="1" />

@@ -184,7 +184,7 @@ scenarios:
           sequence:
             type: "value"
             expected: 10
-          invoice_id:
+          customer_invoice_id:
             type: "value"
             operator: "is_falsy"
           detail_ids:
@@ -210,7 +210,7 @@ scenarios:
           price_unit:
             type: "value"
             expected: 500000.0
-          invoice_line_id:
+          customer_invoice_line_id:
             type: "value"
             operator: "is_falsy"
 

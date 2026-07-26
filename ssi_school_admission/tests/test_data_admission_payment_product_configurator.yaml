@@ -1,6 +1,38 @@
 scenarios:
   - name: "Allowed Products - Template Detail - Manual Strategy"
     steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable ADMCI05"
+          code: "ADMCI05"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type ADMCI05"
+          code: "ADMCI05"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
       - step: "Get account type ref"
         action: "ref"
         xml_id: "account.data_account_type_revenue"
@@ -32,6 +64,7 @@ scenarios:
         model: "school_admission_payment_template"
         save_as: "template"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
           name: "Template ADCFG Manual"
           code: "TPLADCFGMAN"
           product_selection_method: "manual"
@@ -71,6 +104,38 @@ scenarios:
 
   - name: "Allowed Products - Template Detail - Manual Strategy Empty"
     steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable ADMCI06"
+          code: "ADMCI06"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type ADMCI06"
+          code: "ADMCI06"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
       - step: "Get account type ref"
         action: "ref"
         xml_id: "account.data_account_type_revenue"
@@ -95,6 +160,7 @@ scenarios:
         model: "school_admission_payment_template"
         save_as: "template"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
           name: "Template ADCFG Empty"
           code: "TPLADCFGEMP"
           product_selection_method: "manual"
@@ -129,6 +195,38 @@ scenarios:
 
   - name: "Allowed Products - Template Detail - Domain Strategy"
     steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable ADMCI07"
+          code: "ADMCI07"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type ADMCI07"
+          code: "ADMCI07"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
       - step: "Get account type ref"
         action: "ref"
         xml_id: "account.data_account_type_revenue"
@@ -162,6 +260,7 @@ scenarios:
         model: "school_admission_payment_template"
         save_as: "template"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
           name: "Template ADCFG Domain"
           code: "TPLADCFGDOM"
           product_selection_method: "domain"
@@ -197,6 +296,38 @@ scenarios:
 
   - name: "Allowed Products - Template Detail - Python Code Strategy"
     steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable ADMCI08"
+          code: "ADMCI08"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type ADMCI08"
+          code: "ADMCI08"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
       - step: "Get account type ref"
         action: "ref"
         xml_id: "account.data_account_type_revenue"
@@ -230,6 +361,7 @@ scenarios:
         model: "school_admission_payment_template"
         save_as: "template"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
           name: "Template ADCFG Code"
           code: "TPLADCFGCOD"
           product_selection_method: "code"
@@ -267,6 +399,38 @@ scenarios:
 
   - name: "Allowed Products - Admission Detail - Manual Strategy"
     steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable ADMCI09"
+          code: "ADMCI09"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type ADMCI09"
+          code: "ADMCI09"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
       - step: "Setup - get sale journal"
         action: "search"
         model: "account.journal"
@@ -362,6 +526,7 @@ scenarios:
         model: "school_admission_payment_template"
         save_as: "payment_template"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
           name: "Template ADCFG Adm Manual"
           code: "TPLADCFGADMMAN"
           school_id: "EVAL: registry['school'].id"
@@ -556,6 +721,38 @@ scenarios:
 
   - name: "Allowed Products - Admission Detail - Domain Strategy"
     steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable ADMCI10"
+          code: "ADMCI10"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type ADMCI10"
+          code: "ADMCI10"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
       - step: "Setup - get sale journal"
         action: "search"
         model: "account.journal"
@@ -653,6 +850,7 @@ scenarios:
         model: "school_admission_payment_template"
         save_as: "payment_template"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
           name: "Template ADCFG Adm Domain"
           code: "TPLADCFGADMDOM"
           school_id: "EVAL: registry['school'].id"
@@ -715,6 +913,38 @@ scenarios:
 
   - name: "Allowed Products - Admission Detail - Python Code Strategy"
     steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable ADMCI11"
+          code: "ADMCI11"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type ADMCI11"
+          code: "ADMCI11"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
       - step: "Setup - get sale journal"
         action: "search"
         model: "account.journal"
@@ -812,6 +1042,7 @@ scenarios:
         model: "school_admission_payment_template"
         save_as: "payment_template"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
           name: "Template ADCFG Adm Code"
           code: "TPLADCFGADMCOD"
           school_id: "EVAL: registry['school'].id"
