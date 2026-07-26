@@ -167,6 +167,7 @@ scenarios:
       - step: "Diagnostic - inspect approval state right after confirm"
         action: "assert"
         target: "enrollment"
+        as_user: "base.user_admin"
         asserts:
           state:
             type: "value"
@@ -176,6 +177,7 @@ scenarios:
             check: "contains_xml_ids"
             expected_xml_ids:
               - "base.user_admin"
+              - "base.user_root"
           approve_ok:
             type: "value"
             expected: true
