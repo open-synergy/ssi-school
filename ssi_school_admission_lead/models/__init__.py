@@ -3,4 +3,6 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 from . import (  # noqa: F401
     crm_lead,
+    res_company,
+    res_config_settings,
 )

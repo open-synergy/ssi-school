@@ -15,10 +15,12 @@
     "depends": [
         "ssi_school_lead",
         "ssi_school_admission",
+        "ssi_m2o_configurator_mixin",
     ],
     "data": [
         "security/ir.model.access.csv",
         "views/crm_lead_create_admission_form.xml",
         "views/crm_lead.xml",
+        "views/res_config_settings_views.xml",
     ],
 }

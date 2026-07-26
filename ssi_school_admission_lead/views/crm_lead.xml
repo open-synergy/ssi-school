@@ -19,6 +19,11 @@
                 <field name="birth_city" />
                 <field name="religion_id" />
                 <field name="nationality_id" />
+                <field name="allowed_previous_school_ids" invisible="1" />
+                <field
+                        name="previous_school_id"
+                        domain="[('id', 'in', allowed_previous_school_ids)]"
+                    />
             </xpath>
             <xpath
                     expr="//group[@name='school_lead_admission_target']//field[@name='school_id']"
