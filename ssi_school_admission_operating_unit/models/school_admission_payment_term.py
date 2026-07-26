@@ -8,13 +8,18 @@ from odoo import models
 class SchoolAdmissionPaymentTerm(models.Model):
     """
     Extends School Admission Payment Term to propagate
-    operating_unit_id from the parent admission to the generated invoice.
+    operating_unit_id from the parent admission to the generated
+    customer invoice.
     """
 
     _name = "school_admission_payment_term"
     _inherit = "school_admission_payment_term"
 
     def _prepare_invoice_data(self):
+        """Add the admission operating unit to the customer invoice.
+
+        :return: dict of ``customer_invoice`` values
+        """
         res = super()._prepare_invoice_data()
         res["operating_unit_id"] = self.admission_id.operating_unit_id.id
         return res
