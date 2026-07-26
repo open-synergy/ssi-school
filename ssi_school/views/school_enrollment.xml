@@ -228,7 +228,7 @@
                             <field name="amount_untaxed" />
                             <field name="amount_tax" />
                             <field name="amount_total" />
-                            <field name="invoice_id" />
+                            <field name="customer_invoice_id" />
                             <field name="state" />
                             <button
                                     name="action_create_invoice"
@@ -289,6 +289,8 @@
                     <group name="accounting_group" colspan="4" col="2">
                         <field name="receivable_journal_id" />
                         <field name="receivable_account_id" />
+                        <field name="customer_invoice_type_id" />
+                        <field name="auto_confirm_customer_invoice" />
                     </group>
                 </page>
             </xpath>

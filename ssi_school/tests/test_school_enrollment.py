@@ -12,6 +12,27 @@ class TestSchoolEnrollmentWorkflow(YamlTransactionCase):
     def test_enrollment_workflow(self):
         self.run_yaml_scenario("test_data_enrollment.yaml")
 
+    def _create_customer_invoice_type(self, suffix):
+        """Create the customer invoice type required by every template."""
+        journal = self.env["account.journal"].search([("type", "=", "sale")], limit=1)
+        receivable_type = self.env.ref("account.data_account_type_receivable")
+        account = self.env["account.account"].create(
+            {
+                "name": "Receivable %s" % suffix,
+                "code": "RCVENR%s" % suffix,
+                "user_type_id": receivable_type.id,
+                "reconcile": True,
+            }
+        )
+        return self.env["customer_invoice_type"].create(
+            {
+                "name": "Customer Invoice Type %s" % suffix,
+                "code": "CITENR%s" % suffix,
+                "journal_id": journal.id,
+                "receivable_account_id": account.id,
+            }
+        )
+
     def test_onchange_receivable_journal_id_from_template(self):
         """Selecting payment_template_id fills receivable_journal_id from the template."""
         journal = self.env["account.journal"].search([("type", "=", "sale")], limit=1)
@@ -20,6 +41,9 @@ class TestSchoolEnrollmentWorkflow(YamlTransactionCase):
                 "name": "Template Receivable Journal OC",
                 "code": "PMTRJOC",
                 "journal_id": journal.id,
+                "customer_invoice_type_id": self._create_customer_invoice_type(
+                    "RJOC"
+                ).id,
             }
         )
         form = Form(self.env["school_enrollment"])
@@ -41,6 +65,9 @@ class TestSchoolEnrollmentWorkflow(YamlTransactionCase):
                 "name": "Template Receivable Account OC",
                 "code": "PMTRAOC",
                 "receivable_account_id": account.id,
+                "customer_invoice_type_id": self._create_customer_invoice_type(
+                    "RAOC"
+                ).id,
             }
         )
         form = Form(self.env["school_enrollment"])
@@ -64,6 +91,9 @@ class TestSchoolEnrollmentWorkflow(YamlTransactionCase):
                 "code": "PMTRRST",
                 "journal_id": journal.id,
                 "receivable_account_id": account.id,
+                "customer_invoice_type_id": self._create_customer_invoice_type(
+                    "RRST"
+                ).id,
             }
         )
         form = Form(self.env["school_enrollment"])

@@ -3,6 +3,38 @@ options:
 scenarios:
   - name: "Enrollment Payment Term - Delete Invoice"
     steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable PTMCI01"
+          code: "PTMCI01"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type PTMCI01"
+          code: "PTMCI01"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
       - step: "Setup - get receivable journal"
         action: "search"
         model: "account.journal"
@@ -123,6 +155,7 @@ scenarios:
         model: "school_enrollment_payment_template"
         save_as: "payment_template"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
           name: "Payment Template PTDEL"
           code: "PMTPTDEL"
           school_id: "EVAL: registry['school'].id"
@@ -148,6 +181,8 @@ scenarios:
         model: "school_enrollment"
         save_as: "enrollment"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
+          receivable_account_id: "REC: ci_account.id"
           date: "2024-07-01"
           academic_year_id: "EVAL: registry['academic_year'].id"
           academic_term_id: "EVAL: registry['academic_term'].id"
@@ -203,7 +238,7 @@ scenarios:
         action: "assert"
         target: "term"
         asserts:
-          invoice_id:
+          customer_invoice_id:
             type: "value"
             operator: "is_truthy"
           state:
@@ -219,7 +254,7 @@ scenarios:
         action: "assert"
         target: "term"
         asserts:
-          invoice_id:
+          customer_invoice_id:
             type: "value"
             operator: "is_falsy"
           state:
@@ -228,6 +263,38 @@ scenarios:
 
   - name: "Enrollment Payment Term - Disconnect Invoice"
     steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable PTMCI02"
+          code: "PTMCI02"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type PTMCI02"
+          code: "PTMCI02"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
       - step: "Setup - get receivable journal"
         action: "search"
         model: "account.journal"
@@ -348,6 +415,7 @@ scenarios:
         model: "school_enrollment_payment_template"
         save_as: "payment_template"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
           name: "Payment Template PTDISC"
           code: "PMTPTDISC"
           school_id: "EVAL: registry['school'].id"
@@ -373,6 +441,8 @@ scenarios:
         model: "school_enrollment"
         save_as: "enrollment"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
+          receivable_account_id: "REC: ci_account.id"
           date: "2024-07-01"
           academic_year_id: "EVAL: registry['academic_year'].id"
           academic_term_id: "EVAL: registry['academic_term'].id"
@@ -424,7 +494,7 @@ scenarios:
         action: "assert"
         target: "term"
         asserts:
-          invoice_id:
+          customer_invoice_id:
             type: "value"
             operator: "is_truthy"
 
@@ -437,7 +507,7 @@ scenarios:
         action: "assert"
         target: "term"
         asserts:
-          invoice_id:
+          customer_invoice_id:
             type: "value"
             operator: "is_falsy"
           state:
@@ -446,6 +516,38 @@ scenarios:
 
   - name: "Enrollment Payment Term - Unmark As Manual"
     steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable PTMCI03"
+          code: "PTMCI03"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type PTMCI03"
+          code: "PTMCI03"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
       - step: "Setup - get receivable journal"
         action: "search"
         model: "account.journal"
@@ -566,6 +668,7 @@ scenarios:
         model: "school_enrollment_payment_template"
         save_as: "payment_template"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
           name: "Payment Template PTUM"
           code: "PMTPTUM"
           school_id: "EVAL: registry['school'].id"
@@ -591,6 +694,8 @@ scenarios:
         model: "school_enrollment"
         save_as: "enrollment"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
+          receivable_account_id: "REC: ci_account.id"
           date: "2024-07-01"
           academic_year_id: "EVAL: registry['academic_year'].id"
           academic_term_id: "EVAL: registry['academic_term'].id"

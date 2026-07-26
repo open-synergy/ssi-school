@@ -335,6 +335,34 @@ class SchoolEnrollment(models.Model):
         },
         help="The receivable account used to record enrollment billing.",
     )
+    customer_invoice_type_id = fields.Many2one(
+        string="Customer Invoice Type",
+        comodel_name="customer_invoice_type",
+        readonly=True,
+        states={
+            "draft": [
+                ("readonly", False),
+            ],
+        },
+        help=(
+            "The customer invoice type used for every customer invoice "
+            "generated from the payment terms of this enrollment."
+        ),
+    )
+    auto_confirm_customer_invoice = fields.Boolean(
+        string="Auto Confirm Customer Invoice",
+        readonly=True,
+        states={
+            "draft": [
+                ("readonly", False),
+            ],
+        },
+        help=(
+            "If enabled, the customer invoice created from a payment "
+            "term of this enrollment is immediately confirmed instead "
+            "of being left in draft."
+        ),
+    )
     pass_ok = fields.Boolean(
         string="Pass",
         compute="_compute_policy",
@@ -504,6 +532,26 @@ class SchoolEnrollment(models.Model):
         self.receivable_account_id = False
         if self.payment_template_id:
             self.receivable_account_id = self.payment_template_id.receivable_account_id
+
+    @api.onchange(
+        "payment_template_id",
+    )
+    def onchange_customer_invoice_type_id(self):
+        self.customer_invoice_type_id = False
+        if self.payment_template_id:
+            self.customer_invoice_type_id = (
+                self.payment_template_id.customer_invoice_type_id
+            )
+
+    @api.onchange(
+        "payment_template_id",
+    )
+    def onchange_auto_confirm_customer_invoice(self):
+        self.auto_confirm_customer_invoice = False
+        if self.payment_template_id:
+            self.auto_confirm_customer_invoice = (
+                self.payment_template_id.auto_confirm_customer_invoice
+            )
 
     @api.constrains("academic_term_id", "academic_year_id")
     def _check_term_year_match(self):
@@ -859,7 +907,7 @@ Solution: Check create due invoice policy prerequisite
     @ssi_decorator.pre_cancel_action()
     def _10_check_payment_term_invoice(self):
         self.ensure_one()
-        invoiced_terms = self.payment_term_ids.filtered(lambda r: r.invoice_id)
+        invoiced_terms = self.payment_term_ids.filtered(lambda r: r.customer_invoice_id)
         if invoiced_terms:
             error_message = (
                 _(
