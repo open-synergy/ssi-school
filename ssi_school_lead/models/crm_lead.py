@@ -61,12 +61,14 @@ class CrmLead(models.Model):
         string="Parent Street",
         related="partner_id.street",
         store=True,
+        readonly=False,
         help="Street address of the parent/guardian, mirrored from their contact record.",
     )
     parent_street2 = fields.Char(
         string="Parent Street2",
         related="partner_id.street2",
         store=True,
+        readonly=False,
         help="Additional street address of the parent/guardian, mirrored from their "
         "contact record.",
     )
@@ -74,6 +76,7 @@ class CrmLead(models.Model):
         string="Parent City",
         related="partner_id.city",
         store=True,
+        readonly=False,
         help="City of the parent/guardian, mirrored from their contact record.",
     )
     parent_state_id = fields.Many2one(
@@ -81,12 +84,14 @@ class CrmLead(models.Model):
         string="Parent State",
         related="partner_id.state_id",
         store=True,
+        readonly=False,
         help="State/province of the parent/guardian, mirrored from their contact record.",
     )
     parent_zip = fields.Char(
         string="Parent Zip",
         related="partner_id.zip",
         store=True,
+        readonly=False,
         help="Postal/zip code of the parent/guardian, mirrored from their contact record.",
     )
     parent_country_id = fields.Many2one(
@@ -94,24 +99,28 @@ class CrmLead(models.Model):
         string="Parent Country",
         related="partner_id.country_id",
         store=True,
+        readonly=False,
         help="Country of the parent/guardian, mirrored from their contact record.",
     )
     parent_mobile = fields.Char(
         string="Parent Mobile",
         related="partner_id.mobile",
         store=True,
+        readonly=False,
         help="Mobile number of the parent/guardian, mirrored from their contact record.",
     )
     parent_phone = fields.Char(
         string="Parent Phone",
         related="partner_id.phone",
         store=True,
+        readonly=False,
         help="Phone number of the parent/guardian, mirrored from their contact record.",
     )
     parent_email = fields.Char(
         string="Parent Email",
         related="partner_id.email",
         store=True,
+        readonly=False,
         help="Email address of the parent/guardian, mirrored from their contact record.",
     )
 

@@ -21,12 +21,41 @@
                         name="school_lead_parent_contact"
                         string="Parent/Guardian Contact"
                     >
-                    <field name="parent_street" />
-                    <field name="parent_street2" />
-                    <field name="parent_city" />
-                    <field name="parent_state_id" />
-                    <field name="parent_zip" />
-                    <field name="parent_country_id" />
+                    <div class="o_address_format">
+                        <field
+                                name="parent_street"
+                                placeholder="Street..."
+                                class="o_address_street"
+                            />
+                        <field
+                                name="parent_street2"
+                                placeholder="Street 2..."
+                                class="o_address_street"
+                            />
+                        <field
+                                name="parent_city"
+                                placeholder="City"
+                                class="o_address_city"
+                            />
+                        <field
+                                name="parent_state_id"
+                                placeholder="State"
+                                class="o_address_state"
+                                options="{'no_open': True, 'no_quick_create': True}"
+                                context="{'country_id': parent_country_id, 'default_country_id': parent_country_id, 'zip': parent_zip}"
+                            />
+                        <field
+                                name="parent_zip"
+                                placeholder="ZIP"
+                                class="o_address_zip"
+                            />
+                        <field
+                                name="parent_country_id"
+                                placeholder="Country"
+                                class="o_address_country"
+                                options='{"no_open": True, "no_create": True}'
+                            />
+                    </div>
                     <field name="parent_phone" />
                     <field name="parent_mobile" />
                     <field name="parent_email" />
