@@ -1787,7 +1787,9 @@ scenarios:
                 uom_id: "REF: uom.product_uom_unit"
                 price_unit: 500000.0
 
-      - step: "Create wizard with date_start tomorrow (later than effective date_end)"
+      - step:
+          "Create wizard with date_start day after tomorrow (later than effective
+          date_end)"
         action: "create"
         model: "school_enrollment.wizard_create_due_invoice"
         save_as: "wizard"
@@ -1796,7 +1798,7 @@ scenarios:
             - - 6
               - 0
               - - "REC: enrollment.id"
-          date_start: "EVAL: (datetime.now() + timedelta(days=1)).date()"
+          date_start: "EVAL: (datetime.now() + timedelta(days=2)).date()"
 
       - step: "Run create due invoice must fail because of the reversed date range"
         action: "call"
