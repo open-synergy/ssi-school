@@ -181,6 +181,15 @@ scenarios:
             type: "value"
             expected: true
 
+      - step: "Assert enrollment is approvable before approving"
+        action: "assert"
+        target: "enrollment"
+        as_user: "base.user_admin"
+        asserts:
+          approve_ok:
+            type: "value"
+            expected: true
+
       - step: "Approve enrollment"
         action: "call"
         target: "enrollment"
@@ -246,6 +255,15 @@ scenarios:
         as_user: "base.user_admin"
         refresh: true
 
+      - step: "Assert invoice_open_a is approvable before approving"
+        action: "assert"
+        target: "invoice_open_a"
+        as_user: "base.user_admin"
+        asserts:
+          approve_ok:
+            type: "value"
+            expected: true
+
       - step: "Approve invoice Open A"
         action: "call"
         target: "invoice_open_a"
@@ -294,6 +312,15 @@ scenarios:
         as_user: "base.user_admin"
         refresh: true
 
+      - step: "Assert invoice_open_b is approvable before approving"
+        action: "assert"
+        target: "invoice_open_b"
+        as_user: "base.user_admin"
+        asserts:
+          approve_ok:
+            type: "value"
+            expected: true
+
       - step: "Approve invoice Open B"
         action: "call"
         target: "invoice_open_b"
@@ -341,6 +368,15 @@ scenarios:
         method: "action_confirm"
         as_user: "base.user_admin"
         refresh: true
+
+      - step: "Assert invoice_done is approvable before approving"
+        action: "assert"
+        target: "invoice_done"
+        as_user: "base.user_admin"
+        asserts:
+          approve_ok:
+            type: "value"
+            expected: true
 
       - step: "Approve invoice Done"
         action: "call"
@@ -609,6 +645,15 @@ scenarios:
         as_user: "base.user_admin"
         refresh: true
 
+      - step: "Assert enrollment_a is approvable before approving"
+        action: "assert"
+        target: "enrollment_a"
+        as_user: "base.user_admin"
+        asserts:
+          approve_ok:
+            type: "value"
+            expected: true
+
       - step: "Approve first enrollment"
         action: "call"
         target: "enrollment_a"
@@ -644,6 +689,15 @@ scenarios:
         method: "action_confirm"
         as_user: "base.user_admin"
         refresh: true
+
+      - step: "Assert enrollment_b is approvable before approving"
+        action: "assert"
+        target: "enrollment_b"
+        as_user: "base.user_admin"
+        asserts:
+          approve_ok:
+            type: "value"
+            expected: true
 
       - step: "Approve second enrollment"
         action: "call"
@@ -702,6 +756,15 @@ scenarios:
         as_user: "base.user_admin"
         refresh: true
 
+      - step: "Assert invoice_a is approvable before approving"
+        action: "assert"
+        target: "invoice_a"
+        as_user: "base.user_admin"
+        asserts:
+          approve_ok:
+            type: "value"
+            expected: true
+
       - step: "Approve invoice of first enrollment"
         action: "call"
         target: "invoice_a"
@@ -749,6 +812,15 @@ scenarios:
         method: "action_confirm"
         as_user: "base.user_admin"
         refresh: true
+
+      - step: "Assert invoice_b is approvable before approving"
+        action: "assert"
+        target: "invoice_b"
+        as_user: "base.user_admin"
+        asserts:
+          approve_ok:
+            type: "value"
+            expected: true
 
       - step: "Approve invoice of second enrollment"
         action: "call"
@@ -1127,6 +1199,15 @@ scenarios:
         as_user: "base.user_admin"
         refresh: true
 
+      - step: "Assert enrollment is approvable before approving"
+        action: "assert"
+        target: "enrollment"
+        as_user: "base.user_admin"
+        asserts:
+          approve_ok:
+            type: "value"
+            expected: true
+
       - step: "Approve enrollment"
         action: "call"
         target: "enrollment"
@@ -1351,6 +1432,15 @@ scenarios:
         as_user: "base.user_admin"
         refresh: true
 
+      - step: "Assert enrollment is approvable before approving"
+        action: "assert"
+        target: "enrollment"
+        as_user: "base.user_admin"
+        asserts:
+          approve_ok:
+            type: "value"
+            expected: true
+
       - step: "Approve enrollment"
         action: "call"
         target: "enrollment"
@@ -1398,6 +1488,15 @@ scenarios:
         method: "action_confirm"
         as_user: "base.user_admin"
         refresh: true
+
+      - step: "Assert invoice is approvable before approving"
+        action: "assert"
+        target: "invoice"
+        as_user: "base.user_admin"
+        asserts:
+          approve_ok:
+            type: "value"
+            expected: true
 
       - step: "Approve the invoice"
         action: "call"
