@@ -158,12 +158,14 @@ scenarios:
         target: "enrollment"
         method: "action_confirm"
         as_user: "base.user_admin"
+        refresh: true
 
       - step: "Approve enrollment"
         action: "call"
         target: "enrollment"
         method: "action_approve_approval"
         as_user: "base.user_admin"
+        refresh: true
         asserts:
           state:
             type: "value"
@@ -221,12 +223,14 @@ scenarios:
         target: "invoice_open_a"
         method: "action_confirm"
         as_user: "base.user_admin"
+        refresh: true
 
       - step: "Approve invoice Open A"
         action: "call"
         target: "invoice_open_a"
         method: "action_approve_approval"
         as_user: "base.user_admin"
+        refresh: true
         asserts:
           state:
             type: "value"
@@ -267,12 +271,14 @@ scenarios:
         target: "invoice_open_b"
         method: "action_confirm"
         as_user: "base.user_admin"
+        refresh: true
 
       - step: "Approve invoice Open B"
         action: "call"
         target: "invoice_open_b"
         method: "action_approve_approval"
         as_user: "base.user_admin"
+        refresh: true
         asserts:
           state:
             type: "value"
@@ -313,12 +319,14 @@ scenarios:
         target: "invoice_done"
         method: "action_confirm"
         as_user: "base.user_admin"
+        refresh: true
 
       - step: "Approve invoice Done"
         action: "call"
         target: "invoice_done"
         method: "action_approve_approval"
         as_user: "base.user_admin"
+        refresh: true
         asserts:
           state:
             type: "value"
@@ -329,6 +337,7 @@ scenarios:
         target: "invoice_done"
         method: "action_done"
         as_user: "base.user_admin"
+        refresh: true
         asserts:
           state:
             type: "value"
@@ -397,6 +406,7 @@ scenarios:
         target: "export_doc"
         method: "action_confirm"
         as_user: "base.user_admin"
+        refresh: true
         asserts:
           state:
             type: "value"
@@ -576,12 +586,14 @@ scenarios:
         target: "enrollment_a"
         method: "action_confirm"
         as_user: "base.user_admin"
+        refresh: true
 
       - step: "Approve first enrollment"
         action: "call"
         target: "enrollment_a"
         method: "action_approve_approval"
         as_user: "base.user_admin"
+        refresh: true
         asserts:
           state:
             type: "value"
@@ -610,12 +622,14 @@ scenarios:
         target: "enrollment_b"
         method: "action_confirm"
         as_user: "base.user_admin"
+        refresh: true
 
       - step: "Approve second enrollment"
         action: "call"
         target: "enrollment_b"
         method: "action_approve_approval"
         as_user: "base.user_admin"
+        refresh: true
         asserts:
           state:
             type: "value"
@@ -665,12 +679,14 @@ scenarios:
         target: "invoice_a"
         method: "action_confirm"
         as_user: "base.user_admin"
+        refresh: true
 
       - step: "Approve invoice of first enrollment"
         action: "call"
         target: "invoice_a"
         method: "action_approve_approval"
         as_user: "base.user_admin"
+        refresh: true
         asserts:
           state:
             type: "value"
@@ -711,12 +727,14 @@ scenarios:
         target: "invoice_b"
         method: "action_confirm"
         as_user: "base.user_admin"
+        refresh: true
 
       - step: "Approve invoice of second enrollment"
         action: "call"
         target: "invoice_b"
         method: "action_approve_approval"
         as_user: "base.user_admin"
+        refresh: true
         asserts:
           state:
             type: "value"
@@ -1086,12 +1104,14 @@ scenarios:
         target: "enrollment"
         method: "action_confirm"
         as_user: "base.user_admin"
+        refresh: true
 
       - step: "Approve enrollment"
         action: "call"
         target: "enrollment"
         method: "action_approve_approval"
         as_user: "base.user_admin"
+        refresh: true
         asserts:
           state:
             type: "value"
@@ -1308,12 +1328,14 @@ scenarios:
         target: "enrollment"
         method: "action_confirm"
         as_user: "base.user_admin"
+        refresh: true
 
       - step: "Approve enrollment"
         action: "call"
         target: "enrollment"
         method: "action_approve_approval"
         as_user: "base.user_admin"
+        refresh: true
         asserts:
           state:
             type: "value"
@@ -1354,12 +1376,14 @@ scenarios:
         target: "invoice"
         method: "action_confirm"
         as_user: "base.user_admin"
+        refresh: true
 
       - step: "Approve the invoice"
         action: "call"
         target: "invoice"
         method: "action_approve_approval"
         as_user: "base.user_admin"
+        refresh: true
         asserts:
           state:
             type: "value"
