@@ -13,6 +13,30 @@ class TestSchoolLead(YamlTransactionCase):
     def test_school_lead(self):
         self.run_yaml_scenario("test_data_school_lead.yaml")
 
+    def _create_customer_invoice_type(self, suffix):
+        """Create the customer invoice type required by a payment template.
+
+        :param suffix: unique suffix used to build the record name/code
+        :return: the created ``customer_invoice_type`` record
+        """
+        journal = self.env["account.journal"].search([("type", "=", "sale")], limit=1)
+        account = self.env["account.account"].create(
+            {
+                "name": "Customer Invoice Receivable %s" % suffix,
+                "code": "CIREC%s" % suffix,
+                "user_type_id": self.env.ref("account.data_account_type_receivable").id,
+                "reconcile": True,
+            }
+        )
+        return self.env["customer_invoice_type"].create(
+            {
+                "name": "Customer Invoice Type %s" % suffix,
+                "code": "CIT%s" % suffix,
+                "journal_id": journal.id,
+                "receivable_account_id": account.id,
+            }
+        )
+
     def test_onchange_payment_template_id_auto_populates(self):
         """payment_template_id should auto-populate when school, grade, and term match."""
         year = self.env["school_academic_year"].create(
@@ -54,6 +78,7 @@ class TestSchoolLead(YamlTransactionCase):
                 "school_id": school.id,
                 "grade_id": grade.id,
                 "academic_term_id": term.id,
+                "customer_invoice_type_id": self._create_customer_invoice_type("OC").id,
             }
         )
         student = self.env["res.partner"].create({"name": "Student OC"})
@@ -120,6 +145,9 @@ class TestSchoolLead(YamlTransactionCase):
                 "school_id": school_a.id,
                 "grade_id": grade.id,
                 "academic_term_id": term.id,
+                "customer_invoice_type_id": self._create_customer_invoice_type(
+                    "OC2"
+                ).id,
             }
         )
         student = self.env["res.partner"].create({"name": "Student OC2"})
@@ -196,6 +224,9 @@ class TestSchoolLead(YamlTransactionCase):
                 "academic_term_id": term.id,
                 "receivable_journal_id": journal.id,
                 "receivable_account_id": account.id,
+                "customer_invoice_type_id": self._create_customer_invoice_type(
+                    "OC3"
+                ).id,
             }
         )
         student = self.env["res.partner"].create({"name": "Student OC3"})
