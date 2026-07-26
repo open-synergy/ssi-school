@@ -40,9 +40,20 @@ class TestCrmLeadViewArchitecture(YamlTransactionCase):
                 "birth_city",
                 "religion_id",
                 "nationality_id",
+                "allowed_previous_school_ids",
+                "previous_school_id",
             ],
             "Prospective Student group should list student_id, student_birthdate, "
-            "student_gender, birth_city, religion_id, nationality_id in that order",
+            "student_gender, birth_city, religion_id, nationality_id, "
+            "allowed_previous_school_ids, previous_school_id in that order",
+        )
+        previous_school_id_field = group.xpath(".//field[@name='previous_school_id']")[
+            0
+        ]
+        self.assertEqual(
+            previous_school_id_field.get("domain"),
+            "[('id', 'in', allowed_previous_school_ids)]",
+            "previous_school_id should be restricted by allowed_previous_school_ids",
         )
 
     def test_admission_target_group_contains_expected_fields_in_order(self):

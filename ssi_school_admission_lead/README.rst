@@ -22,6 +22,11 @@ It also carries the first layer of admission intake data on the lead itself:
   ``res.partner``, not duplicated on the lead.
 * ``grade_id``: the grade level the prospective student applies for, restricted
   by ``grade_type_id`` which is derived from the selected school.
+* ``previous_school_id``: the prospective student's previous school, a
+  ``res.partner`` reference restricted to ``allowed_previous_school_ids``.
+  The list of partners that can be selected is configurable per company
+  (``previous_school_selection_method``: manual/domain/code) from
+  **Settings > School > Admission > Settings**, without a code release.
 
 Credits
 =======

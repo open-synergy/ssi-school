@@ -128,11 +128,54 @@ class CrmLead(models.Model):  # pylint: disable=too-few-public-methods
             "Indicates whether an admission form can still " "be created for this lead."
         ),
     )
+    previous_school_id = fields.Many2one(
+        string="Previous School",
+        comodel_name="res.partner",
+        tracking=True,
+        help=(
+            "The prospective student's previous school, restricted to the "
+            "partners allowed by the company's Previous School "
+            "configuration (see Allowed Previous Schools)."
+        ),
+    )
+    allowed_previous_school_ids = fields.Many2many(
+        string="Allowed Previous Schools",
+        comodel_name="res.partner",
+        compute="_compute_allowed_previous_school_ids",
+        store=False,
+        compute_sudo=True,
+        help=(
+            "Partners that can be selected on the Previous School field, "
+            "computed from the company's Previous School Selection "
+            "Method (manual/domain/code)."
+        ),
+    )
 
     @api.depends("admission_form_id")
     def _compute_create_admission_form_ok(self):
         for record in self:
             record.create_admission_form_ok = not record.admission_form_id
+
+    @api.depends(
+        "company_id.previous_school_selection_method",
+        "company_id.previous_school_ids",
+        "company_id.previous_school_domain",
+        "company_id.previous_school_python_code",
+    )
+    def _compute_allowed_previous_school_ids(self):
+        for record in self:
+            result = False
+            if record.company_id:
+                result = record.company_id._m2o_configurator_get_filter(
+                    object_name="res.partner",
+                    method_selection=(
+                        record.company_id.previous_school_selection_method
+                    ),
+                    manual_recordset=record.company_id.previous_school_ids,
+                    domain=record.company_id.previous_school_domain,
+                    python_code=record.company_id.previous_school_python_code,
+                )
+            record.allowed_previous_school_ids = result
 
     def action_create_admission_form(self):
         self.ensure_one()

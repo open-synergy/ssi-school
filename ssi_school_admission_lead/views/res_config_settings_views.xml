@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 OpenSynergy Indonesia
+     Copyright 2026 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+
+<record id="res_config_settings_view_form" model="ir.ui.view">
+    <field name="name">res.config.settings form - ssi_school_admission_lead</field>
+    <field name="model">res.config.settings</field>
+    <field name="priority" eval="1" />
+    <field name="inherit_id" ref="base.res_config_settings_view_form" />
+    <field name="arch" type="xml">
+        <xpath expr="//div[hasclass('settings')]" position="inside">
+            <div
+                    class="app_settings_block"
+                    data-string="School Admission Lead"
+                    string="School Admission Lead"
+                    data-key="ssi_school_admission_lead"
+                >
+                <h2>Previous School Configuration</h2>
+                <div
+                        class="row mt16 o_settings_container"
+                        id="previous_school_configuration"
+                    >
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_right_pane">
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <label
+                                            for="previous_school_selection_method"
+                                            class="col-lg-4 o_light_label"
+                                        />
+                                    <field name="previous_school_selection_method" />
+                                </div>
+                                <div class="row">
+                                    <label
+                                            for="previous_school_ids"
+                                            class="col-lg-4 o_light_label"
+                                        />
+                                    <field
+                                            name="previous_school_ids"
+                                            widget="many2many_tags"
+                                            attrs="{'invisible': [('previous_school_selection_method', '!=', 'manual')]}"
+                                        />
+                                </div>
+                                <div class="row">
+                                    <label
+                                            for="previous_school_domain"
+                                            class="col-lg-4 o_light_label"
+                                        />
+                                    <field
+                                            name="previous_school_domain"
+                                            widget="domain"
+                                            options="{'model': 'res.partner', 'in_dialog': True}"
+                                            attrs="{'invisible': [('previous_school_selection_method', '!=', 'domain')]}"
+                                        />
+                                </div>
+                                <div class="row">
+                                    <label
+                                            for="previous_school_python_code"
+                                            class="col-lg-4 o_light_label"
+                                        />
+                                    <field
+                                            name="previous_school_python_code"
+                                            widget="ace"
+                                            attrs="{'invisible': [('previous_school_selection_method', '!=', 'code')]}"
+                                        />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </field>
+</record>
+
+<record id="res_config_settings_action" model="ir.actions.act_window">
+    <field name="name">Settings</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">res.config.settings</field>
+    <field name="view_mode">form</field>
+    <field name="target">inline</field>
+    <field
+            name="context"
+        >{'module' : 'ssi_school_admission_lead', 'bin_size': False}</field>
+</record>
+
+<menuitem
+        id="res_config_settings_menu"
+        name="Settings"
+        parent="ssi_school.menu_admission_configuration"
+        sequence="100"
+        action="res_config_settings_action"
+        groups="base.group_system"
+    />
+
+</odoo>

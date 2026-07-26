@@ -1,0 +1,163 @@
+scenarios:
+  - name:
+      "Previous School Configurator - company defaults match the legacy hardcoded
+      criteria"
+    steps:
+      - step: "Assert company keeps the built-in Previous School configurator defaults"
+        action: "assert"
+        target: "company"
+        asserts:
+          previous_school_selection_method:
+            type: "value"
+            expected: "domain"
+          previous_school_domain:
+            type: "value"
+            expected: "[('is_company', '=', True), ('parent_id', '=', False)]"
+          previous_school_python_code:
+            type: "value"
+            expected: "result = []"
+
+  - name:
+      "Domain method - allowed_previous_school_ids restricted to partners matching
+      is_company/parent_id"
+    steps:
+      - step: "Create a partner matching the is_company/parent_id criteria"
+        action: "create"
+        model: "res.partner"
+        save_as: "school_match"
+        values:
+          name: "Previous School Domain Match"
+          is_company: true
+          parent_id: false
+
+      - step: "Create a partner NOT matching the is_company criteria"
+        action: "create"
+        model: "res.partner"
+        save_as: "school_nomatch"
+        values:
+          name: "Previous School Domain No Match"
+          is_company: false
+
+      - step: >-
+          Configure company with the domain method, keeping the same
+          is_company/parent_id criteria as the default but scoped to this scenario's two
+          candidate partners so the assertion below is not affected by unrelated
+          partners already present in the database (e.g. demo data companies)
+        action: "write"
+        target: "company"
+        values:
+          previous_school_selection_method: "domain"
+          previous_school_domain: >-
+            EVAL: "[('is_company', '=', True), ('parent_id', '=', False), ('id', 'in',
+            [%d, %d])]" % (registry['school_match'].id, registry['school_nomatch'].id)
+
+      - step: "Create CRM lead"
+        action: "create"
+        model: "crm.lead"
+        save_as: "lead"
+        values:
+          name: "Lead Previous School Domain"
+
+      - step: "Assert allowed_previous_school_ids contains exactly the matching partner"
+        action: "assert"
+        target: "lead"
+        asserts:
+          allowed_previous_school_ids:
+            type: "m2m"
+            check: "exact"
+            expected_records:
+              - "REC: school_match"
+
+  - name:
+      "Manual method - allowed_previous_school_ids restricted to the manually configured
+      partner list"
+    steps:
+      - step: "Create a partner outside the domain criteria"
+        action: "create"
+        model: "res.partner"
+        save_as: "school_manual"
+        values:
+          name: "Previous School Manual Override"
+          is_company: false
+
+      - step: "Configure company with the manual method"
+        action: "write"
+        target: "company"
+        values:
+          previous_school_selection_method: "manual"
+          previous_school_ids:
+            - - 6
+              - 0
+              - - "REC: school_manual.id"
+
+      - step: "Create CRM lead"
+        action: "create"
+        model: "crm.lead"
+        save_as: "lead"
+        values:
+          name: "Lead Previous School Manual"
+
+      - step:
+          "Assert allowed_previous_school_ids contains exactly the manually configured
+          partner"
+        action: "assert"
+        target: "lead"
+        asserts:
+          allowed_previous_school_ids:
+            type: "m2m"
+            check: "exact"
+            expected_records:
+              - "REC: school_manual"
+
+  - name: "Create lead with a valid previous_school_id - saved without error"
+    steps:
+      - step: "Create a partner to be the allowed previous school"
+        action: "create"
+        model: "res.partner"
+        save_as: "school_valid"
+        values:
+          name: "Previous School Valid"
+          is_company: false
+
+      - step: "Configure company to allow only that partner (manual method)"
+        action: "write"
+        target: "company"
+        values:
+          previous_school_selection_method: "manual"
+          previous_school_ids:
+            - - 6
+              - 0
+              - - "REC: school_valid.id"
+
+      - step: "Create CRM lead with previous_school_id set to the allowed partner"
+        action: "create"
+        model: "crm.lead"
+        save_as: "lead"
+        values:
+          name: "Lead With Previous School"
+          previous_school_id: "REC: school_valid.id"
+
+      - step: "Assert previous_school_id was saved"
+        action: "assert"
+        target: "lead"
+        asserts:
+          previous_school_id:
+            type: "m2o"
+            expected: "REC: school_valid"
+
+  - name: "Create lead without previous_school_id - falsy"
+    steps:
+      - step: "Create CRM lead without previous_school_id"
+        action: "create"
+        model: "crm.lead"
+        save_as: "lead"
+        values:
+          name: "Lead Without Previous School"
+
+      - step: "Assert previous_school_id is falsy"
+        action: "assert"
+        target: "lead"
+        asserts:
+          previous_school_id:
+            type: "value"
+            operator: "is_falsy"
