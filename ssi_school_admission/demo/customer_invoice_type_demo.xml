@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 OpenSynergy Indonesia
+     Copyright 2026 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="demo_customer_invoice_type" model="customer_invoice_type">
+        <field name="name">School Admission Billing (demo)</field>
+        <field name="code">XSAP-CIT001</field>
+        <field name="journal_id" ref="demo_journal_sale" />
+        <field name="receivable_account_id" ref="demo_account_receivable" />
+    </record>
+</odoo>

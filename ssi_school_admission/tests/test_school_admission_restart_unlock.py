@@ -14,6 +14,7 @@ class TestSchoolAdmissionRestartUnlock(YamlTransactionCase):
         self.run_yaml_scenario("test_data_admission_restart_unlock.yaml")
 
     def _create_base_data(self, suffix):
+        """Build the shared master data used by every scenario here."""
         account_type = self.env.ref("account.data_account_type_revenue")
         account = self.env["account.account"].create(
             {
@@ -70,6 +71,23 @@ class TestSchoolAdmissionRestartUnlock(YamlTransactionCase):
             }
         )
         journal = self.env["account.journal"].search([("type", "=", "sale")], limit=1)
+        receivable_type = self.env.ref("account.data_account_type_receivable")
+        receivable_account = self.env["account.account"].create(
+            {
+                "name": "Admission Receivable %s" % suffix,
+                "code": "ADRSTUNLK%s1100" % suffix,
+                "user_type_id": receivable_type.id,
+                "reconcile": True,
+            }
+        )
+        customer_invoice_type = self.env["customer_invoice_type"].create(
+            {
+                "name": "Customer Invoice Type %s" % suffix,
+                "code": "ADCIT%s" % suffix,
+                "journal_id": journal.id,
+                "receivable_account_id": receivable_account.id,
+            }
+        )
         return {
             "account": account,
             "product": product,
@@ -78,9 +96,12 @@ class TestSchoolAdmissionRestartUnlock(YamlTransactionCase):
             "school": school,
             "grade": grade,
             "journal": journal,
+            "receivable_account": receivable_account,
+            "customer_invoice_type": customer_invoice_type,
         }
 
     def _create_admission(self, base, name_suffix):
+        """Create an admission wired to the customer invoice fixtures."""
         student_contact = self.env["res.partner"].create(
             {"name": "Student Contact %s" % name_suffix}
         )
@@ -92,9 +113,11 @@ class TestSchoolAdmissionRestartUnlock(YamlTransactionCase):
                 "school_id": base["school"].id,
                 "grade_id": base["grade"].id,
                 "student_id": student_contact.id,
-                "pricelist_id": False,
+                "pricelist_id": self.env.ref("product.list0").id,
                 "currency_id": self.env.company.currency_id.id,
                 "receivable_journal_id": base["journal"].id,
+                "receivable_account_id": base["receivable_account"].id,
+                "customer_invoice_type_id": base["customer_invoice_type"].id,
             }
         )
 
@@ -182,7 +205,7 @@ class TestSchoolAdmissionRestartUnlock(YamlTransactionCase):
 
         term.action_create_invoice()
         term.invalidate_cache()
-        self.assertTrue(term.invoice_id)
+        self.assertTrue(term.customer_invoice_id)
 
         admission.invalidate_cache()
         self.assertFalse(admission.cancel_ok)
@@ -193,7 +216,7 @@ class TestSchoolAdmissionRestartUnlock(YamlTransactionCase):
 
         term.action_delete_invoice()
         term.invalidate_cache()
-        self.assertFalse(term.invoice_id)
+        self.assertFalse(term.customer_invoice_id)
 
         admission.invalidate_cache()
         self.assertTrue(admission.cancel_ok)

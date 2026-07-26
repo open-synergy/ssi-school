@@ -1,0 +1,1771 @@
+scenarios:
+  - name: "Create Customer Invoice From Payment Term"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal"
+        limit: 1
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type"
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account"
+        values:
+          name: "Admission Fee Income ADCI1"
+          code: "ADCI14200"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          name: "Admission Receivable ADCI1"
+          code: "ADCI11100"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type ADCI1"
+          code: "CITADCI1"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "Admission Fee ADCI1"
+          type: "service"
+          list_price: 1000000.0
+
+      - step: "Setup - create pricelist"
+        action: "create"
+        model: "product.pricelist"
+        save_as: "pricelist"
+        values:
+          name: "Admission Pricelist ADCI1"
+          currency_id: "EVAL: env.company.currency_id.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type ADCI1"
+          code: "GTADCI1"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 ADCI1"
+          code: "AYADCI1"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester ADCI1"
+          code: "SMADCI1"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School ADCI1"
+          code: "SCHADCI1"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade ADCI1"
+          code: "GADCI1"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact ADCI1"
+
+      - step: "Setup - create payment template"
+        action: "create"
+        model: "school_admission_payment_template"
+        save_as: "payment_template"
+        values:
+          name: "Payment Template ADCI1"
+          code: "PMTADCI1"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          academic_term_id: "REC: academic_term.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+          auto_confirm_customer_invoice: false
+
+      - step: "Create admission"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: contact.id"
+          currency_id: "EVAL: env.company.currency_id.id"
+          pricelist_id: "REC: pricelist.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: payment_template.customer_invoice_type_id.id"
+          auto_confirm_customer_invoice:
+            "REC: payment_template.auto_confirm_customer_invoice"
+
+      - step: "Create payment term"
+        action: "create"
+        model: "school_admission_payment_term"
+        save_as: "term"
+        values:
+          admission_id: "REC: admission.id"
+          name: "Term ADCI1"
+          sequence: 10
+          date_invoice: "2024-07-05"
+          date_due: "2024-07-20"
+
+      - step: "Create first payment term detail"
+        action: "create"
+        model: "school_admission_payment_term_detail"
+        save_as: "detail_1"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Registration Fee ADCI1"
+          account_id: "REC: income_account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+
+      - step: "Create second payment term detail"
+        action: "create"
+        model: "school_admission_payment_term_detail"
+        save_as: "detail_2"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Books and Uniform Fee ADCI1"
+          account_id: "REC: income_account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 500000.0
+
+      - step: "Confirm admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate admission cache before approve"
+        action: "call"
+        target: "admission"
+        method: "invalidate_cache"
+
+      - step: "Approve admission"
+        action: "call"
+        target: "admission"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate admission cache after approve"
+        action: "call"
+        target: "admission"
+        method: "invalidate_cache"
+
+      - step: "Assert the admission is open"
+        action: "assert"
+        target: "admission"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create customer invoice from the payment term"
+        action: "call"
+        target: "term"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate cache after creating the customer invoice"
+        action: "call"
+        target: "term"
+        method: "invalidate_cache"
+
+      - step: "Assert term is invoiced and linked to a customer invoice"
+        action: "assert"
+        target: "term"
+        asserts:
+          state:
+            type: "value"
+            expected: "invoiced"
+          customer_invoice_id:
+            type: "value"
+            operator: "is_truthy"
+          customer_invoice_id.state:
+            type: "value"
+            expected: "draft"
+          customer_invoice_id.type_id.id:
+            type: "value"
+            expected: "REC: ci_type.id"
+          customer_invoice_id.partner_id.id:
+            type: "value"
+            expected: "REC: contact.id"
+          customer_invoice_id.customer_document_number:
+            type: "value"
+            expected: "REC: admission.name"
+          customer_invoice_id.amount_untaxed:
+            type: "value"
+            expected: 1500000.0
+
+      - step: "Assert first detail is linked to its own customer invoice line"
+        action: "assert"
+        target: "detail_1"
+        asserts:
+          customer_invoice_line_id:
+            type: "value"
+            operator: "is_truthy"
+          customer_invoice_line_id.name:
+            type: "value"
+            expected: "Registration Fee ADCI1"
+          customer_invoice_line_id.price_unit:
+            type: "value"
+            expected: 1000000.0
+          customer_invoice_line_id.customer_invoice_id.id:
+            type: "value"
+            expected: "REC: term.customer_invoice_id.id"
+
+      - step: "Assert second detail is linked to its own customer invoice line"
+        action: "assert"
+        target: "detail_2"
+        asserts:
+          customer_invoice_line_id:
+            type: "value"
+            operator: "is_truthy"
+          customer_invoice_line_id.name:
+            type: "value"
+            expected: "Books and Uniform Fee ADCI1"
+          customer_invoice_line_id.price_unit:
+            type: "value"
+            expected: 500000.0
+          customer_invoice_line_id.customer_invoice_id.id:
+            type: "value"
+            expected: "REC: term.customer_invoice_id.id"
+
+  - name: "Auto Confirm Customer Invoice From Payment Template"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal"
+        limit: 1
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type"
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account"
+        values:
+          name: "Admission Fee Income ADCI2"
+          code: "ADCI24200"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          name: "Admission Receivable ADCI2"
+          code: "ADCI21100"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type ADCI2"
+          code: "CITADCI2"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "Admission Fee ADCI2"
+          type: "service"
+          list_price: 1000000.0
+
+      - step: "Setup - create pricelist"
+        action: "create"
+        model: "product.pricelist"
+        save_as: "pricelist"
+        values:
+          name: "Admission Pricelist ADCI2"
+          currency_id: "EVAL: env.company.currency_id.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type ADCI2"
+          code: "GTADCI2"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 ADCI2"
+          code: "AYADCI2"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester ADCI2"
+          code: "SMADCI2"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School ADCI2"
+          code: "SCHADCI2"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade ADCI2"
+          code: "GADCI2"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact ADCI2"
+
+      - step: "Setup - create payment template"
+        action: "create"
+        model: "school_admission_payment_template"
+        save_as: "payment_template"
+        values:
+          name: "Payment Template ADCI2"
+          code: "PMTADCI2"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          academic_term_id: "REC: academic_term.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+          auto_confirm_customer_invoice: true
+
+      - step: "Create admission"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: contact.id"
+          currency_id: "EVAL: env.company.currency_id.id"
+          pricelist_id: "REC: pricelist.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: payment_template.customer_invoice_type_id.id"
+          auto_confirm_customer_invoice:
+            "REC: payment_template.auto_confirm_customer_invoice"
+
+      - step: "Create payment term"
+        action: "create"
+        model: "school_admission_payment_term"
+        save_as: "term"
+        values:
+          admission_id: "REC: admission.id"
+          name: "Term ADCI2"
+          sequence: 10
+          date_invoice: "2024-07-05"
+          date_due: "2024-07-20"
+
+      - step: "Create first payment term detail"
+        action: "create"
+        model: "school_admission_payment_term_detail"
+        save_as: "detail_1"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Registration Fee ADCI2"
+          account_id: "REC: income_account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+
+      - step: "Create second payment term detail"
+        action: "create"
+        model: "school_admission_payment_term_detail"
+        save_as: "detail_2"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Books and Uniform Fee ADCI2"
+          account_id: "REC: income_account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 500000.0
+
+      - step: "Confirm admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate admission cache before approve"
+        action: "call"
+        target: "admission"
+        method: "invalidate_cache"
+
+      - step: "Approve admission"
+        action: "call"
+        target: "admission"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate admission cache after approve"
+        action: "call"
+        target: "admission"
+        method: "invalidate_cache"
+
+      - step: "Assert the admission is open"
+        action: "assert"
+        target: "admission"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create customer invoice from the payment term"
+        action: "call"
+        target: "term"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate cache after creating the customer invoice"
+        action: "call"
+        target: "term"
+        method: "invalidate_cache"
+
+      - step: "Assert the admission asks for an automatic confirmation"
+        action: "assert"
+        target: "admission"
+        asserts:
+          auto_confirm_customer_invoice:
+            type: "value"
+            expected: true
+
+      - step: "Assert customer invoice state is confirm"
+        action: "assert"
+        target: "term"
+        asserts:
+          state:
+            type: "value"
+            expected: "invoiced"
+          customer_invoice_id.state:
+            type: "value"
+            expected: "confirm"
+
+  - name: "Disconnect Customer Invoice From Payment Term"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal"
+        limit: 1
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type"
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account"
+        values:
+          name: "Admission Fee Income ADCI3"
+          code: "ADCI34200"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          name: "Admission Receivable ADCI3"
+          code: "ADCI31100"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type ADCI3"
+          code: "CITADCI3"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "Admission Fee ADCI3"
+          type: "service"
+          list_price: 1000000.0
+
+      - step: "Setup - create pricelist"
+        action: "create"
+        model: "product.pricelist"
+        save_as: "pricelist"
+        values:
+          name: "Admission Pricelist ADCI3"
+          currency_id: "EVAL: env.company.currency_id.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type ADCI3"
+          code: "GTADCI3"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 ADCI3"
+          code: "AYADCI3"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester ADCI3"
+          code: "SMADCI3"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School ADCI3"
+          code: "SCHADCI3"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade ADCI3"
+          code: "GADCI3"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact ADCI3"
+
+      - step: "Setup - create payment template"
+        action: "create"
+        model: "school_admission_payment_template"
+        save_as: "payment_template"
+        values:
+          name: "Payment Template ADCI3"
+          code: "PMTADCI3"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          academic_term_id: "REC: academic_term.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+          auto_confirm_customer_invoice: false
+
+      - step: "Create admission"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: contact.id"
+          currency_id: "EVAL: env.company.currency_id.id"
+          pricelist_id: "REC: pricelist.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: payment_template.customer_invoice_type_id.id"
+          auto_confirm_customer_invoice:
+            "REC: payment_template.auto_confirm_customer_invoice"
+
+      - step: "Create payment term"
+        action: "create"
+        model: "school_admission_payment_term"
+        save_as: "term"
+        values:
+          admission_id: "REC: admission.id"
+          name: "Term ADCI3"
+          sequence: 10
+          date_invoice: "2024-07-05"
+          date_due: "2024-07-20"
+
+      - step: "Create first payment term detail"
+        action: "create"
+        model: "school_admission_payment_term_detail"
+        save_as: "detail_1"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Registration Fee ADCI3"
+          account_id: "REC: income_account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+
+      - step: "Create second payment term detail"
+        action: "create"
+        model: "school_admission_payment_term_detail"
+        save_as: "detail_2"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Books and Uniform Fee ADCI3"
+          account_id: "REC: income_account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 500000.0
+
+      - step: "Confirm admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate admission cache before approve"
+        action: "call"
+        target: "admission"
+        method: "invalidate_cache"
+
+      - step: "Approve admission"
+        action: "call"
+        target: "admission"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate admission cache after approve"
+        action: "call"
+        target: "admission"
+        method: "invalidate_cache"
+
+      - step: "Assert the admission is open"
+        action: "assert"
+        target: "admission"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create customer invoice from the payment term"
+        action: "call"
+        target: "term"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate cache after creating the customer invoice"
+        action: "call"
+        target: "term"
+        method: "invalidate_cache"
+
+      - step: "Disconnect the customer invoice from the payment term"
+        action: "call"
+        target: "term"
+        method: "action_disconnect_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate cache after disconnecting the customer invoice"
+        action: "call"
+        target: "term"
+        method: "invalidate_cache"
+
+      - step: "Assert the term is uninvoiced again"
+        action: "assert"
+        target: "term"
+        asserts:
+          customer_invoice_id:
+            type: "value"
+            operator: "is_falsy"
+          state:
+            type: "value"
+            expected: "uninvoiced"
+
+      - step: "Assert the customer invoice document still exists"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["customer_document_number", "=", "REC: admission.name"]]
+        save_as: "kept_invoices"
+        expect_count: 1
+
+  - name: "Delete Draft Customer Invoice Of Payment Term"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal"
+        limit: 1
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type"
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account"
+        values:
+          name: "Admission Fee Income ADCI4"
+          code: "ADCI44200"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          name: "Admission Receivable ADCI4"
+          code: "ADCI41100"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type ADCI4"
+          code: "CITADCI4"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "Admission Fee ADCI4"
+          type: "service"
+          list_price: 1000000.0
+
+      - step: "Setup - create pricelist"
+        action: "create"
+        model: "product.pricelist"
+        save_as: "pricelist"
+        values:
+          name: "Admission Pricelist ADCI4"
+          currency_id: "EVAL: env.company.currency_id.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type ADCI4"
+          code: "GTADCI4"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 ADCI4"
+          code: "AYADCI4"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester ADCI4"
+          code: "SMADCI4"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School ADCI4"
+          code: "SCHADCI4"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade ADCI4"
+          code: "GADCI4"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact ADCI4"
+
+      - step: "Setup - create payment template"
+        action: "create"
+        model: "school_admission_payment_template"
+        save_as: "payment_template"
+        values:
+          name: "Payment Template ADCI4"
+          code: "PMTADCI4"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          academic_term_id: "REC: academic_term.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+          auto_confirm_customer_invoice: false
+
+      - step: "Create admission"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: contact.id"
+          currency_id: "EVAL: env.company.currency_id.id"
+          pricelist_id: "REC: pricelist.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: payment_template.customer_invoice_type_id.id"
+          auto_confirm_customer_invoice:
+            "REC: payment_template.auto_confirm_customer_invoice"
+
+      - step: "Create payment term"
+        action: "create"
+        model: "school_admission_payment_term"
+        save_as: "term"
+        values:
+          admission_id: "REC: admission.id"
+          name: "Term ADCI4"
+          sequence: 10
+          date_invoice: "2024-07-05"
+          date_due: "2024-07-20"
+
+      - step: "Create first payment term detail"
+        action: "create"
+        model: "school_admission_payment_term_detail"
+        save_as: "detail_1"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Registration Fee ADCI4"
+          account_id: "REC: income_account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+
+      - step: "Create second payment term detail"
+        action: "create"
+        model: "school_admission_payment_term_detail"
+        save_as: "detail_2"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Books and Uniform Fee ADCI4"
+          account_id: "REC: income_account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 500000.0
+
+      - step: "Confirm admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate admission cache before approve"
+        action: "call"
+        target: "admission"
+        method: "invalidate_cache"
+
+      - step: "Approve admission"
+        action: "call"
+        target: "admission"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate admission cache after approve"
+        action: "call"
+        target: "admission"
+        method: "invalidate_cache"
+
+      - step: "Assert the admission is open"
+        action: "assert"
+        target: "admission"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create customer invoice from the payment term"
+        action: "call"
+        target: "term"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate cache after creating the customer invoice"
+        action: "call"
+        target: "term"
+        method: "invalidate_cache"
+
+      - step: "Delete the draft customer invoice"
+        action: "call"
+        target: "term"
+        method: "action_delete_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate cache after deleting the customer invoice"
+        action: "call"
+        target: "term"
+        method: "invalidate_cache"
+
+      - step: "Assert the term is uninvoiced again"
+        action: "assert"
+        target: "term"
+        asserts:
+          customer_invoice_id:
+            type: "value"
+            operator: "is_falsy"
+          state:
+            type: "value"
+            expected: "uninvoiced"
+
+      - step: "Assert first detail is no longer linked to a line"
+        action: "assert"
+        target: "detail_1"
+        asserts:
+          customer_invoice_line_id:
+            type: "value"
+            operator: "is_falsy"
+
+      - step: "Assert second detail is no longer linked to a line"
+        action: "assert"
+        target: "detail_2"
+        asserts:
+          customer_invoice_line_id:
+            type: "value"
+            operator: "is_falsy"
+
+      - step: "Assert the customer invoice document is gone"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["customer_document_number", "=", "REC: admission.name"]]
+        save_as: "remaining_invoices"
+        expect_count: 0
+
+  - name: "Delete Non Draft Customer Invoice Is Rejected"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal"
+        limit: 1
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type"
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account"
+        values:
+          name: "Admission Fee Income ADCI5"
+          code: "ADCI54200"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          name: "Admission Receivable ADCI5"
+          code: "ADCI51100"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type ADCI5"
+          code: "CITADCI5"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "Admission Fee ADCI5"
+          type: "service"
+          list_price: 1000000.0
+
+      - step: "Setup - create pricelist"
+        action: "create"
+        model: "product.pricelist"
+        save_as: "pricelist"
+        values:
+          name: "Admission Pricelist ADCI5"
+          currency_id: "EVAL: env.company.currency_id.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type ADCI5"
+          code: "GTADCI5"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 ADCI5"
+          code: "AYADCI5"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester ADCI5"
+          code: "SMADCI5"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School ADCI5"
+          code: "SCHADCI5"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade ADCI5"
+          code: "GADCI5"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact ADCI5"
+
+      - step: "Setup - create payment template"
+        action: "create"
+        model: "school_admission_payment_template"
+        save_as: "payment_template"
+        values:
+          name: "Payment Template ADCI5"
+          code: "PMTADCI5"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          academic_term_id: "REC: academic_term.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+          auto_confirm_customer_invoice: false
+
+      - step: "Create admission"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: contact.id"
+          currency_id: "EVAL: env.company.currency_id.id"
+          pricelist_id: "REC: pricelist.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: payment_template.customer_invoice_type_id.id"
+          auto_confirm_customer_invoice:
+            "REC: payment_template.auto_confirm_customer_invoice"
+
+      - step: "Create payment term"
+        action: "create"
+        model: "school_admission_payment_term"
+        save_as: "term"
+        values:
+          admission_id: "REC: admission.id"
+          name: "Term ADCI5"
+          sequence: 10
+          date_invoice: "2024-07-05"
+          date_due: "2024-07-20"
+
+      - step: "Create first payment term detail"
+        action: "create"
+        model: "school_admission_payment_term_detail"
+        save_as: "detail_1"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Registration Fee ADCI5"
+          account_id: "REC: income_account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+
+      - step: "Create second payment term detail"
+        action: "create"
+        model: "school_admission_payment_term_detail"
+        save_as: "detail_2"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Books and Uniform Fee ADCI5"
+          account_id: "REC: income_account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 500000.0
+
+      - step: "Confirm admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate admission cache before approve"
+        action: "call"
+        target: "admission"
+        method: "invalidate_cache"
+
+      - step: "Approve admission"
+        action: "call"
+        target: "admission"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate admission cache after approve"
+        action: "call"
+        target: "admission"
+        method: "invalidate_cache"
+
+      - step: "Assert the admission is open"
+        action: "assert"
+        target: "admission"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create customer invoice from the payment term"
+        action: "call"
+        target: "term"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate cache after creating the customer invoice"
+        action: "call"
+        target: "term"
+        method: "invalidate_cache"
+
+      - step: "Get the generated customer invoice"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["customer_document_number", "=", "REC: admission.name"]]
+        save_as: "invoice"
+        expect_count: 1
+
+      - step: "Confirm the customer invoice"
+        action: "call"
+        target: "invoice"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Deleting a non-draft customer invoice must be rejected"
+        action: "call"
+        target: "term"
+        method: "action_delete_invoice"
+        as_user: "base.user_admin"
+        expect_error:
+          type: "UserError"
+          message_contains: "not draft anymore"
+
+      - step: "Invalidate cache after the rejected deletion"
+        action: "call"
+        target: "term"
+        method: "invalidate_cache"
+
+      - step: "Assert the term is still linked to the customer invoice"
+        action: "assert"
+        target: "term"
+        asserts:
+          customer_invoice_id:
+            type: "value"
+            operator: "is_truthy"
+          state:
+            type: "value"
+            expected: "invoiced"
+
+  - name: "Cancel Admission With Invoiced Payment Term Is Rejected"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal"
+        limit: 1
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type"
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account"
+        values:
+          name: "Admission Fee Income ADCI6"
+          code: "ADCI64200"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          name: "Admission Receivable ADCI6"
+          code: "ADCI61100"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type ADCI6"
+          code: "CITADCI6"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "Admission Fee ADCI6"
+          type: "service"
+          list_price: 1000000.0
+
+      - step: "Setup - create pricelist"
+        action: "create"
+        model: "product.pricelist"
+        save_as: "pricelist"
+        values:
+          name: "Admission Pricelist ADCI6"
+          currency_id: "EVAL: env.company.currency_id.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type ADCI6"
+          code: "GTADCI6"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 ADCI6"
+          code: "AYADCI6"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester ADCI6"
+          code: "SMADCI6"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School ADCI6"
+          code: "SCHADCI6"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade ADCI6"
+          code: "GADCI6"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact ADCI6"
+
+      - step: "Setup - create payment template"
+        action: "create"
+        model: "school_admission_payment_template"
+        save_as: "payment_template"
+        values:
+          name: "Payment Template ADCI6"
+          code: "PMTADCI6"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          academic_term_id: "REC: academic_term.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+          auto_confirm_customer_invoice: false
+
+      - step: "Create admission"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: contact.id"
+          currency_id: "EVAL: env.company.currency_id.id"
+          pricelist_id: "REC: pricelist.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: payment_template.customer_invoice_type_id.id"
+          auto_confirm_customer_invoice:
+            "REC: payment_template.auto_confirm_customer_invoice"
+
+      - step: "Create payment term"
+        action: "create"
+        model: "school_admission_payment_term"
+        save_as: "term"
+        values:
+          admission_id: "REC: admission.id"
+          name: "Term ADCI6"
+          sequence: 10
+          date_invoice: "2024-07-05"
+          date_due: "2024-07-20"
+
+      - step: "Create first payment term detail"
+        action: "create"
+        model: "school_admission_payment_term_detail"
+        save_as: "detail_1"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Registration Fee ADCI6"
+          account_id: "REC: income_account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+
+      - step: "Create second payment term detail"
+        action: "create"
+        model: "school_admission_payment_term_detail"
+        save_as: "detail_2"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Books and Uniform Fee ADCI6"
+          account_id: "REC: income_account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 500000.0
+
+      - step: "Confirm admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate admission cache before approve"
+        action: "call"
+        target: "admission"
+        method: "invalidate_cache"
+
+      - step: "Approve admission"
+        action: "call"
+        target: "admission"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate admission cache after approve"
+        action: "call"
+        target: "admission"
+        method: "invalidate_cache"
+
+      - step: "Assert the admission is open"
+        action: "assert"
+        target: "admission"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create customer invoice from the payment term"
+        action: "call"
+        target: "term"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate cache after creating the customer invoice"
+        action: "call"
+        target: "term"
+        method: "invalidate_cache"
+
+      - step: "Cancelling the admission must be rejected"
+        action: "call"
+        target: "admission"
+        method: "action_cancel"
+        as_user: "base.user_admin"
+        expect_error:
+          type: "UserError"
+
+      - step: "Invalidate cache after the rejected cancellation"
+        action: "call"
+        target: "admission"
+        method: "invalidate_cache"
+
+      - step: "Assert the admission is still open"
+        action: "assert"
+        target: "admission"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+  - name: "Payment Template Onchange Fills Customer Invoice Fields"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal"
+        limit: 1
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type"
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account"
+        values:
+          name: "Admission Fee Income ADCI7"
+          code: "ADCI74200"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          name: "Admission Receivable ADCI7"
+          code: "ADCI71100"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type ADCI7"
+          code: "CITADCI7"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "Admission Fee ADCI7"
+          type: "service"
+          list_price: 1000000.0
+
+      - step: "Setup - create pricelist"
+        action: "create"
+        model: "product.pricelist"
+        save_as: "pricelist"
+        values:
+          name: "Admission Pricelist ADCI7"
+          currency_id: "EVAL: env.company.currency_id.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type ADCI7"
+          code: "GTADCI7"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 ADCI7"
+          code: "AYADCI7"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester ADCI7"
+          code: "SMADCI7"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School ADCI7"
+          code: "SCHADCI7"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade ADCI7"
+          code: "GADCI7"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact ADCI7"
+
+      - step: "Setup - create payment template"
+        action: "create"
+        model: "school_admission_payment_template"
+        save_as: "payment_template"
+        values:
+          name: "Payment Template ADCI7"
+          code: "PMTADCI7"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          academic_term_id: "REC: academic_term.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+          auto_confirm_customer_invoice: true
+
+      - step: "Selecting the payment template fills the customer invoice fields"
+        action: "form"
+        model: "school_admission"
+        save: false
+        values:
+          payment_template_id: "REC: payment_template"
+        asserts:
+          customer_invoice_type_id.id:
+            type: "value"
+            expected: "REC: ci_type.id"
+          auto_confirm_customer_invoice:
+            type: "value"
+            expected: true

@@ -44,6 +44,14 @@ class TestSchoolAdmissionWorkflow(
                 "type_id": grade_type.id,
             }
         )
+        customer_invoice_type = self.env["customer_invoice_type"].create(
+            {
+                "name": "Customer Invoice Type Onchange",
+                "code": "ADMCITONC1",
+                "journal_id": journal.id,
+                "receivable_account_id": account.id,
+            }
+        )
         template = self.env["school_admission_payment_template"].create(
             {
                 "name": "Admission Payment Template Onchange",
@@ -52,6 +60,7 @@ class TestSchoolAdmissionWorkflow(
                 "grade_id": grade.id,
                 "receivable_journal_id": journal.id,
                 "receivable_account_id": account.id,
+                "customer_invoice_type_id": customer_invoice_type.id,
             }
         )
         return template, journal, account

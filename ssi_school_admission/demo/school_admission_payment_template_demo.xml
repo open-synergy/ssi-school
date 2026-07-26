@@ -13,6 +13,7 @@
         <field name="grade_id" ref="ssi_school.school_grade1_type" />
         <field name="receivable_journal_id" ref="demo_journal_sale" />
         <field name="receivable_account_id" ref="demo_account_receivable" />
+        <field name="customer_invoice_type_id" ref="demo_customer_invoice_type" />
         <field
             name="term_ids"
             eval="[
@@ -69,6 +70,7 @@
         <field name="grade_id" ref="ssi_school.school_grade2_type" />
         <field name="receivable_journal_id" ref="demo_journal_sale" />
         <field name="receivable_account_id" ref="demo_account_receivable" />
+        <field name="customer_invoice_type_id" ref="demo_customer_invoice_type" />
         <field
             name="term_ids"
             eval="[

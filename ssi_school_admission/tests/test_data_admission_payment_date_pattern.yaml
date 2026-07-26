@@ -1,6 +1,38 @@
 scenarios:
   - name: "Compute Payment - Estimated Invoice and Due Date from Duration"
     steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable ADMCI03"
+          code: "ADMCI03"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type ADMCI03"
+          code: "ADMCI03"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
       - step: "Setup - get sale journal"
         action: "search"
         model: "account.journal"
@@ -127,6 +159,7 @@ scenarios:
         model: "school_admission_payment_template"
         save_as: "payment_template"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
           name: "Admission Payment Template ADPTDUR"
           code: "ADPTDUR001"
           school_id: "EVAL: registry['school'].id"
@@ -243,6 +276,38 @@ scenarios:
 
   - name: "Compute Payment - Term without Duration leaves dates empty"
     steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable ADMCI04"
+          code: "ADMCI04"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type ADMCI04"
+          code: "ADMCI04"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
       - step: "Setup - get sale journal"
         action: "search"
         model: "account.journal"
@@ -343,6 +408,7 @@ scenarios:
         model: "school_admission_payment_template"
         save_as: "payment_template"
         values:
+          customer_invoice_type_id: "REC: ci_type.id"
           name: "Admission Payment Template ADPTNODUR"
           code: "ADPTNODUR001"
           school_id: "EVAL: registry['school'].id"

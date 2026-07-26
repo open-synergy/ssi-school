@@ -5,14 +5,20 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
-ADDENDUM_LOCK_ALLOWED_FIELDS = {"invoice_id", "manually_control", "locked", "sequence"}
+ADDENDUM_LOCK_ALLOWED_FIELDS = {
+    "customer_invoice_id",
+    "manually_control",
+    "locked",
+    "sequence",
+}
 
 
 class SchoolAdmissionPaymentTerm(models.Model):
     """
     Represents a payment installment term within a school admission
-    record, tracking invoice status, amounts, and due dates for
-    one payment period.
+    record, tracking customer invoice status, amounts, and due dates
+    for one payment period. Each term can generate one customer invoice
+    (customer_invoice_id) via action_create_invoice.
     """
 
     _name = "school_admission_payment_term"
@@ -20,7 +26,7 @@ class SchoolAdmissionPaymentTerm(models.Model):
     _order = "sequence, id"
 
     @api.depends(
-        "invoice_id",
+        "customer_invoice_id",
         "admission_id.state",
         "manually_control",
     )
@@ -29,7 +35,7 @@ class SchoolAdmissionPaymentTerm(models.Model):
             if record.admission_id.state in ["draft", "confirm"]:
                 state = "draft"
             elif record.admission_id.state in ["open", "done"]:
-                if record.invoice_id:
+                if record.customer_invoice_id:
                     state = "invoiced"
                 elif record.manually_control:
                     state = "manual"
@@ -123,12 +129,12 @@ class SchoolAdmissionPaymentTerm(models.Model):
         currency_field="currency_id",
         help="The total amount including taxes for this term.",
     )
-    invoice_id = fields.Many2one(
-        string="# Invoice",
-        comodel_name="account.move",
+    customer_invoice_id = fields.Many2one(
+        string="# Customer Invoice",
+        comodel_name="customer_invoice",
         readonly=True,
         ondelete="restrict",
-        help="The invoice generated for this payment term, if any.",
+        help="The customer invoice generated for this payment term, if any.",
     )
     date_invoice = fields.Date(
         string="Estimated Invoice Date",
@@ -290,44 +296,95 @@ Solution: Locked payment terms are permanent; create a new one via addendum inst
         self.write({"manually_control": False})
 
     def _create_invoice(self):
+        """Create the ``customer_invoice`` document for this term.
+
+        Creates the header first, then one ``customer_invoice.line`` per
+        detail line, writing the resulting line back onto the detail it
+        originates from, and finally links the document to this term.
+        Taxes are not computed here: ``customer_invoice`` recomputes them
+        itself on pre-confirm. When the admission has
+        ``auto_confirm_customer_invoice`` enabled, the new document is
+        confirmed right away.
+
+        :return: None
+        """
         self.ensure_one()
-        invoice = self.env["account.move"].create(self._prepare_invoice_data())
-        self.write({"invoice_id": invoice.id})
+        line_model = self.env["customer_invoice.line"]
+        invoice = self.env["customer_invoice"].create(self._prepare_invoice_data())
+        for detail in self.detail_ids:
+            # pylint: disable=protected-access
+            line_data = detail._prepare_invoice_line()
+            line_data["customer_invoice_id"] = invoice.id
+            line = line_model.create(line_data)
+            detail.write({"customer_invoice_line_id": line.id})
+        self.write({"customer_invoice_id": invoice.id})
+        if self.admission_id.auto_confirm_customer_invoice:
+            invoice.action_confirm()
 
     def _disconnect_invoice(self):
+        """Detach the customer invoice from this term without deleting it.
+
+        Only ``customer_invoice_id`` is cleared, so the term falls back to
+        the uninvoiced state while the ``customer_invoice`` document itself
+        is kept.
+
+        :return: None
+        """
         self.ensure_one()
-        self.write({"invoice_id": False})
+        self.write({"customer_invoice_id": False})
 
     def _prepare_invoice_data(self):
+        """Build the ``customer_invoice`` header values for this term.
+
+        Extension point: override in a glue module (Operating Unit, for
+        instance) to add extra header values without touching
+        ``_create_invoice``. Detail lines are deliberately excluded --
+        they are created one by one by ``_create_invoice`` so that each
+        line can be written back to its originating detail.
+
+        :return: dict of ``customer_invoice`` values
+        """
         self.ensure_one()
         admission = self.admission_id
-        partner = admission.student_id
-        journal = admission.receivable_journal_id
-        lines = []
-        for detail in self.detail_ids:
-            lines += [
-                (0, 0, detail._prepare_invoice_line())
-            ]  # pylint: disable=protected-access
+        date = self.date_invoice or fields.Date.today()
         return {
-            "date": fields.Date.today(),
-            "ref": admission.name,
-            "move_type": "out_invoice",
-            "journal_id": journal.id,
-            "partner_id": partner.id,
+            "type_id": admission.customer_invoice_type_id.id,
+            "partner_id": admission.student_id.id,
             "currency_id": admission.currency_id.id,
-            "invoice_user_id": False,
-            "invoice_date": self.date_invoice or fields.Date.today(),
-            "invoice_date_due": self.date_due
-            or self.date_invoice
-            or fields.Date.today(),
-            "invoice_origin": admission.name,
-            "invoice_payment_term_id": False,
-            "invoice_line_ids": lines,
+            "pricelist_id": admission.pricelist_id.id,
+            "journal_id": admission.receivable_journal_id.id,
+            "receivable_account_id": admission.receivable_account_id.id,
+            "date": date,
+            "date_due": self.date_due or date,
+            "customer_document_number": admission.name,
         }
 
     def _delete_invoice(self):
+        """Delete the customer invoice document created from this term.
+
+        Only a document still in ``draft`` may be deleted. Every detail
+        line is unlinked from its ``customer_invoice.line`` first, then the
+        term is detached, and finally the document is deleted (its lines
+        are removed by cascade).
+
+        :raises UserError: when the customer invoice is no longer draft
+        :return: None
+        """
         self.ensure_one()
-        invoice = self.invoice_id
-        self.detail_ids.write({"invoice_line_id": False})
-        self.write({"invoice_id": False})
+        invoice = self.customer_invoice_id
+        if invoice.state != "draft":
+            error_message = (
+                _(
+                    """
+Context: Delete customer invoice of payment term
+Database ID: %s
+Problem: Customer invoice '%s' is not draft anymore and cannot be deleted
+Solution: Use Disconnect Invoice to detach it from the payment term instead
+"""
+                )
+                % (self.id, invoice.display_name)
+            )
+            raise UserError(error_message)
+        self.detail_ids.write({"customer_invoice_line_id": False})
+        self.write({"customer_invoice_id": False})
         invoice.unlink()

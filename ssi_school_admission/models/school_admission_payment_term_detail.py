@@ -5,14 +5,14 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
-ADDENDUM_LOCK_ALLOWED_FIELDS = {"invoice_line_id", "locked", "sequence"}
+ADDENDUM_LOCK_ALLOWED_FIELDS = {"customer_invoice_line_id", "locked", "sequence"}
 
 
 class SchoolAdmissionPaymentTermDetail(models.Model):
     """
     Represents a single fee line detail within a school admission
     payment term, specifying the product, amount, and associated
-    journal entry line for one payment item.
+    customer invoice line for one payment item.
     """
 
     _name = "school_admission_payment_term_detail"
@@ -45,12 +45,15 @@ class SchoolAdmissionPaymentTermDetail(models.Model):
         store=True,
         help="The pricelist derived from the parent admission record.",
     )
-    invoice_line_id = fields.Many2one(
-        string="Invoice Line",
-        comodel_name="account.move.line",
+    customer_invoice_line_id = fields.Many2one(
+        string="Customer Invoice Line",
+        comodel_name="customer_invoice.line",
         readonly=True,
         ondelete="restrict",
-        help=("The invoice line linked to this detail " "after the term is invoiced."),
+        help=(
+            "The customer invoice line linked to this detail "
+            "after the term is invoiced."
+        ),
     )
     allowed_product_ids = fields.Many2many(
         comodel_name="product.product",
@@ -159,6 +162,16 @@ Solution: Locked detail lines are permanent; create a new one via the addendum m
         return result
 
     def _prepare_invoice_line(self):
+        """Build the ``customer_invoice.line`` values for this fee line.
+
+        Extension point: override in a glue module to add extra line
+        values. The link to the parent document
+        (``customer_invoice_id``) is intentionally left out -- it is
+        added by ``school_admission_payment_term._create_invoice``,
+        which owns the newly created header.
+
+        :return: dict of ``customer_invoice.line`` values
+        """
         self.ensure_one()
         aa = (
             self.analytic_account_id and self.analytic_account_id.id or False
@@ -167,8 +180,8 @@ Solution: Locked detail lines are permanent; create a new one via the addendum m
             "product_id": self.product_id.id,
             "name": self.name,
             "account_id": self.account_id.id,
-            "quantity": self.uom_quantity,
-            "product_uom_id": self.uom_id.id,
+            "uom_id": self.uom_id.id,
+            "uom_quantity": self.uom_quantity,
             "price_unit": self.price_unit,
             "tax_ids": [(6, 0, self.tax_ids.ids)],
             "analytic_account_id": aa or False,

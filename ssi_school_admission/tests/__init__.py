@@ -13,6 +13,7 @@ from . import (  # noqa: F401
     test_school_admission_payment_term_duplicate,
     test_school_admission_copy_payment_term,
     test_school_admission_create_due_invoice,
+    test_school_admission_customer_invoice,
     test_school_admission_payment_product_configurator,
     test_school_admission_product_summary,
     test_school_admission_test,
