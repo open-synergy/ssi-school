@@ -172,6 +172,17 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
+"Context: Delete customer invoice of payment term\n"
+"Database ID: %s\n"
+"Problem: Customer invoice '%s' is not draft anymore and cannot be deleted\n"
+"Solution: Use Disconnect Invoice to detach it from the payment term instead\n"
+msgstr ""
+
+#. module: ssi_school
+#: code:addons/ssi_school/models/school_enrollment_payment_term.py:0
+#, python-format
+msgid ""
+"\n"
 "Context: Delete payment term\n"
 "Database ID: %s\n"
 "Problem: Payment term '%s' is locked and cannot be deleted\n"
@@ -370,6 +381,11 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term__customer_invoice_id
+msgid "# Customer Invoice"
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__name
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__name
 #: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__name
@@ -379,11 +395,6 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_product_summary__enrollment_id
 msgid "# Enrollment"
-msgstr ""
-
-#. module: ssi_school
-#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term__invoice_id
-msgid "# Invoice"
 msgstr ""
 
 #. module: ssi_school
@@ -826,6 +837,12 @@ msgid "Attachment Count"
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__auto_confirm_customer_invoice
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__auto_confirm_customer_invoice
+msgid "Auto Confirm Customer Invoice"
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment__product_summary_ids
 msgid ""
 "Automatically maintained summary of all payment term details grouped by "
@@ -900,17 +917,18 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment_fee_analysis__term_state
 msgid ""
 "Billing status of the payment term: Draft = enrollment still in "
-"draft/confirm, Uninvoiced = enrollment open/done but no invoice yet, "
-"Invoiced = invoice created, Manually Controlled = managed manually, "
-"Cancelled = enrollment cancelled."
+"draft/confirm, Uninvoiced = enrollment open/done but no customer invoice "
+"yet, Invoiced = customer invoice created, Manually Controlled = managed "
+"manually, Cancelled = enrollment cancelled."
 msgstr ""
 
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_term__state
 msgid ""
 "Billing status: Draft = enrollment still in draft/confirm, Uninvoiced = "
-"enrollment open/done but no invoice yet, Invoiced = invoice created, "
-"Manually Controlled = managed manually, Cancelled = enrollment cancelled."
+"enrollment open/done but no customer invoice yet, Invoiced = customer "
+"invoice created, Manually Controlled = managed manually, Cancelled = "
+"enrollment cancelled."
 msgstr ""
 
 #. module: ssi_school
@@ -1459,6 +1477,29 @@ msgstr ""
 msgid ""
 "Current status of the student, from waiting for enrollment to actively "
 "enrolled, graduated, or exited."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_fee_analysis__customer_invoice_id
+msgid "Customer Invoice"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__customer_invoice_line_id
+msgid "Customer Invoice Line"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__customer_invoice_type_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__customer_invoice_type_id
+msgid "Customer Invoice Type"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template__customer_invoice_type_id
+msgid ""
+"Customer invoice type used for every customer invoice generated from the "
+"payment terms of an enrollment that uses this template."
 msgstr ""
 
 #. module: ssi_school
@@ -2361,10 +2402,24 @@ msgid "If checked, some messages have a delivery error."
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template__auto_confirm_customer_invoice
+msgid ""
+"If enabled, the customer invoice created from a payment term is immediately "
+"confirmed instead of being left in draft."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__auto_confirm_customer_invoice
+msgid ""
+"If enabled, the customer invoice created from a payment term of this "
+"enrollment is immediately confirmed instead of being left in draft."
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_term__manually_control
 msgid ""
-"If enabled, this billing term is managed manually and does not require an "
-"invoice."
+"If enabled, this billing term is managed manually and does not require a "
+"customer invoice."
 msgstr ""
 
 #. module: ssi_school
@@ -2403,18 +2458,8 @@ msgid "Initial Grade Type"
 msgstr ""
 
 #. module: ssi_school
-#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_fee_analysis__invoice_id
-msgid "Invoice"
-msgstr ""
-
-#. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template_term__date_invoice_duration_id
 msgid "Invoice Date Duration"
-msgstr ""
-
-#. module: ssi_school
-#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__invoice_line_id
-msgid "Invoice Line"
 msgstr ""
 
 #. module: ssi_school
@@ -4302,6 +4347,30 @@ msgid "The currently active enrollment (status open) of this student."
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_term_detail__customer_invoice_line_id
+msgid ""
+"The customer invoice line linked to this detail, automatically populated "
+"when the customer invoice is generated."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_fee_analysis__customer_invoice_id
+msgid "The customer invoice linked to the payment term, if generated."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_term__customer_invoice_id
+msgid "The customer invoice linked to this payment period."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__customer_invoice_type_id
+msgid ""
+"The customer invoice type used for every customer invoice generated from the"
+" payment terms of this enrollment."
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_homeroom__date
 msgid "The date the Homeroom document was created."
 msgstr ""
@@ -4434,23 +4503,6 @@ msgstr ""
 msgid ""
 "The initial grade type from the school, automatically populated from school "
 "data."
-msgstr ""
-
-#. module: ssi_school
-#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_term_detail__invoice_line_id
-msgid ""
-"The invoice line linked to this detail, automatically populated when the "
-"invoice is generated."
-msgstr ""
-
-#. module: ssi_school
-#: model:ir.model.fields,help:ssi_school.field_school_enrollment_fee_analysis__invoice_id
-msgid "The invoice linked to the payment term, if already generated."
-msgstr ""
-
-#. module: ssi_school
-#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_term__invoice_id
-msgid "The invoice linked to this payment period."
 msgstr ""
 
 #. module: ssi_school
