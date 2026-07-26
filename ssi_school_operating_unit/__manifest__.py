@@ -18,6 +18,7 @@
         "ssi_school",
         "ssi_operating_unit_mixin",
         "ssi_financial_accounting_operating_unit",
+        "ssi_customer_invoice_operating_unit",
     ],
     "data": [
         # Security - transactional (school_enrollment)
