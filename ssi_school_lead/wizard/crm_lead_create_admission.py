@@ -115,7 +115,12 @@ class CrmLeadCreateAdmission(models.TransientModel):
     def action_confirm(self):
         self.ensure_one()
         admission = self.env["school_admission"].create(self._prepare_admission_data())
-        self.lead_id.sudo().write({"admission_id": admission.id})
+        self.lead_id.sudo().write(
+            {
+                "admission_id": admission.id,
+                "student_id": self.student_id.id,
+            }
+        )
         if self.payment_template_id:
             admission.action_compute_payment()
         return {
