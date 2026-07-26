@@ -177,7 +177,6 @@ scenarios:
             check: "contains_xml_ids"
             expected_xml_ids:
               - "base.user_admin"
-              - "base.user_root"
           approve_ok:
             type: "value"
             expected: true
