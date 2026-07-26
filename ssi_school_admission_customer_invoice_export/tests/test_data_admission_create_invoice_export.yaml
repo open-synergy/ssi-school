@@ -119,6 +119,7 @@ scenarios:
         action: "create"
         model: "school_admission"
         save_as: "admission"
+        as_user: "base.user_admin"
         values:
           customer_invoice_type_id: "REC: ci_type.id"
           receivable_account_id: "REC: ci_account.id"
@@ -557,6 +558,7 @@ scenarios:
         action: "create"
         model: "school_admission"
         save_as: "admission_a"
+        as_user: "base.user_admin"
         values:
           customer_invoice_type_id: "REC: ci_type.id"
           receivable_account_id: "REC: ci_account.id"
@@ -601,6 +603,7 @@ scenarios:
         action: "create"
         model: "school_admission"
         save_as: "admission_b"
+        as_user: "base.user_admin"
         values:
           customer_invoice_type_id: "REC: ci_type.id"
           receivable_account_id: "REC: ci_account.id"
@@ -925,6 +928,7 @@ scenarios:
         action: "create"
         model: "school_admission"
         save_as: "admission_draft"
+        as_user: "base.user_admin"
         values:
           customer_invoice_type_id: "REC: ci_type.id"
           receivable_account_id: "REC: ci_account.id"
@@ -1071,6 +1075,7 @@ scenarios:
         action: "create"
         model: "school_admission"
         save_as: "admission"
+        as_user: "base.user_admin"
         values:
           customer_invoice_type_id: "REC: ci_type.id"
           receivable_account_id: "REC: ci_account.id"
@@ -1284,6 +1289,7 @@ scenarios:
         action: "create"
         model: "school_admission"
         save_as: "admission"
+        as_user: "base.user_admin"
         values:
           customer_invoice_type_id: "REC: ci_type.id"
           receivable_account_id: "REC: ci_account.id"
