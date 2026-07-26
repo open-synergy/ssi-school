@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 OpenSynergy Indonesia
+     Copyright 2026 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+
+<record id="school_admission_view_form_invoice_export" model="ir.ui.view">
+    <field name="name">school_admission form - invoice export</field>
+    <field name="model">school_admission</field>
+    <field name="inherit_id" ref="ssi_school_admission.school_admission_view_form" />
+    <field name="arch" type="xml">
+        <data>
+            <xpath
+                    expr="//button[@name='action_open_create_due_invoice_wizard']"
+                    position="after"
+                >
+                <button
+                        name="action_open_create_invoice_export_wizard"
+                        type="object"
+                        string="Create Invoice Export"
+                        attrs="{'invisible':[('create_invoice_export_ok','=',False)]}"
+                    />
+            </xpath>
+            <xpath expr="//group[@name='policy_2']" position="inside">
+                <field name="create_invoice_export_ok" />
+            </xpath>
+        </data>
+    </field>
+</record>
+
+</odoo>
