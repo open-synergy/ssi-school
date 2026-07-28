@@ -69,14 +69,18 @@ class SchoolAdmissionWizardCreateEnrollment(models.TransientModel):
     def action_create_enrollment(self):
         """Create the draft enrollment, or open the existing linked one.
 
-        Delegates to ``_create_enrollment``, then returns an act_window
-        opening the resulting (or pre-existing) ``school_enrollment``
-        form.
+        Delegates to ``_create_enrollment`` under ``sudo()``, since
+        creating a ``school_enrollment`` and linking it back to the
+        admission must not depend on the current user also holding
+        ``school_enrollment`` module access or admission write rights
+        (mirrors ``action_create_due_invoice`` on ``school_admission``).
+        Returns an act_window opening the resulting (or pre-existing)
+        ``school_enrollment`` form.
 
         :return: an ``ir.actions.act_window`` dict
         """
         self.ensure_one()
-        enrollment = self._create_enrollment()
+        enrollment = self.sudo()._create_enrollment()
         return {
             "type": "ir.actions.act_window",
             "name": "School Enrollment",
