@@ -1,0 +1,296 @@
+scenarios:
+  - name: "Wizard - Create Enrollment from School Admission"
+    steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable ENRW01"
+          code: "ENRW01"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type ENRW01"
+          code: "ENRW01"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
+      - step: "Setup - get receivable journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "receivable_journal"
+        limit: 1
+
+      - step: "Setup - create pricelist"
+        action: "create"
+        model: "product.pricelist"
+        save_as: "pricelist"
+        values:
+          name: "Pricelist ENRW01"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type ENRW01"
+          code: "GTENRW01"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 ENRW01"
+          code: "AYENRW01"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester ENRW01"
+          code: "SMENRW01"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School ENRW01"
+          code: "SCHENRW01"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create previous grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "prev_grade"
+        values:
+          name: "Grade 0 ENRW01"
+          code: "G0ENRW01"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade (with previous grade computed)"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade 1 ENRW01"
+          code: "G1ENRW01"
+          sequence: 20
+          type_id: "REC: grade_type.id"
+
+      - step: "Assert grade has previous grade auto-computed"
+        action: "assert"
+        target: "grade"
+        asserts:
+          previous_grade_id:
+            type: "m2o"
+            expected: "REC: prev_grade"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class A ENRW01"
+          code: "CLAENRW01"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Setup - create enrollment payment template"
+        action: "create"
+        model: "school_enrollment_payment_template"
+        save_as: "enrollment_payment_template"
+        values:
+          customer_invoice_type_id: "REC: ci_type.id"
+          name: "Enrollment Payment Template ENRW01"
+          code: "EPTENRW01"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          academic_term_id: "REC: academic_term.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "student_contact"
+        values:
+          name: "Student Contact ENRW01"
+
+      - step: "Create admission"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: student_contact.id"
+          currency_id: "REC: company.currency_id.id"
+          pricelist_id: "REC: pricelist.id"
+          receivable_journal_id: "REC: receivable_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
+      - step: "Confirm admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Invalidate admission cache after confirm"
+        action: "call"
+        target: "admission"
+        method: "invalidate_cache"
+
+      - step: "Approve admission (moves to open, creates school student)"
+        action: "call"
+        target: "admission"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Invalidate admission cache after approve"
+        action: "call"
+        target: "admission"
+        method: "invalidate_cache"
+
+      - step: "Assert admission has school student and is allowed to create enrollment"
+        action: "assert"
+        target: "admission"
+        asserts:
+          school_student_id:
+            type: "value"
+            operator: "is_truthy"
+          create_enrollment_ok:
+            type: "value"
+            expected: true
+          enrollment_id:
+            type: "value"
+            operator: "is_falsy"
+
+      - step: "Create wizard to create enrollment"
+        action: "create"
+        model: "school_admission.wizard_create_enrollment"
+        save_as: "wizard"
+        values:
+          admission_id: "REC: admission.id"
+          grade_class_id: "REC: grade_class.id"
+          payment_template_id: "REC: enrollment_payment_template.id"
+          currency_id: "REC: company.currency_id.id"
+          pricelist_id: "REC: pricelist.id"
+          receivable_journal_id: "REC: receivable_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
+      - step: "Call wizard action_create_enrollment"
+        action: "call"
+        target: "wizard"
+        method: "action_create_enrollment"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate admission cache after wizard call"
+        action: "call"
+        target: "admission"
+        method: "invalidate_cache"
+
+      - step: "Search for created enrollment"
+        action: "search"
+        model: "school_enrollment"
+        domain: [["student_id", "=", "REC: admission.school_student_id.id"]]
+        save_as: "created_enrollment"
+        expect_count: 1
+
+      - step: "Assert enrollment matches admission data"
+        action: "assert"
+        target: "created_enrollment"
+        asserts:
+          state:
+            type: "value"
+            expected: "draft"
+          student_id:
+            type: "m2o"
+            expected: "REC: admission.school_student_id"
+          grade_id:
+            type: "m2o"
+            expected: "REC: grade"
+          academic_term_id:
+            type: "m2o"
+            expected: "REC: academic_term"
+          school_id:
+            type: "m2o"
+            expected: "REC: school"
+          grade_class_id:
+            type: "m2o"
+            expected: "REC: grade_class"
+          payment_template_id:
+            type: "m2o"
+            expected: "REC: enrollment_payment_template"
+          currency_id:
+            type: "m2o"
+            expected: "REC: company.currency_id"
+          pricelist_id:
+            type: "m2o"
+            expected: "REC: pricelist"
+          receivable_journal_id:
+            type: "m2o"
+            expected: "REC: receivable_journal"
+          receivable_account_id:
+            type: "m2o"
+            expected: "REC: ci_account"
+
+      - step: "Assert admission is now linked to the created enrollment"
+        action: "assert"
+        target: "admission"
+        asserts:
+          enrollment_id:
+            type: "m2o"
+            expected: "REC: created_enrollment"
+
+      - step: "Call wizard action_create_enrollment again (idempotent)"
+        action: "call"
+        target: "wizard"
+        method: "action_create_enrollment"
+        as_user: "base.user_admin"
+
+      - step: "Assert still only one enrollment exists for the student"
+        action: "search"
+        model: "school_enrollment"
+        domain: [["student_id", "=", "REC: admission.school_student_id.id"]]
+        save_as: "enrollments_after_second_call"
+        expect_count: 1

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 OpenSynergy Indonesia
+     Copyright 2026 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+
+<record id="school_admission_wizard_create_enrollment_view_form" model="ir.ui.view">
+    <field name="name">school_admission.wizard_create_enrollment - form</field>
+    <field name="model">school_admission.wizard_create_enrollment</field>
+    <field name="arch" type="xml">
+        <form string="Create Enrollment">
+            <group name="main" colspan="4" col="2">
+                <field name="admission_id" />
+                <field name="grade_class_id" />
+                <field name="payment_template_id" />
+                <field name="currency_id" />
+                <field name="pricelist_id" />
+                <field name="receivable_journal_id" />
+                <field name="receivable_account_id" />
+            </group>
+            <footer>
+                <button
+                        name="action_create_enrollment"
+                        type="object"
+                        string="Create Enrollment"
+                        class="btn-primary"
+                    />
+                <button string="Cancel" class="btn-default" special="cancel" />
+            </footer>
+        </form>
+    </field>
+</record>
+
+<record
+        id="school_admission_wizard_create_enrollment_action"
+        model="ir.actions.act_window"
+    >
+    <field name="name">Create Enrollment</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">school_admission.wizard_create_enrollment</field>
+    <field name="view_mode">form</field>
+    <field name="target">new</field>
+</record>
+
+</odoo>

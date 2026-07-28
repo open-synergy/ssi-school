@@ -5,6 +5,7 @@
 from . import (  # noqa: F401
     school_admission_copy_payment_term,
     school_admission_create_due_invoice,
+    school_admission_create_enrollment,
     school_admission_form_create_admission,
     school_admission_payment_term_duplicate,
     school_admission_test_create_admission,

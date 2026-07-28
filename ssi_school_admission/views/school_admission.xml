@@ -85,6 +85,12 @@
                         string="Create Due Invoice"
                         attrs="{'invisible':[('create_invoice_ok','=',False)]}"
                     />
+                <button
+                        name="action_create_enrollment"
+                        type="object"
+                        string="Create Enrollment"
+                        attrs="{'invisible':[('create_enrollment_ok','=',False)]}"
+                    />
             </xpath>
             <xpath expr="//field[@name='user_id']" position="after">
                 <label for="academic_term_id" string="Year/Term" />
@@ -250,12 +256,14 @@
                 <page name="result" string="Result">
                     <group name="result_group" colspan="4" col="2">
                         <field name="school_student_id" />
+                        <field name="enrollment_id" />
                     </group>
                 </page>
             </xpath>
             <xpath expr="//group[@name='policy_2']" position="inside">
                 <field name="addendum_ok" />
                 <field name="create_invoice_ok" />
+                <field name="create_enrollment_ok" />
             </xpath>
         </data>
     </field>

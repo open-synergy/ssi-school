@@ -47,6 +47,7 @@ class SchoolAdmission(models.Model):
         "cancel_ok",
         "restart_ok",
         "manual_number_ok",
+        "create_enrollment_ok",
     ]
     _header_button_order = [
         "action_confirm",
@@ -276,6 +277,15 @@ class SchoolAdmission(models.Model):
         readonly=True,
         help=("The student profile created when this " "admission is opened."),
     )
+    enrollment_id = fields.Many2one(
+        string="Enrollment",
+        comodel_name="school_enrollment",
+        readonly=True,
+        help=(
+            "The school enrollment created from this admission via the "
+            "Create Enrollment wizard, if any."
+        ),
+    )
     copy_payment_term_ok = fields.Boolean(
         string="Can Copy Payment Term",
         compute="_compute_policy",
@@ -306,6 +316,17 @@ class SchoolAdmission(models.Model):
         help=(
             "Policy that determines whether invoices may be created for "
             "payment terms that are due, via the Create Due Invoice wizard."
+        ),
+    )
+    create_enrollment_ok = fields.Boolean(
+        string="Can Create Enrollment",
+        compute="_compute_policy",
+        store=False,
+        compute_sudo=True,
+        help=(
+            "Policy that determines whether the Create Enrollment button "
+            "is visible, allowing a school_enrollment to be generated "
+            "from this admission."
         ),
     )
 
@@ -488,6 +509,53 @@ class SchoolAdmission(models.Model):
         )
         return waction
 
+    def action_create_enrollment(self):
+        """Open the Create Enrollment wizard, or the linked enrollment.
+
+        For each record: if ``enrollment_id`` is already set, return an
+        act_window opening that enrollment's form directly. Otherwise,
+        return an act_window opening the
+        ``school_admission.wizard_create_enrollment`` wizard (in a new
+        dialog) with ``admission_id`` and the currency/pricelist/journal/
+        account defaults pre-filled from this admission.
+
+        :return: an ``ir.actions.act_window`` dict
+        """
+        for record in self.sudo():
+            result = record._open_create_enrollment_wizard()
+        return result
+
+    def _open_create_enrollment_wizard(self):
+        """Build the act_window that opens the enrollment or its wizard.
+
+        :return: an ``ir.actions.act_window`` dict
+        """
+        self.ensure_one()
+        if self.enrollment_id:
+            return {
+                "type": "ir.actions.act_window",
+                "name": "School Enrollment",
+                "res_model": "school_enrollment",
+                "res_id": self.enrollment_id.id,
+                "view_mode": "form",
+                "target": "current",
+            }
+        waction = self.env.ref(
+            "ssi_school_admission.school_admission_wizard_create_enrollment_action"
+        ).read()[0]
+        waction.update(
+            {
+                "context": {
+                    "default_admission_id": self.id,
+                    "default_currency_id": self.currency_id.id,
+                    "default_pricelist_id": self.pricelist_id.id,
+                    "default_receivable_journal_id": self.receivable_journal_id.id,
+                    "default_receivable_account_id": self.receivable_account_id.id,
+                },
+            }
+        )
+        return waction
+
     def _create_due_invoice(self, date_start=False, date_end=False):
         self.ensure_one()
         self._check_create_invoice_policy()
@@ -611,6 +679,7 @@ Solution: Delete or disconnect the invoice on the payment term before cancelling
             "copy_payment_term_ok",
             "addendum_ok",
             "create_invoice_ok",
+            "create_enrollment_ok",
         ]
         res += policy_field
         return res
