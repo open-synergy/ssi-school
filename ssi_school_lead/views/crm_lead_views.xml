@@ -21,6 +21,7 @@
                         name="school_lead_parent_contact"
                         string="Parent/Guardian Contact"
                     >
+                    <label for="parent_street" string="Parent Address" />
                     <div class="o_address_format">
                         <field
                                 name="parent_street"
