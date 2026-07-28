@@ -195,6 +195,11 @@ msgid "Mother"
 msgstr ""
 
 #. module: ssi_school_lead
+#: model_terms:ir.ui.view,arch_db:ssi_school_lead.crm_lead_school_form_view
+msgid "Parent Address"
+msgstr ""
+
+#. module: ssi_school_lead
 #: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead__parent_city
 msgid "Parent City"
 msgstr ""
