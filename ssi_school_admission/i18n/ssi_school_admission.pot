@@ -96,6 +96,17 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_admission
+#: code:addons/ssi_school_admission/wizards/school_admission_create_enrollment.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Create enrollment from admission\n"
+"Database ID: %s\n"
+"Problem: Admission has no linked school student yet\n"
+"Solution: Open the admission first so its school student is created\n"
+msgstr ""
+
+#. module: ssi_school_admission
 #: code:addons/ssi_school_admission/models/school_admission_payment_term.py:0
 #, python-format
 msgid ""
@@ -323,6 +334,7 @@ msgstr ""
 #. module: ssi_school_admission
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term__admission_id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_product_summary__admission_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_wizard_create_enrollment__admission_id
 #: model:ir.ui.menu,name:ssi_school_admission.menu_school_admission
 msgid "Admission"
 msgstr ""
@@ -597,6 +609,11 @@ msgid "Can Create Due Invoice"
 msgstr ""
 
 #. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__create_enrollment_ok
+msgid "Can Create Enrollment"
+msgstr ""
+
+#. module: ssi_school_admission
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__create_school_admission_ok
 msgid "Can Create School Admission"
 msgstr ""
@@ -649,6 +666,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_test_wizard_create_admission_view_form
 #: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_wizard_copy_payment_term_view_form
 #: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_wizard_create_due_invoice_view_form
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_wizard_create_enrollment_view_form
 msgid "Cancel"
 msgstr ""
 
@@ -792,6 +810,13 @@ msgid "Create Due Invoice for Admission Payment Terms"
 msgstr ""
 
 #. module: ssi_school_admission
+#: model:ir.actions.act_window,name:ssi_school_admission.school_admission_wizard_create_enrollment_action
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_view_form
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_wizard_create_enrollment_view_form
+msgid "Create Enrollment"
+msgstr ""
+
+#. module: ssi_school_admission
 #: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_payment_term_view_tree
 #: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_view_form
 msgid "Create Invoice"
@@ -817,6 +842,11 @@ msgid "Create School Admission from Admission Test"
 msgstr ""
 
 #. module: ssi_school_admission
+#: model:ir.model,name:ssi_school_admission.model_school_admission_wizard_create_enrollment
+msgid "Create School Enrollment from School Admission"
+msgstr ""
+
+#. module: ssi_school_admission
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__create_uid
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template__create_uid
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template_line__create_uid
@@ -835,6 +865,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test_wizard_create_admission__create_uid
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_wizard_copy_payment_term__create_uid
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_wizard_create_due_invoice__create_uid
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_wizard_create_enrollment__create_uid
 msgid "Created by"
 msgstr ""
 
@@ -857,6 +888,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test_wizard_create_admission__create_date
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_wizard_copy_payment_term__create_date
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_wizard_create_due_invoice__create_date
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_wizard_create_enrollment__create_date
 msgid "Created on"
 msgstr ""
 
@@ -871,6 +903,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_detail__currency_id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_product_summary__currency_id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test_wizard_create_admission__currency_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_wizard_create_enrollment__currency_id
 msgid "Currency"
 msgstr ""
 
@@ -999,6 +1032,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test_wizard_create_admission__display_name
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_wizard_copy_payment_term__display_name
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_wizard_create_due_invoice__display_name
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_wizard_create_enrollment__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -1101,6 +1135,11 @@ msgstr ""
 #. module: ssi_school_admission
 #: model:school_admission_payment_template,name:ssi_school_admission.demo_payment_template_2
 msgid "Elementary School A - Grade 2 Admission Payment Template (demo)"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__enrollment_id
+msgid "Enrollment"
 msgstr ""
 
 #. module: ssi_school_admission
@@ -1208,6 +1247,11 @@ msgid "Grade"
 msgstr ""
 
 #. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_wizard_create_enrollment__grade_class_id
+msgid "Grade Class"
+msgstr ""
+
+#. module: ssi_school_admission
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__grade_type_id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template__grade_type_id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__grade_type_id
@@ -1252,6 +1296,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test_wizard_create_admission__id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_wizard_copy_payment_term__id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_wizard_create_due_invoice__id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_wizard_create_enrollment__id
 msgid "ID"
 msgstr ""
 
@@ -1390,6 +1435,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test_wizard_create_admission____last_update
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_wizard_copy_payment_term____last_update
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_wizard_create_due_invoice____last_update
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_wizard_create_enrollment____last_update
 msgid "Last Modified on"
 msgstr ""
 
@@ -1412,6 +1458,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test_wizard_create_admission__write_uid
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_wizard_copy_payment_term__write_uid
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_wizard_create_due_invoice__write_uid
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_wizard_create_enrollment__write_uid
 msgid "Last Updated by"
 msgstr ""
 
@@ -1434,6 +1481,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test_wizard_create_admission__write_date
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_wizard_copy_payment_term__write_date
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_wizard_create_due_invoice__write_date
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_wizard_create_enrollment__write_date
 msgid "Last Updated on"
 msgstr ""
 
@@ -1714,6 +1762,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__payment_template_id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_wizard_create_admission__payment_template_id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test_wizard_create_admission__payment_template_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_wizard_create_enrollment__payment_template_id
 msgid "Payment Template"
 msgstr ""
 
@@ -1764,6 +1813,13 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__create_enrollment_ok
+msgid ""
+"Policy that determines whether the Create Enrollment button is visible, "
+"allowing a school_enrollment to be generated from this admission."
+msgstr ""
+
+#. module: ssi_school_admission
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template_line__price_subtotal
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__price_subtotal
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_detail__price_subtotal
@@ -1786,6 +1842,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term__pricelist_id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_detail__pricelist_id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test_wizard_create_admission__pricelist_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_wizard_create_enrollment__pricelist_id
 msgid "Pricelist"
 msgstr ""
 
@@ -1882,6 +1939,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_wizard_create_admission__receivable_account_id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__receivable_account_id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test_wizard_create_admission__receivable_account_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_wizard_create_enrollment__receivable_account_id
 msgid "Receivable Account"
 msgstr ""
 
@@ -1890,6 +1948,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_wizard_create_admission__receivable_journal_id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__receivable_journal_id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test_wizard_create_admission__receivable_journal_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_wizard_create_enrollment__receivable_journal_id
 msgid "Receivable Journal"
 msgstr ""
 
@@ -2329,6 +2388,11 @@ msgid "The account used to record receivables for admission payments."
 msgstr ""
 
 #. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_wizard_create_enrollment__receivable_account_id
+msgid "The account used to record receivables for the enrollment."
+msgstr ""
+
+#. module: ssi_school_admission
 #: model:ir.model.fields,help:ssi_school_admission.field_school_admission_fee_template__journal_id
 msgid "The accounting journal used to post admission fees."
 msgstr ""
@@ -2359,6 +2423,11 @@ msgid "The admission test associated with this form."
 msgstr ""
 
 #. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_wizard_create_enrollment__admission_id
+msgid "The admission this enrollment will be generated from."
+msgstr ""
+
+#. module: ssi_school_admission
 #: model:ir.model.fields,help:ssi_school_admission.field_school_admission_wizard_copy_payment_term__source_admission_id
 msgid "The admission whose payment terms (and detail lines) will be copied."
 msgstr ""
@@ -2386,6 +2455,11 @@ msgstr ""
 #. module: ssi_school_admission
 #: model:ir.model.fields,help:ssi_school_admission.field_school_admission__currency_id
 msgid "The currency used for payment calculations in this admission."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_wizard_create_enrollment__currency_id
+msgid "The currency used for the enrollment payment billing."
 msgstr ""
 
 #. module: ssi_school_admission
@@ -2431,6 +2505,13 @@ msgstr ""
 #. module: ssi_school_admission
 #: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_template_term_detail__name
 msgid "The description of this fee line item."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_wizard_create_enrollment__payment_template_id
+msgid ""
+"The enrollment payment template used to auto-populate billing terms. Left "
+"empty, no payment terms are generated."
 msgstr ""
 
 #. module: ssi_school_admission
@@ -2482,6 +2563,11 @@ msgid "The grade type derived from the selected school."
 msgstr ""
 
 #. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_wizard_create_enrollment__grade_class_id
+msgid "The homeroom class the student will be placed in."
+msgstr ""
+
+#. module: ssi_school_admission
 #: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_template_term__detail_ids
 #: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_term__detail_ids
 msgid "The individual fee items included in this payment term."
@@ -2506,6 +2592,11 @@ msgstr ""
 #. module: ssi_school_admission
 #: model:ir.model.fields,help:ssi_school_admission.field_school_admission__receivable_journal_id
 msgid "The journal used to post receivable entries for admission payments."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_wizard_create_enrollment__receivable_journal_id
+msgid "The journal used to post receivable entries for the enrollment."
 msgstr ""
 
 #. module: ssi_school_admission
@@ -2582,6 +2673,11 @@ msgid "The payment term whose detail lines will be copied to the new term."
 msgstr ""
 
 #. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_wizard_create_enrollment__pricelist_id
+msgid "The pricelist applied for price calculations in the enrollment."
+msgstr ""
+
+#. module: ssi_school_admission
 #: model:ir.model.fields,help:ssi_school_admission.field_school_admission__pricelist_id
 msgid "The pricelist applied for price calculations in this admission."
 msgstr ""
@@ -2631,6 +2727,13 @@ msgstr ""
 #. module: ssi_school_admission
 #: model:ir.model.fields,help:ssi_school_admission.field_school_admission_test__school_id
 msgid "The school at which this admission test is conducted."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__enrollment_id
+msgid ""
+"The school enrollment created from this admission via the Create Enrollment "
+"wizard, if any."
 msgstr ""
 
 #. module: ssi_school_admission
