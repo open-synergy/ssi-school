@@ -1,0 +1,221 @@
+options:
+  auto_refresh: true
+
+scenarios:
+  - name: "CRM Lead Student Nickname - Create mirrors student nickname"
+    steps:
+      - step: "Create student partner with nickname"
+        action: "create"
+        model: "res.partner"
+        save_as: "student"
+        values:
+          name: "Student Nickname Full SN1"
+          nickname: "Budi"
+
+      - step: "Create CRM lead with student_id"
+        action: "create"
+        model: "crm.lead"
+        save_as: "lead"
+        as_user: "base.user_admin"
+        values:
+          name: "Lead Student Nickname Full SN1"
+          student_id: "REC: student.id"
+
+      - step: "Assert student_nickname mirrors student partner nickname"
+        action: "assert"
+        target: "lead"
+        asserts:
+          student_nickname:
+            type: "value"
+            expected: "Budi"
+
+  - name: "CRM Lead Student Nickname - Write on lead writes through to student"
+    steps:
+      - step: "Create student partner with initial nickname"
+        action: "create"
+        model: "res.partner"
+        save_as: "student"
+        values:
+          name: "Student Nickname Write-Through SN2"
+          nickname: "Old Nick"
+
+      - step: "Create CRM lead with student_id"
+        action: "create"
+        model: "crm.lead"
+        save_as: "lead"
+        as_user: "base.user_admin"
+        values:
+          name: "Lead Student Nickname Write-Through SN2"
+          student_id: "REC: student.id"
+
+      - step: "Write new student_nickname value on the lead"
+        action: "write"
+        target: "lead"
+        values:
+          student_nickname: "New Nick"
+
+      - step: "Assert student_nickname on lead is updated"
+        action: "assert"
+        target: "lead"
+        asserts:
+          student_nickname:
+            type: "value"
+            expected: "New Nick"
+
+      - step: "Assert student_id.nickname is updated by the related inverse"
+        action: "assert"
+        target: "student"
+        asserts:
+          nickname:
+            type: "value"
+            expected: "New Nick"
+
+  - name: "CRM Lead Student Nickname - Propagates when student partner is updated"
+    steps:
+      - step: "Create student partner with initial nickname"
+        action: "create"
+        model: "res.partner"
+        save_as: "student"
+        values:
+          name: "Student Nickname Propagation SN3"
+          nickname: "First Nick"
+
+      - step: "Create CRM lead with student_id"
+        action: "create"
+        model: "crm.lead"
+        save_as: "lead"
+        as_user: "base.user_admin"
+        values:
+          name: "Lead Student Nickname Propagation SN3"
+          student_id: "REC: student.id"
+
+      - step: "Assert student_nickname mirrors initial student partner nickname"
+        action: "assert"
+        target: "lead"
+        asserts:
+          student_nickname:
+            type: "value"
+            expected: "First Nick"
+
+      - step: "Update student partner nickname"
+        action: "write"
+        target: "student"
+        values:
+          nickname: "Updated Nick"
+
+      - step: "Assert student_nickname on lead follows updated student value"
+        action: "assert"
+        target: "lead"
+        asserts:
+          student_nickname:
+            type: "value"
+            expected: "Updated Nick"
+
+  - name: "CRM Lead Student Nickname - Propagates when student_id is changed"
+    steps:
+      - step: "Create first student partner"
+        action: "create"
+        model: "res.partner"
+        save_as: "student_a"
+        values:
+          name: "Student Nickname A SN4"
+          nickname: "Nick A"
+
+      - step: "Create second student partner with different nickname"
+        action: "create"
+        model: "res.partner"
+        save_as: "student_b"
+        values:
+          name: "Student Nickname B SN4"
+          nickname: "Nick B"
+
+      - step: "Create CRM lead with first student_id"
+        action: "create"
+        model: "crm.lead"
+        save_as: "lead"
+        as_user: "base.user_admin"
+        values:
+          name: "Lead Student Nickname Change Student SN4"
+          student_id: "REC: student_a.id"
+
+      - step: "Assert student_nickname mirrors first student"
+        action: "assert"
+        target: "lead"
+        asserts:
+          student_nickname:
+            type: "value"
+            expected: "Nick A"
+
+      - step: "Change lead student_id to second student"
+        action: "write"
+        target: "lead"
+        values:
+          student_id: "REC: student_b.id"
+
+      - step: "Assert student_nickname now mirrors second student"
+        action: "assert"
+        target: "lead"
+        asserts:
+          student_nickname:
+            type: "value"
+            expected: "Nick B"
+
+  - name: "CRM Lead Student Nickname - Negative, no student_id"
+    steps:
+      - step: "Create CRM lead without student_id"
+        action: "create"
+        model: "crm.lead"
+        save_as: "lead"
+        as_user: "base.user_admin"
+        values:
+          name: "Lead Student Nickname No Student SN5"
+
+      - step: "Assert lead was created successfully"
+        action: "assert"
+        target: "lead"
+        asserts:
+          id:
+            type: "value"
+            operator: "is_truthy"
+
+      - step: "Assert student_nickname is falsy"
+        action: "assert"
+        target: "lead"
+        asserts:
+          student_nickname:
+            type: "value"
+            operator: "is_falsy"
+
+  - name: "CRM Lead Student Nickname - Negative, student without nickname"
+    steps:
+      - step: "Create student partner without nickname"
+        action: "create"
+        model: "res.partner"
+        save_as: "student"
+        values:
+          name: "Student Nickname Empty SN6"
+
+      - step: "Create CRM lead with student having empty nickname"
+        action: "create"
+        model: "crm.lead"
+        save_as: "lead"
+        as_user: "base.user_admin"
+        values:
+          name: "Lead Student Nickname Empty Student SN6"
+          student_id: "REC: student.id"
+
+      - step: "Assert lead was created successfully"
+        action: "assert"
+        target: "lead"
+        asserts:
+          id:
+            type: "value"
+            operator: "is_truthy"
+
+      - step: "Assert student_nickname is falsy, not an error"
+        action: "assert"
+        target: "lead"
+        asserts:
+          student_nickname:
+            type: "value"
+            operator: "is_falsy"

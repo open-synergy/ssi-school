@@ -5,3 +5,4 @@
 from . import test_school_lead  # noqa: F401
 from . import test_crm_lead_parent_contact  # noqa: F401
 from . import test_crm_lead_student_family_link  # noqa: F401
+from . import test_crm_lead_student_nickname  # noqa: F401
