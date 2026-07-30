@@ -3,7 +3,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 {
     "name": "School Admission Lead",
-    "version": "14.0.1.8.0",
+    "version": "14.0.1.9.0",
     "website": "https://simetri-sinergi.id",
     "author": (
         "PT. Simetri Sinergi Indonesia, "
