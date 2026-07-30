@@ -195,6 +195,14 @@ msgid "Mother"
 msgstr ""
 
 #. module: ssi_school_lead
+#: model:ir.model.fields,help:ssi_school_lead.field_crm_lead__student_nickname
+msgid ""
+"Nickname of the prospective student, synchronized from the contact "
+"referenced by the Student field. Writing this field updates that contact's "
+"nickname."
+msgstr ""
+
+#. module: ssi_school_lead
 #: model_terms:ir.ui.view,arch_db:ssi_school_lead.crm_lead_school_form_view
 msgid "Parent Address"
 msgstr ""
@@ -326,6 +334,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead__student_id
 #: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead_create_admission__student_id
 msgid "Student"
+msgstr ""
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead__student_nickname
+msgid "Student Nickname"
 msgstr ""
 
 #. module: ssi_school_lead
