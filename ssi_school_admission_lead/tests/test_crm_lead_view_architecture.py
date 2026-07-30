@@ -42,12 +42,13 @@ class TestCrmLeadViewArchitecture(YamlTransactionCase):
                 "nationality_id",
                 "allowed_previous_school_ids",
                 "previous_school_id",
+                "student_nickname",
                 "parent_relationship",
             ],
             "Prospective Student group should list student_id, student_birthdate, "
             "student_gender, birth_city, religion_id, nationality_id, "
-            "allowed_previous_school_ids, previous_school_id, parent_relationship "
-            "in that order",
+            "allowed_previous_school_ids, previous_school_id, student_nickname, "
+            "parent_relationship in that order",
         )
         previous_school_id_field = group.xpath(".//field[@name='previous_school_id']")[
             0

@@ -123,6 +123,16 @@ class CrmLead(models.Model):
         readonly=False,
         help="Email address of the parent/guardian, mirrored from their contact record.",
     )
+    student_nickname = fields.Char(
+        string="Student Nickname",
+        related="student_id.nickname",
+        store=True,
+        readonly=False,
+        compute_sudo=True,
+        help="Nickname of the prospective student, synchronized from the "
+        "contact referenced by the Student field. Writing this field "
+        "updates that contact's nickname.",
+    )
 
     @api.depends("admission_id")
     def _compute_create_admission_ok(self):
