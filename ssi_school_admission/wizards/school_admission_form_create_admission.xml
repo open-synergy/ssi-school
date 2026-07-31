@@ -22,6 +22,8 @@
                 <group name="main_right" colspan="1" col="2">
                     <field name="receivable_journal_id" />
                     <field name="receivable_account_id" />
+                    <field name="customer_invoice_type_id" />
+                    <field name="auto_confirm_customer_invoice" />
                 </group>
             </group>
             <footer>
