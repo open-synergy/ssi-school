@@ -238,6 +238,7 @@ msgstr ""
 
 #. module: ssi_school_admission
 #: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_form_view_form
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_payment_template_view_form
 #: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_view_form
 msgid "Accounting"
 msgstr ""
@@ -529,7 +530,10 @@ msgstr ""
 
 #. module: ssi_school_admission
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__auto_confirm_customer_invoice
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_wizard_create_admission__auto_confirm_customer_invoice
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__auto_confirm_customer_invoice
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test_wizard_create_admission__auto_confirm_customer_invoice
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_wizard_create_enrollment__auto_confirm_customer_invoice
 msgid "Auto Confirm Customer Invoice"
 msgstr ""
 
@@ -914,8 +918,26 @@ msgstr ""
 
 #. module: ssi_school_admission
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__customer_invoice_type_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_wizard_create_admission__customer_invoice_type_id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__customer_invoice_type_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test_wizard_create_admission__customer_invoice_type_id
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_wizard_create_enrollment__customer_invoice_type_id
 msgid "Customer Invoice Type"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form_wizard_create_admission__customer_invoice_type_id
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_test_wizard_create_admission__customer_invoice_type_id
+msgid ""
+"Customer invoice type applied to the admission created by this wizard. Auto-"
+"populated from the selected payment template, but can be overridden."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_wizard_create_enrollment__customer_invoice_type_id
+msgid ""
+"Customer invoice type applied to the enrollment created by this wizard. "
+"Auto-populated from the selected payment template, but can be overridden."
 msgstr ""
 
 #. module: ssi_school_admission
@@ -1353,6 +1375,23 @@ msgstr ""
 msgid ""
 "If enabled, the customer invoice created from a payment term of this "
 "admission is immediately confirmed instead of being left in draft."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form_wizard_create_admission__auto_confirm_customer_invoice
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_test_wizard_create_admission__auto_confirm_customer_invoice
+msgid ""
+"If enabled, the customer invoice created from the admission's payment terms "
+"is immediately confirmed instead of being left in draft. Auto-populated from"
+" the selected payment template, but can be overridden."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_wizard_create_enrollment__auto_confirm_customer_invoice
+msgid ""
+"If enabled, the customer invoice created from the enrollment's payment terms"
+" is immediately confirmed instead of being left in draft. Auto-populated "
+"from the selected payment template, but can be overridden."
 msgstr ""
 
 #. module: ssi_school_admission
