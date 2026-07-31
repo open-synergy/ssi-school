@@ -290,3 +290,217 @@ scenarios:
         domain: [["admission_test_id", "=", "EVAL: registry['admission_test'].id"]]
         save_as: "admissions_after_second_call"
         expect_count: 1
+
+  - name:
+      "Wizard Form - Onchange sets and resets Customer Invoice Type and Auto Confirm"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable WZOC"
+          code: "WZOC4200"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type WZOC"
+          code: "CITWZOC"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
+      - step: "Setup - create payment template with auto confirm"
+        action: "create"
+        model: "school_admission_payment_template"
+        save_as: "payment_template"
+        values:
+          name: "Payment Template WZOC"
+          code: "PTWZOC"
+          customer_invoice_type_id: "REC: ci_type.id"
+          auto_confirm_customer_invoice: true
+
+      - step: "Fill form and pick payment template"
+        action: "form"
+        model: "school_admission_form.wizard_create_admission"
+        save: false
+        ops:
+          - set:
+              payment_template_id: "REC: payment_template"
+          - assert:
+              customer_invoice_type_id:
+                type: "value"
+                operator: "is_truthy"
+              auto_confirm_customer_invoice:
+                type: "value"
+                expected: true
+
+      - step: "Clear payment template and confirm both fields reset"
+        action: "form"
+        model: "school_admission_form.wizard_create_admission"
+        save: false
+        ops:
+          - set:
+              payment_template_id: "REC: payment_template"
+          - set:
+              payment_template_id: "EVAL: self.env['school_admission_payment_template']"
+          - assert:
+              customer_invoice_type_id:
+                type: "value"
+                operator: "is_falsy"
+              auto_confirm_customer_invoice:
+                type: "value"
+                expected: false
+
+  - name: "Wizard - Create Admission from Admission Test with Customer Invoice Fields"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable WZTC"
+          code: "WZTC4200"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type WZTC"
+          code: "CITWZTC"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type WZTC"
+          code: "GTWZTC"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 WZTC"
+          code: "AYWZTC"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester WZTC"
+          code: "SMWZTC"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School WZTC"
+          code: "SCHWZTC"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade WZTC"
+          code: "GWZTC"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "student_contact"
+        values:
+          name: "Student Contact WZTC"
+
+      - step: "Create admission test"
+        action: "create"
+        model: "school_admission_test"
+        save_as: "admission_test"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: student_contact.id"
+
+      - step: "Create wizard with customer invoice fields filled"
+        action: "create"
+        model: "school_admission_test.wizard_create_admission"
+        save_as: "test_wizard"
+        values:
+          admission_test_id: "REC: admission_test.id"
+          currency_id: "REC: company.currency_id.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+          auto_confirm_customer_invoice: true
+
+      - step: "Call wizard action_create_admission"
+        action: "call"
+        target: "test_wizard"
+        method: "action_create_admission"
+        as_user: "base.user_admin"
+
+      - step: "Search for created admission"
+        action: "search"
+        model: "school_admission"
+        domain: [["admission_test_id", "=", "REC: admission_test.id"]]
+        save_as: "created_admission"
+        expect_count: 1
+
+      - step: "Assert admission has customer invoice fields from wizard"
+        action: "assert"
+        target: "created_admission"
+        asserts:
+          customer_invoice_type_id:
+            type: "m2o"
+            expected: "REC: ci_type"
+          auto_confirm_customer_invoice:
+            type: "value"
+            expected: true

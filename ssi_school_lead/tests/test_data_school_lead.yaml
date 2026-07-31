@@ -221,6 +221,12 @@ scenarios:
           create_admission_ok:
             type: "value"
             expected: false
+          admission_id.customer_invoice_type_id:
+            type: "value"
+            operator: "is_falsy"
+          admission_id.auto_confirm_customer_invoice:
+            type: "value"
+            expected: false
 
       - step: "Call action_create_admission on lead (admission already exists)"
         action: "call"
@@ -340,6 +346,7 @@ scenarios:
         save_as: "payment_template"
         values:
           customer_invoice_type_id: "REC: ci_type.id"
+          auto_confirm_customer_invoice: true
           name: "Payment Template SLPT"
           code: "PTSLPT"
           school_id: "EVAL: registry['school'].id"
@@ -427,6 +434,12 @@ scenarios:
             type: "o2m"
             check: "count"
             expected_count: 1
+          customer_invoice_type_id:
+            type: "m2o"
+            expected: "REC: ci_type"
+          auto_confirm_customer_invoice:
+            type: "value"
+            expected: true
 
   - name: "School Lead - Academic Term Default is_open_admission Filter"
     steps:

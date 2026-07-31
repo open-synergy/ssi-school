@@ -217,6 +217,8 @@ scenarios:
           pricelist_id: "REC: pricelist.id"
           receivable_journal_id: "REC: receivable_journal.id"
           receivable_account_id: "REC: ci_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+          auto_confirm_customer_invoice: true
 
       - step: "Call wizard action_create_enrollment"
         action: "call"
@@ -273,6 +275,12 @@ scenarios:
           receivable_account_id:
             type: "m2o"
             expected: "REC: ci_account"
+          customer_invoice_type_id:
+            type: "m2o"
+            expected: "REC: ci_type"
+          auto_confirm_customer_invoice:
+            type: "value"
+            expected: true
 
       - step: "Assert admission is now linked to the created enrollment"
         action: "assert"

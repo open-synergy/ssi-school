@@ -2,7 +2,7 @@
 # Copyright 2026 PT. Simetri Sinergi Indonesia
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import _, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -65,6 +65,46 @@ class SchoolAdmissionWizardCreateEnrollment(models.TransientModel):
         default=lambda self: self.env.company.currency_id,
         help="The currency used for the enrollment payment billing.",
     )
+    customer_invoice_type_id = fields.Many2one(
+        string="Customer Invoice Type",
+        comodel_name="customer_invoice_type",
+        required=False,
+        help=(
+            "Customer invoice type applied to the enrollment created by "
+            "this wizard. Auto-populated from the selected payment "
+            "template, but can be overridden."
+        ),
+    )
+    auto_confirm_customer_invoice = fields.Boolean(
+        string="Auto Confirm Customer Invoice",
+        default=False,
+        help=(
+            "If enabled, the customer invoice created from the "
+            "enrollment's payment terms is immediately confirmed "
+            "instead of being left in draft. Auto-populated from the "
+            "selected payment template, but can be overridden."
+        ),
+    )
+
+    @api.onchange(
+        "payment_template_id",
+    )
+    def onchange_customer_invoice_type_id(self):
+        self.customer_invoice_type_id = False
+        if self.payment_template_id:
+            self.customer_invoice_type_id = (
+                self.payment_template_id.customer_invoice_type_id
+            )
+
+    @api.onchange(
+        "payment_template_id",
+    )
+    def onchange_auto_confirm_customer_invoice(self):
+        self.auto_confirm_customer_invoice = False
+        if self.payment_template_id:
+            self.auto_confirm_customer_invoice = (
+                self.payment_template_id.auto_confirm_customer_invoice
+            )
 
     def action_create_enrollment(self):
         """Create the draft enrollment, or open the existing linked one.
@@ -126,6 +166,10 @@ class SchoolAdmissionWizardCreateEnrollment(models.TransientModel):
                 "payment_template_id": self.payment_template_id.id
                 if self.payment_template_id
                 else False,
+                "customer_invoice_type_id": self.customer_invoice_type_id.id
+                if self.customer_invoice_type_id
+                else False,
+                "auto_confirm_customer_invoice": self.auto_confirm_customer_invoice,
             }
         )
         admission.write({"enrollment_id": enrollment.id})
