@@ -574,6 +574,7 @@ msgid "Account"
 msgstr ""
 
 #. module: ssi_school
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_payment_template_view_form
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_form
 msgid "Accounting"
 msgstr ""
