@@ -68,10 +68,6 @@
                 <field name="school_id" />
                 <field name="grade_id" domain="[('type_id','=',grade_type_id)]" />
                 <field name="grade_type_id" invisible="1" />
-                <field name="receivable_journal_id" />
-                <field name="receivable_account_id" />
-                <field name="customer_invoice_type_id" />
-                <field name="auto_confirm_customer_invoice" />
             </xpath>
             <xpath expr="//page[1]" position="before">
                 <page name="payment_terms" string="Payment Terms">
@@ -206,6 +202,14 @@
                                 widget="ace"
                                 attrs="{'invisible':[('product_selection_method','!=','code')]}"
                             />
+                    </group>
+                </page>
+                <page name="accounting" string="Accounting">
+                    <group name="accounting_group" colspan="4" col="2">
+                        <field name="receivable_journal_id" />
+                        <field name="receivable_account_id" />
+                        <field name="customer_invoice_type_id" />
+                        <field name="auto_confirm_customer_invoice" />
                     </group>
                 </page>
             </xpath>
