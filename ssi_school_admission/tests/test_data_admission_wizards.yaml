@@ -359,7 +359,7 @@ scenarios:
           - set:
               payment_template_id: "REC: payment_template"
           - set:
-              payment_template_id: false
+              payment_template_id: "EVAL: self.env['school_admission_payment_template']"
           - assert:
               customer_invoice_type_id:
                 type: "value"
