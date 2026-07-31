@@ -18,8 +18,8 @@ Available addons
 ----------------
 addon | version | maintainers | summary
 --- | --- | --- | ---
-[ssi_school](ssi_school/) | 14.0.5.9.0 |  | School
-[ssi_school_admission](ssi_school_admission/) | 14.0.2.21.0 |  | School Admission
+[ssi_school](ssi_school/) | 14.0.5.10.0 |  | School
+[ssi_school_admission](ssi_school_admission/) | 14.0.2.22.0 |  | School Admission
 [ssi_school_admission_customer_invoice_export](ssi_school_admission_customer_invoice_export/) | 14.0.1.1.0 |  | School Admission - Customer Invoice Export
 [ssi_school_admission_lead](ssi_school_admission_lead/) | 14.0.1.9.0 |  | School Admission Lead
 [ssi_school_admission_lead_operating_unit](ssi_school_admission_lead_operating_unit/) | 14.0.1.1.1 |  | School Admission Lead - Operating Unit
@@ -28,7 +28,7 @@ addon | version | maintainers | summary
 [ssi_school_health](ssi_school_health/) | 14.0.1.0.0 |  | School Health
 [ssi_school_incident](ssi_school_incident/) | 14.0.1.1.0 |  | School Incident
 [ssi_school_incident_operating_unit](ssi_school_incident_operating_unit/) | 14.0.1.0.0 |  | School Incident - Operating Unit
-[ssi_school_lead](ssi_school_lead/) | 14.0.1.10.0 |  | School Lead
+[ssi_school_lead](ssi_school_lead/) | 14.0.1.11.0 |  | School Lead
 [ssi_school_operating_unit](ssi_school_operating_unit/) | 14.0.1.6.0 |  | School - Operating Unit
 [ssi_school_qr_code](ssi_school_qr_code/) | 14.0.1.0.0 |  | Student QR Code
 [ssi_school_student_graduation](ssi_school_student_graduation/) | 14.0.1.0.0 |  | School Student Graduation
