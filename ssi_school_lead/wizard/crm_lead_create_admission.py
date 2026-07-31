@@ -8,6 +8,13 @@ from odoo import api, fields, models
 
 
 class CrmLeadCreateAdmission(models.TransientModel):
+    """
+    Wizard that creates the school_admission for a CRM lead's
+    prospective student, deriving the payment template (and, through
+    it, the receivable journal/account and customer invoice settings)
+    from the selected school, grade, and academic term.
+    """
+
     _name = "crm.lead.create_admission"
     _description = "Wizard - Create Admission from CRM Lead"
 
@@ -133,6 +140,16 @@ class CrmLeadCreateAdmission(models.TransientModel):
         }
 
     def _prepare_admission_data(self):
+        """Build the ``school_admission`` values for this wizard.
+
+        ``customer_invoice_type_id`` and ``auto_confirm_customer_invoice``
+        are copied straight from ``payment_template_id``, mirroring the
+        ``receivable_journal_id``/``receivable_account_id`` conditional
+        pattern below: this wizard exposes no override field for either
+        of the four, so the template is the only source of truth.
+
+        :return: dict of ``school_admission`` values
+        """
         self.ensure_one()
         return {
             "date": self.date,
@@ -151,4 +168,14 @@ class CrmLeadCreateAdmission(models.TransientModel):
             "receivable_account_id": self.payment_template_id.receivable_account_id.id
             if self.payment_template_id
             else False,
+            "customer_invoice_type_id": (
+                self.payment_template_id.customer_invoice_type_id.id
+                if self.payment_template_id
+                else False
+            ),
+            "auto_confirm_customer_invoice": (
+                self.payment_template_id.auto_confirm_customer_invoice
+                if self.payment_template_id
+                else False
+            ),
         }
