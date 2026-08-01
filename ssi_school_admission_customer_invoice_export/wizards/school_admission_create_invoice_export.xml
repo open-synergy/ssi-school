@@ -10,7 +10,7 @@
     <field name="arch" type="xml">
         <form string="Create Invoice Export">
             <group name="main" colspan="4" col="2">
-                <field name="admission_ids" widget="many2many_tags" colspan="2" />
+                <field name="admission_ids" invisible="1" />
                 <field name="type_id" />
                 <field name="date" />
                 <field name="output_format" />
