@@ -1299,6 +1299,7 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model,name:ssi_school.model_res_partner
 #: model:ir.model.fields,field_description:ssi_school.field_school_student__contact_id
 msgid "Contact"
 msgstr ""
@@ -1627,6 +1628,7 @@ msgstr ""
 
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:ssi_school.field_res_partner__display_name
 #: model:ir.model.fields,field_description:ssi_school.field_school__display_name
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__display_name
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__display_name
@@ -2246,6 +2248,7 @@ msgstr ""
 
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_hr_employee__id
+#: model:ir.model.fields,field_description:ssi_school.field_res_partner__id
 #: model:ir.model.fields,field_description:ssi_school.field_school__id
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__id
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__id
@@ -2504,6 +2507,7 @@ msgstr ""
 
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_hr_employee____last_update
+#: model:ir.model.fields,field_description:ssi_school.field_res_partner____last_update
 #: model:ir.model.fields,field_description:ssi_school.field_school____last_update
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term____last_update
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_year____last_update
@@ -2844,6 +2848,13 @@ msgid "My Activity Deadline"
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_res_partner__nisn
+#: model:ir.model.fields,field_description:ssi_school.field_res_users__nisn
+#: model:res.partner.id_category,name:ssi_school.partner_identification_nisn
+msgid "NISN"
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school__name
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__name
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__name
@@ -2879,6 +2890,18 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template_term__name
 msgid ""
 "Name of the payment period, e.g. 'Registration Fee' or 'Tuition Semester 1'."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_res_partner__nisn
+#: model:ir.model.fields,help:ssi_school.field_res_users__nisn
+msgid ""
+"National student number (Nomor Induk Siswa Nasional) of this contact, stored"
+" as an ID number record under the NISN category. Emptying this field "
+"archives the related ID number record instead of deleting it, so the history"
+" is preserved. When the contact already has more than one ID number under "
+"the NISN category, writing through this field is rejected with a validation "
+"error and the ID Numbers tab must be used instead."
 msgstr ""
 
 #. module: ssi_school
