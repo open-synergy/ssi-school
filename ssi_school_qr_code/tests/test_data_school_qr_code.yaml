@@ -1,34 +1,39 @@
 scenarios:
-  - name: "Create Student With QR Code Image"
+  # NOTE: this scenario MUST stay first in this file. All scenarios in a
+  # single YAML file share one DB transaction without rollback, so any
+  # ir.model configuration written by an earlier scenario stays applied
+  # for the later ones. Placing it anywhere else would make it pass or
+  # fail by accident.
+  - name: "QR Image Is Falsy When Student Model Has No QR Content"
     steps:
       - step: "Create grade type"
         action: "create"
         model: "school_grade_type"
         save_as: "grade_type"
         values:
-          name: "Grade Type Student QR"
-          code: "GTSQR"
+          name: "Grade Type Student QR Unconfigured"
+          code: "GTSQR1"
           sequence: 10
       - step: "Create school"
         action: "create"
         model: "school"
         save_as: "school"
         values:
-          name: "School for Student QR"
-          code: "SCHSQR"
+          name: "School for Student QR Unconfigured"
+          code: "SCHSQR1"
           grade_type_id: "EVAL: registry['grade_type'].id"
       - step: "Create contact"
         action: "create"
         model: "res.partner"
         save_as: "contact"
         values:
-          name: "Student QR Contact"
-      - step: "Create student"
+          name: "Student QR Unconfigured Contact"
+      - step: "Create student without configuring the QR content"
         action: "create"
         model: "school_student"
         save_as: "student"
         values:
-          name: "Student QR"
+          name: "Student QR Unconfigured"
           code: "STUQR001"
           contact_id: "EVAL: registry['contact'].id"
           school_id: "EVAL: registry['school'].id"
@@ -36,7 +41,7 @@ scenarios:
         action: "call"
         target: "student"
         method: "invalidate_cache"
-      - step: "Assert student created and qr_image computed"
+      - step: "Assert student created and qr_image left empty"
         action: "assert"
         target: "student"
         asserts:
@@ -45,10 +50,192 @@ scenarios:
             operator: "is_truthy"
           name:
             type: "value"
-            expected: "Student QR"
+            expected: "Student QR Unconfigured"
+          qr_image:
+            type: "value"
+            operator: "is_falsy"
+
+  - name: "QR Image Is Generated From Standard Content"
+    steps:
+      - step: "Locate the ir.model row of school_student"
+        action: "search"
+        model: "ir.model"
+        domain: [["model", "=", "school_student"]]
+        save_as: "student_ir_model"
+        limit: 1
+        expect_count: 1
+      - step: "Configure the model to use the standard QR content"
+        action: "write"
+        target: "student_ir_model"
+        values:
+          qr_use_standard_content: true
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Student QR Standard"
+          code: "GTSQR2"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School for Student QR Standard"
+          code: "SCHSQR2"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+      - step: "Create contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student QR Standard Contact"
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student QR Standard"
+          code: "STUQR002"
+          contact_id: "EVAL: registry['contact'].id"
+          school_id: "EVAL: registry['school'].id"
+      - step: "Invalidate student cache before reading computed QR image"
+        action: "call"
+        target: "student"
+        method: "invalidate_cache"
+      - step: "Assert qr_image is generated from the standard content"
+        action: "assert"
+        target: "student"
+        asserts:
+          name:
+            type: "value"
+            expected: "Student QR Standard"
           qr_image:
             type: "value"
             operator: "is_truthy"
+
+  - name: "QR Image Is Generated From Custom Python Content"
+    steps:
+      - step: "Locate the ir.model row of school_student"
+        action: "search"
+        model: "ir.model"
+        domain: [["model", "=", "school_student"]]
+        save_as: "student_ir_model"
+        limit: 1
+        expect_count: 1
+      - step: "Configure a custom content built from a student field"
+        action: "write"
+        target: "student_ir_model"
+        values:
+          qr_use_standard_content: false
+          qr_python_code: "result = document.code"
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Student QR Custom"
+          code: "GTSQR3"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School for Student QR Custom"
+          code: "SCHSQR3"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+      - step: "Create contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student QR Custom Contact"
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student QR Custom"
+          code: "STUQR003"
+          contact_id: "EVAL: registry['contact'].id"
+          school_id: "EVAL: registry['school'].id"
+      - step: "Invalidate student cache before reading computed QR image"
+        action: "call"
+        target: "student"
+        method: "invalidate_cache"
+      - step: "Assert qr_image is generated from the custom content"
+        action: "assert"
+        target: "student"
+        asserts:
+          code:
+            type: "value"
+            expected: "STUQR003"
+          qr_image:
+            type: "value"
+            operator: "is_truthy"
+
+  - name: "QR Image Is Falsy When Custom Content Never Assigns Result"
+    steps:
+      - step: "Locate the ir.model row of school_student"
+        action: "search"
+        model: "ir.model"
+        domain: [["model", "=", "school_student"]]
+        save_as: "student_ir_model"
+        limit: 1
+        expect_count: 1
+      - step: "Configure a custom content that never assigns result"
+        action: "write"
+        target: "student_ir_model"
+        values:
+          qr_use_standard_content: false
+          qr_python_code: "pass"
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Student QR Broken"
+          code: "GTSQR4"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School for Student QR Broken"
+          code: "SCHSQR4"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+      - step: "Create contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student QR Broken Contact"
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student QR Broken"
+          code: "STUQR004"
+          contact_id: "EVAL: registry['contact'].id"
+          school_id: "EVAL: registry['school'].id"
+      - step: "Invalidate student cache before reading computed QR image"
+        action: "call"
+        target: "student"
+        method: "invalidate_cache"
+      - step: "Assert qr_image stays empty without leaking an exception"
+        action: "assert"
+        target: "student"
+        asserts:
+          name:
+            type: "value"
+            expected: "Student QR Broken"
+          qr_image:
+            type: "value"
+            operator: "is_falsy"
 
   - name: "Edit Student Master Data Preserved With QR Mixin"
     steps:
