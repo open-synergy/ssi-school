@@ -14,6 +14,17 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: ssi_school_lead
+#: code:addons/ssi_school_lead/models/crm_lead.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Set Student NISN\n"
+"Database ID: %s\n"
+"Problem: No Student is selected on this lead\n"
+"Solution: Select the Student first, then fill in the Student NISN\n"
+msgstr ""
+
+#. module: ssi_school_lead
 #: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead_create_admission__academic_term_id
 msgid "Academic Term"
 msgstr ""
@@ -195,6 +206,17 @@ msgid "Mother"
 msgstr ""
 
 #. module: ssi_school_lead
+#: model:ir.model.fields,help:ssi_school_lead.field_crm_lead__student_nisn
+msgid ""
+"National student number (NISN) of the prospective student, read from and "
+"written to the contact referenced by the Student field. The value is never "
+"stored on the lead itself: it lives on that contact as an ID number record "
+"under the NISN category. Writing this field updates the contact even when "
+"the current user may not edit contact ID numbers directly. Emptying it "
+"archives the related ID number record instead of deleting it."
+msgstr ""
+
+#. module: ssi_school_lead
 #: model:ir.model.fields,help:ssi_school_lead.field_crm_lead__student_nickname
 msgid ""
 "Nickname of the prospective student, synchronized from the contact "
@@ -334,6 +356,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead__student_id
 #: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead_create_admission__student_id
 msgid "Student"
+msgstr ""
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead__student_nisn
+msgid "Student NISN"
 msgstr ""
 
 #. module: ssi_school_lead
