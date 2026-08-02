@@ -1,0 +1,554 @@
+options:
+  auto_refresh: true
+
+scenarios:
+  - name: "CRM Lead Student NISN - Officer sets NISN without ID number rights"
+    steps:
+      - step: "Create admission officer user"
+        action: "create"
+        model: "res.users"
+        save_as: "officer"
+        values:
+          name: "Admission Officer NI1"
+          login: "admission.officer.ni1@example.com"
+          groups_id:
+            - - 6
+              - 0
+              - - "REF: base.group_user"
+                - "REF: sales_team.group_sale_salesman"
+                - "REF: ssi_lead.crm_lead_user_group"
+                - "REF: ssi_partner.contacts_configurator_group"
+
+      - step: "Create student partner without NISN"
+        action: "create"
+        model: "res.partner"
+        save_as: "student"
+        values:
+          name: "Student NISN Set NI1"
+
+      - step: "Create CRM lead owned by the admission officer"
+        action: "create"
+        model: "crm.lead"
+        save_as: "lead"
+        as_user: "officer"
+        values:
+          name: "Lead Student NISN Set NI1"
+          user_id: "REC: officer.id"
+          student_id: "REC: student.id"
+
+      - step: "Write student_nisn from the lead as the admission officer"
+        action: "write"
+        target: "lead"
+        as_user: "officer"
+        values:
+          student_nisn: "0021000001"
+
+      - step: "Assert student_nisn on the lead reflects the written value"
+        action: "assert"
+        target: "lead"
+        asserts:
+          student_nisn:
+            type: "value"
+            expected: "0021000001"
+
+      - step: "Assert the student contact carries exactly one NISN ID number"
+        action: "assert"
+        target: "student"
+        asserts:
+          nisn:
+            type: "value"
+            expected: "0021000001"
+          id_numbers:
+            type: "o2m"
+            check: "count"
+            expected_count: 1
+          id_numbers.name:
+            type: "value"
+            expected: "0021000001"
+          id_numbers.category_id.code:
+            type: "value"
+            expected: "nisn"
+
+  - name: "CRM Lead Student NISN - Officer edits an existing NISN"
+    steps:
+      - step: "Create admission officer user"
+        action: "create"
+        model: "res.users"
+        save_as: "officer"
+        values:
+          name: "Admission Officer NI2"
+          login: "admission.officer.ni2@example.com"
+          groups_id:
+            - - 6
+              - 0
+              - - "REF: base.group_user"
+                - "REF: sales_team.group_sale_salesman"
+                - "REF: ssi_lead.crm_lead_user_group"
+                - "REF: ssi_partner.contacts_configurator_group"
+
+      - step: "Create student partner that already has a NISN"
+        action: "create"
+        model: "res.partner"
+        save_as: "student"
+        values:
+          name: "Student NISN Edit NI2"
+          nisn: "0021000002"
+
+      - step: "Create CRM lead owned by the admission officer"
+        action: "create"
+        model: "crm.lead"
+        save_as: "lead"
+        as_user: "officer"
+        values:
+          name: "Lead Student NISN Edit NI2"
+          user_id: "REC: officer.id"
+          student_id: "REC: student.id"
+
+      - step: "Assert the lead mirrors the existing NISN"
+        action: "assert"
+        target: "lead"
+        asserts:
+          student_nisn:
+            type: "value"
+            expected: "0021000002"
+
+      - step: "Write a different student_nisn as the admission officer"
+        action: "write"
+        target: "lead"
+        as_user: "officer"
+        values:
+          student_nisn: "0021000012"
+
+      - step: "Assert the lead reflects the new NISN"
+        action: "assert"
+        target: "lead"
+        asserts:
+          student_nisn:
+            type: "value"
+            expected: "0021000012"
+
+      - step: "Assert the ID number was updated, not duplicated"
+        action: "assert"
+        target: "student"
+        asserts:
+          nisn:
+            type: "value"
+            expected: "0021000012"
+          id_numbers:
+            type: "o2m"
+            check: "count"
+            expected_count: 1
+          id_numbers.name:
+            type: "value"
+            expected: "0021000012"
+
+  - name: "CRM Lead Student NISN - Officer empties the NISN"
+    steps:
+      - step: "Create admission officer user"
+        action: "create"
+        model: "res.users"
+        save_as: "officer"
+        values:
+          name: "Admission Officer NI3"
+          login: "admission.officer.ni3@example.com"
+          groups_id:
+            - - 6
+              - 0
+              - - "REF: base.group_user"
+                - "REF: sales_team.group_sale_salesman"
+                - "REF: ssi_lead.crm_lead_user_group"
+                - "REF: ssi_partner.contacts_configurator_group"
+
+      - step: "Create student partner that already has a NISN"
+        action: "create"
+        model: "res.partner"
+        save_as: "student"
+        values:
+          name: "Student NISN Empty NI3"
+          nisn: "0021000003"
+
+      - step: "Create CRM lead owned by the admission officer"
+        action: "create"
+        model: "crm.lead"
+        save_as: "lead"
+        as_user: "officer"
+        values:
+          name: "Lead Student NISN Empty NI3"
+          user_id: "REC: officer.id"
+          student_id: "REC: student.id"
+
+      - step: "Empty student_nisn as the admission officer"
+        action: "write"
+        target: "lead"
+        as_user: "officer"
+        values:
+          student_nisn: false
+
+      - step: "Assert student_nisn on the lead is falsy"
+        action: "assert"
+        target: "lead"
+        asserts:
+          student_nisn:
+            type: "value"
+            operator: "is_falsy"
+
+      - step: "Assert the student contact has no active NISN left"
+        action: "assert"
+        target: "student"
+        asserts:
+          nisn:
+            type: "value"
+            operator: "is_falsy"
+          id_numbers:
+            type: "o2m"
+            check: "count"
+            expected_count: 0
+
+      - step: "Assert the ID number record is archived, not deleted"
+        action: "search"
+        model: "res.partner.id_number"
+        domain:
+          - ["partner_id", "=", "REC: student.id"]
+          - ["category_id.code", "=", "nisn"]
+          - ["active", "=", false]
+        save_as: "archived_id_numbers"
+        expect_count: 1
+
+      - step: "Assert the archived ID number keeps its value"
+        action: "assert"
+        target: "archived_id_numbers"
+        asserts:
+          name:
+            type: "value"
+            expected: "0021000003"
+          active:
+            type: "value"
+            expected: false
+
+  - name: "CRM Lead Student NISN - Create the lead with student and NISN at once"
+    steps:
+      - step: "Create admission officer user"
+        action: "create"
+        model: "res.users"
+        save_as: "officer"
+        values:
+          name: "Admission Officer NI4"
+          login: "admission.officer.ni4@example.com"
+          groups_id:
+            - - 6
+              - 0
+              - - "REF: base.group_user"
+                - "REF: sales_team.group_sale_salesman"
+                - "REF: ssi_lead.crm_lead_user_group"
+                - "REF: ssi_partner.contacts_configurator_group"
+
+      - step: "Create student partner without NISN"
+        action: "create"
+        model: "res.partner"
+        save_as: "student"
+        values:
+          name: "Student NISN Create NI4"
+
+      - step: "Create CRM lead with student_id and student_nisn together"
+        action: "create"
+        model: "crm.lead"
+        save_as: "lead"
+        as_user: "officer"
+        values:
+          name: "Lead Student NISN Create NI4"
+          user_id: "REC: officer.id"
+          student_id: "REC: student.id"
+          student_nisn: "0021000004"
+
+      - step: "Assert the NISN landed on the student contact"
+        action: "assert"
+        target: "student"
+        asserts:
+          nisn:
+            type: "value"
+            expected: "0021000004"
+          id_numbers:
+            type: "o2m"
+            check: "count"
+            expected_count: 1
+          id_numbers.category_id.code:
+            type: "value"
+            expected: "nisn"
+
+  - name: "CRM Lead Student NISN - Guard, lead without student and without NISN"
+    steps:
+      - step: "Create admission officer user"
+        action: "create"
+        model: "res.users"
+        save_as: "officer"
+        values:
+          name: "Admission Officer NI5"
+          login: "admission.officer.ni5@example.com"
+          groups_id:
+            - - 6
+              - 0
+              - - "REF: base.group_user"
+                - "REF: sales_team.group_sale_salesman"
+                - "REF: ssi_lead.crm_lead_user_group"
+                - "REF: ssi_partner.contacts_configurator_group"
+
+      - step: "Create CRM lead without student_id and without student_nisn"
+        action: "create"
+        model: "crm.lead"
+        save_as: "lead"
+        as_user: "officer"
+        values:
+          name: "Lead Student NISN Guard NI5"
+          user_id: "REC: officer.id"
+
+      - step: "Assert the lead was created"
+        action: "assert"
+        target: "lead"
+        asserts:
+          id:
+            type: "value"
+            operator: "is_truthy"
+          student_nisn:
+            type: "value"
+            operator: "is_falsy"
+
+      - step: "Create another lead sending an empty student_nisn explicitly"
+        action: "create"
+        model: "crm.lead"
+        save_as: "lead_explicit"
+        as_user: "officer"
+        values:
+          name: "Lead Student NISN Guard Explicit NI5"
+          user_id: "REC: officer.id"
+          student_nisn: false
+
+      - step: "Assert the lead with an explicit empty NISN was created"
+        action: "assert"
+        target: "lead_explicit"
+        asserts:
+          id:
+            type: "value"
+            operator: "is_truthy"
+          student_nisn:
+            type: "value"
+            operator: "is_falsy"
+
+      - step: "Write an empty student_nisn on a lead without a student"
+        action: "write"
+        target: "lead"
+        as_user: "officer"
+        values:
+          student_nisn: false
+
+      - step: "Assert the lead still has no NISN and raised nothing"
+        action: "assert"
+        target: "lead"
+        asserts:
+          student_nisn:
+            type: "value"
+            operator: "is_falsy"
+
+  - name: "CRM Lead Student NISN - Value follows the selected student"
+    steps:
+      - step: "Create first student partner with a NISN"
+        action: "create"
+        model: "res.partner"
+        save_as: "student_a"
+        values:
+          name: "Student NISN Follow A NI6"
+          nisn: "0021000006"
+
+      - step: "Create second student partner with a different NISN"
+        action: "create"
+        model: "res.partner"
+        save_as: "student_b"
+        values:
+          name: "Student NISN Follow B NI6"
+          nisn: "0021000016"
+
+      - step: "Create CRM lead pointing to the first student"
+        action: "create"
+        model: "crm.lead"
+        save_as: "lead"
+        as_user: "base.user_admin"
+        values:
+          name: "Lead Student NISN Follow NI6"
+          student_id: "REC: student_a.id"
+
+      - step: "Assert the lead mirrors the first student NISN"
+        action: "assert"
+        target: "lead"
+        asserts:
+          student_nisn:
+            type: "value"
+            expected: "0021000006"
+
+      - step: "Point the lead to the second student"
+        action: "write"
+        target: "lead"
+        values:
+          student_id: "REC: student_b.id"
+
+      - step: "Assert the lead now mirrors the second student NISN"
+        action: "assert"
+        target: "lead"
+        asserts:
+          student_nisn:
+            type: "value"
+            expected: "0021000016"
+
+  - name: "CRM Lead Student NISN - Search leads by student NISN"
+    steps:
+      - step: "Create student partner with a NISN to be searched"
+        action: "create"
+        model: "res.partner"
+        save_as: "student"
+        values:
+          name: "Student NISN Search NI7"
+          nisn: "0021000007"
+
+      - step: "Create CRM lead pointing to that student"
+        action: "create"
+        model: "crm.lead"
+        save_as: "lead"
+        as_user: "base.user_admin"
+        values:
+          name: "Lead Student NISN Search NI7"
+          student_id: "REC: student.id"
+
+      - step: "Search leads by student_nisn"
+        action: "search"
+        model: "crm.lead"
+        domain:
+          - ["student_nisn", "=", "0021000007"]
+        save_as: "leads_by_nisn"
+        expect_count: 1
+
+      - step: "Assert the found lead is the created one"
+        action: "assert"
+        target: "leads_by_nisn"
+        asserts:
+          id:
+            type: "value"
+            expected: "REC: lead.id"
+
+  - name: "CRM Lead Student NISN - Negative, NISN without a selected student"
+    steps:
+      - step: "Create admission officer user"
+        action: "create"
+        model: "res.users"
+        save_as: "officer"
+        values:
+          name: "Admission Officer NI8"
+          login: "admission.officer.ni8@example.com"
+          groups_id:
+            - - 6
+              - 0
+              - - "REF: base.group_user"
+                - "REF: sales_team.group_sale_salesman"
+                - "REF: ssi_lead.crm_lead_user_group"
+                - "REF: ssi_partner.contacts_configurator_group"
+
+      - step: "Create CRM lead without student_id"
+        action: "create"
+        model: "crm.lead"
+        save_as: "lead"
+        as_user: "officer"
+        values:
+          name: "Lead Student NISN No Student NI8"
+          user_id: "REC: officer.id"
+
+      - step: "Assert student_nisn is falsy on a lead without a student"
+        action: "assert"
+        target: "lead"
+        asserts:
+          student_nisn:
+            type: "value"
+            operator: "is_falsy"
+
+      - step: "Writing a NISN without a student must be rejected"
+        action: "write"
+        target: "lead"
+        as_user: "officer"
+        expect_error:
+          type: "UserError"
+          message_contains: "No Student is selected on this lead"
+        values:
+          student_nisn: "0021000008"
+
+      - step: "Assert no ID number was created for the rejected value"
+        action: "search"
+        model: "res.partner.id_number"
+        domain:
+          - ["name", "=", "0021000008"]
+          - ["category_id.code", "=", "nisn"]
+        save_as: "rejected_id_numbers"
+        expect_count: 0
+
+  - name: "CRM Lead Student NISN - Negative, student with multiple NISN records"
+    steps:
+      - step: "Create admission officer user"
+        action: "create"
+        model: "res.users"
+        save_as: "officer"
+        values:
+          name: "Admission Officer NI9"
+          login: "admission.officer.ni9@example.com"
+          groups_id:
+            - - 6
+              - 0
+              - - "REF: base.group_user"
+                - "REF: sales_team.group_sale_salesman"
+                - "REF: ssi_lead.crm_lead_user_group"
+                - "REF: ssi_partner.contacts_configurator_group"
+
+      - step: "Create student partner with a NISN"
+        action: "create"
+        model: "res.partner"
+        save_as: "student"
+        values:
+          name: "Student NISN Multiple NI9"
+          nisn: "0021000009"
+
+      - step: "Get the NISN ID category"
+        action: "ref"
+        xml_id: "ssi_school.partner_identification_nisn"
+        save_as: "nisn_category"
+
+      - step: "Create a second NISN ID number directly"
+        action: "create"
+        model: "res.partner.id_number"
+        save_as: "second_id_number"
+        values:
+          partner_id: "REC: student.id"
+          category_id: "REC: nisn_category.id"
+          name: "0021000019"
+
+      - step: "Assert the student contact now has two NISN ID numbers"
+        action: "assert"
+        target: "student"
+        asserts:
+          id_numbers:
+            type: "o2m"
+            check: "count"
+            expected_count: 2
+
+      - step: "Create CRM lead pointing to that student"
+        action: "create"
+        model: "crm.lead"
+        save_as: "lead"
+        as_user: "officer"
+        values:
+          name: "Lead Student NISN Multiple NI9"
+          user_id: "REC: officer.id"
+          student_id: "REC: student.id"
+
+      - step: "Writing student_nisn from the lead must be rejected"
+        action: "write"
+        target: "lead"
+        as_user: "officer"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "multiple IDs of this type"
+        values:
+          student_nisn: "0021000029"

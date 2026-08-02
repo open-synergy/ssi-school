@@ -2,7 +2,8 @@
 # Copyright 2024 PT. Simetri Sinergi Indonesia
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 
 _SYNC_STUDENT_FAMILY_LINK_TRIGGER_FIELDS = [
     "partner_id",
@@ -133,6 +134,85 @@ class CrmLead(models.Model):
         "contact referenced by the Student field. Writing this field "
         "updates that contact's nickname.",
     )
+    student_nisn = fields.Char(
+        string="Student NISN",
+        compute="_compute_student_nisn",
+        compute_sudo=True,
+        inverse="_inverse_student_nisn",
+        search="_search_student_nisn",
+        help="National student number (NISN) of the prospective student, "
+        "read from and written to the contact referenced by the Student "
+        "field. The value is never stored on the lead itself: it lives on "
+        "that contact as an ID number record under the NISN category. "
+        "Writing this field updates the contact even when the current user "
+        "may not edit contact ID numbers directly. Emptying it archives "
+        "the related ID number record instead of deleting it.",
+    )
+
+    @api.depends("student_id")
+    def _compute_student_nisn(self):
+        """Read the NISN of the contact referenced by ``student_id``.
+
+        The contact is read with ``sudo()`` because ``res.partner`` and
+        ``res.partner.id_number`` are only readable in full by the
+        identification configurator groups, while admission officers must
+        still see the number on the lead form.
+
+        :return: nothing; assigns ``student_nisn``
+        """
+        for record in self:
+            result = False
+            if record.student_id:
+                result = record.student_id.sudo().nisn
+            record.student_nisn = result
+
+    def _inverse_student_nisn(self):
+        """Write ``student_nisn`` back onto the prospective student.
+
+        The write goes through ``student_id.sudo()`` so that the NISN of
+        the contact can be maintained from the lead form without granting
+        the admission officer write access to ``res.partner`` or to
+        ``res.partner.id_number``. The elevation is deliberately scoped to
+        the student contact record, never to ``self``.
+
+        An empty value on a lead without a student is a no-op, because the
+        web client submits every editable non-stored field on save even
+        when the lead has no prospective student yet.
+
+        :raises UserError: when a non-empty NISN is set while
+            ``student_id`` is empty
+        :return: nothing; writes ``res.partner.nisn`` of the student
+        """
+        for record in self:
+            if not record.student_id:
+                if record.student_nisn:
+                    error_message = (
+                        _(
+                            """
+Context: Set Student NISN
+Database ID: %s
+Problem: No Student is selected on this lead
+Solution: Select the Student first, then fill in the Student NISN
+"""
+                        )
+                        % record.id
+                    )
+                    raise UserError(error_message)
+                continue
+            record.student_id.sudo().nisn = record.student_nisn
+
+    def _search_student_nisn(self, operator, value):
+        """Search leads by the NISN of their prospective student.
+
+        The lookup is delegated to the ``search`` method of
+        ``res.partner.nisn``, which resolves the NISN category on
+        ``res.partner.id_number``.
+
+        :param operator: the search operator supplied by the domain
+        :param value: the NISN value being searched for
+        :return: an Odoo search domain on ``crm.lead``
+        """
+        return [("student_id.nisn", operator, value)]
 
     @api.depends("admission_id")
     def _compute_create_admission_ok(self):
