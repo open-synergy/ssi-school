@@ -67,6 +67,7 @@
                     >
                     <field name="student_id" />
                     <field name="student_nickname" />
+                    <field name="student_nisn" />
                     <field name="parent_relationship" />
                 </group>
                 <group name="school_lead_admission_target" string="Admission Target">
