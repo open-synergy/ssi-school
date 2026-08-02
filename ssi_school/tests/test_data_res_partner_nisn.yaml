@@ -1,0 +1,203 @@
+options:
+  auto_refresh: true
+
+scenarios:
+  - name: "Create partner with NISN stores it as an ID number"
+    steps:
+      - step: "Create partner with NISN"
+        action: "create"
+        model: "res.partner"
+        save_as: "partner"
+        values:
+          name: "NISN Partner Create"
+          nisn: "0011000001"
+
+      - step: "Assert NISN value and its ID number record"
+        action: "assert"
+        target: "partner"
+        asserts:
+          nisn:
+            type: "value"
+            expected: "0011000001"
+          id_numbers:
+            type: "o2m"
+            check: "count"
+            expected_count: 1
+          id_numbers.name:
+            type: "value"
+            expected: "0011000001"
+          id_numbers.category_id.code:
+            type: "value"
+            expected: "nisn"
+
+  - name: "Write a new NISN updates the existing ID number"
+    steps:
+      - step: "Create partner with initial NISN"
+        action: "create"
+        model: "res.partner"
+        save_as: "partner"
+        values:
+          name: "NISN Partner Write"
+          nisn: "0011000002"
+
+      - step: "Write a new NISN"
+        action: "write"
+        target: "partner"
+        values:
+          nisn: "0011000012"
+
+      - step: "Assert NISN updated without adding an ID number"
+        action: "assert"
+        target: "partner"
+        asserts:
+          nisn:
+            type: "value"
+            expected: "0011000012"
+          id_numbers:
+            type: "o2m"
+            check: "count"
+            expected_count: 1
+          id_numbers.name:
+            type: "value"
+            expected: "0011000012"
+
+  - name: "Search partner by NISN"
+    steps:
+      - step: "Create partner to be searched"
+        action: "create"
+        model: "res.partner"
+        save_as: "partner"
+        values:
+          name: "NISN Partner Search"
+          nisn: "0011000003"
+
+      - step: "Search partner by NISN"
+        action: "search"
+        model: "res.partner"
+        domain:
+          - ["nisn", "=", "0011000003"]
+        save_as: "partners_by_nisn"
+        expect_count: 1
+
+      - step: "Assert the searched partner is the created one"
+        action: "assert"
+        target: "partners_by_nisn"
+        asserts:
+          id:
+            type: "value"
+            expected: "REC: partner.id"
+          nisn:
+            type: "value"
+            expected: "0011000003"
+
+  - name: "Emptying NISN archives the ID number record"
+    steps:
+      - step: "Create partner with NISN to be emptied"
+        action: "create"
+        model: "res.partner"
+        save_as: "partner"
+        values:
+          name: "NISN Partner Archive"
+          nisn: "0011000004"
+
+      - step: "Empty the NISN"
+        action: "write"
+        target: "partner"
+        values:
+          nisn: false
+
+      - step: "Assert NISN is empty and no active ID number left"
+        action: "assert"
+        target: "partner"
+        asserts:
+          nisn:
+            type: "value"
+            operator: "is_falsy"
+          id_numbers:
+            type: "o2m"
+            check: "count"
+            expected_count: 0
+
+      - step: "Assert the ID number record is archived, not deleted"
+        action: "search"
+        model: "res.partner.id_number"
+        domain:
+          - ["partner_id", "=", "REC: partner.id"]
+          - ["category_id.code", "=", "nisn"]
+          - ["active", "=", false]
+        save_as: "archived_id_numbers"
+        expect_count: 1
+
+      - step: "Assert the archived ID number keeps its value"
+        action: "assert"
+        target: "archived_id_numbers"
+        asserts:
+          name:
+            type: "value"
+            expected: "0011000004"
+          active:
+            type: "value"
+            expected: false
+
+  - name: "Partner without NISN returns an empty value"
+    steps:
+      - step: "Create partner without NISN"
+        action: "create"
+        model: "res.partner"
+        save_as: "partner"
+        values:
+          name: "NISN Partner Empty"
+
+      - step: "Assert NISN is empty and no ID number exists"
+        action: "assert"
+        target: "partner"
+        asserts:
+          nisn:
+            type: "value"
+            operator: "is_falsy"
+          id_numbers:
+            type: "o2m"
+            check: "count"
+            expected_count: 0
+
+  - name: "Writing NISN is rejected when the partner has multiple NISN records"
+    steps:
+      - step: "Create partner with NISN"
+        action: "create"
+        model: "res.partner"
+        save_as: "partner"
+        values:
+          name: "NISN Partner Multiple"
+          nisn: "0011000006"
+
+      - step: "Get the NISN category"
+        action: "ref"
+        xml_id: "ssi_school.partner_identification_nisn"
+        save_as: "nisn_category"
+
+      - step: "Create a second NISN ID number directly"
+        action: "create"
+        model: "res.partner.id_number"
+        save_as: "second_id_number"
+        values:
+          partner_id: "REC: partner.id"
+          category_id: "REC: nisn_category.id"
+          name: "0011000016"
+
+      - step: "Assert the partner now has two NISN ID numbers"
+        action: "assert"
+        target: "partner"
+        asserts:
+          id_numbers:
+            type: "o2m"
+            check: "count"
+            expected_count: 2
+
+      - step: "Writing NISN must be rejected"
+        action: "write"
+        target: "partner"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "multiple IDs of this type"
+        values:
+          nisn: "0011000026"
