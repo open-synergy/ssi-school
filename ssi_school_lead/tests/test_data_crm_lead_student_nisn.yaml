@@ -16,6 +16,7 @@ scenarios:
               - 0
               - - "REF: base.group_user"
                 - "REF: sales_team.group_sale_salesman"
+                - "REF: ssi_lead.crm_lead_user_group"
                 - "REF: ssi_partner.contacts_configurator_group"
 
       - step: "Create student partner without NISN"
@@ -82,6 +83,7 @@ scenarios:
               - 0
               - - "REF: base.group_user"
                 - "REF: sales_team.group_sale_salesman"
+                - "REF: ssi_lead.crm_lead_user_group"
                 - "REF: ssi_partner.contacts_configurator_group"
 
       - step: "Create student partner that already has a NISN"
@@ -154,6 +156,7 @@ scenarios:
               - 0
               - - "REF: base.group_user"
                 - "REF: sales_team.group_sale_salesman"
+                - "REF: ssi_lead.crm_lead_user_group"
                 - "REF: ssi_partner.contacts_configurator_group"
 
       - step: "Create student partner that already has a NISN"
@@ -236,6 +239,7 @@ scenarios:
               - 0
               - - "REF: base.group_user"
                 - "REF: sales_team.group_sale_salesman"
+                - "REF: ssi_lead.crm_lead_user_group"
                 - "REF: ssi_partner.contacts_configurator_group"
 
       - step: "Create student partner without NISN"
@@ -285,6 +289,7 @@ scenarios:
               - 0
               - - "REF: base.group_user"
                 - "REF: sales_team.group_sale_salesman"
+                - "REF: ssi_lead.crm_lead_user_group"
                 - "REF: ssi_partner.contacts_configurator_group"
 
       - step: "Create CRM lead without student_id and without student_nisn"
@@ -441,6 +446,7 @@ scenarios:
               - 0
               - - "REF: base.group_user"
                 - "REF: sales_team.group_sale_salesman"
+                - "REF: ssi_lead.crm_lead_user_group"
                 - "REF: ssi_partner.contacts_configurator_group"
 
       - step: "Create CRM lead without student_id"
@@ -493,6 +499,7 @@ scenarios:
               - 0
               - - "REF: base.group_user"
                 - "REF: sales_team.group_sale_salesman"
+                - "REF: ssi_lead.crm_lead_user_group"
                 - "REF: ssi_partner.contacts_configurator_group"
 
       - step: "Create student partner with a NISN"
