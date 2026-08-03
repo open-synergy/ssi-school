@@ -16,6 +16,7 @@
     "application": False,
     "depends": [
         "ssi_school_admission",
+        "ssi_school_operating_unit",
         "ssi_operating_unit_mixin",
         "ssi_financial_accounting_operating_unit",
         "ssi_customer_invoice_operating_unit",
