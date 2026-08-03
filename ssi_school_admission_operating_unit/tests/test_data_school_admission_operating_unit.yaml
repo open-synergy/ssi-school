@@ -669,3 +669,872 @@ scenarios:
           operating_unit_id:
             type: "m2o"
             expected: "REC: ou_b"
+
+  - name:
+      "Admission OU Derive - school_admission create derives operating unit from school"
+    steps:
+      - step: "Create partner for the school's operating unit"
+        action: "create"
+        model: "res.partner"
+        save_as: "derive_admission_ou_partner"
+        values:
+          name: "Derive Admission Operating Unit Partner"
+
+      - step: "Create the school's own operating unit"
+        action: "create"
+        model: "operating.unit"
+        save_as: "derive_admission_ou"
+        values:
+          name: "Derive Admission Operating Unit"
+          code: "OUDRVADM"
+          company_id: "REF: base.main_company"
+          partner_id: "REC: derive_admission_ou_partner.id"
+
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Derive Admission"
+          code: "GTDRVADM"
+          sequence: 10
+
+      - step: "Create school with exactly one operating unit"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Derive Admission"
+          code: "SCHDRVADM"
+          grade_type_id: "REC: grade_type.id"
+          operating_unit_ids: [[6, 0, ["REC: derive_admission_ou.id"]]]
+
+      - step: "Create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade Derive Admission"
+          code: "GDRVADM"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2025/2026 Derive Admission"
+          code: "AYDRVADM"
+          date_start: 2025-07-01
+          date_end: 2026-06-30
+
+      - step: "Create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester Derive Admission"
+          code: "SMDRVADM"
+          date_start: 2025-07-01
+          date_end: 2025-12-31
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Create student partner"
+        action: "create"
+        model: "res.partner"
+        save_as: "student"
+        values:
+          name: "Student Derive Admission"
+
+      - step: "Create school admission without an explicit operating unit"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        as_user: "base.user_admin"
+        values:
+          date: "2025-07-15"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: student.id"
+
+      - step: "Assert operating unit was derived from the school"
+        action: "assert"
+        target: "admission"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: derive_admission_ou"
+
+  - name:
+      "Admission OU Derive - school_admission_form create derives operating unit from
+      school"
+    steps:
+      - step: "Create partner for the school's operating unit"
+        action: "create"
+        model: "res.partner"
+        save_as: "derive_form_ou_partner"
+        values:
+          name: "Derive Admission Form Operating Unit Partner"
+
+      - step: "Create the school's own operating unit"
+        action: "create"
+        model: "operating.unit"
+        save_as: "derive_form_ou"
+        values:
+          name: "Derive Admission Form Operating Unit"
+          code: "OUDRVFRM"
+          company_id: "REF: base.main_company"
+          partner_id: "REC: derive_form_ou_partner.id"
+
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal"
+        limit: 1
+
+      - step: "Setup - get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "Derive Admission Form Fee Income"
+          code: "DRVFRMFI"
+          user_type_id: "REC: account_type.id"
+
+      - step: "Setup - create pricelist"
+        action: "create"
+        model: "product.pricelist"
+        save_as: "pricelist"
+        values:
+          name: "Pricelist Derive Admission Form"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Derive Admission Form"
+          code: "GTDRVFRM"
+          sequence: 10
+
+      - step: "Setup - create school with exactly one operating unit"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Derive Admission Form"
+          code: "SCHDRVFRM"
+          grade_type_id: "REC: grade_type.id"
+          operating_unit_ids: [[6, 0, ["REC: derive_form_ou.id"]]]
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade Derive Admission Form"
+          code: "GDRVFRM"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2025/2026 Derive Admission Form"
+          code: "AYDRVFRM"
+          date_start: 2025-07-01
+          date_end: 2026-06-30
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester Derive Admission Form"
+          code: "SMDRVFRM"
+          date_start: 2025-07-01
+          date_end: 2025-12-31
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "student_contact"
+        values:
+          name: "Student Derive Admission Form"
+
+      - step: "Setup - create parent contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "parent_contact"
+        values:
+          name: "Parent Derive Admission Form"
+
+      - step: "Setup - create fee template"
+        action: "create"
+        model: "school_admission_fee_template"
+        save_as: "fee_template"
+        values:
+          name: "Fee Template Derive Admission Form"
+          code: "FTDRVFRM"
+          journal_id: "REC: journal.id"
+          account_id: "REC: account.id"
+
+      - step: "Create school admission form without an explicit operating unit"
+        action: "create"
+        model: "school_admission_form"
+        save_as: "admission_form"
+        as_user: "base.user_admin"
+        values:
+          date: "2025-07-15"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          student_id: "REC: student_contact.id"
+          parent_id: "REC: parent_contact.id"
+          pricelist_id: "REC: pricelist.id"
+          currency_id: "REC: company.currency_id.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          fee_template_id: "REC: fee_template.id"
+          journal_id: "REC: journal.id"
+          account_id: "REC: account.id"
+
+      - step: "Assert operating unit was derived from the school"
+        action: "assert"
+        target: "admission_form"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: derive_form_ou"
+
+  - name:
+      "Admission OU Derive - school_admission_test create derives operating unit from
+      school"
+    steps:
+      - step: "Create partner for the school's operating unit"
+        action: "create"
+        model: "res.partner"
+        save_as: "derive_test_ou_partner"
+        values:
+          name: "Derive Admission Test Operating Unit Partner"
+
+      - step: "Create the school's own operating unit"
+        action: "create"
+        model: "operating.unit"
+        save_as: "derive_test_ou"
+        values:
+          name: "Derive Admission Test Operating Unit"
+          code: "OUDRVTST"
+          company_id: "REF: base.main_company"
+          partner_id: "REC: derive_test_ou_partner.id"
+
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Derive Admission Test"
+          code: "GTDRVTST"
+          sequence: 10
+
+      - step: "Create school with exactly one operating unit"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Derive Admission Test"
+          code: "SCHDRVTST"
+          grade_type_id: "REC: grade_type.id"
+          operating_unit_ids: [[6, 0, ["REC: derive_test_ou.id"]]]
+
+      - step: "Create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade Derive Admission Test"
+          code: "GDRVTST"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2025/2026 Derive Admission Test"
+          code: "AYDRVTST"
+          date_start: 2025-07-01
+          date_end: 2026-06-30
+
+      - step: "Create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester Derive Admission Test"
+          code: "SMDRVTST"
+          date_start: 2025-07-01
+          date_end: 2025-12-31
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Create student partner"
+        action: "create"
+        model: "res.partner"
+        save_as: "student"
+        values:
+          name: "Student Derive Admission Test"
+
+      - step: "Create school admission test without an explicit operating unit"
+        action: "create"
+        model: "school_admission_test"
+        save_as: "admission_test"
+        as_user: "base.user_admin"
+        values:
+          date: "2025-07-15"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: student.id"
+
+      - step: "Assert operating unit was derived from the school"
+        action: "assert"
+        target: "admission_test"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: derive_test_ou"
+
+  - name:
+      "Admission OU Derive - explicit operating_unit_id in create wins over the school's
+      own operating unit"
+    steps:
+      - step: "Create partner for the school's own operating unit"
+        action: "create"
+        model: "res.partner"
+        save_as: "ou_override_school_partner"
+        values:
+          name: "Override School Operating Unit Partner"
+
+      - step: "Create the school's own operating unit"
+        action: "create"
+        model: "operating.unit"
+        save_as: "ou_override_school"
+        values:
+          name: "Override School Operating Unit"
+          code: "OUOVSCH"
+          company_id: "REF: base.main_company"
+          partner_id: "REC: ou_override_school_partner.id"
+
+      - step: "Create partner for the caller's explicit operating unit"
+        action: "create"
+        model: "res.partner"
+        save_as: "ou_override_explicit_partner"
+        values:
+          name: "Override Explicit Operating Unit Partner"
+
+      - step: "Create the operating unit the caller passes explicitly"
+        action: "create"
+        model: "operating.unit"
+        save_as: "ou_override_explicit"
+        values:
+          name: "Override Explicit Operating Unit"
+          code: "OUOVEXP"
+          company_id: "REF: base.main_company"
+          partner_id: "REC: ou_override_explicit_partner.id"
+
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Override"
+          code: "GTOV"
+          sequence: 10
+
+      - step: "Create school with exactly one operating unit"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Override"
+          code: "SCHOV"
+          grade_type_id: "REC: grade_type.id"
+          operating_unit_ids: [[6, 0, ["REC: ou_override_school.id"]]]
+
+      - step: "Create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade Override"
+          code: "GOV"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2025/2026 Override"
+          code: "AYOV"
+          date_start: 2025-07-01
+          date_end: 2026-06-30
+
+      - step: "Create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester Override"
+          code: "SMOV"
+          date_start: 2025-07-01
+          date_end: 2025-12-31
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Create student partner"
+        action: "create"
+        model: "res.partner"
+        save_as: "student"
+        values:
+          name: "Student Override"
+
+      - step:
+          "Create school admission with school_id and an explicit operating_unit_id in
+          the same vals"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        as_user: "base.user_admin"
+        values:
+          date: "2025-07-15"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: student.id"
+          operating_unit_id: "REC: ou_override_explicit.id"
+
+      - step: "Assert the caller's explicit operating unit wins over the school's own"
+        action: "assert"
+        target: "admission"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ou_override_explicit"
+
+  - name: "Admission OU Derive - write changing school_id moves the operating unit"
+    steps:
+      - step: "Create partner for Operating Unit A"
+        action: "create"
+        model: "res.partner"
+        save_as: "ou_wc_a_partner"
+        values:
+          name: "Write Change Operating Unit A Partner"
+
+      - step: "Create Operating Unit A"
+        action: "create"
+        model: "operating.unit"
+        save_as: "ou_wc_a"
+        values:
+          name: "Write Change Operating Unit A"
+          code: "OUWCA"
+          company_id: "REF: base.main_company"
+          partner_id: "REC: ou_wc_a_partner.id"
+
+      - step: "Create partner for Operating Unit B"
+        action: "create"
+        model: "res.partner"
+        save_as: "ou_wc_b_partner"
+        values:
+          name: "Write Change Operating Unit B Partner"
+
+      - step: "Create Operating Unit B"
+        action: "create"
+        model: "operating.unit"
+        save_as: "ou_wc_b"
+        values:
+          name: "Write Change Operating Unit B"
+          code: "OUWCB"
+          company_id: "REF: base.main_company"
+          partner_id: "REC: ou_wc_b_partner.id"
+
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Write Change"
+          code: "GTWC"
+          sequence: 10
+
+      - step: "Create School A with Operating Unit A"
+        action: "create"
+        model: "school"
+        save_as: "school_a"
+        values:
+          name: "School Write Change A"
+          code: "SCHWCA"
+          grade_type_id: "REC: grade_type.id"
+          operating_unit_ids: [[6, 0, ["REC: ou_wc_a.id"]]]
+
+      - step: "Create School B with Operating Unit B"
+        action: "create"
+        model: "school"
+        save_as: "school_b"
+        values:
+          name: "School Write Change B"
+          code: "SCHWCB"
+          grade_type_id: "REC: grade_type.id"
+          operating_unit_ids: [[6, 0, ["REC: ou_wc_b.id"]]]
+
+      - step: "Create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade Write Change"
+          code: "GWC"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2025/2026 Write Change"
+          code: "AYWC"
+          date_start: 2025-07-01
+          date_end: 2026-06-30
+
+      - step: "Create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester Write Change"
+          code: "SMWC"
+          date_start: 2025-07-01
+          date_end: 2025-12-31
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Create student partner"
+        action: "create"
+        model: "res.partner"
+        save_as: "student"
+        values:
+          name: "Student Write Change"
+
+      - step: "Create school admission for School A without an explicit operating unit"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        as_user: "base.user_admin"
+        values:
+          date: "2025-07-15"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school_a.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: student.id"
+
+      - step: "Assert operating unit was derived from School A"
+        action: "assert"
+        target: "admission"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ou_wc_a"
+
+      - step: "Write school_id to School B, without touching operating_unit_id"
+        action: "write"
+        target: "admission"
+        as_user: "base.user_admin"
+        values:
+          school_id: "REC: school_b.id"
+
+      - step: "Assert operating unit moved to School B"
+        action: "assert"
+        target: "admission"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ou_wc_b"
+
+  - name:
+      "Admission OU Derive - write touching only operating_unit_id is not overridden"
+    steps:
+      - step: "Create partner for the school's own operating unit"
+        action: "create"
+        model: "res.partner"
+        save_as: "ou_wo_school_partner"
+        values:
+          name: "Write Only School Operating Unit Partner"
+
+      - step: "Create the school's own operating unit"
+        action: "create"
+        model: "operating.unit"
+        save_as: "ou_wo_school"
+        values:
+          name: "Write Only School Operating Unit"
+          code: "OUWOSCH"
+          company_id: "REF: base.main_company"
+          partner_id: "REC: ou_wo_school_partner.id"
+
+      - step: "Create partner for the manually written operating unit"
+        action: "create"
+        model: "res.partner"
+        save_as: "ou_wo_explicit_partner"
+        values:
+          name: "Write Only Explicit Operating Unit Partner"
+
+      - step: "Create the operating unit written manually afterwards"
+        action: "create"
+        model: "operating.unit"
+        save_as: "ou_wo_explicit"
+        values:
+          name: "Write Only Explicit Operating Unit"
+          code: "OUWOEXP"
+          company_id: "REF: base.main_company"
+          partner_id: "REC: ou_wo_explicit_partner.id"
+
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Write Only"
+          code: "GTWO"
+          sequence: 10
+
+      - step: "Create school with exactly one operating unit"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Write Only"
+          code: "SCHWO"
+          grade_type_id: "REC: grade_type.id"
+          operating_unit_ids: [[6, 0, ["REC: ou_wo_school.id"]]]
+
+      - step: "Create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade Write Only"
+          code: "GWO"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2025/2026 Write Only"
+          code: "AYWO"
+          date_start: 2025-07-01
+          date_end: 2026-06-30
+
+      - step: "Create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester Write Only"
+          code: "SMWO"
+          date_start: 2025-07-01
+          date_end: 2025-12-31
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Create student partner"
+        action: "create"
+        model: "res.partner"
+        save_as: "student"
+        values:
+          name: "Student Write Only"
+
+      - step: "Create school admission without an explicit operating unit"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        as_user: "base.user_admin"
+        values:
+          date: "2025-07-15"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: student.id"
+
+      - step: "Write operating_unit_id alone, without touching school_id"
+        action: "write"
+        target: "admission"
+        as_user: "base.user_admin"
+        values:
+          operating_unit_id: "REC: ou_wo_explicit.id"
+
+      - step: "Assert the manually written operating unit was not overridden"
+        action: "assert"
+        target: "admission"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ou_wo_explicit"
+
+  - name:
+      "Admission OU Derive - school with zero operating units keeps the mixin default,
+      no error"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type No OU"
+          code: "GTNOOU"
+          sequence: 10
+
+      - step: "Create school without any operating unit"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School No OU"
+          code: "SCHNOOU"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade No OU"
+          code: "GNOOU"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2025/2026 No OU"
+          code: "AYNOOU"
+          date_start: 2025-07-01
+          date_end: 2026-06-30
+
+      - step: "Create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester No OU"
+          code: "SMNOOU"
+          date_start: 2025-07-01
+          date_end: 2025-12-31
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Create student partner"
+        action: "create"
+        model: "res.partner"
+        save_as: "student"
+        values:
+          name: "Student No OU"
+
+      - step:
+          "Create school admission for a school with zero operating units, without an
+          explicit operating unit"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        as_user: "base.user_admin"
+        values:
+          date: "2025-07-15"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: student.id"
+
+      - step: "Assert operating_unit_id is left at the mixin's own default, no error"
+        action: "assert"
+        target: "admission"
+        as_user: "base.user_admin"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "EVAL: env['res.users'].operating_unit_default_get()"
+
+  - name: "Admission OU Derive - onchange school_id fills operating_unit_id on the form"
+    steps:
+      - step: "Create partner for the school's own operating unit"
+        action: "create"
+        model: "res.partner"
+        save_as: "ou_onchange_partner"
+        values:
+          name: "Onchange Operating Unit Partner"
+
+      - step: "Create the school's own operating unit"
+        action: "create"
+        model: "operating.unit"
+        save_as: "ou_onchange"
+        values:
+          name: "Onchange Operating Unit"
+          code: "OUONSCH"
+          company_id: "REF: base.main_company"
+          partner_id: "REC: ou_onchange_partner.id"
+
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Onchange"
+          code: "GTON"
+          sequence: 10
+
+      - step: "Create school with exactly one operating unit"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Onchange"
+          code: "SCHON"
+          grade_type_id: "REC: grade_type.id"
+          operating_unit_ids: [[6, 0, ["REC: ou_onchange.id"]]]
+
+      - step: "Set school_id on a new school_admission form and check the onchange"
+        action: "form"
+        model: "school_admission"
+        as_user: "base.user_admin"
+        save: false
+        values:
+          school_id: "REC: school"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ou_onchange"

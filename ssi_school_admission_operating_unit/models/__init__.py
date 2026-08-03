@@ -5,6 +5,7 @@
 from . import (  # noqa: F401
     school_admission,
     school_admission_form,
+    school_admission_operating_unit_mixin,
     school_admission_payment_term,
     school_admission_test,
 )
