@@ -4,7 +4,7 @@
 
 {
     "name": "School Admission - Operating Unit",
-    "version": "14.0.1.4.1",
+    "version": "14.0.1.4.2",
     "website": "https://simetri-sinergi.id",
     "author": (
         "PT. Simetri Sinergi Indonesia, "
