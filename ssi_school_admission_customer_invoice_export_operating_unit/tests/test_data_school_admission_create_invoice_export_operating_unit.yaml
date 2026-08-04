@@ -1,0 +1,1295 @@
+options:
+  auto_refresh: true
+scenarios:
+  - name: "Wizard Operating Unit Defaults To The Acting User, Not The Admission"
+    steps:
+      - step: "Create partner for the admission's own operating unit"
+        action: "create"
+        model: "res.partner"
+        save_as: "ou_a_partner"
+        values:
+          name: "Wizard Default OU A Partner"
+
+      - step: "Create the admission's own operating unit"
+        action: "create"
+        model: "operating.unit"
+        save_as: "ou_a"
+        values:
+          name: "Wizard Default OU A"
+          code: "SAOU1A"
+          company_id: "REF: base.main_company"
+          partner_id: "REC: ou_a_partner.id"
+
+      - step: "Create partner for the acting user's own default operating unit"
+        action: "create"
+        model: "res.partner"
+        save_as: "ou_u_partner"
+        values:
+          name: "Wizard Default OU User Partner"
+
+      - step: "Create the acting user's own default operating unit"
+        action: "create"
+        model: "operating.unit"
+        save_as: "ou_u"
+        values:
+          name: "Wizard Default OU User"
+          code: "SAOU1U"
+          company_id: "REF: base.main_company"
+          partner_id: "REC: ou_u_partner.id"
+
+      - step:
+          "Create a dedicated user to open the wizard, with a default operating unit
+          distinct from the admission's own. A throwaway user is used instead of
+          base.user_admin so this scenario does not mutate a fixture shared by every
+          other test in the suite (all scenarios in this file -- and every other
+          module's post_install test -- run in one shared DB transaction)"
+        action: "create"
+        model: "res.users"
+        save_as: "wizard_user"
+        values:
+          name: "Wizard Default OU User SAOU1"
+          login: "wizard_default_ou_saou1@example.com"
+          default_operating_unit_id: "REC: ou_u.id"
+          groups_id:
+            - - 6
+              - 0
+              - - "REF: base.group_user"
+                - "REF: operating_unit.group_manager_operating_unit"
+                - "REF: ssi_school_admission.school_admission_user_group"
+
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable SAOU1"
+          code: "RECSAOU1"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type SAOU1"
+          code: "CITSAOU1"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type SAOU1"
+          code: "GTSAOU1"
+          sequence: 10
+
+      - step: "Setup - create school with the admission's own operating unit"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School SAOU1"
+          code: "SCSAOU1"
+          grade_type_id: "REC: grade_type.id"
+          operating_unit_ids: [[6, 0, ["REC: ou_a.id"]]]
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade SAOU1"
+          code: "GRSAOU1"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 SAOU1"
+          code: "AYSAOU1"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester SAOU1"
+          code: "SMSAOU1"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "student_contact"
+        values:
+          name: "Student Contact SAOU1"
+
+      - step: "Create admission, operating unit derived from the school"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        as_user: "wizard_user"
+        values:
+          customer_invoice_type_id: "REC: ci_type.id"
+          receivable_account_id: "REC: ci_account.id"
+          pricelist_id: "REF: product.list0"
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: student_contact.id"
+          currency_id: "REC: company.currency_id.id"
+          receivable_journal_id: "REC: ci_journal.id"
+
+      - step: "Assert admission's own operating unit is OU A"
+        action: "assert"
+        target: "admission"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ou_a"
+
+      - step: "Setup - create export type matching every journal/partner/product"
+        action: "create"
+        model: "customer_invoice_export_type"
+        save_as: "export_type"
+        values:
+          name: "Export Type SAOU1"
+          code: "ETYSAOU1"
+          default_output_format: "csv"
+
+      - step: "Create wizard for the admission without touching operating_unit_id"
+        action: "create"
+        model: "school_admission.wizard_create_invoice_export"
+        save_as: "wizard"
+        as_user: "wizard_user"
+        values:
+          admission_ids:
+            - - 6
+              - 0
+              - - "REC: admission.id"
+          type_id: "REC: export_type.id"
+          date: "2024-07-01"
+          output_format: "csv"
+
+      - step:
+          "Assert operating_unit_id defaults to the acting user's own default OU, not
+          the admission's OU A"
+        action: "assert"
+        target: "wizard"
+        as_user: "wizard_user"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ou_u"
+
+  - name:
+      "Wizard Run With Selected Operating Unit Exports Only That Operating Unit's Moves
+      And Propagates It"
+    steps:
+      - step: "Setup - create partner for the operating unit"
+        action: "create"
+        model: "res.partner"
+        save_as: "ou_a_partner"
+        values:
+          name: "Wizard Run OU A Partner"
+
+      - step: "Create the operating unit"
+        action: "create"
+        model: "operating.unit"
+        save_as: "ou_a"
+        values:
+          name: "Wizard Run OU A"
+          code: "SAOU2A"
+          company_id: "REF: base.main_company"
+          partner_id: "REC: ou_a_partner.id"
+
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable SAOU2"
+          code: "RECSAOU2"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type SAOU2"
+          code: "CITSAOU2"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
+      - step: "Setup - get income account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "Admission Fee Income SAOU2"
+          code: "INCSAOU2"
+          user_type_id: "REC: account_type.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "Admission Fee SAOU2"
+          type: "service"
+          list_price: 500000.0
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type SAOU2"
+          code: "GTSAOU2"
+          sequence: 10
+
+      - step: "Setup - create school with the operating unit"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School SAOU2"
+          code: "SCSAOU2"
+          grade_type_id: "REC: grade_type.id"
+          operating_unit_ids: [[6, 0, ["REC: ou_a.id"]]]
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade SAOU2"
+          code: "GRSAOU2"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 SAOU2"
+          code: "AYSAOU2"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester SAOU2"
+          code: "SMSAOU2"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "student_contact"
+        values:
+          name: "Student Contact SAOU2"
+
+      - step: "Create admission"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        as_user: "base.user_admin"
+        values:
+          customer_invoice_type_id: "REC: ci_type.id"
+          receivable_account_id: "REC: ci_account.id"
+          pricelist_id: "REF: product.list0"
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: student_contact.id"
+          currency_id: "REC: company.currency_id.id"
+          receivable_journal_id: "REC: ci_journal.id"
+
+      - step: "Confirm admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve admission"
+        action: "call"
+        target: "admission"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Setup - create export type matching every journal/partner/product"
+        action: "create"
+        model: "customer_invoice_export_type"
+        save_as: "export_type"
+        values:
+          name: "Export Type SAOU2"
+          code: "ETYSAOU2"
+          default_output_format: "csv"
+
+      - step: "Create term A"
+        action: "create"
+        model: "school_admission_payment_term"
+        save_as: "term_a"
+        values:
+          admission_id: "REC: admission.id"
+          name: "Term A SAOU2"
+          sequence: 10
+          detail_ids:
+            - - 0
+              - 0
+              - product_id: "REC: product.id"
+                name: "Fee A SAOU2"
+                account_id: "REC: account.id"
+                uom_quantity: 1.0
+                uom_id: "REF: uom.product_uom_unit"
+                price_unit: 500000.0
+
+      - step: "Generate invoice for term A"
+        action: "call"
+        target: "term_a"
+        method: "action_create_invoice"
+
+      - step: "Fetch invoice generated for term A"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["id", "=", "REC: term_a.customer_invoice_id.id"]]
+        save_as: "invoice_a"
+        expect_count: 1
+
+      - step: "Confirm invoice A"
+        action: "call"
+        target: "invoice_a"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve invoice A"
+        action: "call"
+        target: "invoice_a"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create term B"
+        action: "create"
+        model: "school_admission_payment_term"
+        save_as: "term_b"
+        values:
+          admission_id: "REC: admission.id"
+          name: "Term B SAOU2"
+          sequence: 20
+          detail_ids:
+            - - 0
+              - 0
+              - product_id: "REC: product.id"
+                name: "Fee B SAOU2"
+                account_id: "REC: account.id"
+                uom_quantity: 1.0
+                uom_id: "REF: uom.product_uom_unit"
+                price_unit: 500000.0
+
+      - step: "Generate invoice for term B"
+        action: "call"
+        target: "term_b"
+        method: "action_create_invoice"
+
+      - step: "Fetch invoice generated for term B"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["id", "=", "REC: term_b.customer_invoice_id.id"]]
+        save_as: "invoice_b"
+        expect_count: 1
+
+      - step: "Confirm invoice B"
+        action: "call"
+        target: "invoice_b"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve invoice B"
+        action: "call"
+        target: "invoice_b"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create wizard selecting the admission and operating unit A"
+        action: "create"
+        model: "school_admission.wizard_create_invoice_export"
+        save_as: "wizard"
+        as_user: "base.user_admin"
+        values:
+          admission_ids:
+            - - 6
+              - 0
+              - - "REC: admission.id"
+          operating_unit_id: "REC: ou_a.id"
+          type_id: "REC: export_type.id"
+          date: "2024-07-01"
+          output_format: "csv"
+
+      - step: "Run create invoice export"
+        action: "call"
+        target: "wizard"
+        method: "action_create_invoice_export"
+
+      - step: "Fetch the created customer invoice export document"
+        action: "search"
+        model: "customer_invoice_export"
+        domain: [["type_id", "=", "REC: export_type.id"]]
+        save_as: "export_doc"
+        expect_count: 1
+
+      - step:
+          "Assert export document is draft, carries operating unit A, and includes both
+          moves"
+        action: "assert"
+        target: "export_doc"
+        asserts:
+          state:
+            type: "value"
+            expected: "draft"
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ou_a"
+          source_move_ids:
+            type: "m2m"
+            check: "exact"
+            expected_records:
+              - "REC: invoice_a.move_id"
+              - "REC: invoice_b.move_id"
+          summary_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 2
+
+  - name:
+      "Wizard Filters Out Moves From Another Operating Unit When Multiple Admissions Are
+      Selected"
+    steps:
+      - step: "Setup - create partner for operating unit A"
+        action: "create"
+        model: "res.partner"
+        save_as: "ou_a_partner"
+        values:
+          name: "Wizard Filter OU A Partner"
+
+      - step: "Create operating unit A"
+        action: "create"
+        model: "operating.unit"
+        save_as: "ou_a"
+        values:
+          name: "Wizard Filter OU A"
+          code: "SAOU3A"
+          company_id: "REF: base.main_company"
+          partner_id: "REC: ou_a_partner.id"
+
+      - step: "Setup - create partner for operating unit B"
+        action: "create"
+        model: "res.partner"
+        save_as: "ou_b_partner"
+        values:
+          name: "Wizard Filter OU B Partner"
+
+      - step: "Create operating unit B"
+        action: "create"
+        model: "operating.unit"
+        save_as: "ou_b"
+        values:
+          name: "Wizard Filter OU B"
+          code: "SAOU3B"
+          company_id: "REF: base.main_company"
+          partner_id: "REC: ou_b_partner.id"
+
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable SAOU3"
+          code: "RECSAOU3"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type SAOU3"
+          code: "CITSAOU3"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
+      - step: "Setup - get income account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "Admission Fee Income SAOU3"
+          code: "INCSAOU3"
+          user_type_id: "REC: account_type.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "Admission Fee SAOU3"
+          type: "service"
+          list_price: 500000.0
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type SAOU3"
+          code: "GTSAOU3"
+          sequence: 10
+
+      - step: "Create School A with operating unit A"
+        action: "create"
+        model: "school"
+        save_as: "school_a"
+        values:
+          name: "School SAOU3 A"
+          code: "SCSAOU3A"
+          grade_type_id: "REC: grade_type.id"
+          operating_unit_ids: [[6, 0, ["REC: ou_a.id"]]]
+
+      - step: "Create School B with operating unit B"
+        action: "create"
+        model: "school"
+        save_as: "school_b"
+        values:
+          name: "School SAOU3 B"
+          code: "SCSAOU3B"
+          grade_type_id: "REC: grade_type.id"
+          operating_unit_ids: [[6, 0, ["REC: ou_b.id"]]]
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade SAOU3"
+          code: "GRSAOU3"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 SAOU3"
+          code: "AYSAOU3"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester SAOU3"
+          code: "SMSAOU3"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create first student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "student_contact_a"
+        values:
+          name: "Student Contact SAOU3A"
+
+      - step: "Setup - create second student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "student_contact_b"
+        values:
+          name: "Student Contact SAOU3B"
+
+      - step: "Create admission on School A"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission_a"
+        as_user: "base.user_admin"
+        values:
+          customer_invoice_type_id: "REC: ci_type.id"
+          receivable_account_id: "REC: ci_account.id"
+          pricelist_id: "REF: product.list0"
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school_a.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: student_contact_a.id"
+          currency_id: "REC: company.currency_id.id"
+          receivable_journal_id: "REC: ci_journal.id"
+
+      - step: "Confirm admission on School A"
+        action: "call"
+        target: "admission_a"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve admission on School A"
+        action: "call"
+        target: "admission_a"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Assert admission_a's operating unit was derived as OU A"
+        action: "assert"
+        target: "admission_a"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ou_a"
+
+      - step: "Create admission on School B"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission_b"
+        as_user: "base.user_admin"
+        values:
+          customer_invoice_type_id: "REC: ci_type.id"
+          receivable_account_id: "REC: ci_account.id"
+          pricelist_id: "REF: product.list0"
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school_b.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: student_contact_b.id"
+          currency_id: "REC: company.currency_id.id"
+          receivable_journal_id: "REC: ci_journal.id"
+
+      - step: "Confirm admission on School B"
+        action: "call"
+        target: "admission_b"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve admission on School B"
+        action: "call"
+        target: "admission_b"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Assert admission_b's operating unit was derived as OU B"
+        action: "assert"
+        target: "admission_b"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ou_b"
+
+      - step: "Setup - create export type matching every journal/partner/product"
+        action: "create"
+        model: "customer_invoice_export_type"
+        save_as: "export_type"
+        values:
+          name: "Export Type SAOU3"
+          code: "ETYSAOU3"
+          default_output_format: "csv"
+
+      - step: "Create term on admission A"
+        action: "create"
+        model: "school_admission_payment_term"
+        save_as: "term_a"
+        values:
+          admission_id: "REC: admission_a.id"
+          name: "Term SAOU3A"
+          sequence: 10
+          detail_ids:
+            - - 0
+              - 0
+              - product_id: "REC: product.id"
+                name: "Fee SAOU3A"
+                account_id: "REC: account.id"
+                uom_quantity: 1.0
+                uom_id: "REF: uom.product_uom_unit"
+                price_unit: 500000.0
+
+      - step: "Generate invoice for admission A's term"
+        action: "call"
+        target: "term_a"
+        method: "action_create_invoice"
+
+      - step: "Fetch invoice generated for admission A's term"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["id", "=", "REC: term_a.customer_invoice_id.id"]]
+        save_as: "invoice_a"
+        expect_count: 1
+
+      - step: "Confirm invoice of admission A"
+        action: "call"
+        target: "invoice_a"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve invoice of admission A"
+        action: "call"
+        target: "invoice_a"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create term on admission B"
+        action: "create"
+        model: "school_admission_payment_term"
+        save_as: "term_b"
+        values:
+          admission_id: "REC: admission_b.id"
+          name: "Term SAOU3B"
+          sequence: 10
+          detail_ids:
+            - - 0
+              - 0
+              - product_id: "REC: product.id"
+                name: "Fee SAOU3B"
+                account_id: "REC: account.id"
+                uom_quantity: 1.0
+                uom_id: "REF: uom.product_uom_unit"
+                price_unit: 500000.0
+
+      - step: "Generate invoice for admission B's term"
+        action: "call"
+        target: "term_b"
+        method: "action_create_invoice"
+
+      - step: "Fetch invoice generated for admission B's term"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["id", "=", "REC: term_b.customer_invoice_id.id"]]
+        save_as: "invoice_b"
+        expect_count: 1
+
+      - step: "Confirm invoice of admission B"
+        action: "call"
+        target: "invoice_b"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve invoice of admission B"
+        action: "call"
+        target: "invoice_b"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create wizard selecting both admissions, operating unit A selected"
+        action: "create"
+        model: "school_admission.wizard_create_invoice_export"
+        save_as: "wizard"
+        as_user: "base.user_admin"
+        values:
+          admission_ids:
+            - - 6
+              - 0
+              - - "REC: admission_a.id"
+                - "REC: admission_b.id"
+          operating_unit_id: "REC: ou_a.id"
+          type_id: "REC: export_type.id"
+          date: "2024-07-01"
+          output_format: "csv"
+
+      - step: "Run create invoice export over both admissions"
+        action: "call"
+        target: "wizard"
+        method: "action_create_invoice_export"
+
+      - step: "Fetch the created customer invoice export document"
+        action: "search"
+        model: "customer_invoice_export"
+        domain: [["type_id", "=", "REC: export_type.id"]]
+        save_as: "export_doc"
+        expect_count: 1
+
+      - step: "Assert export document only contains the move from operating unit A"
+        action: "assert"
+        target: "export_doc"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ou_a"
+          source_move_ids:
+            type: "m2m"
+            check: "exact"
+            expected_records:
+              - "REC: invoice_a.move_id"
+
+  - name: "Wizard Saved Without Operating Unit Is Rejected By The Required Field Check"
+    steps:
+      - step: "Setup - create export type matching every journal/partner/product"
+        action: "create"
+        model: "customer_invoice_export_type"
+        save_as: "export_type"
+        values:
+          name: "Export Type SAOU4"
+          code: "ETYSAOU4"
+          default_output_format: "csv"
+
+      - step:
+          "Setup - create a dedicated user with no assigned/default operating unit, so
+          the wizard's own operating_unit_id default resolves to empty. Not
+          base.user_admin: that user may already carry a default operating unit set by
+          an earlier scenario in this shared transaction (T-01), and the
+          operating_unit.group_manager_operating_unit group is deliberately withheld,
+          since it would make operating_unit_default_get() fall back to the first OU of
+          the current company instead of staying empty"
+        action: "create"
+        model: "res.users"
+        save_as: "wizard_user_no_ou"
+        values:
+          name: "Wizard No Default OU User SAOU4"
+          login: "wizard_no_default_ou_saou4@example.com"
+          default_operating_unit_id: false
+          groups_id:
+            - - 6
+              - 0
+              - - "REF: base.group_user"
+                - "REF: ssi_school_admission.school_admission_user_group"
+
+      - step:
+          "Fill every other required field via the form's own onchange, then attempt to
+          save without touching operating_unit_id -- its default resolves to empty for
+          this user, and the field is visible (no groups attribute) on the wizard's only
+          form, so Form.save() rejects it the same way it would reject any other empty
+          required field"
+        action: "form"
+        model: "school_admission.wizard_create_invoice_export"
+        as_user: "wizard_user_no_ou"
+        ops:
+          - set:
+              type_id: "REC: export_type"
+        expect_error:
+          type: "AssertionError"
+          message_contains: "operating_unit_id"
+
+  - name:
+      "Wizard On Admission Whose Operating Unit Does Not Match The Selected One Raises
+      UserError"
+    steps:
+      - step: "Setup - create partner for the admission's operating unit"
+        action: "create"
+        model: "res.partner"
+        save_as: "ou_a_partner"
+        values:
+          name: "Wizard Mismatch OU A Partner"
+
+      - step: "Create operating unit A (the admission's own)"
+        action: "create"
+        model: "operating.unit"
+        save_as: "ou_a"
+        values:
+          name: "Wizard Mismatch OU A"
+          code: "SAOU5A"
+          company_id: "REF: base.main_company"
+          partner_id: "REC: ou_a_partner.id"
+
+      - step: "Setup - create partner for the operating unit selected in the wizard"
+        action: "create"
+        model: "res.partner"
+        save_as: "ou_b_partner"
+        values:
+          name: "Wizard Mismatch OU B Partner"
+
+      - step: "Create operating unit B (the one selected in the wizard)"
+        action: "create"
+        model: "operating.unit"
+        save_as: "ou_b"
+        values:
+          name: "Wizard Mismatch OU B"
+          code: "SAOU5B"
+          company_id: "REF: base.main_company"
+          partner_id: "REC: ou_b_partner.id"
+
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable SAOU5"
+          code: "RECSAOU5"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type SAOU5"
+          code: "CITSAOU5"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
+      - step: "Setup - get income account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "Admission Fee Income SAOU5"
+          code: "INCSAOU5"
+          user_type_id: "REC: account_type.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "Admission Fee SAOU5"
+          type: "service"
+          list_price: 500000.0
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type SAOU5"
+          code: "GTSAOU5"
+          sequence: 10
+
+      - step: "Setup - create school with operating unit A"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School SAOU5"
+          code: "SCSAOU5"
+          grade_type_id: "REC: grade_type.id"
+          operating_unit_ids: [[6, 0, ["REC: ou_a.id"]]]
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade SAOU5"
+          code: "GRSAOU5"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 SAOU5"
+          code: "AYSAOU5"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester SAOU5"
+          code: "SMSAOU5"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "student_contact"
+        values:
+          name: "Student Contact SAOU5"
+
+      - step: "Create admission on School A (operating unit A)"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        as_user: "base.user_admin"
+        values:
+          customer_invoice_type_id: "REC: ci_type.id"
+          receivable_account_id: "REC: ci_account.id"
+          pricelist_id: "REF: product.list0"
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: student_contact.id"
+          currency_id: "REC: company.currency_id.id"
+          receivable_journal_id: "REC: ci_journal.id"
+
+      - step: "Confirm admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve admission"
+        action: "call"
+        target: "admission"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create term, will be invoiced and open"
+        action: "create"
+        model: "school_admission_payment_term"
+        save_as: "term"
+        values:
+          admission_id: "REC: admission.id"
+          name: "Term SAOU5"
+          sequence: 10
+          detail_ids:
+            - - 0
+              - 0
+              - product_id: "REC: product.id"
+                name: "Fee SAOU5"
+                account_id: "REC: account.id"
+                uom_quantity: 1.0
+                uom_id: "REF: uom.product_uom_unit"
+                price_unit: 500000.0
+
+      - step: "Generate invoice for the term"
+        action: "call"
+        target: "term"
+        method: "action_create_invoice"
+
+      - step: "Fetch the generated invoice"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["id", "=", "REC: term.customer_invoice_id.id"]]
+        save_as: "invoice"
+        expect_count: 1
+
+      - step: "Confirm the invoice"
+        action: "call"
+        target: "invoice"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the invoice"
+        action: "call"
+        target: "invoice"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Setup - create export type matching every journal/partner/product"
+        action: "create"
+        model: "customer_invoice_export_type"
+        save_as: "export_type"
+        values:
+          name: "Export Type SAOU5"
+          code: "ETYSAOU5"
+          default_output_format: "csv"
+
+      - step: "Create wizard selecting the OU A admission but operating unit B"
+        action: "create"
+        model: "school_admission.wizard_create_invoice_export"
+        save_as: "wizard"
+        as_user: "base.user_admin"
+        values:
+          admission_ids:
+            - - 6
+              - 0
+              - - "REC: admission.id"
+          operating_unit_id: "REC: ou_b.id"
+          type_id: "REC: export_type.id"
+          date: "2024-07-01"
+          output_format: "csv"
+
+      - step:
+          "Running the wizard must fail: no move of the admission belongs to operating
+          unit B"
+        action: "call"
+        target: "wizard"
+        method: "action_create_invoice_export"
+        expect_error:
+          type: "UserError"
+          message_contains: "operating unit"
+
+      - step: "Assert no customer invoice export document was created for OU B"
+        action: "search"
+        model: "customer_invoice_export"
+        domain: [["operating_unit_id", "=", "REC: ou_b.id"]]
+        save_as: "no_export_doc"
+        expect_count: 0
