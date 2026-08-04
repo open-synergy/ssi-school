@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 OpenSynergy Indonesia
+     Copyright 2026 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+
+<record
+        id="school_enrollment_wizard_create_invoice_export_view_form_ou"
+        model="ir.ui.view"
+    >
+    <field
+            name="name"
+        >school_enrollment.wizard_create_invoice_export - form - operating unit</field>
+    <field name="model">school_enrollment.wizard_create_invoice_export</field>
+    <field
+            name="inherit_id"
+            ref="ssi_school_customer_invoice_export.school_enrollment_wizard_create_invoice_export_view_form"
+        />
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='type_id']" position="before">
+                <field name="operating_unit_id" />
+            </xpath>
+        </data>
+    </field>
+</record>
+
+</odoo>
