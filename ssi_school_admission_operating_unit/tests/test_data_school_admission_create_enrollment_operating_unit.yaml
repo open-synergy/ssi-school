@@ -1,0 +1,587 @@
+scenarios:
+  - name:
+      "Enrollment Wizard OU - enrollment inherits the admission's operating unit,
+      winning over the school-derived and user-default one"
+    steps:
+      - step: "Setup - create partner for the school's own operating unit"
+        action: "create"
+        model: "res.partner"
+        save_as: "school_ou_partner"
+        values:
+          name: "Enrollment Wizard OU School Partner"
+
+      - step: "Setup - create the school's own operating unit"
+        action: "create"
+        model: "operating.unit"
+        save_as: "school_ou"
+        values:
+          name: "Enrollment Wizard OU School"
+          code: "ENROUSCH"
+          company_id: "REF: base.main_company"
+          partner_id: "REC: school_ou_partner.id"
+
+      - step: "Setup - create partner for the admission's operating unit"
+        action: "create"
+        model: "res.partner"
+        save_as: "admission_ou_partner"
+        values:
+          name: "Enrollment Wizard OU Admission Partner"
+
+      - step: "Setup - create the admission's own operating unit"
+        action: "create"
+        model: "operating.unit"
+        save_as: "admission_ou"
+        values:
+          name: "Enrollment Wizard OU Admission"
+          code: "ENROUADM"
+          company_id: "REF: base.main_company"
+          partner_id: "REC: admission_ou_partner.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Enrollment Wizard OU"
+          code: "GTENROU"
+          sequence: 10
+
+      - step:
+          "Setup - create school whose own operating unit differs from the admission's"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Enrollment Wizard OU"
+          code: "SCHENROU"
+          grade_type_id: "REC: grade_type.id"
+          operating_unit_ids: [[6, 0, ["REC: school_ou.id"]]]
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade Enrollment Wizard OU"
+          code: "GENROU"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2025/2026 Enrollment Wizard OU"
+          code: "AYENROU"
+          date_start: "2025-07-01"
+          date_end: "2026-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester Enrollment Wizard OU"
+          code: "SMENROU"
+          date_start: "2025-07-01"
+          date_end: "2025-12-31"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class Enrollment Wizard OU"
+          code: "CLENROU"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Setup - create student partner"
+        action: "create"
+        model: "res.partner"
+        save_as: "student"
+        values:
+          name: "Student Enrollment Wizard OU"
+
+      - step:
+          "Create school admission with an operating unit different from the school's
+          own"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        as_user: "base.user_admin"
+        values:
+          date: "2025-07-15"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: student.id"
+          operating_unit_id: "REC: admission_ou.id"
+
+      - step: "Assert admission carries its own explicit operating unit"
+        action: "assert"
+        target: "admission"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: admission_ou"
+
+      - step: "Confirm admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Invalidate admission cache after confirm"
+        action: "call"
+        target: "admission"
+        method: "invalidate_cache"
+
+      - step: "Approve admission (moves to open, creates the school student)"
+        action: "call"
+        target: "admission"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Invalidate admission cache after approve"
+        action: "call"
+        target: "admission"
+        method: "invalidate_cache"
+
+      - step: "Assert admission is ready to create its enrollment"
+        action: "assert"
+        target: "admission"
+        asserts:
+          school_student_id:
+            type: "value"
+            operator: "is_truthy"
+          enrollment_id:
+            type: "value"
+            operator: "is_falsy"
+
+      - step: "Create wizard to create the enrollment"
+        action: "create"
+        model: "school_admission.wizard_create_enrollment"
+        save_as: "wizard"
+        values:
+          admission_id: "REC: admission.id"
+          grade_class_id: "REC: grade_class.id"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Call wizard action_create_enrollment"
+        action: "call"
+        target: "wizard"
+        method: "action_create_enrollment"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate admission cache after wizard call"
+        action: "call"
+        target: "admission"
+        method: "invalidate_cache"
+
+      - step: "Search for the created enrollment"
+        action: "search"
+        model: "school_enrollment"
+        domain: [["student_id", "=", "REC: admission.school_student_id.id"]]
+        save_as: "created_enrollment"
+        expect_count: 1
+
+      - step:
+          "Assert the enrollment carries the admission's operating unit, not the
+          school's own"
+        action: "assert"
+        target: "created_enrollment"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: admission_ou"
+
+      - step: "Assert admission is now linked to the created enrollment"
+        action: "assert"
+        target: "admission"
+        asserts:
+          enrollment_id:
+            type: "m2o"
+            expected: "REC: created_enrollment"
+
+  - name:
+      "Enrollment Wizard OU - repeated wizard call does not overwrite a manually changed
+      enrollment operating unit"
+    steps:
+      - step: "Setup - create partner for Operating Unit A"
+        action: "create"
+        model: "res.partner"
+        save_as: "ou_a_partner"
+        values:
+          name: "Enrollment Wizard Idempotent OU A Partner"
+
+      - step: "Setup - create Operating Unit A"
+        action: "create"
+        model: "operating.unit"
+        save_as: "ou_a"
+        values:
+          name: "Enrollment Wizard Idempotent OU A"
+          code: "ENROUIDA"
+          company_id: "REF: base.main_company"
+          partner_id: "REC: ou_a_partner.id"
+
+      - step: "Setup - create partner for Operating Unit B"
+        action: "create"
+        model: "res.partner"
+        save_as: "ou_b_partner"
+        values:
+          name: "Enrollment Wizard Idempotent OU B Partner"
+
+      - step: "Setup - create Operating Unit B"
+        action: "create"
+        model: "operating.unit"
+        save_as: "ou_b"
+        values:
+          name: "Enrollment Wizard Idempotent OU B"
+          code: "ENROUIDB"
+          company_id: "REF: base.main_company"
+          partner_id: "REC: ou_b_partner.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Enrollment Wizard Idempotent"
+          code: "GTENROUI"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Enrollment Wizard Idempotent"
+          code: "SCHENROUI"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade Enrollment Wizard Idempotent"
+          code: "GENROUI"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2025/2026 Enrollment Wizard Idempotent"
+          code: "AYENROUI"
+          date_start: "2025-07-01"
+          date_end: "2026-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester Enrollment Wizard Idempotent"
+          code: "SMENROUI"
+          date_start: "2025-07-01"
+          date_end: "2025-12-31"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class Enrollment Wizard Idempotent"
+          code: "CLENROUI"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Setup - create student partner"
+        action: "create"
+        model: "res.partner"
+        save_as: "student"
+        values:
+          name: "Student Enrollment Wizard Idempotent"
+
+      - step: "Create school admission with Operating Unit A"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        as_user: "base.user_admin"
+        values:
+          date: "2025-07-15"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: student.id"
+          operating_unit_id: "REC: ou_a.id"
+
+      - step: "Confirm admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Invalidate admission cache after confirm"
+        action: "call"
+        target: "admission"
+        method: "invalidate_cache"
+
+      - step: "Approve admission"
+        action: "call"
+        target: "admission"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Invalidate admission cache after approve"
+        action: "call"
+        target: "admission"
+        method: "invalidate_cache"
+
+      - step: "Create wizard to create the enrollment"
+        action: "create"
+        model: "school_admission.wizard_create_enrollment"
+        save_as: "wizard"
+        values:
+          admission_id: "REC: admission.id"
+          grade_class_id: "REC: grade_class.id"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Call wizard action_create_enrollment the first time"
+        action: "call"
+        target: "wizard"
+        method: "action_create_enrollment"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate admission cache after first wizard call"
+        action: "call"
+        target: "admission"
+        method: "invalidate_cache"
+
+      - step: "Search for the created enrollment"
+        action: "search"
+        model: "school_enrollment"
+        domain: [["student_id", "=", "REC: admission.school_student_id.id"]]
+        save_as: "created_enrollment"
+        expect_count: 1
+
+      - step: "Assert the enrollment first received Operating Unit A"
+        action: "assert"
+        target: "created_enrollment"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ou_a"
+
+      - step: "Manually change the enrollment's operating unit to B"
+        action: "write"
+        target: "created_enrollment"
+        as_user: "base.user_admin"
+        values:
+          operating_unit_id: "REC: ou_b.id"
+
+      - step: "Call wizard action_create_enrollment a second time"
+        action: "call"
+        target: "wizard"
+        method: "action_create_enrollment"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate enrollment cache after second wizard call"
+        action: "call"
+        target: "created_enrollment"
+        method: "invalidate_cache"
+
+      - step:
+          "Assert the manually set operating unit was not overwritten by the repeated
+          call"
+        action: "assert"
+        target: "created_enrollment"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ou_b"
+
+      - step: "Assert still only one enrollment exists for the student"
+        action: "search"
+        model: "school_enrollment"
+        domain: [["student_id", "=", "REC: admission.school_student_id.id"]]
+        save_as: "enrollments_after_second_call"
+        expect_count: 1
+
+  - name:
+      "Enrollment Wizard OU - admission without an operating unit creates the enrollment
+      without error"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Enrollment Wizard No OU"
+          code: "GTENRNOU"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Enrollment Wizard No OU"
+          code: "SCHENRNOU"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade Enrollment Wizard No OU"
+          code: "GENRNOU"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2025/2026 Enrollment Wizard No OU"
+          code: "AYENRNOU"
+          date_start: "2025-07-01"
+          date_end: "2026-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester Enrollment Wizard No OU"
+          code: "SMENRNOU"
+          date_start: "2025-07-01"
+          date_end: "2025-12-31"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class Enrollment Wizard No OU"
+          code: "CLENRNOU"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Setup - create student partner"
+        action: "create"
+        model: "res.partner"
+        save_as: "student"
+        values:
+          name: "Student Enrollment Wizard No OU"
+
+      - step: "Create school admission with operating_unit_id explicitly empty"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        as_user: "base.user_admin"
+        values:
+          date: "2025-07-15"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: student.id"
+          operating_unit_id: false
+
+      - step: "Assert admission has no operating unit"
+        action: "assert"
+        target: "admission"
+        asserts:
+          operating_unit_id:
+            type: "value"
+            operator: "is_falsy"
+
+      - step: "Confirm admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Invalidate admission cache after confirm"
+        action: "call"
+        target: "admission"
+        method: "invalidate_cache"
+
+      - step: "Approve admission"
+        action: "call"
+        target: "admission"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Invalidate admission cache after approve"
+        action: "call"
+        target: "admission"
+        method: "invalidate_cache"
+
+      - step: "Create wizard to create the enrollment"
+        action: "create"
+        model: "school_admission.wizard_create_enrollment"
+        save_as: "wizard"
+        values:
+          admission_id: "REC: admission.id"
+          grade_class_id: "REC: grade_class.id"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Call wizard action_create_enrollment without any error"
+        action: "call"
+        target: "wizard"
+        method: "action_create_enrollment"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate admission cache after wizard call"
+        action: "call"
+        target: "admission"
+        method: "invalidate_cache"
+
+      - step: "Assert the admission is now linked to an enrollment"
+        action: "assert"
+        target: "admission"
+        asserts:
+          enrollment_id:
+            type: "value"
+            operator: "is_truthy"
