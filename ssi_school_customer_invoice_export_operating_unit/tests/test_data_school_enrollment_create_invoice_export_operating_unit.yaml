@@ -369,6 +369,10 @@ scenarios:
         method: "action_confirm"
         as_user: "base.user_admin"
         refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
 
       - step: "Approve enrollment"
         action: "call"
@@ -426,6 +430,10 @@ scenarios:
         method: "action_confirm"
         as_user: "base.user_admin"
         refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
 
       - step: "Approve invoice A"
         action: "call"
@@ -474,6 +482,10 @@ scenarios:
         method: "action_confirm"
         as_user: "base.user_admin"
         refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
 
       - step: "Approve invoice B"
         action: "call"
@@ -768,6 +780,10 @@ scenarios:
         method: "action_confirm"
         as_user: "base.user_admin"
         refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
 
       - step: "Approve enrollment on School A"
         action: "call"
@@ -812,6 +828,10 @@ scenarios:
         method: "action_confirm"
         as_user: "base.user_admin"
         refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
 
       - step: "Approve enrollment on School B"
         action: "call"
@@ -877,6 +897,10 @@ scenarios:
         method: "action_confirm"
         as_user: "base.user_admin"
         refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
 
       - step: "Approve invoice of enrollment A"
         action: "call"
@@ -925,6 +949,10 @@ scenarios:
         method: "action_confirm"
         as_user: "base.user_admin"
         refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
 
       - step: "Approve invoice of enrollment B"
         action: "call"
@@ -1173,6 +1201,10 @@ scenarios:
         method: "action_confirm"
         as_user: "base.user_admin"
         refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
 
       - step: "Approve enrollment"
         action: "call"
@@ -1221,6 +1253,10 @@ scenarios:
         method: "action_confirm"
         as_user: "base.user_admin"
         refresh: true
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
 
       - step: "Approve the invoice"
         action: "call"
