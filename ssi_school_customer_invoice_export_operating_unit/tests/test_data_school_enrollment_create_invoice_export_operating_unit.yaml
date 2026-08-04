@@ -37,18 +37,25 @@ scenarios:
           company_id: "REF: base.main_company"
           partner_id: "REC: ou_u_partner.id"
 
-      - step: "Setup - get the admin user"
-        action: "ref"
-        xml_id: "base.user_admin"
-        save_as: "admin_user"
-
       - step:
-          "Give the admin user a default operating unit distinct from the enrollment's
-          own"
-        action: "write"
-        target: "admin_user"
+          "Create a dedicated user to open the wizard, with a default operating unit
+          distinct from the enrollment's own. A throwaway user is used instead of
+          base.user_admin so this scenario does not mutate a fixture shared by every
+          other test in the suite (all scenarios in this file -- and every other
+          module's post_install test -- run in one shared DB transaction)"
+        action: "create"
+        model: "res.users"
+        save_as: "wizard_user"
         values:
+          name: "Wizard Default OU User CIEO1"
+          login: "wizard_default_ou_cieo1@example.com"
           default_operating_unit_id: "REC: ou_u.id"
+          groups_id:
+            - - 6
+              - 0
+              - - "REF: base.group_user"
+                - "REF: operating_unit.group_manager_operating_unit"
+                - "REF: ssi_school.school_enrollment_user_group"
 
       - step: "Setup - create grade type"
         action: "create"
@@ -132,7 +139,7 @@ scenarios:
         action: "create"
         model: "school_enrollment"
         save_as: "enrollment"
-        as_user: "base.user_admin"
+        as_user: "wizard_user"
         values:
           date: "2024-07-01"
           academic_year_id: "REC: academic_year.id"
@@ -163,7 +170,7 @@ scenarios:
         action: "create"
         model: "school_enrollment.wizard_create_invoice_export"
         save_as: "wizard"
-        as_user: "base.user_admin"
+        as_user: "wizard_user"
         values:
           enrollment_ids:
             - - 6
@@ -174,11 +181,11 @@ scenarios:
           output_format: "csv"
 
       - step:
-          "Assert operating_unit_id defaults to the admin user's own default OU, not the
-          enrollment's OU A"
+          "Assert operating_unit_id defaults to the acting user's own default OU, not
+          the enrollment's OU A"
         action: "assert"
         target: "wizard"
-        as_user: "base.user_admin"
+        as_user: "wizard_user"
         asserts:
           operating_unit_id:
             type: "m2o"
