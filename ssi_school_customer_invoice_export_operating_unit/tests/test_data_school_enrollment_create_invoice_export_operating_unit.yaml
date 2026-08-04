@@ -150,6 +150,15 @@ scenarios:
             type: "m2o"
             expected: "REC: ou_a"
 
+      - step: "Setup - create export type matching every journal/partner/product"
+        action: "create"
+        model: "customer_invoice_export_type"
+        save_as: "export_type"
+        values:
+          name: "Export Type CIEO1"
+          code: "ETYCIEO1"
+          default_output_format: "csv"
+
       - step: "Create wizard for the enrollment without touching operating_unit_id"
         action: "create"
         model: "school_enrollment.wizard_create_invoice_export"
@@ -160,6 +169,9 @@ scenarios:
             - - 6
               - 0
               - - "REC: enrollment.id"
+          type_id: "REC: export_type.id"
+          date: "2024-07-01"
+          output_format: "csv"
 
       - step:
           "Assert operating_unit_id defaults to the admin user's own default OU, not the
