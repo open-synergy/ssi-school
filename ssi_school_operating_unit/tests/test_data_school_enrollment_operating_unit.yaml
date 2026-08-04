@@ -1,0 +1,1300 @@
+options:
+  auto_refresh: true
+scenarios:
+  - name: "Enrollment OU Derive - create derives operating unit from school"
+    steps:
+      - step: "Create partner for the school's own operating unit"
+        action: "create"
+        model: "res.partner"
+        save_as: "ou1_partner"
+        values:
+          name: "Enrollment Derive OU1 Partner"
+
+      - step: "Create the school's own operating unit"
+        action: "create"
+        model: "operating.unit"
+        save_as: "ou1"
+        values:
+          name: "Enrollment Derive OU1"
+          code: "OUSEOU1"
+          company_id: "REF: base.main_company"
+          partner_id: "REC: ou1_partner.id"
+
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type SEOU1"
+          code: "GTSEOU1"
+          sequence: 10
+
+      - step: "Create school with exactly one operating unit"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School SEOU1"
+          code: "SCHSEOU1"
+          grade_type_id: "REC: grade_type.id"
+          operating_unit_ids: [[6, 0, ["REC: ou1.id"]]]
+
+      - step: "Create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade SEOU1"
+          code: "GSEOU1"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Grade Class SEOU1"
+          code: "GCSEOU1"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2025/2026 SEOU1"
+          code: "AYSEOU1"
+          date_start: "2025-07-01"
+          date_end: "2026-06-30"
+
+      - step: "Create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester SEOU1"
+          code: "SMSEOU1"
+          date_start: "2025-07-01"
+          date_end: "2025-12-31"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact SEOU1"
+
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student SEOU1"
+          code: "STUSEOU1"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Create enrollment without an explicit operating unit"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        as_user: "base.user_admin"
+        values:
+          date: "2025-07-15"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+
+      - step: "Assert operating unit was derived from the school"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ou1"
+
+  - name:
+      "Enrollment OU Derive - explicit operating_unit_id wins over the school's own on
+      create"
+    steps:
+      - step: "Create partner for the school's own operating unit"
+        action: "create"
+        model: "res.partner"
+        save_as: "ou2_school_partner"
+        values:
+          name: "Enrollment Derive OU2 School Partner"
+
+      - step: "Create the school's own operating unit"
+        action: "create"
+        model: "operating.unit"
+        save_as: "ou2_school"
+        values:
+          name: "Enrollment Derive OU2 School"
+          code: "OUSEOU2S"
+          company_id: "REF: base.main_company"
+          partner_id: "REC: ou2_school_partner.id"
+
+      - step: "Create partner for the caller's explicit operating unit"
+        action: "create"
+        model: "res.partner"
+        save_as: "ou2_explicit_partner"
+        values:
+          name: "Enrollment Derive OU2 Explicit Partner"
+
+      - step: "Create the operating unit the caller passes explicitly"
+        action: "create"
+        model: "operating.unit"
+        save_as: "ou2_explicit"
+        values:
+          name: "Enrollment Derive OU2 Explicit"
+          code: "OUSEOU2E"
+          company_id: "REF: base.main_company"
+          partner_id: "REC: ou2_explicit_partner.id"
+
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type SEOU2"
+          code: "GTSEOU2"
+          sequence: 10
+
+      - step: "Create school with exactly one operating unit"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School SEOU2"
+          code: "SCHSEOU2"
+          grade_type_id: "REC: grade_type.id"
+          operating_unit_ids: [[6, 0, ["REC: ou2_school.id"]]]
+
+      - step: "Create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade SEOU2"
+          code: "GSEOU2"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Grade Class SEOU2"
+          code: "GCSEOU2"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2025/2026 SEOU2"
+          code: "AYSEOU2"
+          date_start: "2025-07-01"
+          date_end: "2026-06-30"
+
+      - step: "Create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester SEOU2"
+          code: "SMSEOU2"
+          date_start: "2025-07-01"
+          date_end: "2025-12-31"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact SEOU2"
+
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student SEOU2"
+          code: "STUSEOU2"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step:
+          "Create enrollment with school_id and an explicit operating_unit_id in the
+          same vals"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        as_user: "base.user_admin"
+        values:
+          date: "2025-07-15"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          operating_unit_id: "REC: ou2_explicit.id"
+
+      - step: "Assert the caller's explicit operating unit wins over the school's own"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ou2_explicit"
+
+  - name: "Enrollment OU Derive - write changing school_id moves the operating unit"
+    steps:
+      - step: "Create partner for Operating Unit A"
+        action: "create"
+        model: "res.partner"
+        save_as: "ou3_a_partner"
+        values:
+          name: "Enrollment Write Change OU A Partner"
+
+      - step: "Create Operating Unit A"
+        action: "create"
+        model: "operating.unit"
+        save_as: "ou3_a"
+        values:
+          name: "Enrollment Write Change OU A"
+          code: "OUSEOU3A"
+          company_id: "REF: base.main_company"
+          partner_id: "REC: ou3_a_partner.id"
+
+      - step: "Create partner for Operating Unit B"
+        action: "create"
+        model: "res.partner"
+        save_as: "ou3_b_partner"
+        values:
+          name: "Enrollment Write Change OU B Partner"
+
+      - step: "Create Operating Unit B"
+        action: "create"
+        model: "operating.unit"
+        save_as: "ou3_b"
+        values:
+          name: "Enrollment Write Change OU B"
+          code: "OUSEOU3B"
+          company_id: "REF: base.main_company"
+          partner_id: "REC: ou3_b_partner.id"
+
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type SEOU3"
+          code: "GTSEOU3"
+          sequence: 10
+
+      - step: "Create School A with Operating Unit A"
+        action: "create"
+        model: "school"
+        save_as: "school_a"
+        values:
+          name: "School SEOU3 A"
+          code: "SCHSEOU3A"
+          grade_type_id: "REC: grade_type.id"
+          operating_unit_ids: [[6, 0, ["REC: ou3_a.id"]]]
+
+      - step: "Create School B with Operating Unit B"
+        action: "create"
+        model: "school"
+        save_as: "school_b"
+        values:
+          name: "School SEOU3 B"
+          code: "SCHSEOU3B"
+          grade_type_id: "REC: grade_type.id"
+          operating_unit_ids: [[6, 0, ["REC: ou3_b.id"]]]
+
+      - step: "Create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade SEOU3"
+          code: "GSEOU3"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Create grade class for School A"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_a"
+        values:
+          name: "Grade Class SEOU3 A"
+          code: "GCSEOU3A"
+          school_id: "REC: school_a.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Create grade class for School B"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_b"
+        values:
+          name: "Grade Class SEOU3 B"
+          code: "GCSEOU3B"
+          school_id: "REC: school_b.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2025/2026 SEOU3"
+          code: "AYSEOU3"
+          date_start: "2025-07-01"
+          date_end: "2026-06-30"
+
+      - step: "Create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester SEOU3"
+          code: "SMSEOU3"
+          date_start: "2025-07-01"
+          date_end: "2025-12-31"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact SEOU3"
+
+      - step: "Create student in School A"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student SEOU3"
+          code: "STUSEOU3"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school_a.id"
+
+      - step: "Create enrollment for School A without an explicit operating unit"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        as_user: "base.user_admin"
+        values:
+          date: "2025-07-15"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school_a.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class_a.id"
+          student_id: "REC: student.id"
+
+      - step: "Assert operating unit was derived from School A"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ou3_a"
+
+      - step:
+          "Write school_id to School B (with its matching grade class), without touching
+          operating_unit_id"
+        action: "write"
+        target: "enrollment"
+        as_user: "base.user_admin"
+        values:
+          school_id: "REC: school_b.id"
+          grade_class_id: "REC: grade_class_b.id"
+
+      - step: "Assert operating unit moved to School B"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ou3_b"
+
+  - name:
+      "Enrollment OU Derive - onchange school_id fills operating_unit_id on the form"
+    steps:
+      - step: "Create partner for the school's own operating unit"
+        action: "create"
+        model: "res.partner"
+        save_as: "ou4_partner"
+        values:
+          name: "Enrollment Onchange OU Partner"
+
+      - step: "Create the school's own operating unit"
+        action: "create"
+        model: "operating.unit"
+        save_as: "ou4"
+        values:
+          name: "Enrollment Onchange OU"
+          code: "OUSEOU4"
+          company_id: "REF: base.main_company"
+          partner_id: "REC: ou4_partner.id"
+
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type SEOU4"
+          code: "GTSEOU4"
+          sequence: 10
+
+      - step: "Create school with exactly one operating unit"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School SEOU4"
+          code: "SCHSEOU4"
+          grade_type_id: "REC: grade_type.id"
+          operating_unit_ids: [[6, 0, ["REC: ou4.id"]]]
+
+      - step: "Set school_id on a new school_enrollment form and check the onchange"
+        action: "form"
+        model: "school_enrollment"
+        as_user: "base.user_admin"
+        save: false
+        values:
+          school_id: "REC: school"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ou4"
+
+  - name:
+      "Enrollment OU Derive - chain to customer_invoice via Create Due Invoice wizard"
+    steps:
+      - step: "Create partner for the school's own operating unit"
+        action: "create"
+        model: "res.partner"
+        save_as: "ou5_partner"
+        values:
+          name: "Enrollment Chain OU Partner"
+
+      - step: "Create the school's own operating unit"
+        action: "create"
+        model: "operating.unit"
+        save_as: "ou5"
+        values:
+          name: "Enrollment Chain OU"
+          code: "OUSEOU5"
+          company_id: "REF: base.main_company"
+          partner_id: "REC: ou5_partner.id"
+
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable SEOU5"
+          code: "SEOU5CI"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type SEOU5"
+          code: "SEOU5CT"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
+      - step: "Setup - get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "School Fee Income SEOU5"
+          code: "SEOU5FI"
+          user_type_id: "REC: account_type.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Fee SEOU5"
+          type: "service"
+          list_price: 500000.0
+
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type SEOU5"
+          code: "GTSEOU5"
+          sequence: 10
+
+      - step: "Create school with exactly one operating unit"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School SEOU5"
+          code: "SCHSEOU5"
+          grade_type_id: "REC: grade_type.id"
+          operating_unit_ids: [[6, 0, ["REC: ou5.id"]]]
+
+      - step: "Create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade SEOU5"
+          code: "GSEOU5"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Grade Class SEOU5"
+          code: "GCSEOU5"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2025/2026 SEOU5"
+          code: "AYSEOU5"
+          date_start: "2025-07-01"
+          date_end: "2026-06-30"
+
+      - step: "Create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester SEOU5"
+          code: "SMSEOU5"
+          date_start: "2025-07-01"
+          date_end: "2025-12-31"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - get receivable journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "receivable_journal"
+        limit: 1
+
+      - step: "Create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact SEOU5"
+
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student SEOU5"
+          code: "STUSEOU5"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Create enrollment without an explicit operating unit"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        as_user: "base.user_admin"
+        values:
+          customer_invoice_type_id: "REC: ci_type.id"
+          receivable_account_id: "REC: ci_account.id"
+          pricelist_id: "REF: product.list0"
+          date: "2025-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+          receivable_journal_id: "REC: receivable_journal.id"
+
+      - step: "Assert enrollment operating unit was derived from the school"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ou5"
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate enrollment cache before approve"
+        action: "call"
+        target: "enrollment"
+        method: "invalidate_cache"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create a due payment term (invoice date 10 days ago)"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term SEOU5"
+          sequence: 10
+          date_invoice: "EVAL: (datetime.now() + timedelta(days=-10)).date()"
+          detail_ids:
+            - - 0
+              - 0
+              - product_id: "REC: product.id"
+                name: "Fee SEOU5"
+                account_id: "REC: account.id"
+                uom_quantity: 1.0
+                uom_id: "REF: uom.product_uom_unit"
+                price_unit: 500000.0
+
+      - step: "Create wizard with no date range"
+        action: "create"
+        model: "school_enrollment.wizard_create_due_invoice"
+        save_as: "wizard"
+        values:
+          enrollment_ids:
+            - - 6
+              - 0
+              - - "REC: enrollment.id"
+
+      - step: "Run create due invoice"
+        action: "call"
+        target: "wizard"
+        method: "action_create_due_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Assert term was invoiced"
+        action: "assert"
+        target: "term"
+        asserts:
+          state:
+            type: "value"
+            expected: "invoiced"
+          customer_invoice_id:
+            type: "value"
+            operator: "is_truthy"
+
+      - step: "Assert the invoice's operating unit matches the enrollment's"
+        action: "assert"
+        target: "term"
+        asserts:
+          customer_invoice_id.operating_unit_id:
+            type: "m2o"
+            expected: "REC: ou5"
+
+  - name:
+      "Enrollment OU Derive - two operating units plus explicit operating_unit_id wins
+      on create"
+    steps:
+      - step: "Create partner for Operating Unit A"
+        action: "create"
+        model: "res.partner"
+        save_as: "ou6_a_partner"
+        values:
+          name: "Enrollment Ambiguous OU A Partner"
+
+      - step: "Create Operating Unit A"
+        action: "create"
+        model: "operating.unit"
+        save_as: "ou6_a"
+        values:
+          name: "Enrollment Ambiguous OU A"
+          code: "OUSEOU6A"
+          company_id: "REF: base.main_company"
+          partner_id: "REC: ou6_a_partner.id"
+
+      - step: "Create partner for Operating Unit B"
+        action: "create"
+        model: "res.partner"
+        save_as: "ou6_b_partner"
+        values:
+          name: "Enrollment Ambiguous OU B Partner"
+
+      - step: "Create Operating Unit B"
+        action: "create"
+        model: "operating.unit"
+        save_as: "ou6_b"
+        values:
+          name: "Enrollment Ambiguous OU B"
+          code: "OUSEOU6B"
+          company_id: "REF: base.main_company"
+          partner_id: "REC: ou6_b_partner.id"
+
+      - step: "Create partner for the caller's explicit operating unit"
+        action: "create"
+        model: "res.partner"
+        save_as: "ou6_explicit_partner"
+        values:
+          name: "Enrollment Ambiguous OU Explicit Partner"
+
+      - step: "Create the operating unit the caller passes explicitly"
+        action: "create"
+        model: "operating.unit"
+        save_as: "ou6_explicit"
+        values:
+          name: "Enrollment Ambiguous OU Explicit"
+          code: "OUSEOU6E"
+          company_id: "REF: base.main_company"
+          partner_id: "REC: ou6_explicit_partner.id"
+
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type SEOU6"
+          code: "GTSEOU6"
+          sequence: 10
+
+      - step: "Create school with two operating units (ambiguous)"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School SEOU6"
+          code: "SCHSEOU6"
+          grade_type_id: "REC: grade_type.id"
+          operating_unit_ids: [[6, 0, ["REC: ou6_a.id", "REC: ou6_b.id"]]]
+
+      - step: "Create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade SEOU6"
+          code: "GSEOU6"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Grade Class SEOU6"
+          code: "GCSEOU6"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2025/2026 SEOU6"
+          code: "AYSEOU6"
+          date_start: "2025-07-01"
+          date_end: "2026-06-30"
+
+      - step: "Create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester SEOU6"
+          code: "SMSEOU6"
+          date_start: "2025-07-01"
+          date_end: "2025-12-31"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact SEOU6"
+
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student SEOU6"
+          code: "STUSEOU6"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step:
+          "Create enrollment with school_id and an explicit operating_unit_id, while the
+          school itself has two operating units"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        as_user: "base.user_admin"
+        values:
+          date: "2025-07-15"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          operating_unit_id: "REC: ou6_explicit.id"
+
+      - step:
+          "Assert the explicit operating unit wins, derivation does not bite on an
+          ambiguous school"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ou6_explicit"
+
+  - name:
+      "Enrollment OU Derive - write touching only operating_unit_id is not overridden"
+    steps:
+      - step: "Create partner for the school's own operating unit"
+        action: "create"
+        model: "res.partner"
+        save_as: "ou7_school_partner"
+        values:
+          name: "Enrollment Write Only School OU Partner"
+
+      - step: "Create the school's own operating unit"
+        action: "create"
+        model: "operating.unit"
+        save_as: "ou7_school"
+        values:
+          name: "Enrollment Write Only School OU"
+          code: "OUSEOU7S"
+          company_id: "REF: base.main_company"
+          partner_id: "REC: ou7_school_partner.id"
+
+      - step: "Create partner for the manually written operating unit"
+        action: "create"
+        model: "res.partner"
+        save_as: "ou7_explicit_partner"
+        values:
+          name: "Enrollment Write Only Explicit OU Partner"
+
+      - step: "Create the operating unit written manually afterwards"
+        action: "create"
+        model: "operating.unit"
+        save_as: "ou7_explicit"
+        values:
+          name: "Enrollment Write Only Explicit OU"
+          code: "OUSEOU7E"
+          company_id: "REF: base.main_company"
+          partner_id: "REC: ou7_explicit_partner.id"
+
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type SEOU7"
+          code: "GTSEOU7"
+          sequence: 10
+
+      - step: "Create school with exactly one operating unit"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School SEOU7"
+          code: "SCHSEOU7"
+          grade_type_id: "REC: grade_type.id"
+          operating_unit_ids: [[6, 0, ["REC: ou7_school.id"]]]
+
+      - step: "Create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade SEOU7"
+          code: "GSEOU7"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Grade Class SEOU7"
+          code: "GCSEOU7"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2025/2026 SEOU7"
+          code: "AYSEOU7"
+          date_start: "2025-07-01"
+          date_end: "2026-06-30"
+
+      - step: "Create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester SEOU7"
+          code: "SMSEOU7"
+          date_start: "2025-07-01"
+          date_end: "2025-12-31"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact SEOU7"
+
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student SEOU7"
+          code: "STUSEOU7"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Create enrollment without an explicit operating unit"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        as_user: "base.user_admin"
+        values:
+          date: "2025-07-15"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+
+      - step: "Write operating_unit_id alone, without touching school_id"
+        action: "write"
+        target: "enrollment"
+        as_user: "base.user_admin"
+        values:
+          operating_unit_id: "REC: ou7_explicit.id"
+
+      - step: "Assert the manually written operating unit was not overridden"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ou7_explicit"
+
+  - name:
+      "Enrollment OU Derive - school with zero operating units keeps the mixin default,
+      no error"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type SEOU8"
+          code: "GTSEOU8"
+          sequence: 10
+
+      - step: "Create school without any operating unit"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School SEOU8"
+          code: "SCHSEOU8"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade SEOU8"
+          code: "GSEOU8"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Grade Class SEOU8"
+          code: "GCSEOU8"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2025/2026 SEOU8"
+          code: "AYSEOU8"
+          date_start: "2025-07-01"
+          date_end: "2026-06-30"
+
+      - step: "Create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester SEOU8"
+          code: "SMSEOU8"
+          date_start: "2025-07-01"
+          date_end: "2025-12-31"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact SEOU8"
+
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student SEOU8"
+          code: "STUSEOU8"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step:
+          "Create enrollment for a school with zero operating units, without an explicit
+          operating unit"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        as_user: "base.user_admin"
+        values:
+          date: "2025-07-15"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+
+      - step: "Assert operating_unit_id is left at the mixin's own default, no error"
+        action: "assert"
+        target: "enrollment"
+        as_user: "base.user_admin"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "EVAL: env['res.users'].operating_unit_default_get()"
+
+  - name:
+      "Enrollment OU Derive - school with two operating units and no explicit value
+      keeps the mixin default, no error"
+    steps:
+      - step: "Create partner for Operating Unit A"
+        action: "create"
+        model: "res.partner"
+        save_as: "ou9_a_partner"
+        values:
+          name: "Enrollment No Explicit Ambiguous OU A Partner"
+
+      - step: "Create Operating Unit A"
+        action: "create"
+        model: "operating.unit"
+        save_as: "ou9_a"
+        values:
+          name: "Enrollment No Explicit Ambiguous OU A"
+          code: "OUSEOU9A"
+          company_id: "REF: base.main_company"
+          partner_id: "REC: ou9_a_partner.id"
+
+      - step: "Create partner for Operating Unit B"
+        action: "create"
+        model: "res.partner"
+        save_as: "ou9_b_partner"
+        values:
+          name: "Enrollment No Explicit Ambiguous OU B Partner"
+
+      - step: "Create Operating Unit B"
+        action: "create"
+        model: "operating.unit"
+        save_as: "ou9_b"
+        values:
+          name: "Enrollment No Explicit Ambiguous OU B"
+          code: "OUSEOU9B"
+          company_id: "REF: base.main_company"
+          partner_id: "REC: ou9_b_partner.id"
+
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type SEOU9"
+          code: "GTSEOU9"
+          sequence: 10
+
+      - step: "Create school with two operating units (ambiguous)"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School SEOU9"
+          code: "SCHSEOU9"
+          grade_type_id: "REC: grade_type.id"
+          operating_unit_ids: [[6, 0, ["REC: ou9_a.id", "REC: ou9_b.id"]]]
+
+      - step: "Create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade SEOU9"
+          code: "GSEOU9"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Grade Class SEOU9"
+          code: "GCSEOU9"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2025/2026 SEOU9"
+          code: "AYSEOU9"
+          date_start: "2025-07-01"
+          date_end: "2026-06-30"
+
+      - step: "Create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester SEOU9"
+          code: "SMSEOU9"
+          date_start: "2025-07-01"
+          date_end: "2025-12-31"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact SEOU9"
+
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student SEOU9"
+          code: "STUSEOU9"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step:
+          "Create enrollment for a school with two operating units, without an explicit
+          operating unit"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        as_user: "base.user_admin"
+        values:
+          date: "2025-07-15"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+
+      - step: "Assert operating_unit_id is left at the mixin's own default, no error"
+        action: "assert"
+        target: "enrollment"
+        as_user: "base.user_admin"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "EVAL: env['res.users'].operating_unit_default_get()"
