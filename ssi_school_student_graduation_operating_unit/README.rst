@@ -11,6 +11,20 @@ Adds operating unit access control for the transactional model
 school_student_graduation.
 
 
+Work Instruction
+=================
+
+Student Graduation
+--------------------
+
+* `Create School Student Graduation <docs/school_student_graduation/01-create.html>`_
+
+Student Graduation Batch
+---------------------------
+
+* `Create School Student Graduation Batch <docs/school_student_graduation_batch/01-create.html>`_
+
+
 Bug Tracker
 ===========
 
