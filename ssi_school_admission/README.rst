@@ -7,6 +7,35 @@ School Admission
 ================
 
 
+Work Instruction
+=================
+
+Admission Fee Template
+-----------------------
+
+* `Create Admission Fee Template <docs/school_admission_fee_template/01-create.html>`_
+* `Edit Admission Fee Template <docs/school_admission_fee_template/02-edit.html>`_
+* `Delete Admission Fee Template <docs/school_admission_fee_template/03-delete.html>`_
+* `Deactivate Admission Fee Template <docs/school_admission_fee_template/04-deactivate.html>`_
+* `Activate Admission Fee Template <docs/school_admission_fee_template/05-activate.html>`_
+* `Print Admission Fee Template <docs/school_admission_fee_template/06-print.html>`_
+
+Admission Payment Template
+----------------------------
+
+* `Create Admission Payment Template <docs/school_admission_payment_template/01-create.html>`_
+* `Edit Admission Payment Template <docs/school_admission_payment_template/02-edit.html>`_
+* `Delete Admission Payment Template <docs/school_admission_payment_template/03-delete.html>`_
+* `Deactivate Admission Payment Template <docs/school_admission_payment_template/04-deactivate.html>`_
+* `Activate Admission Payment Template <docs/school_admission_payment_template/05-activate.html>`_
+* `Print Admission Payment Template <docs/school_admission_payment_template/06-print.html>`_
+
+School Academic Term
+----------------------
+
+* `Create School Academic Term <docs/school_academic_term/01-create.html>`_
+* `Edit School Academic Term <docs/school_academic_term/02-edit.html>`_
+
 Installation
 ============
 
