@@ -1,11 +1,18 @@
 # Approve School Incident
 
+> **Module:** ssi*school_incident\
+> **Model:** `school_incident`\
+> **Menu:** School > Incident > Incidents\
+> **Actor:** approver in group \_Officer (Counselor/Vice Principal)* or higher\
+> **State:** `confirm` → `open`\
+> **Requires:** `04-confirm`
+
 ## Pre-Condition
 
-- Record is in **Waiting for Approval** status.
-- User is registered as an approver on the active approval template (belongs to the
-  Officer (Counselor/Vice Principal) group or higher).
-- User has _Can Approve_ access right.
+- **Record:** Status is **Waiting for Approval**.
+- **Access:** User is registered as an approver on the active approval template (belongs
+  to the Officer (Counselor/Vice Principal) group or higher).
+- **Access:** User has _Can Approve_ access right.
 
 ## Flow
 

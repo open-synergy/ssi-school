@@ -1,8 +1,14 @@
 # Edit School Academic Alert
 
+> **Module:** ssi*school_incident\
+> **Model:** `school_academic_alert`\
+> **Menu:** School > Incident > Academic Alerts\
+> **Actor:** user in group \_User (Homeroom Teacher)* or higher\
+> **Requires:** `01-create`
+
 ## Pre-Condition
 
-- Record is in **Draft** status.
+- **Record:** Status is **Draft**.
 
 ## Flow
 

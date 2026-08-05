@@ -1,9 +1,16 @@
 # Evaluate School Academic Alert
 
+> **Module:** ssi*school_incident\
+> **Model:** `school_academic_alert`\
+> **Menu:** School > Incident > Academic Alerts\
+> **Actor:** user in group \_User (Homeroom Teacher)* or higher\
+> **Requires:** `01-create`
+
 ## Pre-Condition
 
-- Record is in a status where _Can Evaluate_ access right applies (Draft), and the user
-  belongs to the User (Homeroom Teacher) group or higher.
+- **Record:** Status is **Draft** (the status where the _Can Evaluate_ access right
+  applies).
+- **Access:** User belongs to the User (Homeroom Teacher) group or higher.
 
 ## Flow
 
@@ -11,7 +18,7 @@
 2. Open the School Academic Alert record to evaluate.
 3. Optionally fill in the **Evaluation Context** field with plain Python assignments to
    seed extra local variables (e.g. `trigger_count = 3`).
-4. Click the **Evaluate** button.
+4. Click the **Evaluate** button (`action_evaluate`).
 
 The system checks every configured Academic Alert Level from most severe (highest
 Sequence, e.g. Red) to least severe (lowest Sequence, e.g. Yellow), running each level's

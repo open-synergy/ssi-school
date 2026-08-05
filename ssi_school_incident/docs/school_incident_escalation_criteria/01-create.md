@@ -1,5 +1,10 @@
 # Create Incident Escalation Criteria
 
+> **Module:** ssi*school_incident\
+> **Model:** `school_incident_escalation_criteria`\
+> **Menu:** School > Configuration > Configuration > Escalation Criteria\
+> **Actor:** user in group \_Manager (Principal)*
+
 ## Pre-Condition
 
 - None.

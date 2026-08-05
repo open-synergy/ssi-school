@@ -1,10 +1,17 @@
 # Confirm School Incident
 
+> **Module:** ssi*school_incident\
+> **Model:** `school_incident`\
+> **Menu:** School > Incident > Incidents\
+> **Actor:** user in group \_User (Homeroom Teacher)* or higher\
+> **State:** `draft` → `confirm`\
+> **Requires:** `01-create`
+
 ## Pre-Condition
 
-- Record is in **Draft** status.
-- User has _Can Confirm_ access right (belongs to the User (Homeroom Teacher) group or
-  higher).
+- **Record:** Status is **Draft**.
+- **Access:** User has _Can Confirm_ access right (belongs to the User (Homeroom
+  Teacher) group or higher).
 
 ## Flow
 
