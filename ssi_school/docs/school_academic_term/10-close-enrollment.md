@@ -22,5 +22,5 @@
 
 - **Enrollment State** changes to **Close**.
 - New Enrollment records for this Academic Term can no longer be opened — an Enrollment
-  cannot move to its **Open** status while the linked Academic Term's Enrollment State is
-  **Close**.
+  cannot move to its **Open** status while the linked Academic Term's Enrollment State
+  is **Close**.
