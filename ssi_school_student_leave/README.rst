@@ -13,6 +13,30 @@ on_leave state. Once the leave period is over, the Return button
 re-enrolls the student directly, with no separate approval step.
 
 
+Work Instruction
+================
+
+Student Leave
+-------------
+
+* `Create Student Leave <docs/school_student_leave/01-create.html>`_
+* `Edit Student Leave <docs/school_student_leave/02-edit.html>`_
+* `Delete Student Leave <docs/school_student_leave/03-delete.html>`_
+* `Confirm Student Leave <docs/school_student_leave/04-confirm.html>`_
+* `Approve Student Leave <docs/school_student_leave/05-approve.html>`_
+* `Reject Student Leave <docs/school_student_leave/06-reject.html>`_
+* `Cancel Student Leave <docs/school_student_leave/10-cancel.html>`_
+* `Restart Student Leave <docs/school_student_leave/12-restart.html>`_
+* `Reset Document Number - Student Leave
+  <docs/school_student_leave/13-reset-number.html>`_
+* `Restart Approval Process - Student Leave
+  <docs/school_student_leave/14-restart-approval.html>`_
+* `Return Student Leave <docs/school_student_leave/15-return.html>`_
+* `Print Student Leave <docs/school_student_leave/16-print.html>`_
+* `Reload Template Policy - Student Leave
+  <docs/school_student_leave/17-reload-template-policy.html>`_
+
+
 Installation
 ============
 
