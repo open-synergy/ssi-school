@@ -11,6 +11,15 @@ Admissions and export their unpaid customer invoices into a draft
 ``customer_invoice_export`` document, ready to be confirmed.
 
 
+Work Instruction
+=================
+
+Admission
+----------
+
+* `Create Invoice Export - Admission <docs/school_admission/20-create-invoice-export.html>`_
+
+
 Bug Tracker
 ===========
 
