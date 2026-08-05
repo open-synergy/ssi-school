@@ -14,6 +14,29 @@ and No News -> Dropped), and, when the student has an active
 enrollment, marks that enrollment's academic year result as Drop Out.
 
 
+Work Instruction
+================
+
+Student Withdrawal
+-------------------
+
+* `Create Student Withdrawal <docs/school_student_withdrawal/01-create.html>`_
+* `Edit Student Withdrawal <docs/school_student_withdrawal/02-edit.html>`_
+* `Delete Student Withdrawal <docs/school_student_withdrawal/03-delete.html>`_
+* `Confirm Student Withdrawal <docs/school_student_withdrawal/04-confirm.html>`_
+* `Approve Student Withdrawal <docs/school_student_withdrawal/05-approve.html>`_
+* `Reject Student Withdrawal <docs/school_student_withdrawal/06-reject.html>`_
+* `Cancel Student Withdrawal <docs/school_student_withdrawal/10-cancel.html>`_
+* `Restart Student Withdrawal <docs/school_student_withdrawal/12-restart.html>`_
+* `Reset Document Number - Student Withdrawal
+  <docs/school_student_withdrawal/13-reset-number.html>`_
+* `Restart Approval Process - Student Withdrawal
+  <docs/school_student_withdrawal/14-restart-approval.html>`_
+* `Print Student Withdrawal <docs/school_student_withdrawal/16-print.html>`_
+* `Reload Template Policy - Student Withdrawal
+  <docs/school_student_withdrawal/17-reload-template-policy.html>`_
+
+
 Installation
 ============
 
