@@ -1,9 +1,15 @@
 # Delete School Incident
 
+> **Module:** ssi*school_incident\
+> **Model:** `school_incident`\
+> **Menu:** School > Incident > Incidents\
+> **Actor:** user in group \_User (Homeroom Teacher)* or higher\
+> **Requires:** `01-create`
+
 ## Pre-Condition
 
-- Record is in **Draft** status.
-- Document number is still **/** (not yet generated).
+- **Record:** Status is **Draft**.
+- **Record:** Document number is still **/** (not yet generated).
 
 ## Flow
 

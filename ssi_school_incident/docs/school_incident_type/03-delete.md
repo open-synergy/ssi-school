@@ -1,8 +1,14 @@
 # Delete Incident Type
 
+> **Module:** ssi*school_incident\
+> **Model:** `school_incident_type`\
+> **Menu:** School > Configuration > Configuration > Incident Types\
+> **Actor:** user in group \_Manager (Principal)*\
+> **Requires:** `01-create`
+
 ## Pre-Condition
 
-- The Incident Type is not referenced by any School Incident record.
+- **Data:** The Incident Type is not referenced by any School Incident record.
 
 ## Flow
 

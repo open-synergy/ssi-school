@@ -1,11 +1,18 @@
 # Approve School Incident Weekly Review
 
+> **Module:** ssi*school_incident\
+> **Model:** `school_incident_weekly_review`\
+> **Menu:** School > Incident > Weekly Case Reviews\
+> **Actor:** approver in group \_Manager (Principal)*\
+> **State:** `confirm` → `done`\
+> **Requires:** `04-confirm`
+
 ## Pre-Condition
 
-- Record is in **Waiting for Approval** status.
-- User is registered as an approver on the active approval template (belongs to the
-  Manager (Principal) group).
-- User has _Can Approve_ access right.
+- **Record:** Status is **Waiting for Approval**.
+- **Access:** User is registered as an approver on the active approval template (belongs
+  to the Manager (Principal) group).
+- **Access:** User has _Can Approve_ access right.
 
 ## Flow
 

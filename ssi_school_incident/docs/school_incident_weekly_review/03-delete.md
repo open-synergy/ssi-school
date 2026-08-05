@@ -1,9 +1,15 @@
 # Delete School Incident Weekly Review
 
+> **Module:** ssi*school_incident\
+> **Model:** `school_incident_weekly_review`\
+> **Menu:** School > Incident > Weekly Case Reviews\
+> **Actor:** user in group \_Officer (Counselor/Vice Principal)* or higher\
+> **Requires:** `01-create`
+
 ## Pre-Condition
 
-- Record is in **Draft** status.
-- Document number is still **/** (not yet generated).
+- **Record:** Status is **Draft**.
+- **Record:** Document number is still **/** (not yet generated).
 
 ## Flow
 

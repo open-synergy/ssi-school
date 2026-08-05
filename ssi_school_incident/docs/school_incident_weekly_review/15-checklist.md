@@ -1,9 +1,15 @@
 # Fill in the Weekly Case Review Checklist
 
+> **Module:** ssi*school_incident\
+> **Model:** `school_incident_weekly_review`\
+> **Menu:** School > Incident > Weekly Case Reviews\
+> **Actor:** user in group \_Officer (Counselor/Vice Principal)* or higher\
+> **Requires:** `01-create`
+
 ## Pre-Condition
 
-- Record is accessible in an editable state (**Draft**, or **Waiting for
-  Approval**/**Rejected** if the checklist still needs correction before re-confirming).
+- **Record:** Status is **Draft**, or **Waiting for Approval**/**Rejected** if the
+  checklist still needs correction before re-confirming.
 
 ## Flow
 

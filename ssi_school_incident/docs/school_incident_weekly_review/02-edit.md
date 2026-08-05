@@ -1,8 +1,14 @@
 # Edit School Incident Weekly Review
 
+> **Module:** ssi*school_incident\
+> **Model:** `school_incident_weekly_review`\
+> **Menu:** School > Incident > Weekly Case Reviews\
+> **Actor:** user in group \_Officer (Counselor/Vice Principal)* or higher\
+> **Requires:** `01-create`
+
 ## Pre-Condition
 
-- Record is in **Draft** status.
+- **Record:** Status is **Draft**.
 
 ## Flow
 

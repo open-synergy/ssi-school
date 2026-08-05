@@ -1,17 +1,24 @@
 # Create Incident from School Academic Alert
 
+> **Module:** ssi*school_incident\
+> **Model:** `school_academic_alert`\
+> **Menu:** School > Incident > Academic Alerts\
+> **Actor:** user in group \_Officer (Counselor/Vice Principal)* or higher\
+> **Requires:** `14-evaluate`
+
 ## Pre-Condition
 
-- Record is in **Open** status.
-- **Alert Level** is set to an Orange or Red level (from a previous **Evaluate** run).
-- User has _Can Create Incident_ access right (belongs to the Officer (Counselor/Vice
-  Principal) group or higher).
+- **Record:** Status is **Open**.
+- **Record:** **Alert Level** is set to an Orange or Red level (from a previous
+  **Evaluate** run).
+- **Access:** User has _Can Create Incident_ access right (belongs to the Officer
+  (Counselor/Vice Principal) group or higher).
 
 ## Flow
 
 1. Open the **School > Incident > Academic Alerts** menu.
 2. Open the School Academic Alert record whose Alert Level is Orange or Red.
-3. Click the **Create Incident** button.
+3. Click the **Create Incident** button (`action_create_incident`).
 
 ## Post-Condition
 

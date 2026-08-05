@@ -34,6 +34,7 @@ Incident Type
 * `Delete Incident Type <docs/school_incident_type/03-delete.html>`_
 * `Deactivate Incident Type <docs/school_incident_type/04-deactivate.html>`_
 * `Activate Incident Type <docs/school_incident_type/05-activate.html>`_
+* `Print Incident Type <docs/school_incident_type/06-print.html>`_
 
 Incident Escalation Criteria
 -----------------------------
@@ -43,6 +44,7 @@ Incident Escalation Criteria
 * `Delete Incident Escalation Criteria <docs/school_incident_escalation_criteria/03-delete.html>`_
 * `Deactivate Incident Escalation Criteria <docs/school_incident_escalation_criteria/04-deactivate.html>`_
 * `Activate Incident Escalation Criteria <docs/school_incident_escalation_criteria/05-activate.html>`_
+* `Print Incident Escalation Criteria <docs/school_incident_escalation_criteria/06-print.html>`_
 
 Academic Alert Level
 ---------------------
@@ -52,6 +54,7 @@ Academic Alert Level
 * `Delete Academic Alert Level <docs/school_academic_alert_level/03-delete.html>`_
 * `Deactivate Academic Alert Level <docs/school_academic_alert_level/04-deactivate.html>`_
 * `Activate Academic Alert Level <docs/school_academic_alert_level/05-activate.html>`_
+* `Print Academic Alert Level <docs/school_academic_alert_level/06-print.html>`_
 
 School Incident
 ----------------
@@ -67,6 +70,9 @@ School Incident
 * `Restart School Incident <docs/school_incident/12-restart.html>`_
 * `Reset Document Number - School Incident <docs/school_incident/13-reset-document-number.html>`_
 * `Escalate School Incident <docs/school_incident/14-escalate.html>`_
+* `Restart Approval Process - School Incident <docs/school_incident/15-restart-approval.html>`_
+* `Print School Incident <docs/school_incident/16-print.html>`_
+* `Reload Template Policy - School Incident <docs/school_incident/17-reload-template-policy.html>`_
 
 School Academic Alert
 -----------------------
@@ -83,6 +89,9 @@ School Academic Alert
 * `Reset Document Number - School Academic Alert <docs/school_academic_alert/13-reset-document-number.html>`_
 * `Evaluate School Academic Alert <docs/school_academic_alert/14-evaluate.html>`_
 * `Create Incident from School Academic Alert <docs/school_academic_alert/15-create-incident.html>`_
+* `Restart Approval Process - School Academic Alert <docs/school_academic_alert/16-restart-approval.html>`_
+* `Print School Academic Alert <docs/school_academic_alert/17-print.html>`_
+* `Reload Template Policy - School Academic Alert <docs/school_academic_alert/18-reload-template-policy.html>`_
 
 School Incident Weekly Review
 -------------------------------
@@ -98,6 +107,9 @@ School Incident Weekly Review
 * `Reset Document Number - School Incident Weekly Review <docs/school_incident_weekly_review/13-reset-document-number.html>`_
 * `Collect Incidents into School Incident Weekly Review <docs/school_incident_weekly_review/14-collect-incidents.html>`_
 * `Fill in the Weekly Case Review Checklist <docs/school_incident_weekly_review/15-checklist.html>`_
+* `Restart Approval Process - School Incident Weekly Review <docs/school_incident_weekly_review/16-restart-approval.html>`_
+* `Print School Incident Weekly Review <docs/school_incident_weekly_review/17-print.html>`_
+* `Reload Template Policy - School Incident Weekly Review <docs/school_incident_weekly_review/18-reload-template-policy.html>`_
 
 
 Installation

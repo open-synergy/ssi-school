@@ -1,12 +1,18 @@
 # Escalate School Incident
 
+> **Module:** ssi*school_incident\
+> **Model:** `school_incident`\
+> **Menu:** School > Incident > Incidents\
+> **Actor:** user in group \_Officer (Counselor/Vice Principal)* or higher\
+> **Requires:** `05-approve`
+
 ## Pre-Condition
 
-- Record is in **Open** status.
-- At least one active **Incident Escalation Criteria** record exists whose Target Level
-  matches the handling tier being escalated to.
-- User has _Can Escalate_ access right (belongs to the Officer (Counselor/Vice
-  Principal) group or higher).
+- **Record:** Status is **Open**.
+- **Data:** At least one active **Incident Escalation Criteria** record exists whose
+  Target Level matches the handling tier being escalated to.
+- **Access:** User has _Can Escalate_ access right (belongs to the Officer
+  (Counselor/Vice Principal) group or higher).
 
 ## Flow
 
@@ -20,7 +26,7 @@
      matches the selected Target Level above, justifying this escalation.
    - **Escalation Reason**: Enter the narrative/chronology explaining why this case is
      being escalated.
-5. Click **Escalate** in the wizard footer.
+5. Click **Escalate** in the wizard footer (`action_escalate_wizard`).
 
 ## Post-Condition
 

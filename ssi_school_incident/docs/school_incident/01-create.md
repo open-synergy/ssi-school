@@ -1,5 +1,11 @@
 # Create School Incident
 
+> **Module:** ssi*school_incident\
+> **Model:** `school_incident`\
+> **Menu:** School > Incident > Incidents\
+> **Actor:** user in group \_User (Homeroom Teacher)* or higher\
+> **State:** `—` → `draft`
+
 ## Pre-Condition
 
 - None.

@@ -1,5 +1,11 @@
 # Create School Academic Alert
 
+> **Module:** ssi*school_incident\
+> **Model:** `school_academic_alert`\
+> **Menu:** School > Incident > Academic Alerts\
+> **Actor:** user in group \_User (Homeroom Teacher)* or higher\
+> **State:** `—` → `draft`
+
 ## Pre-Condition
 
 - None.

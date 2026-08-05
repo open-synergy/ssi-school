@@ -1,10 +1,17 @@
 # Cancel School Academic Alert
 
+> **Module:** ssi*school_incident\
+> **Model:** `school_academic_alert`\
+> **Menu:** School > Incident > Academic Alerts\
+> **Actor:** user in group \_Officer (Counselor/Vice Principal)* or higher\
+> **State:** `draft` | `confirm` | `open` → `cancel`\
+> **Requires:** `01-create`
+
 ## Pre-Condition
 
-- Record is in **Draft**, **Waiting for Approval**, or **Open** status.
-- User has _Can Cancel_ access right (belongs to the Officer (Counselor/Vice Principal)
-  group or higher).
+- **Record:** Status is **Draft**, **Waiting for Approval**, or **Open**.
+- **Access:** User has _Can Cancel_ access right (belongs to the Officer (Counselor/Vice
+  Principal) group or higher).
 
 ## Flow
 

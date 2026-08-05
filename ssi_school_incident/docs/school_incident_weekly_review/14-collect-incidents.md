@@ -1,18 +1,24 @@
 # Collect Incidents into School Incident Weekly Review
 
+> **Module:** ssi*school_incident\
+> **Model:** `school_incident_weekly_review`\
+> **Menu:** School > Incident > Weekly Case Reviews\
+> **Actor:** user in group \_Officer (Counselor/Vice Principal)* or higher\
+> **Requires:** `01-create`
+
 ## Pre-Condition
 
-- Record is in **Draft** status.
-- **Date Start** and **Date End** are filled in.
-- User has _Can Collect_ access right (belongs to the Officer (Counselor/Vice Principal)
-  group or higher).
+- **Record:** Status is **Draft**.
+- **Record:** **Date Start** and **Date End** are filled in.
+- **Access:** User has _Can Collect_ access right (belongs to the Officer
+  (Counselor/Vice Principal) group or higher).
 
 ## Flow
 
 1. Open the **School > Incident > Weekly Case Reviews** menu.
 2. Open the Weekly Case Review record.
 3. Fill in (or confirm) **Date Start**, **Date End**, and optionally **School**.
-4. Click the **Collect Incidents** button.
+4. Click the **Collect Incidents** button (`action_collect_incidents`).
 
 ## Post-Condition
 

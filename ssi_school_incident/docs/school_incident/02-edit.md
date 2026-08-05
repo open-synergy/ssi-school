@@ -1,8 +1,14 @@
 # Edit School Incident
 
+> **Module:** ssi*school_incident\
+> **Model:** `school_incident`\
+> **Menu:** School > Incident > Incidents\
+> **Actor:** user in group \_User (Homeroom Teacher)* or higher\
+> **Requires:** `01-create`
+
 ## Pre-Condition
 
-- Record is in **Draft** status.
+- **Record:** Status is **Draft**.
 
 ## Flow
 

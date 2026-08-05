@@ -1,9 +1,15 @@
 # Delete School Academic Alert
 
+> **Module:** ssi*school_incident\
+> **Model:** `school_academic_alert`\
+> **Menu:** School > Incident > Academic Alerts\
+> **Actor:** user in group \_User (Homeroom Teacher)* or higher\
+> **Requires:** `01-create`
+
 ## Pre-Condition
 
-- Record is in **Draft** status.
-- Document number is still **/** (not yet generated).
+- **Record:** Status is **Draft**.
+- **Record:** Document number is still **/** (not yet generated).
 
 ## Flow
 
