@@ -28,6 +28,16 @@ It also carries the first layer of admission intake data on the lead itself:
   (``previous_school_selection_method``: manual/domain/code) from
   **Settings > School > Admission > Settings**, without a code release.
 
+Work Instruction
+=================
+
+CRM Lead
+--------
+
+* `Create CRM Lead <docs/crm_lead/01-create.html>`_
+* `Create Admission Form from CRM Lead <docs/crm_lead/02-create-admission-form.html>`_
+* `Open Admission Test from CRM Lead <docs/crm_lead/03-open-admission-test.html>`_
+
 Credits
 =======
 
