@@ -11,3 +11,61 @@ Adds operating unit access control for transactional (school_enrollment, school_
 and master data models (school, grade types, grades, classes, academic periods, students, teachers).
 The operating unit selected on a Homeroom batch is automatically propagated to every
 enrollment generated from it.
+
+Work Instruction
+=================
+
+School
+------
+
+* `Create School <docs/school/01-create.html>`_
+
+Student
+-------
+
+* `Create Student <docs/school_student/01-create.html>`_
+
+Teacher
+-------
+
+* `Create Teacher <docs/school_teacher/01-create.html>`_
+
+Grade
+-----
+
+* `Create Grade <docs/school_grade/01-create.html>`_
+
+Grade Type
+----------
+
+* `Create Grade Type <docs/school_grade_type/01-create.html>`_
+
+Grade Class
+-----------
+
+* `Create Grade Class <docs/school_grade_class/01-create.html>`_
+
+Academic Year
+-------------
+
+* `Create Academic Year <docs/school_academic_year/01-create.html>`_
+
+School Academic Term
+--------------------
+
+* `Create School Academic Term <docs/school_academic_term/01-create.html>`_
+
+Homeroom
+--------
+
+* `Create Homeroom <docs/school_homeroom/01-create.html>`_
+
+Student Class Mutation
+-----------------------
+
+* `Create Student Class Mutation <docs/school_student_mutation/01-create.html>`_
+
+Enrollment
+----------
+
+* `Create Enrollment <docs/school_enrollment/01-create.html>`_
