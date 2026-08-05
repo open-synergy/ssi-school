@@ -70,6 +70,21 @@ Academic Year
 * `Activate Academic Year <docs/school_academic_year/05-activate.html>`_
 * `Print Academic Year <docs/school_academic_year/06-print.html>`_
 
+Academic Term
+-------------
+
+* `Create Academic Term <docs/school_academic_term/01-create.html>`_
+* `Edit Academic Term <docs/school_academic_term/02-edit.html>`_
+* `Delete Academic Term <docs/school_academic_term/03-delete.html>`_
+* `Deactivate Academic Term <docs/school_academic_term/04-deactivate.html>`_
+* `Activate Academic Term <docs/school_academic_term/05-activate.html>`_
+* `Start Academic Term <docs/school_academic_term/06-start.html>`_
+* `Finish Academic Term <docs/school_academic_term/07-finish.html>`_
+* `Restart Academic Term <docs/school_academic_term/08-restart.html>`_
+* `Open Enrollment - Academic Term <docs/school_academic_term/09-open-enrollment.html>`_
+* `Close Enrollment - Academic Term <docs/school_academic_term/10-close-enrollment.html>`_
+* `Print Academic Term <docs/school_academic_term/11-print.html>`_
+
 Teacher
 -------
 
