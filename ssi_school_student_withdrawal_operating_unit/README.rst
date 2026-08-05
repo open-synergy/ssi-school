@@ -11,6 +11,15 @@ Adds operating unit access control to the school_student_withdrawal
 transactional model.
 
 
+Work Instruction
+=================
+
+Student Withdrawal
+--------------------
+
+* `Create School Student Withdrawal <docs/school_student_withdrawal/01-create.html>`_
+
+
 Bug Tracker
 ===========
 
