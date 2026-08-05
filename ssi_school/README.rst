@@ -105,6 +105,64 @@ Student
 * `Activate Student <docs/school_student/05-activate.html>`_
 * `Print Student <docs/school_student/06-print.html>`_
 
+Enrollment
+----------
+
+* `Create Enrollment <docs/school_enrollment/01-create.html>`_
+* `Edit Enrollment <docs/school_enrollment/02-edit.html>`_
+* `Delete Enrollment <docs/school_enrollment/03-delete.html>`_
+* `Confirm Enrollment <docs/school_enrollment/04-confirm.html>`_
+* `Approve Enrollment <docs/school_enrollment/05-approve.html>`_
+* `Reject Enrollment <docs/school_enrollment/06-reject.html>`_
+* `Finish Enrollment <docs/school_enrollment/09-finish.html>`_
+* `Cancel Enrollment <docs/school_enrollment/10-cancel.html>`_
+* `Restart Enrollment <docs/school_enrollment/12-restart.html>`_
+* `Reset Document Number - Enrollment <docs/school_enrollment/13-reset-number.html>`_
+* `Restart Approval Process - Enrollment <docs/school_enrollment/14-restart-approval.html>`_
+* `Set Result to Passed - Enrollment <docs/school_enrollment/15-pass.html>`_
+* `Set Result to Failed - Enrollment <docs/school_enrollment/16-fail.html>`_
+* `Set Result to Drop Out - Enrollment <docs/school_enrollment/17-drop-out.html>`_
+* `Set Result to Graduate - Enrollment <docs/school_enrollment/18-graduate.html>`_
+* `Create Due Invoice - Enrollment <docs/school_enrollment/19-create-due-invoice.html>`_
+* `Close Addendum - Enrollment <docs/school_enrollment/20-close-addendum.html>`_
+* `Print Enrollment <docs/school_enrollment/21-print.html>`_
+* `Reload Template Policy - Enrollment <docs/school_enrollment/22-reload-template-policy.html>`_
+
+Student Class Mutation
+-----------------------
+
+* `Create Student Class Mutation <docs/school_student_mutation/01-create.html>`_
+* `Edit Student Class Mutation <docs/school_student_mutation/02-edit.html>`_
+* `Delete Student Class Mutation <docs/school_student_mutation/03-delete.html>`_
+* `Confirm Student Class Mutation <docs/school_student_mutation/04-confirm.html>`_
+* `Approve Student Class Mutation <docs/school_student_mutation/05-approve.html>`_
+* `Reject Student Class Mutation <docs/school_student_mutation/06-reject.html>`_
+* `Cancel Student Class Mutation <docs/school_student_mutation/10-cancel.html>`_
+* `Restart Student Class Mutation <docs/school_student_mutation/12-restart.html>`_
+* `Reset Document Number - Student Class Mutation <docs/school_student_mutation/13-reset-number.html>`_
+* `Restart Approval Process - Student Class Mutation <docs/school_student_mutation/14-restart-approval.html>`_
+* `Print Student Class Mutation <docs/school_student_mutation/15-print.html>`_
+* `Reload Template Policy - Student Class Mutation <docs/school_student_mutation/16-reload-template-policy.html>`_
+
+Homeroom
+--------
+
+* `Create Homeroom <docs/school_homeroom/01-create.html>`_
+* `Edit Homeroom <docs/school_homeroom/02-edit.html>`_
+* `Delete Homeroom <docs/school_homeroom/03-delete.html>`_
+* `Confirm Homeroom <docs/school_homeroom/04-confirm.html>`_
+* `Approve Homeroom <docs/school_homeroom/05-approve.html>`_
+* `Reject Homeroom <docs/school_homeroom/06-reject.html>`_
+* `Finish Homeroom <docs/school_homeroom/09-finish.html>`_
+* `Cancel Homeroom <docs/school_homeroom/10-cancel.html>`_
+* `Restart Homeroom <docs/school_homeroom/12-restart.html>`_
+* `Reset Document Number - Homeroom <docs/school_homeroom/13-reset-number.html>`_
+* `Restart Approval Process - Homeroom <docs/school_homeroom/14-restart-approval.html>`_
+* `Fill Random - Homeroom <docs/school_homeroom/15-fill-random.html>`_
+* `Generate Enrollments - Homeroom <docs/school_homeroom/16-generate-enrollments.html>`_
+* `Print Homeroom <docs/school_homeroom/17-print.html>`_
+* `Reload Template Policy - Homeroom <docs/school_homeroom/18-reload-template-policy.html>`_
+
 Enrollment Payment Template
 ----------------------------
 
