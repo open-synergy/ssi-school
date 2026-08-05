@@ -17,6 +17,15 @@ without leaving the student form. No health data is duplicated: every field is
 related to the student's contact, which remains the single source of truth.
 
 
+Work Instruction
+=================
+
+Student
+-------
+
+* `Create Student <docs/school_student/01-create.html>`_
+* `Edit Student <docs/school_student/02-edit.html>`_
+
 Installation
 ============
 
