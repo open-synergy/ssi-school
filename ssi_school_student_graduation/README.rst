@@ -20,6 +20,48 @@ transaction:
   and side effect from the individual document.
 
 
+Work Instruction
+================
+
+Student Graduation
+-------------------
+
+* `Create Student Graduation <docs/school_student_graduation/01-create.html>`_
+* `Edit Student Graduation <docs/school_student_graduation/02-edit.html>`_
+* `Delete Student Graduation <docs/school_student_graduation/03-delete.html>`_
+* `Confirm Student Graduation <docs/school_student_graduation/04-confirm.html>`_
+* `Approve Student Graduation <docs/school_student_graduation/05-approve.html>`_
+* `Reject Student Graduation <docs/school_student_graduation/06-reject.html>`_
+* `Cancel Student Graduation <docs/school_student_graduation/10-cancel.html>`_
+* `Restart Student Graduation <docs/school_student_graduation/12-restart.html>`_
+* `Reset Document Number - Student Graduation
+  <docs/school_student_graduation/13-reset-number.html>`_
+* `Restart Approval Process - Student Graduation
+  <docs/school_student_graduation/14-restart-approval.html>`_
+* `Print Student Graduation <docs/school_student_graduation/15-print.html>`_
+* `Reload Template Policy - Student Graduation
+  <docs/school_student_graduation/16-reload-template-policy.html>`_
+
+Graduation Batch
+-----------------
+
+* `Create Graduation Batch <docs/school_student_graduation_batch/01-create.html>`_
+* `Edit Graduation Batch <docs/school_student_graduation_batch/02-edit.html>`_
+* `Delete Graduation Batch <docs/school_student_graduation_batch/03-delete.html>`_
+* `Confirm Graduation Batch <docs/school_student_graduation_batch/04-confirm.html>`_
+* `Approve Graduation Batch <docs/school_student_graduation_batch/05-approve.html>`_
+* `Reject Graduation Batch <docs/school_student_graduation_batch/06-reject.html>`_
+* `Cancel Graduation Batch <docs/school_student_graduation_batch/10-cancel.html>`_
+* `Restart Graduation Batch <docs/school_student_graduation_batch/12-restart.html>`_
+* `Reset Document Number - Graduation Batch
+  <docs/school_student_graduation_batch/13-reset-number.html>`_
+* `Restart Approval Process - Graduation Batch
+  <docs/school_student_graduation_batch/14-restart-approval.html>`_
+* `Print Graduation Batch <docs/school_student_graduation_batch/15-print.html>`_
+* `Reload Template Policy - Graduation Batch
+  <docs/school_student_graduation_batch/16-reload-template-policy.html>`_
+
+
 Installation
 ============
 
