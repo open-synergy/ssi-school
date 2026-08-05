@@ -11,6 +11,15 @@ Enrollments and export their unpaid customer invoices into a draft
 ``customer_invoice_export`` document, ready to be confirmed.
 
 
+Work Instruction
+=================
+
+Enrollment
+-----------
+
+* `Create Invoice Export - Enrollment <docs/school_enrollment/23-create-invoice-export.html>`_
+
+
 Bug Tracker
 ===========
 
