@@ -11,6 +11,15 @@ Create Invoice Export wizard for school enrollments, so the exported
 invoices and the resulting document are scoped to one operating unit.
 
 
+Work Instruction
+=================
+
+Enrollment
+-----------
+
+* `Create Invoice Export - Enrollment <docs/school_enrollment/23-create-invoice-export.html>`_
+
+
 Bug Tracker
 ===========
 

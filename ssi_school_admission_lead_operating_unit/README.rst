@@ -10,6 +10,16 @@ Glue module that propagates the operating unit from a CRM lead to the
 school admission form created via the lead's action buttons.
 
 
+Work Instruction
+=================
+
+CRM Lead
+---------
+
+* `Create Admission from CRM Lead <docs/crm_lead/02-create-admission.html>`_
+* `Create Admission Form from CRM Lead <docs/crm_lead/02-create-admission-form.html>`_
+
+
 Bug Tracker
 ===========
 

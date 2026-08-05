@@ -11,6 +11,25 @@ Adds operating unit access control for transactional models:
 school_admission, school_admission_form, and school_admission_test.
 
 
+Work Instruction
+=================
+
+Admission
+----------
+
+* `Create School Admission <docs/school_admission/01-create.html>`_
+
+Admission Form
+---------------
+
+* `Create School Admission Form <docs/school_admission_form/01-create.html>`_
+
+Admission Test
+---------------
+
+* `Create School Admission Test <docs/school_admission_test/01-create.html>`_
+
+
 Bug Tracker
 ===========
 

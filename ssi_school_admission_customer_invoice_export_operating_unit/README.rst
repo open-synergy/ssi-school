@@ -11,6 +11,15 @@ Create Invoice Export wizard for school admissions, so the exported
 invoices and the resulting document are scoped to one operating unit.
 
 
+Work Instruction
+=================
+
+Admission
+----------
+
+* `Create Invoice Export - Admission <docs/school_admission/20-create-invoice-export.html>`_
+
+
 Bug Tracker
 ===========
 

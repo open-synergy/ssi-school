@@ -11,6 +11,20 @@ Adds operating unit access control for the transactional models
 school_incident and school_incident_weekly_review.
 
 
+Work Instruction
+=================
+
+Incident
+---------
+
+* `Create School Incident <docs/school_incident/01-create.html>`_
+
+Incident Weekly Review
+------------------------
+
+* `Create School Incident Weekly Review <docs/school_incident_weekly_review/01-create.html>`_
+
+
 Bug Tracker
 ===========
 

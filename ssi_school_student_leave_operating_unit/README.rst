@@ -11,6 +11,15 @@ Adds operating unit access control for the transactional model
 school_student_leave.
 
 
+Work Instruction
+=================
+
+Student Leave
+---------------
+
+* `Create School Student Leave <docs/school_student_leave/01-create.html>`_
+
+
 Bug Tracker
 ===========
 
