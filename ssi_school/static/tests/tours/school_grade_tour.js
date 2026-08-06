@@ -148,8 +148,16 @@ odoo.define("ssi_school.school_grade_tour", function (require) {
             [
                 // ── Flow 2 — Find and open the record to edit.
                 {
+                    // Scope to a row that HAS an exact-match char Name
+                    // cell, not `:contains` on the whole row:
+                    // next_grade_id/previous_grade_id are many2one
+                    // columns shown in this same list, and their
+                    // computed value can display THIS record's name
+                    // inside an UNRELATED row -- a bare
+                    // `:contains(...)` risks picking that row instead.
                     content: "Open the record",
-                    trigger: ".o_data_row:contains(TOUR Grade Edit) .o_data_cell:first",
+                    trigger:
+                        ".o_data_row:has(.o_data_cell.o_list_char[title='TOUR Grade Edit']) .o_data_cell:first",
                     extra_trigger: ".o_list_view",
                 },
                 {
@@ -220,9 +228,13 @@ odoo.define("ssi_school.school_grade_tour", function (require) {
                     trigger: ".breadcrumb-item.o_back_button a:contains(School Grades)",
                 },
                 {
+                    // Scope to a row with an exact-match char Name
+                    // cell (see the "Open the record" comment above --
+                    // next_grade_id/previous_grade_id columns can echo
+                    // this name in an unrelated row).
                     content: "Select the record's checkbox",
                     trigger:
-                        ".o_data_row:contains(TOUR Grade Edit Changed) .o_list_record_selector input",
+                        ".o_data_row:has(.o_data_cell.o_list_char[title='TOUR Grade Edit Changed']) .o_list_record_selector input",
                     run: "click",
                 },
                 {
@@ -242,7 +254,7 @@ odoo.define("ssi_school.school_grade_tour", function (require) {
                     content:
                         "Reset Code completes and the list reloads (row selection cleared)",
                     trigger:
-                        ".o_data_row:contains(TOUR Grade Edit Changed) .o_list_record_selector input:not(:checked)",
+                        ".o_data_row:has(.o_data_cell.o_list_char[title='TOUR Grade Edit Changed']) .o_list_record_selector input:not(:checked)",
                     run: function () {
                         // Assertion only; do not trigger the default click action.
                     },
@@ -277,9 +289,14 @@ odoo.define("ssi_school.school_grade_tour", function (require) {
                 // ── Flow 2 — Select one or more records to delete (check
                 // the checkbox).
                 {
+                    // Scope to a row with an exact-match char Name
+                    // cell -- next_grade_id/previous_grade_id columns
+                    // can echo this name in an unrelated row (see the
+                    // "Open the record" comment in the edit tour
+                    // above).
                     content: "Select the record's checkbox",
                     trigger:
-                        ".o_data_row:contains(TOUR Grade Delete) .o_list_record_selector input",
+                        ".o_data_row:has(.o_data_cell.o_list_char[title='TOUR Grade Delete']) .o_list_record_selector input",
                     run: "click",
                 },
 
@@ -350,9 +367,17 @@ odoo.define("ssi_school.school_grade_tour", function (require) {
                 // ── Flow 2 — Select one or more records to deactivate
                 // (check the checkbox).
                 {
+                    // Scope to a row with an exact-match char Name
+                    // cell -- next_grade_id/previous_grade_id columns
+                    // can echo this name in an unrelated row (see the
+                    // "Open the record" comment in the edit tour
+                    // above). This is the confirmed root cause of a
+                    // real CI failure: the wrong row's checkbox was
+                    // selected, so Archive ran on a different record
+                    // and this one was never actually deactivated.
                     content: "Select the record's checkbox",
                     trigger:
-                        ".o_data_row:contains(TOUR Grade Deactivate) .o_list_record_selector input",
+                        ".o_data_row:has(.o_data_cell.o_list_char[title='TOUR Grade Deactivate']) .o_list_record_selector input",
                     run: "click",
                 },
 
@@ -441,9 +466,13 @@ odoo.define("ssi_school.school_grade_tour", function (require) {
                 // ── Flow 3 — Select one or more records to reactivate
                 // (check the checkbox).
                 {
+                    // Scope to a row with an exact-match char Name
+                    // cell for consistency with the other Grade tours
+                    // (defense in depth -- see the "Open the record"
+                    // comment in the edit tour above).
                     content: "Select the archived record's checkbox",
                     trigger:
-                        ".o_data_row:contains(TOUR Grade Activate) .o_list_record_selector input",
+                        ".o_data_row:has(.o_data_cell.o_list_char[title='TOUR Grade Activate']) .o_list_record_selector input",
                     run: "click",
                 },
 
@@ -505,8 +534,10 @@ odoo.define("ssi_school.school_grade_tour", function (require) {
                     run: "click",
                 },
                 {
+                    // Exact-match char Name cell -- see the "Open the
+                    // record" comment in the edit tour above.
                     content: "Record appears again in the default list",
-                    trigger: ".o_data_row:contains(TOUR Grade Activate)",
+                    trigger: ".o_data_cell.o_list_char[title='TOUR Grade Activate']",
                     run: function () {
                         // Assertion only; do not trigger the default click action.
                     },

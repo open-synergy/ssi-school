@@ -2,6 +2,8 @@
 # Copyright 2026 PT. Simetri Sinergi Indonesia
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
+from datetime import timedelta
+
 from odoo import fields
 from odoo.tests import HttpSavepointCase, tagged
 
@@ -364,7 +366,20 @@ class TestUiSchoolEnrollment(HttpSavepointCase):
             "TOUR ENR Restart Student", cls.academic_term_1
         )
         _bypass(cls.enrollment_restart).action_confirm()
+        # action_reject_approval() (mixin.multiple_approval) only
+        # writes state="reject" when the acting user is found in
+        # active_approval_ids.approver_user_ids -- a real membership
+        # list computed from the approval.approval record created by
+        # action_confirm(), NOT simply from holding
+        # school_enrollment_validator_group. bypass_policy_check only
+        # skips the outer _check_reject_policy() gate, not this inner
+        # filter, so it silently no-ops when admin isn't in that list.
+        # Force the Pre-Condition state directly instead -- this tour
+        # exercises action_restart, not the reject transition itself
+        # (that is covered by 06-reject.md's own tour).
         _bypass(cls.enrollment_restart).action_reject_approval()
+        if cls.enrollment_restart.state != "reject":
+            cls.enrollment_restart.sudo().write({"state": "reject"})
 
         # 13-reset-number.md -- Draft record with a manually-set document
         # number (the "name" field is editable in Draft status).
@@ -413,12 +428,19 @@ class TestUiSchoolEnrollment(HttpSavepointCase):
         )
         _bypass(cls.enrollment_invoice).action_confirm()
         _bypass(cls.enrollment_invoice).action_approve_approval()
+        # IK Pre-Condition says "on or before the date range used in
+        # the wizard", not "exactly today" -- use yesterday rather
+        # than today so the comparison in
+        # school_enrollment._get_due_payment_term() (which defaults
+        # date_end to fields.Date.context_today(), TIMEZONE-AWARE)
+        # cannot fail a same-day boundary check against
+        # fields.Date.today() (server-local, NOT timezone-adjusted).
         cls.env["school_enrollment_payment_term"].create(
             {
                 "enrollment_id": cls.enrollment_invoice.id,
                 "name": "TOUR ENR DUE TERM",
                 "sequence": 10,
-                "date_invoice": fields.Date.today(),
+                "date_invoice": fields.Date.today() - timedelta(days=1),
             }
         )
 

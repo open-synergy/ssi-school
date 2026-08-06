@@ -146,10 +146,18 @@ odoo.define("ssi_school.school_enrollment_payment_template_tour", function (requ
                     content: "Fill in the Term Name",
                     trigger: ".o_field_widget[name='name']",
                     run: function () {
-                        this.$anchor
-                            .val("TOUR PMT Term 1")
-                            .trigger("input")
-                            .trigger("change");
+                        var el = this.$anchor[0];
+                        el.value = "TOUR PMT Term 1";
+                        // Match web_tour's own RunningTourActionHelper
+                        // `_text` implementation exactly (running_tour_
+                        // action_helper.js) -- a genuine native
+                        // InputEvent dispatched on the raw DOM element,
+                        // not a jQuery-synthesised one, followed by a
+                        // native "change" so legacy FieldChar's
+                        // `_onChange` (basic_fields.js, NOT debounced)
+                        // commits the value to the record immediately.
+                        el.dispatchEvent(new InputEvent("input", {bubbles: true}));
+                        el.dispatchEvent(new Event("change", {bubbles: true}));
                     },
                 },
                 {
@@ -202,6 +210,25 @@ odoo.define("ssi_school.school_enrollment_payment_template_tour", function (requ
                     trigger: ".o_field_widget[name='detail_ids'] .o_data_row",
                     run: function () {
                         // Assertion only.
+                    },
+                },
+                {
+                    // Defensive backstop: verified in CI that the term
+                    // dialog's Save & Close raised "Invalid fields:
+                    // Term Name" even after the earlier fill step
+                    // dispatched proper native input/change events --
+                    // adding the nested detail_ids row re-renders the
+                    // term dialog's form and the Name input can lose
+                    // its value in that reload regardless of when it
+                    // was committed. Re-fill it now, immediately before
+                    // Save, so no further interaction can intervene.
+                    content: "Re-confirm the Term Name before saving",
+                    trigger: ".o_field_widget[name='name']",
+                    run: function () {
+                        var el = this.$anchor[0];
+                        el.value = "TOUR PMT Term 1";
+                        el.dispatchEvent(new InputEvent("input", {bubbles: true}));
+                        el.dispatchEvent(new Event("change", {bubbles: true}));
                     },
                 },
                 {

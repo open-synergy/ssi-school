@@ -928,6 +928,25 @@ odoo.define("ssi_school.school_enrollment_tour", function (require) {
                     trigger: ".o_notebook .nav-link:contains(Billing)",
                 },
                 {
+                    // 14.0: a just-opened record is READONLY -- every
+                    // field, including o2m sub-rows, renders with
+                    // `o_readonly_modifier` regardless of the term's
+                    // own `attrs="{'readonly': [('locked','=',True)]}"`
+                    // (patterns.md §E). That per-field attrs condition
+                    // only takes effect once the FORM itself is
+                    // editable, so Edit must be clicked before the
+                    // "unlocked" litmus gate below can ever be true.
+                    content: "Click the Edit button",
+                    trigger: ".o_form_button_edit",
+                },
+                {
+                    content: "Form is now editable",
+                    trigger: ".o_form_view.o_form_editable",
+                    run: function () {
+                        // Assertion only.
+                    },
+                },
+                {
                     // Gerbang: sebelum Close Addendum, baris ini BELUM
                     // readonly -- uji lakmus patterns.md §P terpenuhi
                     // (selector tidak cocok bila aksi belum dijalankan).
