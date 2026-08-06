@@ -92,6 +92,7 @@ Admission
 * `Close Addendum - Admission <docs/school_admission/17-close-addendum.html>`_
 * `Print Admission <docs/school_admission/18-print.html>`_
 * `Reload Template Policy - Admission <docs/school_admission/19-reload-template-policy.html>`_
+* `Copy Payment Terms - Admission <docs/school_admission/21-copy-payment-term.html>`_
 
 Installation
 ============
