@@ -127,6 +127,7 @@ Enrollment
 * `Close Addendum - Enrollment <docs/school_enrollment/20-close-addendum.html>`_
 * `Print Enrollment <docs/school_enrollment/21-print.html>`_
 * `Reload Template Policy - Enrollment <docs/school_enrollment/22-reload-template-policy.html>`_
+* `Copy Payment Terms - Enrollment <docs/school_enrollment/24-copy-payment-term.html>`_
 
 Student Class Mutation
 -----------------------
