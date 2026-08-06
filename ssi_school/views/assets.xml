@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 OpenSynergy Indonesia
+     Copyright 2026 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <template
+        id="assets_tests"
+        name="ssi_school assets tests"
+        inherit_id="web.assets_tests"
+    >
+        <xpath expr="." position="inside">
+            <script
+                type="text/javascript"
+                src="/ssi_school/static/tests/tours/school_tour.js"
+            />
+            <script
+                type="text/javascript"
+                src="/ssi_school/static/tests/tours/school_branch_tour.js"
+            />
+            <script
+                type="text/javascript"
+                src="/ssi_school/static/tests/tours/school_grade_type_tour.js"
+            />
+            <script
+                type="text/javascript"
+                src="/ssi_school/static/tests/tours/school_grade_tour.js"
+            />
+            <script
+                type="text/javascript"
+                src="/ssi_school/static/tests/tours/school_grade_class_tour.js"
+            />
+            <script
+                type="text/javascript"
+                src="/ssi_school/static/tests/tours/school_academic_year_tour.js"
+            />
+            <script
+                type="text/javascript"
+                src="/ssi_school/static/tests/tours/school_student_tour.js"
+            />
+            <script
+                type="text/javascript"
+                src="/ssi_school/static/tests/tours/school_teacher_tour.js"
+            />
+            <script
+                type="text/javascript"
+                src="/ssi_school/static/tests/tours/school_enrollment_payment_template_tour.js"
+            />
+            <script
+                type="text/javascript"
+                src="/ssi_school/static/tests/tours/school_academic_term_tour.js"
+            />
+            <script
+                type="text/javascript"
+                src="/ssi_school/static/tests/tours/school_enrollment_tour.js"
+            />
+            <script
+                type="text/javascript"
+                src="/ssi_school/static/tests/tours/school_homeroom_tour.js"
+            />
+            <script
+                type="text/javascript"
+                src="/ssi_school/static/tests/tours/school_student_mutation_tour.js"
+            />
+        </xpath>
+    </template>
+</odoo>
