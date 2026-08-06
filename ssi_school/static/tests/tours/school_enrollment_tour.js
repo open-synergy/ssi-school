@@ -898,9 +898,18 @@ odoo.define("ssi_school.school_enrollment_tour", function (require) {
                     trigger: ".o_notebook .nav-link:contains(Billing)",
                 },
                 {
+                    // `[name='state']` never matches: Odoo 14.0's
+                    // list_renderer.js `_renderBodyCell` sets only a
+                    // `class` on <td> (never a `name` HTML attribute --
+                    // verified against source), so this trigger was
+                    // permanently `trigger: 0` regardless of the
+                    // record's actual state. Scope to a row that HAS
+                    // the term's own exact-match char Name cell, then
+                    // look for the "Invoiced" text anywhere in that
+                    // same row (only the state cell can contain it).
                     content: "Payment term status is now Invoiced",
                     trigger:
-                        ".o_data_row:contains(TOUR ENR DUE TERM) .o_field_cell[name='state']:contains(Invoiced)",
+                        ".o_data_row:has(.o_data_cell.o_list_char[title='TOUR ENR DUE TERM']) .o_data_cell:contains(Invoiced)",
                     run: function () {
                         // Assertion only.
                     },
@@ -950,9 +959,17 @@ odoo.define("ssi_school.school_enrollment_tour", function (require) {
                     // Gerbang: sebelum Close Addendum, baris ini BELUM
                     // readonly -- uji lakmus patterns.md §P terpenuhi
                     // (selector tidak cocok bila aksi belum dijalankan).
+                    //
+                    // `[name='name']` never matches: Odoo 14.0's
+                    // list_renderer.js `_renderBodyCell` sets only a
+                    // `class` on <td> (verified against source), never
+                    // a `name` HTML attribute -- this trigger was
+                    // permanently `trigger: 0`. The Name column is a
+                    // char field, so target it precisely by its own
+                    // rendered class + exact text instead.
                     content: "Payment term is unlocked before Close Addendum",
                     trigger:
-                        ".o_data_row:contains(TOUR ENR ADDENDUM TERM) .o_field_cell[name='name']:not(.o_readonly_modifier)",
+                        ".o_data_cell.o_list_char[title='TOUR ENR ADDENDUM TERM']:not(.o_readonly_modifier)",
                     run: function () {
                         // Assertion only.
                     },
@@ -976,9 +993,12 @@ odoo.define("ssi_school.school_enrollment_tour", function (require) {
                 // previously-unlocked payment term becomes locked
                 // (read-only) in the Payment Terms tree.
                 {
+                    // Same fix as the "before" gate above: target the
+                    // Name cell by its own class + exact text, not by
+                    // a non-existent `[name=]` attribute on <td>.
                     content: "Payment term is now locked",
                     trigger:
-                        ".o_data_row:contains(TOUR ENR ADDENDUM TERM) .o_field_cell[name='name'].o_readonly_modifier",
+                        ".o_data_cell.o_list_char[title='TOUR ENR ADDENDUM TERM'].o_readonly_modifier",
                     run: function () {
                         // Assertion only.
                     },

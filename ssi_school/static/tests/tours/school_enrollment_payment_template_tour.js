@@ -302,6 +302,23 @@ odoo.define("ssi_school.school_enrollment_payment_template_tour", function (requ
                         // Assertion only.
                     },
                 },
+                {
+                    // The record has no id until this button auto-saves
+                    // it; the breadcrumb literal "New" going away is the
+                    // data-independent proof the save + reload
+                    // completed (patterns.md §P) -- matches the pattern
+                    // already proven in school_tour.js's create flow.
+                    // Without this gate, "Save the record" below can
+                    // click before the control panel has re-rendered,
+                    // leaving the final Post-Condition gate racing an
+                    // update that already happened moments too late.
+                    content: "Record is saved by Generate Code",
+                    trigger:
+                        ".o_control_panel .breadcrumb-item.active:not(:contains(New))",
+                    run: function () {
+                        // Assertion only; do not trigger the default click action.
+                    },
+                },
 
                 // ── Flow 8 — Click Save.
                 {
