@@ -695,22 +695,37 @@ odoo.define("ssi_school.school_homeroom_tour", function (require) {
                 },
 
                 // Post-Condition -- Candidate Students is filled with a
-                // random selection of eligible students, up to the
-                // number of remaining seats.
+                // RANDOM selection of eligible students, up to the
+                // number of remaining seats (IK: "filled with a random
+                // selection of eligible students"). WHICH student gets
+                // picked is not guaranteed by the IK and is out of
+                // tour scope regardless (a value-level outcome,
+                // odoo-development-unit-test territory) -- assert only
+                // that a row landed, not which one.
+                //
+                // A specific-name assertion was tried here and proven
+                // flaky in CI: setUpClass's _create_grade_class/
+                // _create_homeroom/_create_student helpers all share
+                // the SAME cls.school/cls.grade across every fixture in
+                // this test class, so `allowed_student_ids` (school_id
+                // + grade match, state=draft) actually matches BOTH
+                // "TOUR HR FILL RANDOM STUDENT" AND "TOUR HR GENERATE
+                // STUDENT" (school_homeroom.py
+                // _compute_allowed_student_ids) -- two eligible
+                // candidates for Capacity 1, so random.sample() (
+                // _fill_random_candidate) picks either one with equal
+                // probability, and asserting one specific name fails
+                // roughly half the time.
                 //
                 // Gerbang (patterns.md skill odoo-development-ui-test
-                // §P): candidate_student_ids is EMPTY before this action
-                // runs (Pre-Condition, see setUpClass), so the marker
-                // student's row can only appear AFTER Fill Random has
-                // run -- it cannot match earlier by coincidence. Its
-                // Capacity is 1 and exactly one eligible student exists,
-                // so the outcome is deterministic despite the "random"
-                // selection.
+                // §P): candidate_student_ids is EMPTY before this
+                // action runs (Pre-Condition, see setUpClass), so a row
+                // appearing here can only happen AFTER Fill Random has
+                // run -- it cannot match earlier by coincidence.
                 {
-                    content: "The eligible student is filled as a candidate",
+                    content: "A candidate student is filled",
                     trigger:
-                        ".o_field_widget[name='candidate_student_ids'] " +
-                        ".o_data_row:contains(TOUR HR FILL RANDOM STUDENT)",
+                        ".o_field_widget[name='candidate_student_ids'] .o_data_row",
                     run: function () {
                         // Assertion only; do not trigger the default click
                         // action.
