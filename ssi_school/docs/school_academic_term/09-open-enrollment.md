@@ -16,7 +16,7 @@
 
 1. Open the **School > Configuration > Period > Academic Terms** menu.
 2. Open the record to open for enrollment.
-3. Click the **Open Enrollment** button.
+3. Click the **Open Enrollment** button (`action_open_enrollment`).
 
 ## Post-Condition
 

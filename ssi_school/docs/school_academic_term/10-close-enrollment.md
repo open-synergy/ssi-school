@@ -16,7 +16,7 @@
 
 1. Open the **School > Configuration > Period > Academic Terms** menu.
 2. Open the record to close for enrollment.
-3. Click the **Close Enrollment** button.
+3. Click the **Close Enrollment** button (`action_close_enrollment`).
 
 ## Post-Condition
 

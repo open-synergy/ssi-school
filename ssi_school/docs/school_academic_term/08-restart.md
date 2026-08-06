@@ -16,7 +16,7 @@
 
 1. Open the **School > Configuration > Period > Academic Terms** menu.
 2. Open the record to restart.
-3. Click the **Restart** button.
+3. Click the **Restart** button (`action_restart`).
 
 ## Post-Condition
 

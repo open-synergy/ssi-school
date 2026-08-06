@@ -16,7 +16,7 @@
 
 1. Open the **School > Configuration > Period > Academic Terms** menu.
 2. Open the record to finish.
-3. Click the **Done** button.
+3. Click the **Done** button (`action_done`).
 
 ## Post-Condition
 
