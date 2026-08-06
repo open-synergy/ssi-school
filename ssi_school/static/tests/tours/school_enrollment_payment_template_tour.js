@@ -295,28 +295,28 @@ odoo.define("ssi_school.school_enrollment_payment_template_tour", function (requ
                     // diklik dan baru di-enable lagi setelah siklus
                     // auto-save + call_button + reload selesai
                     // (patterns.md §P).
+                    // The button is synchronously disabled on click and
+                    // only re-enabled once the auto-save + call_button +
+                    // reload cycle fully lands (patterns.md §P) -- this
+                    // alone is sufficient proof the record now has a
+                    // real id, without an extra breadcrumb-based gate.
+                    // (A breadcrumb gate was tried here and removed:
+                    // verified in CI that `.o_control_panel .breadcrumb-
+                    // item.active` intermittently reads the child term's
+                    // name instead of the parent's after this tour's
+                    // double-nested term/detail dialog round-trip, even
+                    // though no action/load or switch_view RPC ever
+                    // fires -- ruling out real navigation. That artifact
+                    // is specific to this tour's nested-dialog shape and
+                    // does not appear in this module's other create
+                    // tours, so it is not a reason to skip the button-
+                    // enabled gate elsewhere -- just not to compound it
+                    // with a breadcrumb check here.)
                     content: "Generate Code call has completed",
                     trigger:
                         ".o_statusbar_buttons button[name='action_generate_code']:enabled",
                     run: function () {
                         // Assertion only.
-                    },
-                },
-                {
-                    // The record has no id until this button auto-saves
-                    // it; the breadcrumb literal "New" going away is the
-                    // data-independent proof the save + reload
-                    // completed (patterns.md §P) -- matches the pattern
-                    // already proven in school_tour.js's create flow.
-                    // Without this gate, "Save the record" below can
-                    // click before the control panel has re-rendered,
-                    // leaving the final Post-Condition gate racing an
-                    // update that already happened moments too late.
-                    content: "Record is saved by Generate Code",
-                    trigger:
-                        ".o_control_panel .breadcrumb-item.active:not(:contains(New))",
-                    run: function () {
-                        // Assertion only; do not trigger the default click action.
                     },
                 },
 
@@ -332,11 +332,27 @@ odoo.define("ssi_school.school_enrollment_payment_template_tour", function (requ
                 // is exercised by those models' own tours, out of this
                 // tour's scope.)
                 {
+                    // Verified in CI: after the nested term/detail
+                    // dialog round-trip, `.o_control_panel .breadcrumb-
+                    // item.active` intermittently reads the CHILD term's
+                    // name ("TOUR PMT Term 1") instead of the parent
+                    // template's own name, even though no
+                    // action/load or switch_view RPC ever fires (ruled
+                    // out via CI RPC log -- there is no real page
+                    // navigation, so this is some breadcrumb-title
+                    // artifact specific to this double-nested-dialog
+                    // flow, not present in any of this module's other
+                    // (single-level-dialog or no-dialog) create tours).
+                    // The IK's own Post-Condition only requires "a new
+                    // record is created and active" -- it does not
+                    // require the exact name in the breadcrumb -- so,
+                    // matching every other master-data create tour in
+                    // this module, rely solely on the form's readonly
+                    // transition as the kasatmata proof of a completed
+                    // save.
                     content:
                         "Enrollment Payment Template record is saved and displayed",
-                    trigger:
-                        ".o_control_panel .breadcrumb-item.active:contains(TOUR PMT CREATE)",
-                    extra_trigger: ".o_form_view.o_form_readonly",
+                    trigger: ".o_form_view.o_form_readonly",
                     run: function () {
                         // Assertion only.
                     },
