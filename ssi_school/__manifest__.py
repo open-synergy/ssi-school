@@ -29,6 +29,7 @@
         "queue_job",
         "ssi_hr",
         "ssi_hr_employee",
+        "web_tour",
     ],
     "data": [
         "security/ir_module_category_data.xml",
@@ -98,6 +99,7 @@
         "wizards/school_enrollment_payment_term_duplicate.xml",
         "wizards/school_enrollment_copy_payment_term.xml",
         "wizards/school_enrollment_create_due_invoice.xml",
+        "views/assets.xml",
     ],
     "demo": [
         "demo/res_partner.xml",
