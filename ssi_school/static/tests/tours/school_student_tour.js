@@ -211,9 +211,19 @@ odoo.define("ssi_school.school_student_tour", function (require) {
                     },
                 },
                 {
+                    // Web.FieldBadge (Owl) renders a single <span
+                    // class="badge badge-pill o_field_badge
+                    // o_field_widget" name="state">...</span> -- there
+                    // is no wrapping div, so `o_field_widget` and
+                    // `o_field_badge` are classes on the SAME element,
+                    // not ancestor/descendant. Verified against the
+                    // actual CI DOM dump and against
+                    // web/static/src/xml/fields.xml `t-name="web.
+                    // FieldBadge"` + web.AbstractFieldOwl (which adds
+                    // o_field_widget to the component's own root).
                     content: "Status badge shows Waiting for Enrollment",
                     trigger:
-                        ".o_field_widget[name='state'] .o_field_badge:contains(Waiting for Enrollment)",
+                        ".o_field_widget.o_field_badge[name='state']:contains(Waiting for Enrollment)",
                     run: function () {
                         // Assertion only.
                     },
@@ -326,16 +336,29 @@ odoo.define("ssi_school.school_student_tour", function (require) {
                     trigger: ".o_cp_buttons button[name='action_reset_code']",
                 },
                 {
-                    content: "Click OK to confirm",
-                    trigger: ".modal-footer button.btn-primary",
-                    in_modal: true,
+                    // Odoo 14.0 core never reads `confirm=` on
+                    // <tree><header> bulk-action buttons (only
+                    // form/kanban controllers implement it -- verified:
+                    // no such handling in list_controller.js or
+                    // list_renderer.js). action_reset_code fires
+                    // immediately with no dialog; the list then reloads
+                    // and clears the row selection, which is a
+                    // data-independent proof the RPC landed (the
+                    // checkbox is guaranteed checked before this point).
+                    content:
+                        "Reset Code completes and the list reloads (row selection cleared)",
+                    trigger:
+                        ".o_data_row:contains(TOUR STUDENT EDIT CHANGED) .o_list_record_selector input:not(:checked)",
+                    run: function () {
+                        // Assertion only; do not trigger the default click action.
+                    },
                 },
 
                 // ── Post-Condition — The record is updated with the
                 // new values.
                 {
-                    content: "Reset code dialog is closed",
-                    trigger: "body:not(:has(.modal))",
+                    content: "Students list is displayed",
+                    trigger: ".o_list_view",
                     run: function () {
                         // Assertion only.
                     },
@@ -530,6 +553,24 @@ odoo.define("ssi_school.school_student_tour", function (require) {
                 // `_toggleArchiveState(false)` directly with no
                 // confirmation dialog -- known IK inaccuracy, no dialog
                 // step added here.
+                //
+                // Gerbang wajib (patterns.md §P): tanpa ini, langkah
+                // berikutnya (buka Filters lalu matikan facet Archived)
+                // berlomba dengan RPC action_unarchive yang masih
+                // berjalan -- terbukti di CI (race < 25ms pada tour
+                // school_academic_term_activate yang berbagi pola ini).
+                // Baris masih tampil di list ter-filter Archived
+                // sebelum tombol diklik, jadi begitu unarchive
+                // mendarat & list reload, baris ini PASTI hilang dari
+                // situ -- gerbang yang sah.
+                {
+                    content: "Unarchive completes (row leaves the Archived list)",
+                    trigger:
+                        ".o_list_view:not(:has(.o_data_row:contains(TOUR STUDENT ACTIVATE)))",
+                    run: function () {
+                        // Assertion only; do not trigger the default click action.
+                    },
+                },
 
                 // Enabling/disabling the Archived filter re-opens the
                 // Filters dropdown.

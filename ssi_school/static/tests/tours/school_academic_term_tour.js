@@ -437,6 +437,26 @@ odoo.define("ssi_school.school_academic_term_tour", function (require) {
                 // ssi_customer_invoice_export's
                 // customer_invoice_export_type_tour.js), out of scope for
                 // this tour-only change.
+                //
+                // Gerbang wajib (patterns.md §P): tanpa ini, langkah
+                // berikutnya (buka Filters lalu matikan facet Archived)
+                // berlomba dengan RPC action_unarchive yang masih
+                // berjalan -- terbukti di CI (race < 25ms, penyebab
+                // tour ini gagal: "Confirm the dialog" langkah lama
+                // sudah dibuang, tapi tanpa gerbang penggantinya
+                // langkah berikutnya bisa mendahului RPC). Baris masih
+                // tampil di list ter-filter Archived sebelum tombol
+                // diklik, jadi begitu unarchive mendarat & list
+                // reload, baris ini PASTI hilang dari situ -- gerbang
+                // yang sah.
+                {
+                    content: "Unarchive completes (row leaves the Archived list)",
+                    trigger:
+                        ".o_list_view:not(:has(.o_data_row:contains(TOUR SAT Activate)))",
+                    run: function () {
+                        // Assertion only; do not trigger the default click action.
+                    },
+                },
 
                 // Enabling/disabling the Archived filter re-opens the
                 // Filters dropdown -- selecting "Unarchive" above closed

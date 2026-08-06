@@ -214,18 +214,29 @@ odoo.define("ssi_school.school_branch_tour", function (require) {
                     trigger: ".o_cp_buttons button[name='action_reset_code']",
                 },
                 {
-                    content: "Confirm reset code",
-                    trigger: ".modal-footer button.btn-primary",
-                    in_modal: true,
+                    // Odoo 14.0 core never reads `confirm=` on
+                    // <tree><header> bulk-action buttons (only
+                    // form/kanban controllers implement it -- verified:
+                    // no such handling in list_controller.js or
+                    // list_renderer.js). action_reset_code fires
+                    // immediately with no dialog; the list then reloads
+                    // and clears the row selection, which is a
+                    // data-independent proof the RPC landed (the
+                    // checkbox is guaranteed checked before this point).
+                    content:
+                        "Reset Code completes and the list reloads (row selection cleared)",
+                    trigger:
+                        ".o_data_row:contains(TOUR Branch Edit Changed) .o_list_record_selector input:not(:checked)",
+                    run: function () {
+                        // Assertion only; do not trigger the default click action.
+                    },
                 },
 
                 // ── Post-Condition — the record is updated with the new
                 // values.
                 {
-                    content:
-                        "Reset code dialog is closed and the Branches list is displayed",
+                    content: "Branches list is displayed",
                     trigger: ".o_list_view",
-                    extra_trigger: "body:not(:has(.modal))",
                     run: function () {
                         // Assertion only; do not trigger the default click action.
                     },
@@ -414,10 +425,29 @@ odoo.define("ssi_school.school_branch_tour", function (require) {
                 },
 
                 // ── Flow 5 — Click OK to confirm.
+                // Odoo 14.0 core wraps ONLY "Archive" in Dialog.confirm
+                // (list_controller.js _getActionMenuItems); "Unarchive"
+                // calls _toggleArchiveState(false) directly with no
+                // dialog at all -- verified via CI RPC log:
+                // action_unarchive fires immediately after the click,
+                // modal_displayed stays 0. There is therefore no OK
+                // step to click here; the IK's Flow 5 does not apply to
+                // this specific action in this Odoo series.
+                //
+                // Gerbang wajib (patterns.md §P): tanpa ini, langkah
+                // berikutnya (buka Filters lalu matikan facet Archived)
+                // berlomba dengan RPC action_unarchive yang masih
+                // berjalan -- terbukti di CI (race < 25ms). Baris masih
+                // tampil di list ter-filter Archived sebelum tombol
+                // diklik, jadi begitu unarchive mendarat & list reload,
+                // baris ini PASTI hilang dari situ -- gerbang yang sah.
                 {
-                    content: "Confirm unarchive",
-                    trigger: ".modal-footer button.btn-primary",
-                    in_modal: true,
+                    content: "Unarchive completes (row leaves the Archived list)",
+                    trigger:
+                        ".o_list_view:not(:has(.o_data_row:contains(TOUR Branch Activate)))",
+                    run: function () {
+                        // Assertion only; do not trigger the default click action.
+                    },
                 },
 
                 // ── Post-Condition — the records are restored and appear

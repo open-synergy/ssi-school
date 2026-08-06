@@ -271,11 +271,16 @@ class TestUiSchoolEnrollment(HttpSavepointCase):
 
         def _create_enrollment(student_name, term, grade_class=None):
             """Create a draft ``school_enrollment`` Pre-Condition fixture."""
+            # `contact_id` is a required res.partner on school_student
+            # (models/school_student.py); without it the create() call
+            # below raises a NOT NULL constraint violation.
+            contact = cls.env["res.partner"].create({"name": student_name})
             student = cls.env["school_student"].create(
                 {
                     "name": student_name,
                     "code": "/",
                     "school_id": cls.school.id,
+                    "contact_id": contact.id,
                 }
             )
             return cls.env["school_enrollment"].create(
@@ -301,11 +306,15 @@ class TestUiSchoolEnrollment(HttpSavepointCase):
         # new one on term 1 (first term), but needs an eligible student
         # (Draft, next_grade_id auto-computed to grade_1) to pick from the
         # Student dropdown.
+        cls.contact_create_student = cls.env["res.partner"].create(
+            {"name": "TOUR ENR Create Student"}
+        )
         cls.student_create = cls.env["school_student"].create(
             {
                 "name": "TOUR ENR Create Student",
                 "code": "/",
                 "school_id": cls.school.id,
+                "contact_id": cls.contact_create_student.id,
             }
         )
 

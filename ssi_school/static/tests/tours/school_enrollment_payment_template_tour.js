@@ -123,9 +123,34 @@ odoo.define("ssi_school.school_enrollment_payment_template_tour", function (requ
                     },
                 },
                 {
+                    // The built-in "text" run helper only dispatches
+                    // synthetic keydown/keyup (running_tour_action_
+                    // helper.js `_text`) -- it never fires a real
+                    // `input` DOM event, so legacy FieldChar's
+                    // `_onInput` (basic_fields.js, bound to 'input')
+                    // never runs its DEBOUNCED commit to the record's
+                    // in-memory data. Normally this is harmless because
+                    // `commitChanges()` re-reads the `<input>` element's
+                    // raw `.val()` directly at Save time. But here,
+                    // adding a row to the NESTED `detail_ids` o2m
+                    // (inside this same term dialog, a few steps below)
+                    // reloads/re-renders the term dialog's own form,
+                    // destroying and recreating this "name" input --
+                    // wiping the uncommitted value before Save ever
+                    // reads it. Verified in CI: the term dialog's Save
+                    // & Close raises "Invalid fields: Term Name" even
+                    // though this step reported success. Dispatch a
+                    // real `input` event ourselves so the debounced
+                    // commit fires immediately, before the nested
+                    // dialog can destroy the widget.
                     content: "Fill in the Term Name",
                     trigger: ".o_field_widget[name='name']",
-                    run: "text TOUR PMT Term 1",
+                    run: function () {
+                        this.$anchor
+                            .val("TOUR PMT Term 1")
+                            .trigger("input")
+                            .trigger("change");
+                    },
                 },
                 {
                     content: "Open the Detail tab in the term dialog",
@@ -380,9 +405,22 @@ odoo.define("ssi_school.school_enrollment_payment_template_tour", function (requ
                     trigger: ".o_cp_buttons button[name='action_reset_code']",
                 },
                 {
-                    content: "Click OK to confirm",
-                    trigger: ".modal-footer button.btn-primary",
-                    in_modal: true,
+                    // Odoo 14.0 core never reads `confirm=` on
+                    // <tree><header> bulk-action buttons (only
+                    // form/kanban controllers implement it -- verified:
+                    // no such handling in list_controller.js or
+                    // list_renderer.js). action_reset_code fires
+                    // immediately with no dialog; the list then reloads
+                    // and clears the row selection, which is a
+                    // data-independent proof the RPC landed (the
+                    // checkbox is guaranteed checked before this point).
+                    content:
+                        "Reset Code completes and the list reloads (row selection cleared)",
+                    trigger:
+                        ".o_data_row:contains(TOUR PMT EDIT CHANGED) .o_list_record_selector input:not(:checked)",
+                    run: function () {
+                        // Assertion only; do not trigger the default click action.
+                    },
                 },
 
                 // ── Post-Condition — The record is updated with the
@@ -585,6 +623,23 @@ odoo.define("ssi_school.school_enrollment_payment_template_tour", function (requ
                 // `_toggleArchiveState(false)` directly with no
                 // confirmation dialog -- known IK inaccuracy, no dialog
                 // step added here.
+                //
+                // Gerbang wajib (patterns.md §P): tanpa ini, langkah
+                // berikutnya (buka Filters lalu matikan facet Archived)
+                // berlomba dengan RPC action_unarchive yang masih
+                // berjalan -- terbukti di CI (race < 25ms, penyebab
+                // tour ini gagal). Baris masih tampil di list
+                // ter-filter Archived sebelum tombol diklik, jadi
+                // begitu unarchive mendarat & list reload, baris ini
+                // PASTI hilang dari situ -- gerbang yang sah.
+                {
+                    content: "Unarchive completes (row leaves the Archived list)",
+                    trigger:
+                        ".o_list_view:not(:has(.o_data_row:contains(TOUR PMT ACTIVATE)))",
+                    run: function () {
+                        // Assertion only; do not trigger the default click action.
+                    },
+                },
 
                 // Enabling/disabling the Archived filter re-opens the
                 // Filters dropdown.

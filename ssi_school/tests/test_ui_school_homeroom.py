@@ -164,13 +164,21 @@ class TestUiSchoolHomeroom(HttpSavepointCase):
         cls.homeroom_reject.action_confirm()
 
         # Pre-Condition for docs/school_homeroom/09-finish.md: an On
-        # Progress record to finish. The single-level approval template
-        # (school_homeroom_validator_group, which admin belongs to)
-        # fulfills on the first approval, auto-transitioning to Open.
+        # Progress record to finish. approve_ok's policy (policy_
+        # template/school_homeroom.xml) requires
+        # `env.user.id in document.active_approver_user_ids.ids` --
+        # real approval-request membership, not merely holding
+        # school_homeroom_validator_group -- so admin is not
+        # automatically a registered approver here. bypass_policy_check
+        # is needed to advance this SETUP fixture past that gate (the
+        # same pattern used for
+        # ssi_employee_external_assignment's cancel/terminate fixtures).
         cls.grade_class_finish = cls._create_grade_class("TOUR HR FINISH CLASS")
         cls.homeroom_finish = cls._create_homeroom(cls.grade_class_finish)
         cls.homeroom_finish.action_confirm()
-        cls.homeroom_finish.action_approve_approval()
+        cls.homeroom_finish.with_context(
+            bypass_policy_check=True
+        ).action_approve_approval()
 
         # Pre-Condition for docs/school_homeroom/10-cancel.md: a Draft
         # record to cancel.
@@ -231,7 +239,12 @@ class TestUiSchoolHomeroom(HttpSavepointCase):
             candidate_students=cls.student_generate,
         )
         cls.homeroom_generate.action_confirm()
-        cls.homeroom_generate.action_approve_approval()
+        # bypass_policy_check: see the docs/school_homeroom/09-finish.md
+        # Pre-Condition comment above -- admin is not automatically a
+        # registered approver in active_approver_user_ids.
+        cls.homeroom_generate.with_context(
+            bypass_policy_check=True
+        ).action_approve_approval()
 
         # Pre-Condition for docs/school_homeroom/17-print.md: a
         # print_document_type linking a report to `school_homeroom` is

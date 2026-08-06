@@ -230,16 +230,28 @@ odoo.define("ssi_school.school_grade_tour", function (require) {
                     trigger: ".o_cp_buttons button[name='action_reset_code']",
                 },
                 {
-                    content: "Confirm reset code",
-                    trigger: ".modal-footer button.btn-primary",
-                    in_modal: true,
+                    // Odoo 14.0 core never reads `confirm=` on
+                    // <tree><header> bulk-action buttons (only
+                    // form/kanban controllers implement it -- verified:
+                    // no such handling in list_controller.js or
+                    // list_renderer.js). action_reset_code fires
+                    // immediately with no dialog; the list then reloads
+                    // and clears the row selection, which is a
+                    // data-independent proof the RPC landed (the
+                    // checkbox is guaranteed checked before this point).
+                    content:
+                        "Reset Code completes and the list reloads (row selection cleared)",
+                    trigger:
+                        ".o_data_row:contains(TOUR Grade Edit Changed) .o_list_record_selector input:not(:checked)",
+                    run: function () {
+                        // Assertion only; do not trigger the default click action.
+                    },
                 },
 
                 // ── Post-Condition — the record is updated with the new
                 // values.
                 {
-                    content:
-                        "Reset code dialog is closed and the Grades list is displayed",
+                    content: "Grades list is displayed",
                     trigger: ".o_list_view",
                     extra_trigger: "body:not(:has(.modal))",
                     run: function () {
@@ -300,10 +312,21 @@ odoo.define("ssi_school.school_grade_tour", function (require) {
                 // removed from the system. Previous Grade and Next Grade of
                 // the remaining Grades are automatically recomputed -- a
                 // value change out of tour scope.
+                //
+                // `previous_grade_id`/`next_grade_id` are shown as
+                // columns in this list, and their computed value can
+                // display THIS record's own name inside a DIFFERENT
+                // row (a still-active Grade whose "Previous"/"Next"
+                // column now points elsewhere, or used to point here).
+                // A bare `:has(.o_data_row:contains(...))` would match
+                // that unrelated row too and could never resolve to
+                // true. Scope to the char-typed Name cell specifically
+                // (`.o_list_char`, exact `title=`) so the many2one
+                // reference columns (`.o_list_many2one`) are excluded.
                 {
                     content: "Record no longer in the list",
                     trigger:
-                        ".o_list_view:not(:has(.o_data_row:contains(TOUR Grade Delete)))",
+                        ".o_list_view:not(:has(.o_data_cell.o_list_char[title='TOUR Grade Delete']))",
                     run: function () {
                         // Assertion only; do not trigger the default click action.
                     },
@@ -360,10 +383,18 @@ odoo.define("ssi_school.school_grade_tour", function (require) {
 
                 // ── Post-Condition — the records are archived and no
                 // longer appear in the default list view.
+                //
+                // Scope to the char-typed Name cell (`.o_list_char`,
+                // exact `title=`), not the whole row: `next_grade_id`/
+                // `previous_grade_id` are shown as many2one columns in
+                // this list and can display this record's own name
+                // inside an unrelated row, which a bare
+                // `:has(.o_data_row:contains(...))` would also match
+                // and could never resolve to true.
                 {
                     content: "Record no longer in the default list",
                     trigger:
-                        ".o_list_view:not(:has(.o_data_row:contains(TOUR Grade Deactivate)))",
+                        ".o_list_view:not(:has(.o_data_cell.o_list_char[title='TOUR Grade Deactivate']))",
                     run: function () {
                         // Assertion only; do not trigger the default click action.
                     },
@@ -435,10 +466,34 @@ odoo.define("ssi_school.school_grade_tour", function (require) {
                 },
 
                 // ── Flow 5 — Click OK to confirm.
+                // Odoo 14.0 core wraps ONLY "Archive" in Dialog.confirm
+                // (list_controller.js _getActionMenuItems); "Unarchive"
+                // calls _toggleArchiveState(false) directly with no
+                // dialog at all -- verified via CI RPC log:
+                // action_unarchive fires immediately after the click,
+                // modal_displayed stays 0. There is therefore no OK
+                // step to click here; the IK's Flow 5 does not apply to
+                // this specific action in this Odoo series.
+                //
+                // Gerbang wajib (patterns.md §P): tanpa ini, langkah
+                // berikutnya (buka Filters lalu matikan facet Archived)
+                // berlomba dengan RPC action_unarchive yang masih
+                // berjalan -- terbukti di CI (race < 25ms). Baris masih
+                // tampil di list ter-filter Archived sebelum tombol
+                // diklik, jadi begitu unarchive mendarat & list reload,
+                // baris ini PASTI hilang dari situ -- gerbang yang sah.
+                // Scope ke sel Name char-typed (bukan seluruh baris):
+                // next_grade_id/previous_grade_id adalah kolom many2one
+                // yang bisa menampilkan nama record ini di BARIS LAIN,
+                // dan `:has(.o_data_row:contains(...))` polos bisa
+                // salah cocok ke situ.
                 {
-                    content: "Confirm unarchive",
-                    trigger: ".modal-footer button.btn-primary",
-                    in_modal: true,
+                    content: "Unarchive completes (row leaves the Archived list)",
+                    trigger:
+                        ".o_list_view:not(:has(.o_data_cell.o_list_char[title='TOUR Grade Activate']))",
+                    run: function () {
+                        // Assertion only; do not trigger the default click action.
+                    },
                 },
 
                 // ── Post-Condition — the records are restored and appear
