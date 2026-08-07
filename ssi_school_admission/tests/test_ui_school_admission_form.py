@@ -80,6 +80,15 @@ class TestUiSchoolAdmissionForm(HttpSavepointCase):
                 "user_type_id": income_type.id,
             }
         )
+        # journal_id/account_id are required=True on school_admission_form
+        # (inherited from mixin.account_move -- ssi_accounting_entry_mixin).
+        # The UI fills them via _onchange_fee_template_id when Fee
+        # Template is selected on the form, but that onchange never
+        # fires on a plain Python .create() call, so every fixture built
+        # by _create_form() below sets them explicitly.
+        cls.journal = cls.env["account.journal"].search(
+            [("type", "=", "sale")], limit=1
+        )
         cls.fee_product = cls.env["product.product"].create(
             {"name": "TOUR ADM FORM Fee Product"}
         )
@@ -89,6 +98,8 @@ class TestUiSchoolAdmissionForm(HttpSavepointCase):
                 "code": "TOURADMFFT",
                 "school_id": cls.school.id,
                 "grade_id": cls.grade.id,
+                "journal_id": cls.journal.id,
+                "account_id": cls.income_account.id,
                 "line_ids": [
                     (
                         0,
@@ -105,6 +116,36 @@ class TestUiSchoolAdmissionForm(HttpSavepointCase):
                 ],
             }
         )
+
+        # -- Operating unit (ssi_school_admission_operating_unit) -------
+        # When that extension module is installed alongside this one (as
+        # it is in the full CI bundle), school_admission_form is gated
+        # by an ir.rule restricting visibility to
+        # [('operating_unit_id','in',[g.id for g in
+        # user.operating_unit_ids])] with no False fallback. Every
+        # fixture below sets operating_unit_id explicitly so it stays
+        # visible to the "admin" tour session. Guarded by a registry
+        # check so this module's own tests keep working standalone (the
+        # "operating.unit" model only exists once that extension is
+        # installed).
+        cls.operating_unit = False
+        if "operating.unit" in cls.env:
+            ou_partner = cls.env["res.partner"].create(
+                {"name": "TOUR ADM FORM OU Partner"}
+            )
+            cls.operating_unit = cls.env["operating.unit"].create(
+                {
+                    "name": "TOUR ADM FORM Operating Unit",
+                    "code": "TOURADMFOU",
+                    "partner_id": ou_partner.id,
+                }
+            )
+            cls.env.ref("base.user_admin").sudo().write(
+                {
+                    "assigned_operating_unit_ids": [(4, cls.operating_unit.id)],
+                    "default_operating_unit_id": cls.operating_unit.id,
+                }
+            )
 
         # -- Cancel reason (10-cancel.md) --------------------------------
         cls.cancel_reason = cls.env["base.cancel_reason"].create(
@@ -141,6 +182,12 @@ class TestUiSchoolAdmissionForm(HttpSavepointCase):
         def _create_form(student_name, free=False):
             """Create a Draft ``school_admission_form`` fixture.
 
+            ``journal_id``/``account_id`` are required=True on the base
+            model (``mixin.account_move``) and are normally filled by
+            the ``_onchange_fee_template_id`` UI onchange -- which never
+            fires on a plain ``.create()`` call -- so they are always
+            set explicitly here, free or not.
+
             :param free: when True, no fee template/lines are set, so
                 the total is zero and approval auto-cascades all the way
                 to Done via ``_20_auto_done_if_free``.
@@ -154,7 +201,11 @@ class TestUiSchoolAdmissionForm(HttpSavepointCase):
                 "school_id": cls.school.id,
                 "grade_id": cls.grade.id,
                 "pricelist_id": cls.pricelist.id,
+                "journal_id": cls.journal.id,
+                "account_id": cls.income_account.id,
             }
+            if cls.operating_unit:
+                vals["operating_unit_id"] = cls.operating_unit.id
             if not free:
                 vals["fee_template_id"] = cls.fee_template.id
             form = cls.env["school_admission_form"].create(vals)

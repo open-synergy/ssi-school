@@ -232,19 +232,46 @@ class TestUiSchoolAdmission(HttpSavepointCase):
             }
         )
 
+        # -- Operating unit (ssi_school_admission_operating_unit) -------
+        # When that extension module is installed alongside this one (as
+        # it is in the full CI bundle), school_admission is gated by an
+        # ir.rule restricting visibility to
+        # [('operating_unit_id','in',[g.id for g in
+        # user.operating_unit_ids])] with no False fallback -- every
+        # fixture below sets operating_unit_id explicitly so it stays
+        # visible to the "admin" tour session. Guarded by a registry
+        # check so this module's own tests keep working standalone.
+        cls.operating_unit = False
+        if "operating.unit" in cls.env:
+            ou_partner = cls.env["res.partner"].create({"name": "TOUR ADM OU Partner"})
+            cls.operating_unit = cls.env["operating.unit"].create(
+                {
+                    "name": "TOUR ADM Operating Unit",
+                    "code": "TOURADMOU",
+                    "partner_id": ou_partner.id,
+                }
+            )
+            cls.env.ref("base.user_admin").sudo().write(
+                {
+                    "assigned_operating_unit_ids": [(4, cls.operating_unit.id)],
+                    "default_operating_unit_id": cls.operating_unit.id,
+                }
+            )
+
         def _create_admission(student_name):
             """Create a Draft ``school_admission`` fixture."""
             student = cls.env["res.partner"].create({"name": student_name})
-            return cls.env["school_admission"].create(
-                {
-                    "academic_year_id": cls.academic_year.id,
-                    "academic_term_id": cls.academic_term.id,
-                    "school_id": cls.school.id,
-                    "grade_id": cls.grade.id,
-                    "student_id": student.id,
-                    "currency_id": cls.env.company.currency_id.id,
-                }
-            )
+            vals = {
+                "academic_year_id": cls.academic_year.id,
+                "academic_term_id": cls.academic_term.id,
+                "school_id": cls.school.id,
+                "grade_id": cls.grade.id,
+                "student_id": student.id,
+                "currency_id": cls.env.company.currency_id.id,
+            }
+            if cls.operating_unit:
+                vals["operating_unit_id"] = cls.operating_unit.id
+            return cls.env["school_admission"].create(vals)
 
         def _bypass(record):
             """Advance a fixture past a policy gate as Pre-Condition setup."""

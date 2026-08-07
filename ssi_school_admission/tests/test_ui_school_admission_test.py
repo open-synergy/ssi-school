@@ -85,18 +85,47 @@ class TestUiSchoolAdmissionTest(HttpSavepointCase):
             {"users": [(4, cls.env.ref("base.user_admin").id)]}
         )
 
+        # -- Operating unit (ssi_school_admission_operating_unit) -------
+        # When that extension module is installed alongside this one (as
+        # it is in the full CI bundle), school_admission_test is gated
+        # by an ir.rule restricting visibility to
+        # [('operating_unit_id','in',[g.id for g in
+        # user.operating_unit_ids])] with no False fallback -- every
+        # fixture below sets operating_unit_id explicitly so it stays
+        # visible to the "admin" tour session. Guarded by a registry
+        # check so this module's own tests keep working standalone.
+        cls.operating_unit = False
+        if "operating.unit" in cls.env:
+            ou_partner = cls.env["res.partner"].create(
+                {"name": "TOUR ADM TEST OU Partner"}
+            )
+            cls.operating_unit = cls.env["operating.unit"].create(
+                {
+                    "name": "TOUR ADM TEST Operating Unit",
+                    "code": "TOURADMTOU",
+                    "partner_id": ou_partner.id,
+                }
+            )
+            cls.env.ref("base.user_admin").sudo().write(
+                {
+                    "assigned_operating_unit_ids": [(4, cls.operating_unit.id)],
+                    "default_operating_unit_id": cls.operating_unit.id,
+                }
+            )
+
         def _create_test(student_name):
             """Create a Draft ``school_admission_test`` fixture."""
             student = cls.env["res.partner"].create({"name": student_name})
-            return cls.env["school_admission_test"].create(
-                {
-                    "academic_year_id": cls.academic_year.id,
-                    "academic_term_id": cls.academic_term.id,
-                    "school_id": cls.school.id,
-                    "grade_id": cls.grade.id,
-                    "student_id": student.id,
-                }
-            )
+            vals = {
+                "academic_year_id": cls.academic_year.id,
+                "academic_term_id": cls.academic_term.id,
+                "school_id": cls.school.id,
+                "grade_id": cls.grade.id,
+                "student_id": student.id,
+            }
+            if cls.operating_unit:
+                vals["operating_unit_id"] = cls.operating_unit.id
+            return cls.env["school_admission_test"].create(vals)
 
         def _bypass(record):
             """Advance a fixture past a policy gate as Pre-Condition setup."""
@@ -107,63 +136,81 @@ class TestUiSchoolAdmissionTest(HttpSavepointCase):
             {"name": "TOUR ADM TEST Create Student"}
         )
 
+        # NOTE: every fixture below is named with an ``admission_test_``
+        # prefix -- NEVER bare ``test_<action>`` -- because a class
+        # attribute named exactly like one of this class's own
+        # ``test_*`` methods (e.g. ``cls.test_edit`` next to
+        # ``def test_edit(self)``) overwrites/shadows that method on the
+        # class. unittest then tries to call the shadowed attribute (a
+        # recordset) as the test, raising "TypeError: '<model>' object
+        # is not callable" for every affected method. Verified in CI on
+        # PR #250 (commit 13454c5): every method whose fixture shared
+        # its exact name failed this way; ``test_create`` (fixture
+        # ``cls.student_create``) and ``test_create_school_admission``
+        # (fixture ``cls.admission_test_create_admission``, a
+        # deliberately different name) were unaffected.
+
         # 02-edit.md
-        cls.test_edit = _create_test("TOUR ADM TEST Edit Student")
+        cls.admission_test_edit = _create_test("TOUR ADM TEST Edit Student")
 
         # 03-delete.md
-        cls.test_delete = _create_test("TOUR ADM TEST Delete Student")
+        cls.admission_test_delete = _create_test("TOUR ADM TEST Delete Student")
 
         # 04-confirm.md
-        cls.test_confirm = _create_test("TOUR ADM TEST Confirm Student")
+        cls.admission_test_confirm = _create_test("TOUR ADM TEST Confirm Student")
 
         # 05-approve.md
-        cls.test_approve = _create_test("TOUR ADM TEST Approve Student")
-        _bypass(cls.test_approve).action_confirm()
+        cls.admission_test_approve = _create_test("TOUR ADM TEST Approve Student")
+        _bypass(cls.admission_test_approve).action_confirm()
 
         # 06-reject.md
-        cls.test_reject = _create_test("TOUR ADM TEST Reject Student")
-        _bypass(cls.test_reject).action_confirm()
+        cls.admission_test_reject = _create_test("TOUR ADM TEST Reject Student")
+        _bypass(cls.admission_test_reject).action_confirm()
 
         # 09-finish.md -- On Progress record to finish.
-        cls.test_finish = _create_test("TOUR ADM TEST Finish Student")
-        _bypass(cls.test_finish).action_confirm()
-        _bypass(cls.test_finish).action_approve_approval()
+        cls.admission_test_finish = _create_test("TOUR ADM TEST Finish Student")
+        _bypass(cls.admission_test_finish).action_confirm()
+        _bypass(cls.admission_test_finish).action_approve_approval()
 
         # 10-cancel.md
-        cls.test_cancel = _create_test("TOUR ADM TEST Cancel Student")
+        cls.admission_test_cancel = _create_test("TOUR ADM TEST Cancel Student")
 
         # 12-restart.md -- Rejected record to restart.
-        cls.test_restart = _create_test("TOUR ADM TEST Restart Student")
-        _bypass(cls.test_restart).action_confirm()
-        _bypass(cls.test_restart).action_reject_approval()
-        if cls.test_restart.state != "reject":
-            cls.test_restart.sudo().write({"state": "reject"})
+        cls.admission_test_restart = _create_test("TOUR ADM TEST Restart Student")
+        _bypass(cls.admission_test_restart).action_confirm()
+        _bypass(cls.admission_test_restart).action_reject_approval()
+        if cls.admission_test_restart.state != "reject":
+            cls.admission_test_restart.sudo().write({"state": "reject"})
 
         # 13-reset-number.md
-        cls.test_reset_number = _create_test("TOUR ADM TEST Reset Number Student")
-        cls.test_reset_number.write({"name": "TOUR-ADM-TEST-MANUAL-001"})
+        cls.admission_test_reset_number = _create_test(
+            "TOUR ADM TEST Reset Number Student"
+        )
+        cls.admission_test_reset_number.write({"name": "TOUR-ADM-TEST-MANUAL-001"})
 
         # 14-restart-approval.md
-        cls.test_restart_approval = _create_test(
+        cls.admission_test_restart_approval = _create_test(
             "TOUR ADM TEST Restart Approval Student"
         )
-        _bypass(cls.test_restart_approval).action_confirm()
+        _bypass(cls.admission_test_restart_approval).action_confirm()
 
         # 15-create-school-admission.md -- Done and Passed.
-        cls.test_create_admission = _create_test(
+        cls.admission_test_create_admission = _create_test(
             "TOUR ADM TEST Create Admission Student"
         )
-        _bypass(cls.test_create_admission).action_confirm()
-        _bypass(cls.test_create_admission).action_approve_approval()
-        cls.test_create_admission.write({"passed": True})
-        _bypass(cls.test_create_admission).action_done()
+        _bypass(cls.admission_test_create_admission).action_confirm()
+        _bypass(cls.admission_test_create_admission).action_approve_approval()
+        cls.admission_test_create_admission.write({"passed": True})
+        _bypass(cls.admission_test_create_admission).action_done()
 
         # 16-print.md
-        cls.test_print = _create_test("TOUR ADM TEST Print Student")
+        cls.admission_test_print = _create_test("TOUR ADM TEST Print Student")
 
         # 17-reload-template-policy.md
-        cls.test_reload_policy = _create_test("TOUR ADM TEST Reload Policy Student")
-        cls.test_reload_policy.write({"policy_template_id": False})
+        cls.admission_test_reload_policy = _create_test(
+            "TOUR ADM TEST Reload Policy Student"
+        )
+        cls.admission_test_reload_policy.write({"policy_template_id": False})
 
     def test_create(self):
         """IK: docs/school_admission_test/01-create.md"""
