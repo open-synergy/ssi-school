@@ -182,9 +182,7 @@ class TestUiSchoolAdmissionForm(HttpCase):
         cls.form_confirm = _create_form("TOUR ADM FORM Confirm Student")
 
         # 05-approve.md -- FREE form so approval lands directly on Done.
-        cls.form_approve = _create_form(
-            "TOUR ADM FORM Approve Student", free=True
-        )
+        cls.form_approve = _create_form("TOUR ADM FORM Approve Student", free=True)
         _bypass(cls.form_approve).action_confirm()
 
         # 06-reject.md

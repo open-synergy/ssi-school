@@ -148,8 +148,7 @@ odoo.define("ssi_school_admission.school_academic_term_tour", function (require)
                 },
                 {
                     content: "Open for Admission field is rendered and editable",
-                    trigger:
-                        ".o_field_widget[name='is_open_admission'] input:enabled",
+                    trigger: ".o_field_widget[name='is_open_admission'] input:enabled",
                     run: function () {
                         // Assertion only; the delta tour stops here.
                     },

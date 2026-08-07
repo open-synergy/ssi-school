@@ -74,9 +74,7 @@ class TestUiSchoolAdmission(HttpCase):
             {
                 "name": "TOUR ADM Income",
                 "code": "TOURADMINC",
-                "user_type_id": cls.env.ref(
-                    "account.data_account_type_revenue"
-                ).id,
+                "user_type_id": cls.env.ref("account.data_account_type_revenue").id,
             }
         )
         cls.pmt_product = cls.env["product.product"].create(
@@ -93,9 +91,7 @@ class TestUiSchoolAdmission(HttpCase):
             {
                 "name": "TOUR ADM Receivable",
                 "code": "TOURADMRCV",
-                "user_type_id": cls.env.ref(
-                    "account.data_account_type_receivable"
-                ).id,
+                "user_type_id": cls.env.ref("account.data_account_type_receivable").id,
                 "reconcile": True,
             }
         )
@@ -292,9 +288,7 @@ class TestUiSchoolAdmission(HttpCase):
             cls.admission_restart.sudo().write({"state": "reject"})
 
         # 13-reset-number.md
-        cls.admission_reset_number = _create_admission(
-            "TOUR ADM Reset Number Student"
-        )
+        cls.admission_reset_number = _create_admission("TOUR ADM Reset Number Student")
         cls.admission_reset_number.write({"name": "TOUR-ADM-MANUAL-001"})
 
         # 14-restart-approval.md

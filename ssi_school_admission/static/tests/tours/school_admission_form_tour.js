@@ -269,45 +269,41 @@ odoo.define("ssi_school_admission.school_admission_form_tour", function (require
             test: true,
             url: "/web",
         },
-        [].concat(
-            openFormList(),
-            openRecordByStudent("TOUR ADM FORM Delete Student"),
-            [
-                {
-                    content: "Open the Action menu",
-                    trigger: ".o_cp_action_menus button:contains(Action)",
+        [].concat(openFormList(), openRecordByStudent("TOUR ADM FORM Delete Student"), [
+            {
+                content: "Open the Action menu",
+                trigger: ".o_cp_action_menus button:contains(Action)",
+            },
+            {
+                content: "Click Delete",
+                trigger: ".o_cp_action_menus .o_menu_item a",
+                run: function () {
+                    var $delete = $(".o_cp_action_menus .o_menu_item a").filter(
+                        function () {
+                            return $(this).text().trim() === "Delete";
+                        }
+                    );
+                    $delete[0].click();
                 },
-                {
-                    content: "Click Delete",
-                    trigger: ".o_cp_action_menus .o_menu_item a",
-                    run: function () {
-                        var $delete = $(".o_cp_action_menus .o_menu_item a").filter(
-                            function () {
-                                return $(this).text().trim() === "Delete";
-                            }
-                        );
-                        $delete[0].click();
-                    },
+            },
+            {
+                content: "Confirm deletion",
+                trigger: ".modal-footer button.btn-primary",
+                in_modal: true,
+            },
+            {
+                content: "Click the Forms breadcrumb",
+                trigger: ".breadcrumb-item.o_back_button a:contains(Forms)",
+            },
+            {
+                content: "Record no longer in the list",
+                trigger:
+                    ".o_list_view:not(:has(.o_data_row:contains(TOUR ADM FORM Delete Student)))",
+                run: function () {
+                    // Assertion only.
                 },
-                {
-                    content: "Confirm deletion",
-                    trigger: ".modal-footer button.btn-primary",
-                    in_modal: true,
-                },
-                {
-                    content: "Click the Forms breadcrumb",
-                    trigger: ".breadcrumb-item.o_back_button a:contains(Forms)",
-                },
-                {
-                    content: "Record no longer in the list",
-                    trigger:
-                        ".o_list_view:not(:has(.o_data_row:contains(TOUR ADM FORM Delete Student)))",
-                    run: function () {
-                        // Assertion only.
-                    },
-                },
-            ]
-        )
+            },
+        ])
     );
 
     // IK: docs/school_admission_form/04-confirm.md
@@ -388,30 +384,26 @@ odoo.define("ssi_school_admission.school_admission_form_tour", function (require
             test: true,
             url: "/web",
         },
-        [].concat(
-            openFormList(),
-            openRecordByStudent("TOUR ADM FORM Reject Student"),
-            [
-                {
-                    content: "Click the Reject button",
-                    trigger: ".o_statusbar_buttons button[name='action_reject_approval']",
-                    extra_trigger: ".o_form_view",
+        [].concat(openFormList(), openRecordByStudent("TOUR ADM FORM Reject Student"), [
+            {
+                content: "Click the Reject button",
+                trigger: ".o_statusbar_buttons button[name='action_reject_approval']",
+                extra_trigger: ".o_form_view",
+            },
+            {
+                content: "Confirm the dialog",
+                trigger: ".modal-footer button.btn-primary",
+                in_modal: true,
+            },
+            {
+                content: "Status is Rejected",
+                trigger:
+                    ".o_statusbar_status .o_arrow_button[data-value='reject'].btn-primary",
+                run: function () {
+                    // Assertion only.
                 },
-                {
-                    content: "Confirm the dialog",
-                    trigger: ".modal-footer button.btn-primary",
-                    in_modal: true,
-                },
-                {
-                    content: "Status is Rejected",
-                    trigger:
-                        ".o_statusbar_status .o_arrow_button[data-value='reject'].btn-primary",
-                    run: function () {
-                        // Assertion only.
-                    },
-                },
-            ]
-        )
+            },
+        ])
     );
 
     // NOTE: 09-finish.md has no manual step (its transition is fired by
@@ -426,49 +418,45 @@ odoo.define("ssi_school_admission.school_admission_form_tour", function (require
             test: true,
             url: "/web",
         },
-        [].concat(
-            openFormList(),
-            openRecordByStudent("TOUR ADM FORM Cancel Student"),
-            [
-                {
-                    content: "Click the Cancel button",
-                    trigger: ".o_statusbar_buttons button:enabled:contains('Cancel')",
-                    extra_trigger: ".o_form_view",
+        [].concat(openFormList(), openRecordByStudent("TOUR ADM FORM Cancel Student"), [
+            {
+                content: "Click the Cancel button",
+                trigger: ".o_statusbar_buttons button:enabled:contains('Cancel')",
+                extra_trigger: ".o_form_view",
+            },
+            {
+                // 14.0: JANGAN prefiks `.modal` (patterns.md §H).
+                content: "Wizard is open",
+                trigger: ".o_form_view",
+                run: function () {
+                    // Assertion only.
                 },
-                {
-                    // 14.0: JANGAN prefiks `.modal` (patterns.md §H).
-                    content: "Wizard is open",
-                    trigger: ".o_form_view",
-                    run: function () {
-                        // Assertion only.
-                    },
+            },
+            {
+                content: "Select the cancellation reason",
+                trigger:
+                    ".o_field_widget[name='cancel_reason_id'] " +
+                    ".o_radio_item:contains(TOUR ADM FORM Cancel Reason) input",
+                run: "click",
+            },
+            {
+                content: "Confirm the wizard",
+                trigger: ".modal-footer button[name='action_confirm']",
+            },
+            {
+                content: "Confirm the Are you sure? dialog",
+                trigger: ".modal-footer button.btn-primary",
+                in_modal: true,
+            },
+            {
+                content: "Status is Cancelled",
+                trigger:
+                    ".o_statusbar_status .o_arrow_button[data-value='cancel'].btn-primary",
+                run: function () {
+                    // Assertion only.
                 },
-                {
-                    content: "Select the cancellation reason",
-                    trigger:
-                        ".o_field_widget[name='cancel_reason_id'] " +
-                        ".o_radio_item:contains(TOUR ADM FORM Cancel Reason) input",
-                    run: "click",
-                },
-                {
-                    content: "Confirm the wizard",
-                    trigger: ".modal-footer button[name='action_confirm']",
-                },
-                {
-                    content: "Confirm the Are you sure? dialog",
-                    trigger: ".modal-footer button.btn-primary",
-                    in_modal: true,
-                },
-                {
-                    content: "Status is Cancelled",
-                    trigger:
-                        ".o_statusbar_status .o_arrow_button[data-value='cancel'].btn-primary",
-                    run: function () {
-                        // Assertion only.
-                    },
-                },
-            ]
-        )
+            },
+        ])
     );
 
     // IK: docs/school_admission_form/12-restart.md
@@ -657,37 +645,33 @@ odoo.define("ssi_school_admission.school_admission_form_tour", function (require
             test: true,
             url: "/web",
         },
-        [].concat(
-            openFormList(),
-            openRecordByStudent("TOUR ADM FORM Print Student"),
-            [
-                {
-                    content: "Click the Print button",
-                    trigger: ".o_statusbar_buttons button:enabled:contains('Print')",
-                    extra_trigger: ".o_form_view",
+        [].concat(openFormList(), openRecordByStudent("TOUR ADM FORM Print Student"), [
+            {
+                content: "Click the Print button",
+                trigger: ".o_statusbar_buttons button:enabled:contains('Print')",
+                extra_trigger: ".o_form_view",
+            },
+            {
+                content: "The Select Report To Print wizard is displayed",
+                trigger: ".modal-title:contains('Select Report To Print')",
+                run: function () {
+                    // Assertion only.
                 },
-                {
-                    content: "The Select Report To Print wizard is displayed",
-                    trigger: ".modal-title:contains('Select Report To Print')",
-                    run: function () {
-                        // Assertion only.
-                    },
+            },
+            {
+                content: "Close the wizard",
+                trigger: ".modal-footer button[special='cancel']",
+                in_modal: true,
+            },
+            {
+                content: "Wizard is closed and the form is displayed again",
+                trigger: ".o_form_view",
+                extra_trigger: "body:not(:has(.modal))",
+                run: function () {
+                    // Assertion only.
                 },
-                {
-                    content: "Close the wizard",
-                    trigger: ".modal-footer button[special='cancel']",
-                    in_modal: true,
-                },
-                {
-                    content: "Wizard is closed and the form is displayed again",
-                    trigger: ".o_form_view",
-                    extra_trigger: "body:not(:has(.modal))",
-                    run: function () {
-                        // Assertion only.
-                    },
-                },
-            ]
-        )
+            },
+        ])
     );
 
     // IK: docs/school_admission_form/18-reload-template-policy.md
