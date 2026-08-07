@@ -191,8 +191,15 @@ odoo.define(
                     },
                 ],
                 // Flow 3/4 -- Refill the Lines list from the current
-                // filters via Populate Eligible Students.
-                populateEligibleStudents("TOUR SGB Edit Eligible Student"),
+                // filters via Populate Eligible Students. The batch's
+                // Academic Year filter matches only "TOUR SGB Edit
+                // Student" (the one line student _create_batch built
+                // this record with in Python) -- a differently-scoped
+                // "eligible" student would never satisfy this
+                // batch's own Populate filter regardless of naming,
+                // see test_ui_school_student_graduation_batch.py
+                // setUpClass's 02-edit.md comment.
+                populateEligibleStudents("TOUR SGB Edit Student"),
                 [
                     // Flow 5 -- Click Save.
                     {

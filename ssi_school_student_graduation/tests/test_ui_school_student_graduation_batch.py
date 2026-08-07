@@ -111,14 +111,22 @@ class TestUiSchoolStudentGraduationBatch(HttpSavepointCase):
         # it.
         cls._create_eligible_student("CR", "Create Eligible")
 
-        # 02-edit.md -- Draft batch to edit, plus its own eligible
-        # student for the re-populate step. Uses a distinct suffix
-        # ("EB") from the "Edit Eligible" fixture above ("ED") --
-        # _create_batch calls _create_eligible_student internally
-        # with this same suffix, and reusing "ED" here collided on
-        # every master data "code" field (school_grade_type,
-        # school, ...), raising a "Duplicate code" UserError.
-        cls._create_eligible_student("ED", "Edit Eligible")
+        # 02-edit.md -- Draft batch to edit. No separate "eligible
+        # student" fixture is created here: _get_eligible_student_
+        # criteria only restricts by active_enrollment_id.
+        # academic_year_id when the batch's own academic_year_id is
+        # set, and _create_batch already sets it to the Academic Year
+        # of the one line student it creates internally ("TOUR SGB
+        # Edit Student", suffix "EB" -- distinct from "01-create"'s
+        # "CR" suffix to avoid the "Duplicate code" collision on
+        # shared master data codes like school_grade_type). That
+        # student is therefore itself the only record guaranteed to
+        # match this batch's Populate filter, so the tour re-populate
+        # step (school_student_graduation_batch_tour.js test_edit)
+        # asserts on "TOUR SGB Edit Student" reappearing after
+        # Populate -- a standalone student tied to a different
+        # Academic Year would never match this batch's filter and was
+        # never actually eligible for it, regardless of naming.
         cls.batch_edit = cls._create_batch("EB", "Edit")
 
         # 03-delete.md -- Draft batch to delete.
