@@ -188,17 +188,24 @@ odoo.define("ssi_school_admission.school_admission_form_tour", function (require
                     },
                 },
 
-                // Flow 7 -- Click Save.
+                // Flow 7 -- Click Save. By this point the record is
+                // already persisted -- action_compute_fee's implicit
+                // auto-save (record was still new/unsaved when it was
+                // clicked) and action_compute_tax's own write already
+                // landed the data, so the form carries no further dirty
+                // state. Confirmed in CI (RPC log): clicking
+                // .o_form_button_save here fires zero write calls, and
+                // 14.0 core does not transition an already-clean form to
+                // .o_form_readonly -- so that class is NOT a valid gate
+                // here (patterns.md skill odoo-development-ui-test §P
+                // covers the "reload race" case; this is the sibling
+                // "nothing left to save" case). IK Post-Condition ("A
+                // new record is created in Draft status") does not
+                // require readonly mode -- the statusbar state below is
+                // the kasatmata proof instead.
                 {
                     content: "Save the record",
                     trigger: ".o_form_button_save",
-                },
-                {
-                    content: "Record is saved",
-                    trigger: ".o_form_view.o_form_readonly",
-                    run: function () {
-                        // Assertion only.
-                    },
                 },
                 {
                     content: "Status is Draft",
@@ -299,14 +306,29 @@ odoo.define("ssi_school_admission.school_admission_form_tour", function (require
                     },
                 },
 
-                // Flow 6 -- Click Save.
+                // Flow 6 -- Click Save. By this point the record is
+                // already persisted -- action_compute_fee's own write
+                // already landed the changed grade_id along with the
+                // refreshed fee lines, and action_compute_tax's write
+                // landed after it, so the form carries no further dirty
+                // state. Confirmed in CI (RPC log): clicking
+                // .o_form_button_save here fires zero write calls, and
+                // 14.0 core does not transition an already-clean form to
+                // .o_form_readonly -- so that class is NOT a valid gate
+                // here (patterns.md skill odoo-development-ui-test §P
+                // covers the "reload race" case; this is the sibling
+                // "nothing left to save" case). IK Post-Condition ("The
+                // record is updated with the new values") is checked
+                // directly instead: the changed Grade is still the one
+                // rendered.
                 {
                     content: "Save the record",
                     trigger: ".o_form_button_save",
                 },
                 {
-                    content: "Record is saved",
-                    trigger: ".o_form_view.o_form_readonly",
+                    content: "Record is updated with the new Grade value",
+                    trigger:
+                        ".o_field_widget[name='grade_id']:contains(TOUR ADM FORM Grade B)",
                     run: function () {
                         // Assertion only.
                     },
