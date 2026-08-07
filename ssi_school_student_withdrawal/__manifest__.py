@@ -31,5 +31,6 @@
         "approval_template/school_student_withdrawal.xml",
         "policy_template/school_student_withdrawal.xml",
         "views/school_student_withdrawal.xml",
+        "views/assets.xml",
     ],
 }
