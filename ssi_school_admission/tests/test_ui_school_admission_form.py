@@ -2,11 +2,11 @@
 # Copyright 2022 PT. Simetri Sinergi Indonesia
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo.tests import HttpCase, tagged
+from odoo.tests import HttpSavepointCase, tagged
 
 
 @tagged("post_install", "-at_install")
-class TestUiSchoolAdmissionForm(HttpCase):
+class TestUiSchoolAdmissionForm(HttpSavepointCase):
     """UI/UX tour tests for the ``school_admission_form`` work
     instructions.
 

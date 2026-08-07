@@ -5,11 +5,11 @@
 from datetime import timedelta
 
 from odoo import fields
-from odoo.tests import HttpCase, tagged
+from odoo.tests import HttpSavepointCase, tagged
 
 
 @tagged("post_install", "-at_install")
-class TestUiSchoolAdmission(HttpCase):
+class TestUiSchoolAdmission(HttpSavepointCase):
     """UI/UX tour tests for the ``school_admission`` work instructions.
 
     Every ``test_*`` method runs the tour pairing with the IK file named

@@ -2,11 +2,11 @@
 # Copyright 2024 PT. Simetri Sinergi Indonesia
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo.tests import HttpCase, tagged
+from odoo.tests import HttpSavepointCase, tagged
 
 
 @tagged("post_install", "-at_install")
-class TestUiSchoolAcademicTermAdmission(HttpCase):
+class TestUiSchoolAcademicTermAdmission(HttpSavepointCase):
     """UI/UX delta tour tests for ``school_academic_term``.
 
     Covers only the ``is_open_admission`` field this module adds to the

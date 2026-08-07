@@ -2,11 +2,11 @@
 # Copyright 2024 PT. Simetri Sinergi Indonesia
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo.tests import HttpCase, tagged
+from odoo.tests import HttpSavepointCase, tagged
 
 
 @tagged("post_install", "-at_install")
-class TestUiSchoolAdmissionPaymentTemplate(HttpCase):
+class TestUiSchoolAdmissionPaymentTemplate(HttpSavepointCase):
     """UI/UX tour tests for ``school_admission_payment_template``.
 
     Every ``test_*`` method runs the tour pairing with the IK file named
