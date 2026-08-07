@@ -201,17 +201,48 @@ odoo.define(
                 // setUpClass's 02-edit.md comment.
                 populateEligibleStudents("TOUR SGB Edit Student"),
                 [
-                    // Flow 5 -- Click Save.
+                    // Flow 5 -- Click Save. By this point the record is
+                    // already persisted -- action_populate_lines is a
+                    // type="object" button that implicit-auto-saves before
+                    // its RPC runs, and its own write() already landed the
+                    // refreshed Lines list, so the form carries no further
+                    // dirty state. Confirmed pattern (patterns.md skill
+                    // odoo-development-ui-test §P covers the "reload race"
+                    // case; this is the sibling "nothing left to save"
+                    // case, already fixed the same way in
+                    // ssi_school_admission's school_admission_form_tour.js
+                    // test_create/test_edit): clicking .o_form_button_save
+                    // here fires zero write calls, and 14.0 core does not
+                    // transition an already-clean form to .o_form_readonly
+                    // -- so that class is NOT a valid gate here. IK
+                    // Post-Condition ("The record is updated with the new
+                    // values") does not require readonly mode either.
                     {
                         content: "Save the record",
                         trigger: ".o_form_button_save",
                     },
-
-                    // Post-Condition -- the record is updated with the new
-                    // values.
+                ],
+                // Post-Condition -- the record is updated with the new
+                // values. Verified by navigating away and re-opening the
+                // record (same technique as school_admission_form_tour.js
+                // test_edit): the form stayed in edit mode after Save (see
+                // note above), and re-opening an EXISTING record always
+                // renders it read-only in 14.0, where the Lines list is a
+                // reliable, mode-independent kasatmata proof the Populate
+                // change actually persisted.
+                [
                     {
-                        content: "Record is saved",
-                        trigger: ".o_form_view.o_form_readonly",
+                        content: "Click the Graduation Batches breadcrumb",
+                        trigger:
+                            ".breadcrumb-item.o_back_button a:contains(Graduation Batches)",
+                    },
+                ],
+                openRecordByYear("TOUR SGB Edit Year"),
+                [
+                    {
+                        content: "The populated student is still on the record",
+                        trigger:
+                            ".o_field_widget[name='line_ids'] .o_data_row:contains(TOUR SGB Edit Student)",
                         run: function () {
                             // Assertion only.
                         },
