@@ -262,6 +262,12 @@ class TestUiSchoolStudentWithdrawal(HttpSavepointCase):
     def _create_withdrawal(cls, data):
         """Create a Draft Resignation withdrawal for ``data``'s student.
 
+        ``user_id`` is set explicitly to ``base.user_admin`` -- see
+        the docstring note in
+        ``TestUiSchoolStudentGraduation._create_graduation``
+        (ssi_school_student_graduation) for why this is required for
+        the tour's "admin" session to see the record at all.
+
         :param data: dict returned by ``_create_open_enrollment``.
         :return: the created ``school_student_withdrawal`` record.
         """
@@ -270,6 +276,7 @@ class TestUiSchoolStudentWithdrawal(HttpSavepointCase):
                 "date": "2025-06-30",
                 "student_id": data["student"].id,
                 "reason_type": "resignation",
+                "user_id": cls.admin.id,
             }
         )
 
