@@ -6,3 +6,4 @@ from . import test_crm_lead_admission  # noqa: F401
 from . import test_crm_lead_previous_school  # noqa: F401
 from . import test_crm_lead_student_identity  # noqa: F401
 from . import test_crm_lead_view_architecture  # noqa: F401
+from . import test_ui_crm_lead  # noqa: F401
