@@ -41,9 +41,7 @@ class TestUiCrmLead(HttpSavepointCase):
         cls.env.ref("sales_team.group_sale_manager").write(
             {"users": [(4, cls.admin_user.id)]}
         )
-        cls.env.ref("crm.group_use_lead").write(
-            {"users": [(4, cls.admin_user.id)]}
-        )
+        cls.env.ref("crm.group_use_lead").write({"users": [(4, cls.admin_user.id)]})
 
         # -- Academic / school structure (Pre-Condition Data) -----------
         cls.academic_year = cls.env["school_academic_year"].create(
@@ -108,9 +106,7 @@ class TestUiCrmLead(HttpSavepointCase):
 
         IK: docs/crm_lead/01-create.md
         """
-        self.start_tour(
-            "/web", "ssi_school_lead_crm_lead_create", login="admin"
-        )
+        self.start_tour("/web", "ssi_school_lead_crm_lead_create", login="admin")
 
     def test_create_admission(self):
         """Run the Create Admission conversion tour for ``crm.lead``.
