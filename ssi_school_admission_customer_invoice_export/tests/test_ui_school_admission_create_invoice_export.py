@@ -122,6 +122,75 @@ class TestUiSchoolAdmissionCreateInvoiceExport(HttpSavepointCase):
             }
         )
 
+        # -- Policy: grant create_invoice_export_ok (20-create-invoice-
+        # export.md Pre-Condition Config) -----------------------------
+        # The shipped policy_template_school_admission already ships a
+        # policy.template_detail for this field
+        # (policy_template/school_admission.xml), but its correctness
+        # cannot be assumed from the test side -- write/create it
+        # explicitly here too (mirrors
+        # test_ui_school_admission.py's restart_approval_ok-style setup
+        # in test_ui_school_enrollment.py) so this tour's Pre-Condition
+        # is guaranteed regardless of the shipped data.
+        # computation_method "use_group" is evaluated against the REAL
+        # browsing user ("admin", not the superuser cls.env runs as
+        # during setUpClass), so the group is also granted to admin
+        # explicitly below.
+        state_field = cls.env["ir.model.fields"].search(
+            [("model_id.model", "=", "school_admission"), ("name", "=", "state")],
+            limit=1,
+        )
+        open_done_selections = cls.env["ir.model.fields.selection"].search(
+            [
+                ("field_id", "=", state_field.id),
+                ("value", "in", ["open", "done"]),
+            ]
+        )
+        create_invoice_export_field = cls.env["ir.model.fields"].search(
+            [
+                ("model_id.model", "=", "school_admission"),
+                ("name", "=", "create_invoice_export_ok"),
+            ],
+            limit=1,
+        )
+        admission_user_group = cls.env.ref(
+            "ssi_school_admission.school_admission_user_group"
+        )
+        policy_detail_vals = {
+            "restrict_state": True,
+            "state_ids": [(6, 0, open_done_selections.ids)],
+            "restrict_user": True,
+            "computation_method": "use_group",
+            "group_ids": [(6, 0, [admission_user_group.id])],
+            "restrict_additional": False,
+        }
+        existing_detail = cls.env["policy.template_detail"].search(
+            [
+                (
+                    "template_id",
+                    "=",
+                    cls.env.ref(
+                        "ssi_school_admission.policy_template_school_admission"
+                    ).id,
+                ),
+                ("field_id", "=", create_invoice_export_field.id),
+            ],
+            limit=1,
+        )
+        if existing_detail:
+            existing_detail.write(policy_detail_vals)
+        else:
+            policy_detail_vals.update(
+                {
+                    "template_id": cls.env.ref(
+                        "ssi_school_admission.policy_template_school_admission"
+                    ).id,
+                    "field_id": create_invoice_export_field.id,
+                }
+            )
+            cls.env["policy.template_detail"].create(policy_detail_vals)
+        admission_user_group.sudo().write({"users": [(4, cls.admin_user.id)]})
+
         # -- Admission, advanced to Open (On Progress) -----------------------
         cls.admission = cls.env["school_admission"].create(
             {
