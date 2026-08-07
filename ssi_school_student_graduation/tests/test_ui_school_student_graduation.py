@@ -291,6 +291,14 @@ class TestUiSchoolStudentGraduation(HttpSavepointCase):
     def _create_graduation(cls, data):
         """Create a Draft graduation for the student in ``data``.
 
+        ``user_id`` is set explicitly to ``base.user_admin`` -- without
+        it, ``mixin.transaction._default_user_id`` defaults new
+        records to the superuser (``SavepointCase.setUpClass`` runs as
+        ``SUPERUSER_ID``), and the internal-user record rule
+        ``[('user_id', '=', user.id)]`` then hides the fixture from
+        the tour's "admin" session, so the list shows zero rows with
+        no error (verified in issue #227 / PR #250).
+
         :param data: dict returned by ``_create_open_enrollment``.
         :return: the created ``school_student_graduation`` record.
         """
@@ -299,6 +307,7 @@ class TestUiSchoolStudentGraduation(HttpSavepointCase):
                 "date": "2025-06-30",
                 "student_id": data["student"].id,
                 "graduation_date": "2025-06-30",
+                "user_id": cls.admin.id,
             }
         )
 

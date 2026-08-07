@@ -112,9 +112,14 @@ class TestUiSchoolStudentGraduationBatch(HttpSavepointCase):
         cls._create_eligible_student("CR", "Create Eligible")
 
         # 02-edit.md -- Draft batch to edit, plus its own eligible
-        # student for the re-populate step.
+        # student for the re-populate step. Uses a distinct suffix
+        # ("EB") from the "Edit Eligible" fixture above ("ED") --
+        # _create_batch calls _create_eligible_student internally
+        # with this same suffix, and reusing "ED" here collided on
+        # every master data "code" field (school_grade_type,
+        # school, ...), raising a "Duplicate code" UserError.
         cls._create_eligible_student("ED", "Edit Eligible")
-        cls.batch_edit = cls._create_batch("ED", "Edit")
+        cls.batch_edit = cls._create_batch("EB", "Edit")
 
         # 03-delete.md -- Draft batch to delete.
         cls.batch_delete = cls._create_batch("DL", "Delete")
@@ -256,7 +261,11 @@ class TestUiSchoolStudentGraduationBatch(HttpSavepointCase):
         Academic Year ("TOUR SGB <label> Year") so the tour can find
         the record's row in the list, and one line is added manually
         (not via Populate) so the "at least one student line exists"
-        Pre-Condition holds for 04-confirm onward.
+        Pre-Condition holds for 04-confirm onward. ``user_id`` is set
+        explicitly to ``base.user_admin`` -- see the docstring note in
+        ``TestUiSchoolStudentGraduation._create_graduation`` for why
+        this is required for the tour's "admin" session to see the
+        record at all.
 
         :param suffix: short unique code suffix for this fixture set.
         :param label: label used to build the batch's tour marker
@@ -274,6 +283,7 @@ class TestUiSchoolStudentGraduationBatch(HttpSavepointCase):
                 "date": "2025-06-30",
                 "academic_year_id": year.id,
                 "line_ids": [(0, 0, {"student_id": student.id})],
+                "user_id": cls.admin.id,
             }
         )
 
