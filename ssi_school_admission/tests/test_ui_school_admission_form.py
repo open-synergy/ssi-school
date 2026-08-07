@@ -25,6 +25,16 @@ class TestUiSchoolAdmissionForm(HttpSavepointCase):
         """Build the academic/school structure and one fixture per tour."""
         super().setUpClass()
 
+        # SavepointCase.setUpClass runs cls.env as SUPERUSER_ID (odoo/
+        # tests/common.py), so any record created via cls.env.create()
+        # without an explicit user_id defaults "Responsible" (user_id,
+        # mixin.transaction._default_user_id -> self.env.user.id) to the
+        # superuser, NOT "admin". school_admission_form_internal_user_rule
+        # ([('user_id','=',user.id)], base.group_user) then hides every
+        # such fixture from the "admin" tour session -- 0 rows in every
+        # list, no crash. Every fixture below sets user_id explicitly.
+        cls.admin_user = cls.env.ref("base.user_admin")
+
         # -- Academic / school structure -------------------------------
         cls.academic_year = cls.env["school_academic_year"].create(
             {
@@ -182,11 +192,15 @@ class TestUiSchoolAdmissionForm(HttpSavepointCase):
         def _create_form(student_name, free=False):
             """Create a Draft ``school_admission_form`` fixture.
 
-            ``journal_id``/``account_id`` are required=True on the base
-            model (``mixin.account_move``) and are normally filled by
-            the ``_onchange_fee_template_id`` UI onchange -- which never
-            fires on a plain ``.create()`` call -- so they are always
-            set explicitly here, free or not.
+            ``journal_id``/``account_id``/``currency_id`` are
+            required=True on base mixins (``mixin.account_move``,
+            ``mixin.transaction_total``/``_tax``/``_untaxed``) and are
+            normally filled by onchange (``_onchange_fee_template_id``
+            for journal/account; the ``currency_id`` field is itself
+            ``related="pricelist_id.currency_id", store=True`` but a
+            required related-stored field can still be inserted before
+            its compute runs on a plain ``.create()`` call) -- so all
+            three are always set explicitly here, free or not.
 
             :param free: when True, no fee template/lines are set, so
                 the total is zero and approval auto-cascades all the way
@@ -201,8 +215,10 @@ class TestUiSchoolAdmissionForm(HttpSavepointCase):
                 "school_id": cls.school.id,
                 "grade_id": cls.grade.id,
                 "pricelist_id": cls.pricelist.id,
+                "currency_id": cls.pricelist.currency_id.id,
                 "journal_id": cls.journal.id,
                 "account_id": cls.income_account.id,
+                "user_id": cls.admin_user.id,
             }
             if cls.operating_unit:
                 vals["operating_unit_id"] = cls.operating_unit.id

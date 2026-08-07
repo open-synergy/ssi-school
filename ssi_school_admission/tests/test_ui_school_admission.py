@@ -23,6 +23,16 @@ class TestUiSchoolAdmission(HttpSavepointCase):
         """Build the academic/school/payment structure and fixtures."""
         super().setUpClass()
 
+        # SavepointCase.setUpClass runs cls.env as SUPERUSER_ID (odoo/
+        # tests/common.py), so any record created via cls.env.create()
+        # without an explicit user_id defaults "Responsible" (user_id,
+        # mixin.transaction._default_user_id -> self.env.user.id) to the
+        # superuser, NOT "admin". school_admission_internal_user_rule
+        # ([('user_id','=',user.id)], base.group_user) then hides every
+        # such fixture from the "admin" tour session -- 0 rows in every
+        # list, no crash. Every fixture below sets user_id explicitly.
+        cls.admin_user = cls.env.ref("base.user_admin")
+
         # -- Academic / school structure ---------------------------------
         cls.academic_year = cls.env["school_academic_year"].create(
             {
@@ -268,6 +278,7 @@ class TestUiSchoolAdmission(HttpSavepointCase):
                 "grade_id": cls.grade.id,
                 "student_id": student.id,
                 "currency_id": cls.env.company.currency_id.id,
+                "user_id": cls.admin_user.id,
             }
             if cls.operating_unit:
                 vals["operating_unit_id"] = cls.operating_unit.id
