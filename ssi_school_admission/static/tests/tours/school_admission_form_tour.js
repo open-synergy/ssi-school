@@ -145,6 +145,16 @@ odoo.define("ssi_school_admission.school_admission_form_tour", function (require
                     in_modal: true,
                 },
                 {
+                    // Gerbang: action_compute_fee auto-save + call_button +
+                    // reload asinkron (patterns.md §P); tunggu tombolnya
+                    // kembali enabled sebelum memeriksa isi line_ids.
+                    content: "Compute Fee call has completed",
+                    trigger: ".o_form_view button[name='action_compute_fee']:enabled",
+                    run: function () {
+                        // Assertion only.
+                    },
+                },
+                {
                     content: "Fee lines are computed from the template",
                     trigger:
                         ".o_field_x2many[name='line_ids'] .o_data_row:contains(TOUR ADM FORM Fee Line)",
@@ -161,6 +171,21 @@ odoo.define("ssi_school_admission.school_admission_form_tour", function (require
                 {
                     content: "Click Compute Tax",
                     trigger: ".o_form_view button[name='action_compute_tax']",
+                },
+                {
+                    // Gerbang: Compute Tax adalah tombol type="object" yang
+                    // auto-save + call_button + reload secara asinkron; ia
+                    // di-disable sinkron saat diklik dan baru di-enable lagi
+                    // setelah siklus itu tuntas (patterns.md §P). Tanpa
+                    // gerbang ini, "Save the record" berikutnya berlomba
+                    // dengan reload tersebut dan form tersangkut di mode
+                    // edit -- persis pola bug §P (Save berlomba dengan
+                    // reload tombol object sebelumnya).
+                    content: "Compute Tax call has completed",
+                    trigger: ".o_form_view button[name='action_compute_tax']:enabled",
+                    run: function () {
+                        // Assertion only.
+                    },
                 },
 
                 // Flow 7 -- Click Save.
@@ -210,8 +235,11 @@ odoo.define("ssi_school_admission.school_admission_form_tour", function (require
                     },
                 },
             ],
-            // Flow 3 -- Change one required field.
-            pickMany2one("grade_id", "TOUR ADM FORM Grade"),
+            // Flow 3 -- Change one required field. A DIFFERENT grade than
+            // the one form_edit was created with (patterns.md litmus
+            // test for m2o pickers: typing the value the field already
+            // holds does not reliably reopen the autocomplete dropdown).
+            pickMany2one("grade_id", "TOUR ADM FORM Grade B"),
             [
                 // Flow 4 -- Compute Fee refreshes the fee lines.
                 {
@@ -226,6 +254,22 @@ odoo.define("ssi_school_admission.school_admission_form_tour", function (require
                     content: "Confirm the dialog",
                     trigger: ".modal-footer button.btn-primary",
                     in_modal: true,
+                },
+                {
+                    // Gerbang: BUKAN ".o_data_row:contains(TOUR ADM FORM Fee
+                    // Line)" -- fixture form_edit SUDAH punya baris itu
+                    // sebelum Compute Fee diklik (dibuat non-free di
+                    // setUpClass), jadi selector data itu akan cocok
+                    // SEKETIKA tanpa menunggu siklus reload asinkronnya
+                    // benar-benar selesai (patterns.md §P "Jebakan
+                    // turunan" -- gerbang yang sama sah di tour create,
+                    // palsu di tour edit ini). Tunggu tombolnya kembali
+                    // enabled sebagai gantinya.
+                    content: "Compute Fee call has completed",
+                    trigger: ".o_form_view button[name='action_compute_fee']:enabled",
+                    run: function () {
+                        // Assertion only.
+                    },
                 },
                 {
                     content: "Fee lines are refreshed from the template",
@@ -244,6 +288,15 @@ odoo.define("ssi_school_admission.school_admission_form_tour", function (require
                 {
                     content: "Click Compute Tax",
                     trigger: ".o_form_view button[name='action_compute_tax']",
+                },
+                {
+                    // Gerbang: lihat catatan gerbang di tour create di atas
+                    // (patterns.md §P).
+                    content: "Compute Tax call has completed",
+                    trigger: ".o_form_view button[name='action_compute_tax']:enabled",
+                    run: function () {
+                        // Assertion only.
+                    },
                 },
 
                 // Flow 6 -- Click Save.

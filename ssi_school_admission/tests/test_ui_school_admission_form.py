@@ -71,6 +71,16 @@ class TestUiSchoolAdmissionForm(HttpSavepointCase):
                 "type_id": cls.grade_type.id,
             }
         )
+        # 02-edit.md -- a second grade so the edit tour changes grade_id
+        # to a value DIFFERENT from what form_edit was created with.
+        cls.grade_b = cls.env["school_grade"].create(
+            {
+                "name": "TOUR ADM FORM Grade B",
+                "code": "TOURADMFGB",
+                "sequence": 20,
+                "type_id": cls.grade_type.id,
+            }
+        )
         cls.pricelist = cls.env["product.pricelist"].create(
             {
                 "name": "TOUR ADM FORM Pricelist",

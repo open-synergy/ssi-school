@@ -113,6 +113,12 @@ class TestUiSchoolAdmission(HttpSavepointCase):
                 "receivable_account_id": cls.ci_account.id,
             }
         )
+        cls.pricelist = cls.env["product.pricelist"].create(
+            {
+                "name": "TOUR ADM Pricelist",
+                "currency_id": cls.env.company.currency_id.id,
+            }
+        )
         cls.payment_template = cls.env["school_admission_payment_template"].create(
             {
                 "name": "TOUR ADM Payment Template",
@@ -268,8 +274,15 @@ class TestUiSchoolAdmission(HttpSavepointCase):
                 }
             )
 
-        def _create_admission(student_name):
-            """Create a Draft ``school_admission`` fixture."""
+        def _create_admission(student_name, **extra_vals):
+            """Create a Draft ``school_admission`` fixture.
+
+            :param extra_vals: extra ``create()`` values, overriding the
+                defaults below (e.g. ``payment_template_id`` so the
+                Compute Payment button, gated by
+                ``payment_template_id != False``, renders for a tour
+                that clicks it without picking a template first).
+            """
             student = cls.env["res.partner"].create({"name": student_name})
             vals = {
                 "academic_year_id": cls.academic_year.id,
@@ -282,6 +295,7 @@ class TestUiSchoolAdmission(HttpSavepointCase):
             }
             if cls.operating_unit:
                 vals["operating_unit_id"] = cls.operating_unit.id
+            vals.update(extra_vals)
             return cls.env["school_admission"].create(vals)
 
         def _bypass(record):
@@ -293,8 +307,13 @@ class TestUiSchoolAdmission(HttpSavepointCase):
             {"name": "TOUR ADM Create Student"}
         )
 
-        # 02-edit.md
-        cls.admission_edit = _create_admission("TOUR ADM Edit Student")
+        # 02-edit.md -- payment_template_id pre-set so the Compute
+        # Payment button (invisible unless payment_template_id is set)
+        # renders when the edit tour clicks it directly, per IK Flow 4
+        # ("refresh ... from the SELECTED Payment Template").
+        cls.admission_edit = _create_admission(
+            "TOUR ADM Edit Student", payment_template_id=cls.payment_template.id
+        )
 
         # 03-delete.md
         cls.admission_delete = _create_admission("TOUR ADM Delete Student")
@@ -336,8 +355,19 @@ class TestUiSchoolAdmission(HttpSavepointCase):
         _bypass(cls.admission_restart_approval).action_confirm()
 
         # 15-create-due-invoice.md -- On Progress, one Uninvoiced term
-        # whose Date Invoice is on or before today.
-        cls.admission_invoice = _create_admission("TOUR ADM Invoice Student")
+        # whose Date Invoice is on or before today. Every field
+        # ``school_admission_payment_term._prepare_invoice_data()``
+        # copies onto the generated ``customer_invoice`` (type_id,
+        # pricelist_id, receivable_journal_id/_account_id) must be set
+        # here -- the UI normally fills them via the Payment Template
+        # onchange, which never fires on a plain ``.create()`` call.
+        cls.admission_invoice = _create_admission(
+            "TOUR ADM Invoice Student",
+            customer_invoice_type_id=cls.ci_type.id,
+            pricelist_id=cls.pricelist.id,
+            receivable_journal_id=cls.ci_journal.id,
+            receivable_account_id=cls.ci_account.id,
+        )
         _bypass(cls.admission_invoice).action_confirm()
         _bypass(cls.admission_invoice).action_approve_approval()
         cls.env["school_admission_payment_term"].create(
