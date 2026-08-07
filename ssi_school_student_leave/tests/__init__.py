@@ -4,4 +4,5 @@
 
 from . import (  # noqa: F401
     test_school_student_leave,
+    test_ui_school_student_leave,
 )

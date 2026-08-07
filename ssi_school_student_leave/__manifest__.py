@@ -28,5 +28,6 @@
         "approval_template/school_student_leave.xml",
         "policy_template/school_student_leave.xml",
         "views/school_student_leave.xml",
+        "views/assets.xml",
     ],
 }
