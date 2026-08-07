@@ -170,10 +170,24 @@ class TestUiSchoolStudentLeave(HttpSavepointCase):
         cls.leave_restart_approval.sudo().write({"approval_template_id": False})
 
         # 15-return.md -- Done record whose student is currently On
-        # Leave.
+        # Leave. Unlike every other fixture above, this is the only
+        # one that drives both Confirm AND Approve from Python in the
+        # same setUpClass (every other state-changing tour only needs
+        # Confirm here and lets the tour itself click Approve in the
+        # browser, where each click is a fresh HTTP request with its
+        # own cache). Chaining both calls on the same in-process
+        # recordset needs an explicit invalidate_cache() between them
+        # -- the same requirement documented on
+        # ``_create_open_enrollment``'s enrollment.action_confirm() /
+        # invalidate_cache() / action_approve_approval() sequence --
+        # otherwise the policy_template_school_student_leave_approve
+        # detail's additional_python_code reads a stale (pre-approval-
+        # record) ``document.active_approver_user_ids`` and raises
+        # "Document is not allowed to approve".
         data_rt = cls._create_open_enrollment("RT", "Return")
         cls.leave_return = cls._create_leave(data_rt)
         cls.leave_return.with_user(cls.admin).action_confirm()
+        cls.leave_return.invalidate_cache()
         cls.leave_return.with_user(cls.admin).action_approve_approval()
         cls.leave_return.invalidate_cache()
         assert cls.leave_return.state == "done"
@@ -295,6 +309,12 @@ class TestUiSchoolStudentLeave(HttpSavepointCase):
     def _create_leave(cls, data):
         """Create a Draft leave for the student/term in ``data``.
 
+        ``user_id`` is set explicitly to ``base.user_admin`` -- see
+        the docstring note in
+        ``TestUiSchoolStudentGraduation._create_graduation``
+        (ssi_school_student_graduation) for why this is required for
+        the tour's "admin" session to see the record at all.
+
         :param data: dict returned by ``_create_open_enrollment``.
         :return: the created ``school_student_leave`` record.
         """
@@ -303,6 +323,7 @@ class TestUiSchoolStudentLeave(HttpSavepointCase):
                 "date": "2024-08-01",
                 "student_id": data["student"].id,
                 "academic_term_id": data["term"].id,
+                "user_id": cls.admin.id,
             }
         )
 
