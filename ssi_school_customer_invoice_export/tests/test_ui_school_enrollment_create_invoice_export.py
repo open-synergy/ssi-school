@@ -138,6 +138,70 @@ class TestUiSchoolEnrollmentCreateInvoiceExport(HttpSavepointCase):
             }
         )
 
+        # -- Policy: grant create_invoice_export_ok (23-create-invoice-
+        # export.md Pre-Condition Config) -----------------------------
+        # The shipped policy_template_school_enrollment already ships a
+        # policy.template_detail for this field
+        # (policy_template/school_enrollment.xml), but its correctness
+        # cannot be assumed from the test side -- write/create it
+        # explicitly here too (mirrors
+        # test_ui_school_enrollment.py's restart_approval_ok setup) so
+        # this tour's Pre-Condition is guaranteed regardless of the
+        # shipped data. computation_method "use_group" is evaluated
+        # against the REAL browsing user ("admin", not the superuser
+        # cls.env runs as during setUpClass), so the group is also
+        # granted to admin explicitly below.
+        state_field = cls.env["ir.model.fields"].search(
+            [("model_id.model", "=", "school_enrollment"), ("name", "=", "state")],
+            limit=1,
+        )
+        open_done_selections = cls.env["ir.model.fields.selection"].search(
+            [
+                ("field_id", "=", state_field.id),
+                ("value", "in", ["open", "done"]),
+            ]
+        )
+        create_invoice_export_field = cls.env["ir.model.fields"].search(
+            [
+                ("model_id.model", "=", "school_enrollment"),
+                ("name", "=", "create_invoice_export_ok"),
+            ],
+            limit=1,
+        )
+        enrollment_user_group = cls.env.ref("ssi_school.school_enrollment_user_group")
+        policy_detail_vals = {
+            "restrict_state": True,
+            "state_ids": [(6, 0, open_done_selections.ids)],
+            "restrict_user": True,
+            "computation_method": "use_group",
+            "group_ids": [(6, 0, [enrollment_user_group.id])],
+            "restrict_additional": False,
+        }
+        existing_detail = cls.env["policy.template_detail"].search(
+            [
+                (
+                    "template_id",
+                    "=",
+                    cls.env.ref("ssi_school.policy_template_school_enrollment").id,
+                ),
+                ("field_id", "=", create_invoice_export_field.id),
+            ],
+            limit=1,
+        )
+        if existing_detail:
+            existing_detail.write(policy_detail_vals)
+        else:
+            policy_detail_vals.update(
+                {
+                    "template_id": cls.env.ref(
+                        "ssi_school.policy_template_school_enrollment"
+                    ).id,
+                    "field_id": create_invoice_export_field.id,
+                }
+            )
+            cls.env["policy.template_detail"].create(policy_detail_vals)
+        enrollment_user_group.sudo().write({"users": [(4, cls.admin_user.id)]})
+
         # -- Enrollment, advanced to Open (On Progress) ---------------------
         cls.enrollment = cls.env["school_enrollment"].create(
             {
