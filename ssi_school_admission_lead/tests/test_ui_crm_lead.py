@@ -43,9 +43,7 @@ class TestUiCrmLead(HttpSavepointCase):
         cls.env.ref("sales_team.group_sale_manager").write(
             {"users": [(4, cls.admin_user.id)]}
         )
-        cls.env.ref("crm.group_use_lead").write(
-            {"users": [(4, cls.admin_user.id)]}
-        )
+        cls.env.ref("crm.group_use_lead").write({"users": [(4, cls.admin_user.id)]})
 
         # -- Academic / school structure (Pre-Condition Data), shared by
         # every tour in this class ------------------------------------
@@ -86,11 +84,51 @@ class TestUiCrmLead(HttpSavepointCase):
             }
         )
 
+        # Journal + income account shared by every school_admission_form
+        # fixture/wizard flow below. journal_id/account_id are
+        # required=True on school_admission_form (inherited from
+        # mixin.account_move -- ssi_accounting_entry_mixin); a plain
+        # Python .create() never runs the onchange that fills them, so
+        # every fixture that creates a school_admission_form directly
+        # sets both explicitly.
+        income_type = cls.env.ref("account.data_account_type_revenue")
+        cls.income_account = cls.env["account.account"].create(
+            {
+                "name": "TOUR LEAD ADF Income",
+                "code": "TOURLEADADFINC",
+                "user_type_id": income_type.id,
+            }
+        )
+        cls.journal = cls.env["account.journal"].search(
+            [("type", "=", "sale")], limit=1
+        )
+
+        # 02-create-admission-form.md -- Fee Template the tour selects in
+        # the wizard. The IK marks Fee Template "Optional", but
+        # crm_lead_create_admission_form.py's action_confirm() only adds
+        # journal_id/account_id to the school_admission_form it creates
+        # WHEN a Fee Template is chosen; leaving it unset raises
+        # IntegrityError (null value in column "journal_id") -- confirmed
+        # in CI on PR #252. Reported to the orchestrator as a real gap
+        # between the documented "Optional" and the code's actual
+        # behavior (out of scope for #229 to fix the wizard itself); the
+        # tour picks a Fee Template so the documented Flow can complete.
+        cls.fee_template_adf = cls.env["school_admission_fee_template"].create(
+            {
+                "name": "TOUR-LEAD-ADF-FEE-TEMPLATE",
+                "code": "TOURLEADADFFT",
+                "school_id": cls.school.id,
+                "grade_id": cls.grade.id,
+                "journal_id": cls.journal.id,
+                "account_id": cls.income_account.id,
+            }
+        )
+
         # 02-create-admission-form.md -- lead with School/Student already
         # set so the wizard's context defaults pre-fill them; Pricelist,
-        # Grade, and Parent are left for the tour to pick (the IK states
-        # Grade is deliberately NOT pre-filled from the lead's own Grade
-        # field).
+        # Grade, Fee Template, and Parent are left for the tour to pick
+        # (the IK states Grade is deliberately NOT pre-filled from the
+        # lead's own Grade field).
         cls.student_adf = cls.env["res.partner"].create(
             {"name": "TOUR-LEAD-ADF-STUDENT", "is_company": False}
         )
@@ -121,30 +159,12 @@ class TestUiCrmLead(HttpSavepointCase):
         cls.student_oat = cls.env["res.partner"].create(
             {"name": "TOUR-LEAD-OAT-STUDENT", "is_company": False}
         )
-        cls.parent_oat = cls.env["res.partner"].create(
-            {"name": "TOUR-LEAD-OAT-PARENT"}
-        )
+        cls.parent_oat = cls.env["res.partner"].create({"name": "TOUR-LEAD-OAT-PARENT"})
         cls.pricelist_oat = cls.env["product.pricelist"].create(
             {
                 "name": "TOUR-LEAD-OAT-PRICELIST",
                 "currency_id": cls.env.company.currency_id.id,
             }
-        )
-        # journal_id/account_id are required=True on school_admission_form
-        # (inherited from mixin.account_move -- ssi_accounting_entry_mixin).
-        # The UI fills them via _onchange_fee_template_id when Fee
-        # Template is selected on the form, but that onchange never fires
-        # on a plain Python .create() call, so both are set explicitly.
-        income_type = cls.env.ref("account.data_account_type_revenue")
-        cls.income_account = cls.env["account.account"].create(
-            {
-                "name": "TOUR LEAD OAT Income",
-                "code": "TOURLEADOATINC",
-                "user_type_id": income_type.id,
-            }
-        )
-        cls.journal = cls.env["account.journal"].search(
-            [("type", "=", "sale")], limit=1
         )
         cls.admission_form_oat = cls.env["school_admission_form"].create(
             {

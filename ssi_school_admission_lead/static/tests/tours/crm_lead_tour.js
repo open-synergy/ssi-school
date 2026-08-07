@@ -155,9 +155,14 @@ odoo.define("ssi_school_admission_lead.crm_lead_tour", function (require) {
             // fields via the button's context defaults. Pricelist,
             // Grade, and Parent have no such default (Grade explicitly
             // NOT pre-filled from the lead's own Grade field per the IK)
-            // and must be picked here.
+            // and must be picked here. Fee Template is documented as
+            // "Optional", but action_confirm() only sets the resulting
+            // school_admission_form's required journal_id/account_id
+            // when one is selected -- picking it here follows the only
+            // path that actually completes the Flow.
             pickMany2one("pricelist_id", "TOUR-LEAD-ADF-PRICELIST"),
             pickMany2one("grade_id", "TOUR-LEAD-ADF-GRADE"),
+            pickMany2one("fee_template_id", "TOUR-LEAD-ADF-FEE-TEMPLATE"),
             pickMany2one("parent_id", "TOUR-LEAD-ADF-PARENT"),
             [
                 // Flow 5 -- Click the Create button.
