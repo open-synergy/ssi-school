@@ -16,6 +16,7 @@
     "depends": [
         "ssi_school",
         "ssi_customer_invoice_export",
+        "web_tour",
     ],
     "data": [
         # Security - access
@@ -24,6 +25,7 @@
         "policy_template/school_enrollment.xml",
         # Views
         "views/school_enrollment.xml",
+        "views/assets.xml",
         "wizards/school_enrollment_create_invoice_export.xml",
     ],
     "demo": [],
