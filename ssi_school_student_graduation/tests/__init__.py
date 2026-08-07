@@ -5,4 +5,6 @@
 from . import (  # noqa: F401
     test_school_student_graduation,
     test_school_student_graduation_batch,
+    test_ui_school_student_graduation,
+    test_ui_school_student_graduation_batch,
 )
