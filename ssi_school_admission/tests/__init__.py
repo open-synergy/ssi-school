@@ -19,4 +19,10 @@ from . import (  # noqa: F401
     test_school_admission_product_summary,
     test_school_admission_test,
     test_school_admission_wizards,
+    test_ui_school_academic_term,
+    test_ui_school_admission_fee_template,
+    test_ui_school_admission_payment_template,
+    test_ui_school_admission_form,
+    test_ui_school_admission_test,
+    test_ui_school_admission,
 )
