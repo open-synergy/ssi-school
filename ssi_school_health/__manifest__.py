@@ -13,9 +13,11 @@
     "depends": [
         "ssi_school",
         "ssi_partner_health",
+        "web_tour",
     ],
     "data": [
         "views/school_student.xml",
+        "views/assets.xml",
     ],
     "demo": [],
     "contributors": [
