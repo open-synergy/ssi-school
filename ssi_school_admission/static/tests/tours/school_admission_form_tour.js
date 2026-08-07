@@ -317,14 +317,35 @@ odoo.define("ssi_school_admission.school_admission_form_tour", function (require
                 // .o_form_readonly -- so that class is NOT a valid gate
                 // here (patterns.md skill odoo-development-ui-test §P
                 // covers the "reload race" case; this is the sibling
-                // "nothing left to save" case). IK Post-Condition ("The
-                // record is updated with the new values") is checked
-                // directly instead: the changed Grade is still the one
-                // rendered.
+                // "nothing left to save" case).
                 {
                     content: "Save the record",
                     trigger: ".o_form_button_save",
                 },
+            ],
+            // IK Post-Condition ("The record is updated with the new
+            // values") is verified by navigating away and re-opening the
+            // record. The form stayed in edit mode after Save (see note
+            // above), and a many2one widget's SELECTED value in edit
+            // mode lives in the <input>'s live "value" JS property, not
+            // as a DOM text node nor as its "value" HTML attribute --
+            // Sizzle's own attribute selector for <input> reads
+            // elem.defaultValue (the ORIGINAL value, confirmed against
+            // web/static/lib/jquery/jquery.js addHandle("value", ...)),
+            // so neither ":contains" nor "[value=...]" can read it.
+            // Re-opening an EXISTING record always renders it read-only
+            // in 14.0 (patterns.md §E), where the selected value is a
+            // genuine rendered text node -- ":contains" is reliable
+            // there, matching every other Post-Condition check in this
+            // module.
+            [
+                {
+                    content: "Click the Forms breadcrumb",
+                    trigger: ".breadcrumb-item.o_back_button a:contains(Forms)",
+                },
+            ],
+            openRecordByStudent("TOUR ADM FORM Edit Student"),
+            [
                 {
                     content: "Record is updated with the new Grade value",
                     trigger:
