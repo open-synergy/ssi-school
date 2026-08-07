@@ -79,6 +79,7 @@
         "wizards/school_admission_copy_payment_term.xml",
         "wizards/school_admission_create_due_invoice.xml",
         "wizards/school_admission_create_enrollment.xml",
+        "views/assets.xml",
     ],
     "demo": [
         "demo/account_account_demo.xml",
