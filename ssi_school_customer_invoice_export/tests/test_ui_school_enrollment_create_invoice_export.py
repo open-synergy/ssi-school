@@ -2,11 +2,7 @@
 # Copyright 2026 PT. Simetri Sinergi Indonesia
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-import logging
-
 from odoo.tests import HttpSavepointCase, tagged
-
-_logger = logging.getLogger(__name__)
 
 
 @tagged("post_install", "-at_install")
@@ -226,23 +222,27 @@ class TestUiSchoolEnrollmentCreateInvoiceExport(HttpSavepointCase):
         )
         cls.enrollment.with_context(bypass_policy_check=True).action_confirm()
         cls.enrollment.invalidate_cache()
-        _logger.info(
-            "DIAG-ENR after confirm: state=%s template=%s approvals=%s",
-            cls.enrollment.state,
-            cls.enrollment.approval_template_id.display_name,
-            [
-                (a.status, a.approver_user_ids.ids, a.approver_selection_method)
-                for a in cls.enrollment.approval_ids
-            ],
-        )
-        cls.enrollment.with_context(bypass_policy_check=True).action_approve_approval()
+        # mixin.multiple_approval's _action_approval() only marks the
+        # active approval.approval "approved" when the ACTING user is
+        # found in that record's approver_user_ids -- a real membership
+        # list computed once (stored, api.depends=["template_detail_id"]
+        # only -- see approval_approval.py) from the shipped detail's
+        # approver_group_ids.users AT THE TIME the approval record was
+        # created (during this test's action_confirm() above). A CI-run
+        # diagnostic proved that list is [admin_user.id] only -- NOT the
+        # superuser cls.env runs as (uid=1) -- for this fixture, even
+        # though school_enrollment_validator_group's shipped XML data
+        # nominally grants both base.user_root and base.user_admin.
+        # bypass_policy_check only skips the outer _check_approve_policy()
+        # gate, not this inner approver filter (same trap documented for
+        # action_reject_approval() in test_ui_school_enrollment.py), so
+        # approving as the superuser silently no-ops here. Approve as
+        # admin_user explicitly instead -- confirmed present in
+        # approver_user_ids, and the same identity the tour browses as.
+        cls.enrollment.with_context(bypass_policy_check=True).with_user(
+            cls.admin_user
+        ).action_approve_approval()
         cls.enrollment.invalidate_cache()
-        _logger.info(
-            "DIAG-ENR after approve: state=%s approvals=%s env_uid=%s",
-            cls.enrollment.state,
-            [(a.status, a.approver_user_ids.ids) for a in cls.enrollment.approval_ids],
-            cls.env.uid,
-        )
 
         # -- Payment term with an Unpaid (open) invoiced move ---------------
         cls.term_open = cls.env["school_enrollment_payment_term"].create(
@@ -270,8 +270,13 @@ class TestUiSchoolEnrollmentCreateInvoiceExport(HttpSavepointCase):
         cls.invoice_open = cls.term_open.customer_invoice_id
         cls.invoice_open.with_context(bypass_policy_check=True).action_confirm()
         cls.invoice_open.invalidate_cache()
-        cls.invoice_open.with_context(
-            bypass_policy_check=True
+        # Same approver-identity requirement as the enrollment approve
+        # above (customer_invoice_validator_group ships the same
+        # base.user_root/base.user_admin grant, but approver_user_ids is
+        # only reliably populated for admin_user at compute time) --
+        # approve as admin_user, not the superuser cls.env runs as.
+        cls.invoice_open.with_context(bypass_policy_check=True).with_user(
+            cls.admin_user
         ).action_approve_approval()
         cls.invoice_open.invalidate_cache()
 
