@@ -2,7 +2,11 @@
 # Copyright 2026 PT. Simetri Sinergi Indonesia
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
+import logging
+
 from odoo.tests import HttpSavepointCase, tagged
+
+_logger = logging.getLogger(__name__)
 
 
 @tagged("post_install", "-at_install")
@@ -222,8 +226,23 @@ class TestUiSchoolEnrollmentCreateInvoiceExport(HttpSavepointCase):
         )
         cls.enrollment.with_context(bypass_policy_check=True).action_confirm()
         cls.enrollment.invalidate_cache()
+        _logger.info(
+            "DIAG-ENR after confirm: state=%s template=%s approvals=%s",
+            cls.enrollment.state,
+            cls.enrollment.approval_template_id.display_name,
+            [
+                (a.status, a.approver_user_ids.ids, a.approver_selection_method)
+                for a in cls.enrollment.approval_ids
+            ],
+        )
         cls.enrollment.with_context(bypass_policy_check=True).action_approve_approval()
         cls.enrollment.invalidate_cache()
+        _logger.info(
+            "DIAG-ENR after approve: state=%s approvals=%s env_uid=%s",
+            cls.enrollment.state,
+            [(a.status, a.approver_user_ids.ids) for a in cls.enrollment.approval_ids],
+            cls.env.uid,
+        )
 
         # -- Payment term with an Unpaid (open) invoiced move ---------------
         cls.term_open = cls.env["school_enrollment_payment_term"].create(
