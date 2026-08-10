@@ -7,5 +7,6 @@
         <field name="name">School Admission - (demo)</field>
         <field name="code">XSAF</field>
         <field name="type">sale</field>
+        <field name="company_id" ref="base.main_company" />
     </record>
 </odoo>
