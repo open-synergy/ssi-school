@@ -1,0 +1,17 @@
+# Penyimpangan yang diterima untuk validator `module` (lihat validator-contract.md §13).
+#
+# `_name` wizard `school_admission.wizard_create_invoice_export` adalah bentuk WARISAN
+# yang keliru menurut 10-wizard.md §1 (memakai prefix model induk, kata `wizard`, dan
+# notasi titik). Ia dipertahankan apa adanya — bersama nama berkas & nama class-nya —
+# karena mengubah `_name` berarti mengubah nama tabel serta XML ID `model_<nama>` yang
+# sudah dirujuk `ir.model.access`, view, dan `ir.actions.act_window` modul ini; itu
+# dilarang 02-core-principles.md §1. Lihat issue open-synergy/ssi-school#261
+# ("## Keputusan Desain").
+#
+# MENGIKAT KE DEPAN: wizard BARU di modul ini wajib memakai bentuk benar — frasa kerja
+# `snake_case` datar, tanpa prefix model induk, tanpa kata `wizard`, tanpa notasi titik.
+# Pengecualian ini hanya mengurung yang sudah ada, bukan mengesahkan gayanya.
+
+module nama-berkas-py-name-model|wizards/school_admission_create_invoice_export.py: _name='school_admission.wizard_create_invoice_export' menuntut berkas school_admission_wizard_create_invoice_export.py -- nama berkas mengikuti `_name` warisan yang tidak boleh diganti; mengganti nama berkas tanpa mengganti `_name` justru menyimpang lebih jauh dari aturan, dan mengganti `_name` dilarang 02-core-principles.md §1 (XML ID & tabel dipakai data produksi)
+module name-wizard-tanpa-notasi-titik|wizards/school_admission_create_invoice_export.py: _name 'school_admission.wizard_create_invoice_export' memakai notasi titik -- `_name` warisan; mengubahnya berarti mengubah nama tabel & XML ID `model_school_admission_wizard_create_invoice_export` yang sudah dirujuk ACL, view, dan act_window (dilarang 02-core-principles.md §1)
+module name-wizard-tanpa-kata-wizard|wizards/school_admission_create_invoice_export.py: _name 'school_admission.wizard_create_invoice_export' memuat kata 'wizard' -- `_name` warisan; alasan sama dengan baris di atas — kata `wizard` tak bisa dibuang tanpa mengubah `_name`, dan `_name` dikunci 02-core-principles.md §1
