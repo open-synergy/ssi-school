@@ -153,6 +153,13 @@ class CrmLead(models.Model):  # pylint: disable=too-few-public-methods
 
     @api.depends("admission_form_id")
     def _compute_create_admission_form_ok(self):
+        """Flag the lead as still able to spawn an admission form.
+
+        The value is ``True`` only while ``admission_form_id`` is empty:
+        one lead owns at most one admission form, so once the form is
+        linked the "Create Admission Form" button must stop offering to
+        create a second one.
+        """
         for record in self:
             record.create_admission_form_ok = not record.admission_form_id
 
@@ -163,6 +170,15 @@ class CrmLead(models.Model):  # pylint: disable=too-few-public-methods
         "company_id.previous_school_python_code",
     )
     def _compute_allowed_previous_school_ids(self):
+        """Resolve the partners selectable as the previous school.
+
+        Delegates to ``mixin.many2one_configurator`` on the lead's
+        company, so the result follows the company's Previous School
+        Selection Method: the manual list, the stored domain, or the
+        stored Python code. Leads without a company get an empty
+        result, which lets the domain on ``previous_school_id`` block
+        every partner rather than allow all of them.
+        """
         for record in self:
             result = False
             if record.company_id:
@@ -178,6 +194,16 @@ class CrmLead(models.Model):  # pylint: disable=too-few-public-methods
             record.allowed_previous_school_ids = result
 
     def action_create_admission_form(self):
+        """Open the admission form of this lead, or the wizard creating it.
+
+        When the lead already has an ``admission_form_id``, the existing
+        ``school_admission_form`` is opened in the main content area so
+        the button never produces a duplicate document. Otherwise the
+        ``crm.lead.create_admission_form`` wizard is opened as a dialog,
+        pre-filled with this lead, its school and its student.
+
+        :return: ``ir.actions.act_window`` dict
+        """
         self.ensure_one()
         if self.admission_form_id:
             return {
@@ -202,6 +228,15 @@ class CrmLead(models.Model):  # pylint: disable=too-few-public-methods
         }
 
     def action_open_admission_test(self):
+        """Open the admission test linked to this lead.
+
+        ``admission_test_id`` is related to the admission form, so the
+        button is only meaningful once that form has produced a
+        ``school_admission_test``; it navigates to that test instead of
+        creating anything.
+
+        :return: ``ir.actions.act_window`` dict
+        """
         self.ensure_one()
         return {
             "type": "ir.actions.act_window",
