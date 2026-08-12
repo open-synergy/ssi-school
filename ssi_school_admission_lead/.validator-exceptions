@@ -1,0 +1,22 @@
+# Penyimpangan yang diterima untuk validator `module` (lihat validator-contract.md §13).
+#
+# Dua kelompok, keduanya diputuskan di issue open-synergy/ssi-school#263
+# ("## Keputusan Desain"):
+#
+# 1. res.config.settings adalah extension model core Odoo (base), bukan wizard SSI.
+#    _name-nya milik base, ACL-nya sudah disediakan base, dan mengubah _name melanggar
+#    02-core-principles.md (XML ID & tabel dipakai data produksi). Validator menandainya
+#    hanya karena ia TransientModel.
+# 2. crm.lead.create_admission_form adalah _name wizard WARISAN. 10-wizard.md §1
+#    menyebut bentuk ini utang yang sedang DIKURUNG, bukan konvensi: mengganti _name
+#    berarti mengganti nama tabel/model beserta XML ID model_<nama> yang sudah dirujuk
+#    ir.model.access, view, dan action. Berkasnya tetap di wizard/ (tunggal) karena
+#    10-wizard.md §3 melarang memindahkan direktori modul lama. Wizard BARU di modul ini
+#    tetap wajib memakai bentuk benar — pengecualian ini tidak mengesahkan gayanya.
+
+module name-wizard-tanpa-notasi-titik|models/res_config_settings.py: _name 'res.config.settings' memakai notasi titik -- res.config.settings adalah extension model core Odoo (base); _name-nya bukan milik modul ini dan mengubahnya melanggar 02-core-principles.md (XML ID & tabel dipakai data produksi)
+module berkas-wizard-berada-di-wizards|models/res_config_settings.py: TransientModel di luar wizards/ -- res.config.settings bukan wizard SSI, melainkan extension res.config.settings core Odoo; ditempatkan di models/ mengikuti konvensi extension model, bukan wizard
+module acl-wizard-satu-user-access-tanpa-all-access|res.config.settings: tidak ada ACL sama sekali -- ACL res.config.settings sudah disediakan modul base; menambah ACL baru untuk model core akan duplikat/bertentangan dengan ACL base
+module name-wizard-tanpa-notasi-titik|wizard/crm_lead_create_admission_form.py: _name 'crm.lead.create_admission_form' memakai notasi titik -- _name warisan yang dikurung 10-wizard.md §1; menggantinya mengubah nama tabel/model beserta XML ID model_crm_lead_create_admission_form yang sudah dirujuk ir.model.access, view, dan action
+module berkas-wizard-berada-di-wizards|wizard/crm_lead_create_admission_form.py: TransientModel di luar wizards/ -- direktori wizard/ (tunggal) adalah ejaan warisan; 10-wizard.md §3 melarang menyeragamkan modul lama dengan memindahkan direktorinya karena itu mengubah path berkas di manifest dan __init__.py tanpa manfaat fungsional
+module direktori-wizards-jamak-bukan-wizard|wizard/ -- direktori wizard/ (tunggal) adalah ejaan warisan yang DIPERTAHANKAN; 10-wizard.md §3 melarang menyeragamkan modul lama dengan memindahkan direktorinya karena itu mengubah path berkas di manifest dan __init__.py tanpa manfaat fungsional. Modul BARU tetap wajib memakai wizards/

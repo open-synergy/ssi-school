@@ -9,11 +9,19 @@ from odoo.tests import Form, tagged
 
 @tagged("post_install", "-at_install")
 class TestCrmLeadAdmission(YamlTransactionCase):
+    """Covers turning a ``crm.lead`` into a ``school_admission_form``."""
+
     def test_crm_lead_admission(self):
+        """Run the create-admission-form-via-wizard scenario."""
         self.run_yaml_scenario("test_data_admission_lead.yaml")
 
     def test_default_academic_term_auto_filled(self):
-        """Wizard should auto-fill academic_term_id from the first term open for admission."""
+        """Assert the wizard seeds the academic term and year.
+
+        Python murni — pemicu P1 (L-01: aksi YAML membuang nilai balik
+        method). What is asserted here is the value ``default_get()``
+        returns through a ``Form``, before any record is stored.
+        """
         grade_type = self.env["school_grade_type"].create(
             {"name": "Grade Type Default AT", "code": "GTDAT", "sequence": 10}
         )

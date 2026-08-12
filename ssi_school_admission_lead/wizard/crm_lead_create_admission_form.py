@@ -8,6 +8,14 @@ from odoo import api, fields, models
 
 
 class CrmLeadCreateAdmissionForm(models.TransientModel):
+    """Collects the data needed to turn a CRM lead into an admission form.
+
+    The lead alone does not carry everything a ``school_admission_form``
+    requires (academic year and term, parent, pricelist, fee template),
+    so this dialog gathers the missing values, creates the document and
+    links it back to the originating lead.
+    """
+
     _name = "crm.lead.create_admission_form"
     _description = "Wizard - Create Admission Form from CRM Lead"
 
@@ -89,6 +97,17 @@ class CrmLeadCreateAdmissionForm(models.TransientModel):
 
     @api.model
     def default_get(self, fields_list):
+        """Pre-fill the academic term and year with the open admission term.
+
+        Overridden because the caller's context only carries the lead,
+        its school and its student. The earliest ``school_academic_term``
+        flagged ``is_open_admission`` is looked up and used to seed
+        ``academic_term_id`` and ``academic_year_id``, but only when the
+        caller did not already provide them.
+
+        :param fields_list: field names the client asks defaults for
+        :return: dict of default values
+        """
         res = super().default_get(fields_list)
         AcademicTerm = self.env["school_academic_term"]  # pylint: disable=invalid-name
         term = AcademicTerm.search(
@@ -118,6 +137,16 @@ class CrmLeadCreateAdmissionForm(models.TransientModel):
         self.fee_template_id = False
 
     def action_confirm(self):
+        """Create the admission form and open it.
+
+        Side effects: a ``school_admission_form`` is created from the
+        wizard values, and the originating lead is written (in ``sudo``)
+        so its ``admission_form_id`` points at that new document. When a
+        fee template is chosen, its journal and account are copied onto
+        the admission form as well.
+
+        :return: ``ir.actions.act_window`` dict opening the new form
+        """
         self.ensure_one()
         vals = {
             "date": self.date,
