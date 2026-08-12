@@ -1,0 +1,23 @@
+# Penyimpangan yang diterima untuk validator `module` (lihat validator-contract.md §13).
+#
+# wizards/school_admission_create_invoice_export.py memakai pola _name + _inherit
+# bernilai sama: ia MENGEKSTENSI wizard school_admission.wizard_create_invoice_export
+# milik modul dasar ssi_school_admission_customer_invoice_export, bukan
+# mendefinisikannya. Konsekuensinya:
+#
+# * _name, nama berkas, dan nama class-nya warisan dan TIDAK boleh diganti —
+#   mengubahnya berarti mengubah nama tabel/model beserta XML ID model_<nama> yang
+#   sudah dirujuk ir.model.access, view, dan action modul dasar
+#   (02-core-principles.md; 10-wizard.md §1 menyebut bentuk ini warisan yang
+#   dipertahankan).
+# * ACL-nya hidup di modul yang mendefinisikan model itu; mendefinisikan ulang di
+#   sini akan menggandakan aturan akses.
+#
+# Wizard BARU di modul ini tetap wajib memakai bentuk benar: frasa kerja snake_case
+# datar, tanpa prefix model induk, tanpa kata 'wizard', tanpa notasi titik.
+# Lihat issue open-synergy/ssi-school#262 ("## Keputusan Desain").
+
+module nama-berkas-py-name-model|wizards/school_admission_create_invoice_export.py: _name='school_admission.wizard_create_invoice_export' menuntut berkas school_admission_wizard_create_invoice_export.py -- berkas mengekstensi wizard modul dasar lewat pola _name + _inherit bernilai sama; nama berkasnya mengikuti berkas modul dasar dan menggantinya tidak mengubah _name warisan yang jadi sumber temuan
+module name-wizard-tanpa-notasi-titik|wizards/school_admission_create_invoice_export.py: _name 'school_admission.wizard_create_invoice_export' memakai notasi titik -- _name warisan milik modul dasar ssi_school_admission_customer_invoice_export; mengubahnya melanggar 02-core-principles.md (XML ID model_<nama> & nama tabel sudah dirujuk ACL, view, dan action)
+module name-wizard-tanpa-kata-wizard|wizards/school_admission_create_invoice_export.py: _name 'school_admission.wizard_create_invoice_export' memuat kata 'wizard' -- _name warisan milik modul dasar ssi_school_admission_customer_invoice_export; mengubahnya melanggar 02-core-principles.md (XML ID model_<nama> & nama tabel sudah dirujuk ACL, view, dan action)
+module acl-wizard-satu-user-access-tanpa-all-access|school_admission.wizard_create_invoice_export: tidak ada ACL sama sekali -- model didefinisikan modul dasar ssi_school_admission_customer_invoice_export dan ACL-nya disediakan di sana; mendefinisikan ulang di modul glue ini akan menggandakan aturan akses
