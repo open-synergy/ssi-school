@@ -87,6 +87,13 @@ class SchoolAdmissionPaymentTermDetail(models.Model):
 
     @api.depends("term_id.admission_id.payment_template_id")
     def _compute_allowed_product_ids(self):
+        """List the products allowed on this payment term detail.
+
+        Delegates to the m2o configurator of the payment template used
+        by the owning admission, so the selection method, manual
+        recordset, domain and python code configured there decide the
+        result. Empty when the admission has no payment template.
+        """
         for record in self:
             result = False
             template = record.term_id.admission_id.payment_template_id
@@ -101,6 +108,16 @@ class SchoolAdmissionPaymentTermDetail(models.Model):
             record.allowed_product_ids = result
 
     def _check_addendum_lock(self, vals):
+        """Forbid editing a locked payment term detail.
+
+        Skipped when the context flag ``bypass_addendum_lock`` is set,
+        or when the write only touches the fields listed in
+        ``ADDENDUM_LOCK_ALLOWED_FIELDS``.
+
+        :param vals: the write values about to be applied
+        :return: ``None``
+        :raises UserError: when a locked detail would be modified
+        """
         if self.env.context.get("bypass_addendum_lock"):
             return
         if set(vals.keys()) <= ADDENDUM_LOCK_ALLOWED_FIELDS:
@@ -121,6 +138,13 @@ Solution: Add a new detail line via the addendum mechanism instead of editing th
                 raise UserError(error_message)
 
     def _check_addendum_lock_unlink(self):
+        """Forbid deleting a locked payment term detail.
+
+        Skipped when the context flag ``bypass_addendum_lock`` is set.
+
+        :return: ``None``
+        :raises UserError: when a locked detail would be deleted
+        """
         if self.env.context.get("bypass_addendum_lock"):
             return
         for record in self:
@@ -140,6 +164,14 @@ Solution: Locked detail lines are permanent; create a new one via the addendum m
 
     @api.model
     def create(self, vals):
+        """Create the detail and refresh the admission product summary.
+
+        Overridden so the aggregated ``product_summary_ids`` of the
+        owning admission stays in sync with its term details.
+
+        :param vals: values of the detail to create
+        :return: the created record
+        """
         record = super().create(vals)
         admission = record.term_id.admission_id
         if admission:
@@ -147,6 +179,15 @@ Solution: Locked detail lines are permanent; create a new one via the addendum m
         return record
 
     def write(self, vals):
+        """Write the detail, enforcing the addendum lock first.
+
+        Overridden both to reject edits on locked details and to
+        refresh the aggregated product summary of the owning admission.
+
+        :param vals: values to write
+        :return: ``True``
+        :raises UserError: when a locked detail would be modified
+        """
         self._check_addendum_lock(vals)
         result = super().write(vals)
         self.mapped(
@@ -155,6 +196,14 @@ Solution: Locked detail lines are permanent; create a new one via the addendum m
         return result
 
     def unlink(self):
+        """Delete the detail, enforcing the addendum lock first.
+
+        Overridden both to reject deletion of locked details and to
+        refresh the aggregated product summary of the owning admission.
+
+        :return: ``True``
+        :raises UserError: when a locked detail would be deleted
+        """
         self._check_addendum_lock_unlink()
         admissions = self.mapped("term_id.admission_id")
         result = super().unlink()

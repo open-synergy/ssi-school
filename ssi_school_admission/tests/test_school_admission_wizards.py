@@ -11,5 +11,8 @@ from odoo.tests import tagged
 class TestSchoolAdmissionWizards(
     YamlTransactionCase
 ):  # pylint: disable=too-few-public-methods
+    """Cover the wizards creating an admission from form and test."""
+
     def test_admission_wizards(self):
+        """Run the admission wizards scenario."""
         self.run_yaml_scenario("test_data_admission_wizards.yaml")

@@ -1,0 +1,33 @@
+# Penyimpangan yang diterima dari validator kepatuhan SSI.
+# Format: <validator> <slug-aturan>|<item> -- <alasan>
+#
+# Seluruh baris di bawah berasal dari satu keputusan yang sama (issue #258):
+# _name wizard warisan modul ini TIDAK diganti, dan nama berkas serta nama
+# class-nya ikut dipertahankan. Mengubah _name berarti mengubah nama
+# tabel/model beserta XML ID model_<nama> yang sudah dirujuk ir.model.access,
+# view, action, dan modul glue lain di repo ini.
+#
+# Pengecualian ini hanya mengurung wizard yang SUDAH ADA. Wizard BARU di modul
+# ini wajib memakai bentuk benar: frasa kerja snake_case datar, tanpa prefix
+# model induk, tanpa kata 'wizard', tanpa notasi titik.
+
+module nama-berkas-py-name-model|wizards/school_admission_copy_payment_term.py: _name='school_admission.wizard_copy_payment_term' menuntut berkas school_admission_wizard_copy_payment_term.py -- nama berkas mengikuti _name warisan yang tidak boleh diganti; mengganti berkasnya menuntut _name ikut berubah
+module nama-berkas-py-name-model|wizards/school_admission_create_due_invoice.py: _name='school_admission.wizard_create_due_invoice' menuntut berkas school_admission_wizard_create_due_invoice.py -- nama berkas mengikuti _name warisan yang tidak boleh diganti; mengganti berkasnya menuntut _name ikut berubah
+module nama-berkas-py-name-model|wizards/school_admission_create_enrollment.py: _name='school_admission.wizard_create_enrollment' menuntut berkas school_admission_wizard_create_enrollment.py -- nama berkas mengikuti _name warisan yang tidak boleh diganti; mengganti berkasnya menuntut _name ikut berubah
+module nama-berkas-py-name-model|wizards/school_admission_form_create_admission.py: _name='school_admission_form.wizard_create_admission' menuntut berkas school_admission_form_wizard_create_admission.py -- nama berkas mengikuti _name warisan yang tidak boleh diganti; mengganti berkasnya menuntut _name ikut berubah
+module nama-berkas-py-name-model|wizards/school_admission_payment_term_duplicate.py: _name='school_admission_payment_term.wizard_duplicate' menuntut berkas school_admission_payment_term_wizard_duplicate.py -- nama berkas mengikuti _name warisan yang tidak boleh diganti; mengganti berkasnya menuntut _name ikut berubah
+module nama-berkas-py-name-model|wizards/school_admission_test_create_admission.py: _name='school_admission_test.wizard_create_admission' menuntut berkas school_admission_test_wizard_create_admission.py -- nama berkas mengikuti _name warisan yang tidak boleh diganti; mengganti berkasnya menuntut _name ikut berubah
+module nama-class-pascalcase-dari-name|wizards/school_admission_form_create_admission.py: class SchoolAdmissionFormCreateAdmission, seharusnya SchoolAdmissionFormWizardCreateAdmission -- nama class diturunkan dari _name warisan yang tidak boleh diganti
+module nama-class-pascalcase-dari-name|wizards/school_admission_test_create_admission.py: class SchoolAdmissionTestCreateAdmission, seharusnya SchoolAdmissionTestWizardCreateAdmission -- nama class diturunkan dari _name warisan yang tidak boleh diganti
+module name-wizard-tanpa-notasi-titik|wizards/school_admission_copy_payment_term.py: _name 'school_admission.wizard_copy_payment_term' memakai notasi titik -- _name warisan; mengubahnya mengubah nama tabel/model dan XML ID model_* yang sudah dirujuk ir.model.access, view, dan action
+module name-wizard-tanpa-notasi-titik|wizards/school_admission_create_due_invoice.py: _name 'school_admission.wizard_create_due_invoice' memakai notasi titik -- _name warisan; mengubahnya mengubah nama tabel/model dan XML ID model_* yang sudah dirujuk ir.model.access, view, dan action
+module name-wizard-tanpa-notasi-titik|wizards/school_admission_create_enrollment.py: _name 'school_admission.wizard_create_enrollment' memakai notasi titik -- _name warisan; mengubahnya mengubah nama tabel/model dan XML ID model_* yang sudah dirujuk ir.model.access, view, dan action
+module name-wizard-tanpa-notasi-titik|wizards/school_admission_form_create_admission.py: _name 'school_admission_form.wizard_create_admission' memakai notasi titik -- _name warisan; mengubahnya mengubah nama tabel/model dan XML ID model_* yang sudah dirujuk ir.model.access, view, dan action
+module name-wizard-tanpa-notasi-titik|wizards/school_admission_payment_term_duplicate.py: _name 'school_admission_payment_term.wizard_duplicate' memakai notasi titik -- _name warisan; mengubahnya mengubah nama tabel/model dan XML ID model_* yang sudah dirujuk ir.model.access, view, dan action
+module name-wizard-tanpa-notasi-titik|wizards/school_admission_test_create_admission.py: _name 'school_admission_test.wizard_create_admission' memakai notasi titik -- _name warisan; mengubahnya mengubah nama tabel/model dan XML ID model_* yang sudah dirujuk ir.model.access, view, dan action
+module name-wizard-tanpa-kata-wizard|wizards/school_admission_copy_payment_term.py: _name 'school_admission.wizard_copy_payment_term' memuat kata 'wizard' -- _name warisan; mengubahnya mengubah nama tabel/model dan XML ID model_* yang sudah dirujuk ir.model.access, view, dan action
+module name-wizard-tanpa-kata-wizard|wizards/school_admission_create_due_invoice.py: _name 'school_admission.wizard_create_due_invoice' memuat kata 'wizard' -- _name warisan; mengubahnya mengubah nama tabel/model dan XML ID model_* yang sudah dirujuk ir.model.access, view, dan action
+module name-wizard-tanpa-kata-wizard|wizards/school_admission_create_enrollment.py: _name 'school_admission.wizard_create_enrollment' memuat kata 'wizard' -- _name warisan; mengubahnya mengubah nama tabel/model dan XML ID model_* yang sudah dirujuk ir.model.access, view, dan action
+module name-wizard-tanpa-kata-wizard|wizards/school_admission_form_create_admission.py: _name 'school_admission_form.wizard_create_admission' memuat kata 'wizard' -- _name warisan; mengubahnya mengubah nama tabel/model dan XML ID model_* yang sudah dirujuk ir.model.access, view, dan action
+module name-wizard-tanpa-kata-wizard|wizards/school_admission_payment_term_duplicate.py: _name 'school_admission_payment_term.wizard_duplicate' memuat kata 'wizard' -- _name warisan; mengubahnya mengubah nama tabel/model dan XML ID model_* yang sudah dirujuk ir.model.access, view, dan action
+module name-wizard-tanpa-kata-wizard|wizards/school_admission_test_create_admission.py: _name 'school_admission_test.wizard_create_admission' memuat kata 'wizard' -- _name warisan; mengubahnya mengubah nama tabel/model dan XML ID model_* yang sudah dirujuk ir.model.access, view, dan action

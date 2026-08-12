@@ -9,10 +9,20 @@ from odoo.tests import tagged
 
 @tagged("post_install", "-at_install")
 class TestSchoolAdmissionPaymentTermDuplicate(YamlTransactionCase):
+    """Cover the Duplicate wizard of admission payment terms."""
+
     def test_admission_payment_term_duplicate(self):
+        """Run the admission payment term duplicate scenario."""
         self.run_yaml_scenario("test_data_admission_payment_term_duplicate.yaml")
 
     def test_wizard_duplicate_default_get_prefill(self):
+        """The wizard prefills its fields from the source term.
+
+        Pure Python -- trigger P1 (L-01/L-02): what is asserted is the
+        outcome of ``default_get``, which the YAML DSL cannot capture
+        because ``action: call`` discards the return value and the
+        wizard defaults key off the ``active_id`` context.
+        """
         # Plain Python (not YAML): default_get keys off context active_id,
         # which the YAML scenario's context: key cannot express reliably.
         term = self.env["school_admission_payment_term"].create(

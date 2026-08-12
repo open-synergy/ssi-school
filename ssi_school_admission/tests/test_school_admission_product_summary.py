@@ -11,5 +11,8 @@ from odoo.tests import tagged
 class TestSchoolAdmissionProductSummary(
     YamlTransactionCase
 ):  # pylint: disable=too-few-public-methods
+    """Cover the aggregated product summary of ``school_admission``."""
+
     def test_admission_product_summary(self):
+        """Run the admission product summary scenario."""
         self.run_yaml_scenario("test_data_admission_product_summary.yaml")

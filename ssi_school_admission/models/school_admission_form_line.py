@@ -82,7 +82,12 @@ class SchoolAdmissionFormLine(models.Model):
         "currency_id",
     )
     def onchange_pricelist_id(self):
-        pass
+        """Trigger the pricelist recomputation of the parent mixin.
+
+        The body is intentionally empty: the decorator only has to make
+        Odoo re-read ``allowed_pricelist_ids`` and ``currency_id`` so
+        the product line mixin can re-evaluate the price.
+        """
 
     @api.onchange(
         "product_id",

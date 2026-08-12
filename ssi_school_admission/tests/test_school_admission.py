@@ -12,7 +12,10 @@ from odoo.tests import Form, tagged
 class TestSchoolAdmissionWorkflow(
     YamlTransactionCase
 ):  # pylint: disable=too-few-public-methods
+    """Cover the ``school_admission`` document workflow."""
+
     def test_admission_workflow(self):
+        """Run the admission workflow scenario."""
         self.run_yaml_scenario("test_data_admission.yaml")
 
     def _prepare_payment_template(self):

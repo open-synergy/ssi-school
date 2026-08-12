@@ -10,7 +10,10 @@ from odoo.tests import tagged
 
 @tagged("post_install", "-at_install")
 class TestSchoolAdmissionTest(YamlTransactionCase):
+    """Cover the ``school_admission_test`` document workflow."""
+
     def test_admission_test_workflow(self):
+        """Run the admission test workflow scenario."""
         self.run_yaml_scenario("test_data_admission_test_workflow.yaml")
 
     def test_admission_form_uniqueness_constraint(

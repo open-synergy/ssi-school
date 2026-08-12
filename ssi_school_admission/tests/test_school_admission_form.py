@@ -11,5 +11,8 @@ from odoo.tests import tagged
 class TestSchoolAdmissionForm(
     YamlTransactionCase
 ):  # pylint: disable=too-few-public-methods
+    """Cover the ``school_admission_form`` document workflow."""
+
     def test_admission_form(self):
+        """Run the admission form scenario."""
         self.run_yaml_scenario("test_data_admission_form.yaml")

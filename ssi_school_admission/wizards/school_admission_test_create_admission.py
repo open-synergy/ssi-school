@@ -77,6 +77,11 @@ class SchoolAdmissionTestCreateAdmission(models.TransientModel):
 
     @api.model
     def default_get(self, fields_list):
+        """Prefill the admission test from the active record.
+
+        :param fields_list: names of the fields to default
+        :return: dict of default values
+        """
         res = super().default_get(fields_list)
         active_id = self.env.context.get("active_id")
         if active_id:
@@ -85,6 +90,12 @@ class SchoolAdmissionTestCreateAdmission(models.TransientModel):
 
     @api.depends("currency_id")
     def _compute_allowed_pricelist_ids(self):
+        """List the pricelists usable with the selected currency.
+
+        Searches ``product.pricelist`` for records whose currency equals
+        ``currency_id``; the result feeds the domain of ``pricelist_id``.
+        Empty when no currency is set yet.
+        """
         Pricelist = self.env["product.pricelist"]  # pylint: disable=invalid-name
         for record in self:
             result = []

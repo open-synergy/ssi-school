@@ -11,5 +11,8 @@ from odoo.tests import tagged
 class TestSchoolAdmissionCreateEnrollment(
     YamlTransactionCase
 ):  # pylint: disable=too-few-public-methods
+    """Cover the Create Enrollment wizard of ``school_admission``."""
+
     def test_admission_create_enrollment(self):
+        """Run the create enrollment scenario."""
         self.run_yaml_scenario("test_data_admission_create_enrollment.yaml")

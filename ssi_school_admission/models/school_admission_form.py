@@ -270,15 +270,38 @@ class SchoolAdmissionForm(models.Model):
 
     @api.depends("admission_test_ids")
     def _compute_admission_test_id(self):
+        """Expose the first related admission test as a single field.
+
+        ``admission_test_ids`` is the real one2many; this non-stored
+        field surfaces its first record so the form view can show and
+        set one admission test.
+        """
         for record in self:
             record.admission_test_id = record.admission_test_ids[:1]
 
     def _inverse_admission_test_id(self):
+        """Link the chosen admission test back to this form.
+
+        Writes ``admission_form_id`` on the selected
+        ``school_admission_test`` so the relation stays consistent with
+        the computed ``admission_test_id``.
+
+        :return: ``None``
+        """
         for record in self:
             if record.admission_test_id:
                 record.admission_test_id.admission_form_id = record
 
     def action_create_admission_test(self):
+        """Create the admission test of this form, then open it.
+
+        Creates one ``school_admission_test`` copying the date, academic
+        year/term, school, grade and student of this form when none
+        exists yet; otherwise reuses the existing one. Either way the
+        test form is opened.
+
+        :return: an ``ir.actions.act_window`` dict
+        """
         self.ensure_one()
         if not self.admission_test_id:
             test = self.env["school_admission_test"].create(
@@ -305,10 +328,15 @@ class SchoolAdmissionForm(models.Model):
 
     @api.onchange("academic_year_id")
     def _onchange_academic_term_id(self):
+        """Clear the academic term when the academic year changes."""
         self.academic_term_id = False
 
     @api.onchange("fee_template_id")
     def _onchange_fee_template_id(self):
+        """Copy journal and account from the selected fee template.
+
+        Both fields are cleared when no fee template is selected.
+        """
         if self.fee_template_id:
             self.journal_id = (
                 self.fee_template_id.journal_id
@@ -321,10 +349,25 @@ class SchoolAdmissionForm(models.Model):
             self.account_id = False  # pylint: disable=attribute-defined-outside-init
 
     def action_compute_fee(self):
+        """Regenerate the fee lines from the selected fee template.
+
+        User-facing button. Runs as superuser so the existing lines can
+        be replaced regardless of the acting user's rights on the line
+        model.
+
+        :return: ``None``
+        """
         for record in self.sudo():
             record._compute_fee_from_template()  # pylint: disable=protected-access
 
     def action_compute_tax(self):
+        """Recompute the tax lines from the current fee lines.
+
+        User-facing button; delegates to the standard tax computation
+        provided by the transaction total mixin.
+
+        :return: ``None``
+        """
         for record in self:
             record._recompute_standard_tax()  # pylint: disable=protected-access
 
@@ -345,6 +388,16 @@ class SchoolAdmissionForm(models.Model):
     def _10_create_accounting_entry(
         self,
     ):  # pylint: disable=inconsistent-return-statements
+        """Post the accounting entry when the form is opened.
+
+        ``ssi_decorator`` hook executed after the transition to the
+        ``open`` state. Creates the journal entry, its header move line,
+        one move line per fee line and per tax line, then posts the
+        move. Skipped for a free admission form or when the move
+        already exists.
+
+        :return: ``True`` when nothing had to be created
+        """
         self.ensure_one()
 
         if self._is_free_admission_form():
@@ -380,6 +433,14 @@ class SchoolAdmissionForm(models.Model):
 
     @ssi_decorator.post_open_action()
     def _20_auto_done_if_free(self):
+        """Finish a free admission form right after it is opened.
+
+        ``ssi_decorator`` hook executed after the transition to the
+        ``open`` state. A form with a zero total has nothing to bill, so
+        it is moved to ``done`` immediately.
+
+        :return: ``True`` when the form is not free and stays open
+        """
         self.ensure_one()
 
         if not self._is_free_admission_form():
@@ -389,10 +450,28 @@ class SchoolAdmissionForm(models.Model):
 
     @ssi_decorator.post_cancel_action()
     def _delete_accounting_entry(self):
+        """Remove the accounting entry when the form is cancelled.
+
+        ``ssi_decorator`` hook executed after the transition to the
+        ``cancel`` state.
+
+        :return: ``None``
+        """
         self.ensure_one()
         self._delete_standard_move()  # Mixin
 
     def _compute_fee_from_template(self):
+        """Rebuild ``line_ids`` from ``fee_template_id``.
+
+        Deletes every existing fee line, then recreates one
+        ``school_admission_form.line`` per template line, copying the
+        product, description, account, analytic account, usage, price,
+        quantity, unit of measure and taxes.
+
+        Does nothing when no fee template is set.
+
+        :return: ``None``
+        """
         self.ensure_one()
         template = self.fee_template_id
         if not template:

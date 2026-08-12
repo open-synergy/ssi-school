@@ -31,6 +31,13 @@ class SchoolAdmissionPaymentTerm(models.Model):
         "manually_control",
     )
     def _compute_state(self):
+        """Derive the term state from the admission and the invoice.
+
+        ``draft`` while the admission is draft or confirm; once open or
+        done the term is ``invoiced`` when a customer invoice exists,
+        ``manual`` when it is manually controlled, otherwise
+        ``uninvoiced``. Any other admission state yields ``cancelled``.
+        """
         for record in self:
             if record.admission_id.state in ["draft", "confirm"]:
                 state = "draft"
@@ -52,6 +59,12 @@ class SchoolAdmissionPaymentTerm(models.Model):
         "detail_ids.price_total",
     )
     def _compute_total(self):
+        """Sum the detail lines into the term amounts.
+
+        ``amount_untaxed``, ``amount_tax`` and ``amount_total`` are the
+        sums of ``price_subtotal``, ``price_tax`` and ``price_total`` of
+        every detail line of this term.
+        """
         for record in self:
             amount_untaxed = amount_tax = amount_total = 0.0
             for detail in record.detail_ids:
@@ -195,6 +208,16 @@ class SchoolAdmissionPaymentTerm(models.Model):
     )
 
     def _check_addendum_lock(self, vals):
+        """Forbid editing a locked payment term.
+
+        Skipped when the context flag ``bypass_addendum_lock`` is set,
+        or when the write only touches the fields listed in
+        ``ADDENDUM_LOCK_ALLOWED_FIELDS``.
+
+        :param vals: the write values about to be applied
+        :return: ``None``
+        :raises UserError: when a locked term would be modified
+        """
         if self.env.context.get("bypass_addendum_lock"):
             return
         if set(vals.keys()) <= ADDENDUM_LOCK_ALLOWED_FIELDS:
@@ -215,6 +238,13 @@ Solution: Add a new payment term via the addendum mechanism instead of editing t
                 raise UserError(error_message)
 
     def _check_addendum_lock_unlink(self):
+        """Forbid deleting a locked payment term.
+
+        Skipped when the context flag ``bypass_addendum_lock`` is set.
+
+        :return: ``None``
+        :raises UserError: when a locked term would be deleted
+        """
         if self.env.context.get("bypass_addendum_lock"):
             return
         for record in self:
@@ -234,12 +264,29 @@ Solution: Locked payment terms are permanent; create a new one via addendum inst
 
     @api.model
     def create(self, vals):
+        """Create the term and refresh the admission product summary.
+
+        Overridden so the aggregated ``product_summary_ids`` of the
+        owning admission stays in sync with its payment terms.
+
+        :param vals: values of the term to create
+        :return: the created ``school_admission_payment_term`` record
+        """
         result = super().create(vals)
         if result.admission_id:
             result.admission_id._recompute_product_summary()  # pylint: disable=protected-access
         return result
 
     def write(self, vals):
+        """Write the term, enforcing the addendum lock first.
+
+        Overridden both to reject edits on locked terms and to refresh
+        the aggregated product summary of the owning admission.
+
+        :param vals: values to write
+        :return: ``True``
+        :raises UserError: when a locked term would be modified
+        """
         self._check_addendum_lock(vals)
         result = super().write(vals)
         self.mapped(
@@ -248,6 +295,14 @@ Solution: Locked payment terms are permanent; create a new one via addendum inst
         return result
 
     def unlink(self):
+        """Delete the term, enforcing the addendum lock first.
+
+        Overridden both to reject deletion of locked terms and to
+        refresh the aggregated product summary of the owning admission.
+
+        :return: ``True``
+        :raises UserError: when a locked term would be deleted
+        """
         self._check_addendum_lock_unlink()
         admissions = self.mapped("admission_id")
         result = super().unlink()
@@ -255,31 +310,77 @@ Solution: Locked payment terms are permanent; create a new one via addendum inst
         return result
 
     def action_create_invoice(self):
+        """Create the customer invoice of this payment term.
+
+        User-facing button; runs as superuser so the invoice can be
+        created regardless of the acting user's accounting rights.
+
+        :return: ``None``
+        """
         for record in self.sudo():
             record._create_invoice()  # pylint: disable=protected-access
 
     def action_delete_invoice(self):
+        """Delete the draft customer invoice of this payment term.
+
+        User-facing button; runs as superuser.
+
+        :return: ``None``
+        :raises UserError: when the invoice is no longer draft
+        """
         for record in self.sudo():
             record._delete_invoice()  # pylint: disable=protected-access
 
     def action_disconnect_invoice(self):
+        """Detach the customer invoice without deleting it.
+
+        User-facing button; runs as superuser. The term goes back to
+        ``uninvoiced`` while the invoice document is kept.
+
+        :return: ``None``
+        """
         for record in self.sudo():
             record._disconnect_invoice()  # pylint: disable=protected-access
 
     def action_mark_as_manual(self):
+        """Flag this term as manually controlled.
+
+        User-facing button; the term then stays out of the automatic
+        due-invoice creation.
+
+        :return: ``None``
+        """
         for record in self.sudo():
             record._mark_as_manual()  # pylint: disable=protected-access
 
     def action_unmark_as_manual(self):
+        """Remove the manually controlled flag from this term.
+
+        User-facing button; the term becomes eligible again for the
+        automatic due-invoice creation.
+
+        :return: ``None``
+        """
         for record in self.sudo():
             record._unmark_as_manual()  # pylint: disable=protected-access
 
     def action_open_duplicate_wizard(self):
+        """Open the wizard duplicating this payment term.
+
+        :return: an ``ir.actions.act_window`` dict
+        """
         for record in self.sudo():
             result = record._open_duplicate_wizard()
         return result
 
     def _open_duplicate_wizard(self):
+        """Build the act_window opening the duplicate-term wizard.
+
+        Reads the wizard action and injects this term as the active
+        record so the wizard can prefill its defaults from it.
+
+        :return: an ``ir.actions.act_window`` dict
+        """
         self.ensure_one()
         waction = self.env.ref(
             "ssi_school_admission.school_admission_payment_term_action_duplicate"
@@ -288,10 +389,18 @@ Solution: Locked payment terms are permanent; create a new one via addendum inst
         return waction
 
     def _mark_as_manual(self):
+        """Set ``manually_control`` on this term.
+
+        :return: ``None``
+        """
         self.ensure_one()
         self.write({"manually_control": True})
 
     def _unmark_as_manual(self):
+        """Clear ``manually_control`` on this term.
+
+        :return: ``None``
+        """
         self.ensure_one()
         self.write({"manually_control": False})
 
