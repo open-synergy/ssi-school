@@ -238,6 +238,14 @@ scenarios:
             type: "value"
             expected: false
 
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
       - step: "Approve enrollment"
         action: "call"
         target: "enrollment"
