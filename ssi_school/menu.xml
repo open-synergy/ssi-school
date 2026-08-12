@@ -27,14 +27,14 @@
         id="menu_school_report"
         name="Reporting"
         parent="menu_school_root"
-        sequence="98"
+        sequence="998"
     />
 
 <menuitem
         id="menu_school_configuration"
         name="Configuration"
         parent="menu_school_root"
-        sequence="99"
+        sequence="999"
     />
 
 <menuitem

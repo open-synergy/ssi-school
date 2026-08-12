@@ -1,0 +1,370 @@
+options:
+  auto_refresh: true
+
+setup:
+  steps:
+    - step: "Setup - create grade type"
+      action: "create"
+      model: "school_grade_type"
+      save_as: "grade_type"
+      values:
+        name: "Grade Type Integrity"
+        code: "GTINT"
+        sequence: 10
+
+    - step: "Setup - create school"
+      action: "create"
+      model: "school"
+      save_as: "school"
+      values:
+        name: "School Integrity"
+        code: "SCHINT"
+        grade_type_id: "REC: grade_type.id"
+
+    - step: "Setup - create the other school"
+      action: "create"
+      model: "school"
+      save_as: "other_school"
+      values:
+        name: "Other School Integrity"
+        code: "SCHINT2"
+        grade_type_id: "REC: grade_type.id"
+
+    - step: "Setup - create grade"
+      action: "create"
+      model: "school_grade"
+      save_as: "grade"
+      values:
+        name: "Grade Integrity"
+        code: "GINT"
+        sequence: 10
+        type_id: "REC: grade_type.id"
+
+    - step: "Setup - create the grade of the other school"
+      action: "create"
+      model: "school_grade"
+      save_as: "other_school_grade"
+      values:
+        name: "Grade Other School Integrity"
+        code: "GINT2"
+        sequence: 20
+        type_id: "REC: grade_type.id"
+
+    - step: "Setup - create the uncapped grade class"
+      action: "create"
+      model: "school_grade_class"
+      save_as: "grade_class"
+      values:
+        name: "Class Integrity"
+        code: "CLINT"
+        school_id: "REC: school.id"
+        grade_id: "REC: grade.id"
+
+    - step: "Setup - create the grade class of the other school"
+      action: "create"
+      model: "school_grade_class"
+      save_as: "other_grade_class"
+      values:
+        name: "Class Other School Integrity"
+        code: "CLINT2"
+        school_id: "REC: other_school.id"
+        grade_id: "REC: other_school_grade.id"
+
+    - step: "Setup - create academic year"
+      action: "create"
+      model: "school_academic_year"
+      save_as: "year"
+      values:
+        name: "Year Integrity"
+        code: "AYINT"
+        date_start: "2024-07-01"
+        date_end: "2025-06-30"
+
+    - step: "Setup - create the other academic year"
+      action: "create"
+      model: "school_academic_year"
+      save_as: "other_year"
+      values:
+        name: "Other Year Integrity"
+        code: "AYINT2"
+        date_start: "2025-07-01"
+        date_end: "2026-06-30"
+
+    - step: "Setup - create the term open for enrollment"
+      action: "create"
+      model: "school_academic_term"
+      save_as: "term"
+      values:
+        name: "Term Integrity"
+        code: "TMINT"
+        date_start: "2024-07-01"
+        date_end: "2024-12-31"
+        year_id: "REC: year.id"
+        enrollment_state: "open"
+
+    - step: "Setup - create the term closed for enrollment"
+      action: "create"
+      model: "school_academic_term"
+      save_as: "closed_term"
+      values:
+        name: "Closed Term Integrity"
+        code: "TMINTCL"
+        date_start: "2025-01-01"
+        date_end: "2025-06-30"
+        year_id: "REC: year.id"
+        enrollment_state: "close"
+
+    - step: "Setup - create the contact of the first student"
+      action: "create"
+      model: "res.partner"
+      save_as: "contact"
+      values:
+        name: "Contact Integrity"
+
+    - step: "Setup - create the first student"
+      action: "create"
+      model: "school_student"
+      save_as: "student"
+      values:
+        name: "Student Integrity"
+        code: "STUINT"
+        contact_id: "REC: contact.id"
+        school_id: "REC: school.id"
+
+    - step: "Setup - create the contact of the second student"
+      action: "create"
+      model: "res.partner"
+      save_as: "other_contact"
+      values:
+        name: "Other Contact Integrity"
+
+    - step: "Setup - create the second student"
+      action: "create"
+      model: "school_student"
+      save_as: "other_student"
+      values:
+        name: "Other Student Integrity"
+        code: "STUINT2"
+        contact_id: "REC: other_contact.id"
+        school_id: "REC: school.id"
+
+    - step: "Setup - create the grade class capped at one seat"
+      action: "create"
+      model: "school_grade_class"
+      save_as: "capped_grade_class"
+      values:
+        name: "Class Capacity Integrity"
+        code: "CLCAP"
+        school_id: "REC: school.id"
+        grade_id: "REC: grade.id"
+        capacity: 1
+
+scenarios:
+  - name: "Fully consistent enrollment data is accepted"
+    steps:
+      - step: "Create the consistent enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: year.id"
+          academic_term_id: "REC: term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Open the enrollment"
+        action: "write"
+        target: "enrollment"
+        values:
+          state: "open"
+
+      - step: "Assert the enrollment is open"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+  - name: "Enrollment whose term is from another year is rejected"
+    steps:
+      - step: "Create the enrollment on a year that does not own the term"
+        action: "create"
+        model: "school_enrollment"
+        expect_error:
+          type: "ValidationError"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: other_year.id"
+          academic_term_id: "REC: term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+
+  - name: "Enrollment whose class is from another school is rejected"
+    steps:
+      - step: "Create the enrollment on the class of the other school"
+        action: "create"
+        model: "school_enrollment"
+        expect_error:
+          type: "ValidationError"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: year.id"
+          academic_term_id: "REC: term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: other_grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+
+  - name: "Opening an enrollment outside the enrollment window is rejected"
+    steps:
+      - step: "Create the enrollment on the closed academic term"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: year.id"
+          academic_term_id: "REC: closed_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Open the enrollment of the closed academic term"
+        action: "write"
+        target: "enrollment"
+        expect_error:
+          type: "ValidationError"
+        values:
+          state: "open"
+
+  - name: "Second active enrollment of the same student is rejected"
+    steps:
+      - step: "Create the first enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "first"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: year.id"
+          academic_term_id: "REC: term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Open the first enrollment"
+        action: "write"
+        target: "first"
+        values:
+          state: "open"
+
+      - step: "Create the second enrollment of the same student"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "second"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: year.id"
+          academic_term_id: "REC: term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Open the second enrollment of the same student"
+        action: "write"
+        target: "second"
+        expect_error:
+          type: "ValidationError"
+        values:
+          state: "open"
+
+  - name: "Open enrollment counts against the grade class capacity"
+    steps:
+      - step: "Create the enrollment on the capped grade class"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: year.id"
+          academic_term_id: "REC: term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: capped_grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Open the enrollment on the capped grade class"
+        action: "write"
+        target: "enrollment"
+        values:
+          state: "open"
+
+      - step: "Assert the capped grade class has one student and no seat"
+        action: "assert"
+        target: "capped_grade_class"
+        asserts:
+          student_count:
+            type: "value"
+            expected: 1
+          available_seat:
+            type: "value"
+            expected: 0
+
+  - name: "Opening an enrollment on a full grade class is rejected"
+    steps:
+      - step: "Create the enrollment taking the only seat"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "first"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: year.id"
+          academic_term_id: "REC: term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: capped_grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Open the enrollment taking the only seat"
+        action: "write"
+        target: "first"
+        values:
+          state: "open"
+
+      - step: "Create the enrollment of the second student"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "second"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: year.id"
+          academic_term_id: "REC: term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: capped_grade_class.id"
+          student_id: "REC: other_student.id"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Open the enrollment of the second student"
+        action: "write"
+        target: "second"
+        expect_error:
+          type: "ValidationError"
+        values:
+          state: "open"

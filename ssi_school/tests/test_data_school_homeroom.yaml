@@ -348,11 +348,6 @@ scenarios:
             type: "value"
             expected: "confirm"
 
-      - step: "Invalidate homeroom cache before approve"
-        action: "call"
-        target: "homeroom"
-        method: "invalidate_cache"
-
       - step: "Approve homeroom"
         action: "call"
         target: "homeroom"
@@ -371,3 +366,746 @@ scenarios:
             type: "value"
             operator: "contains"
             expected: "SH"
+
+  - name: "Onchange Grade Class Fills Capacity"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Homeroom Onchange"
+          code: "GTHRO"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Homeroom Onchange"
+          code: "SCHHRO"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade Homeroom Onchange"
+          code: "GHRO"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade class with capacity 25"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class Homeroom Onchange"
+          code: "CLHRO"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          capacity: 25
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "Year Homeroom Onchange"
+          code: "AYHRO"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Term Homeroom Onchange"
+          code: "TMHRO"
+          date_start: "2024-07-01"
+          date_end: "2024-12-31"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Selecting the grade class fills the capacity on the form"
+        action: form
+        model: "school_homeroom"
+        save: false
+        ops:
+          - set:
+              academic_year_id: "REC: academic_year"
+          - set:
+              academic_term_id: "REC: academic_term"
+          - set:
+              school_id: "REC: school"
+          - set:
+              grade_id: "REC: grade"
+          - set:
+              grade_class_id: "REC: grade_class"
+          - assert:
+              capacity:
+                type: "value"
+                expected: 25
+
+  - name: "Fill Random Only Picks Allowed Students"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Fill Random 1"
+          code: "GTFR1"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Fill Random 1"
+          code: "SCHFR1"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create another school"
+        action: "create"
+        model: "school"
+        save_as: "other_school"
+        values:
+          name: "Other School Fill Random 1"
+          code: "SCHFR1B"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade Fill Random 1"
+          code: "GFR1"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create another grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "other_grade"
+        values:
+          name: "Other Grade Fill Random 1"
+          code: "GFR1B"
+          sequence: 20
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class Fill Random 1"
+          code: "CLFR1"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          capacity: 50
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "Year Fill Random 1"
+          code: "AYFR1"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create first academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "term_1"
+        values:
+          name: "Term 1 Fill Random 1"
+          code: "TMFR1A"
+          date_start: "2024-07-01"
+          date_end: "2024-12-31"
+          year_id: "REC: academic_year.id"
+
+      - step: "Setup - create second academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "term_2"
+        values:
+          name: "Term 2 Fill Random 1"
+          code: "TMFR1B"
+          date_start: "2025-01-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+
+      - step: "Assert the first term opens the academic year"
+        action: "assert"
+        target: "term_1"
+        asserts:
+          first_term:
+            type: "value"
+            operator: "is_truthy"
+
+      - step: "Assert the second term does not open the academic year"
+        action: "assert"
+        target: "term_2"
+        asserts:
+          first_term:
+            type: "value"
+            operator: "is_falsy"
+
+      - step: "Setup - create contact of allowed student 1"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_1"
+        values:
+          name: "Contact STUFR1A"
+
+      - step: "Setup - create allowed student 1"
+        action: "create"
+        model: "school_student"
+        save_as: "student_1"
+        values:
+          name: "Student STUFR1A"
+          code: "STUFR1A"
+          contact_id: "REC: contact_1.id"
+          school_id: "REC: school.id"
+          initial_grade_id: "REC: grade.id"
+
+      - step: "Setup - create contact of allowed student 2"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_2"
+        values:
+          name: "Contact STUFR1B"
+
+      - step: "Setup - create allowed student 2"
+        action: "create"
+        model: "school_student"
+        save_as: "student_2"
+        values:
+          name: "Student STUFR1B"
+          code: "STUFR1B"
+          contact_id: "REC: contact_2.id"
+          school_id: "REC: school.id"
+          initial_grade_id: "REC: grade.id"
+
+      - step: "Setup - create contact of allowed student 3"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_3"
+        values:
+          name: "Contact STUFR1C"
+
+      - step: "Setup - create allowed student 3"
+        action: "create"
+        model: "school_student"
+        save_as: "student_3"
+        values:
+          name: "Student STUFR1C"
+          code: "STUFR1C"
+          contact_id: "REC: contact_3.id"
+          school_id: "REC: school.id"
+          initial_grade_id: "REC: grade.id"
+
+      - step: "Setup - create contact of the non draft student"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_4"
+        values:
+          name: "Contact STUFR1D"
+
+      - step: "Setup - create the non draft student"
+        action: "create"
+        model: "school_student"
+        save_as: "non_draft_student"
+        values:
+          name: "Student STUFR1D"
+          code: "STUFR1D"
+          contact_id: "REC: contact_4.id"
+          school_id: "REC: school.id"
+          initial_grade_id: "REC: grade.id"
+
+      - step: "Setup - move the non draft student out of draft"
+        action: "write"
+        target: "non_draft_student"
+        values:
+          state: "enrol"
+
+      - step: "Setup - create contact of the other school student"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_5"
+        values:
+          name: "Contact STUFR1E"
+
+      - step: "Setup - create the other school student"
+        action: "create"
+        model: "school_student"
+        save_as: "other_school_student"
+        values:
+          name: "Student STUFR1E"
+          code: "STUFR1E"
+          contact_id: "REC: contact_5.id"
+          school_id: "REC: other_school.id"
+          initial_grade_id: "REC: grade.id"
+
+      - step: "Setup - create contact of the other grade student"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_6"
+        values:
+          name: "Contact STUFR1F"
+
+      - step: "Setup - create the other grade student"
+        action: "create"
+        model: "school_student"
+        save_as: "other_grade_student"
+        values:
+          name: "Student STUFR1F"
+          code: "STUFR1F"
+          contact_id: "REC: contact_6.id"
+          school_id: "REC: school.id"
+          initial_grade_id: "REC: other_grade.id"
+
+      - step: "Create homeroom on the second term"
+        action: "create"
+        model: "school_homeroom"
+        save_as: "homeroom"
+        values:
+          date: "2025-01-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: term_2.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          capacity: 50
+
+      - step: "Fill random candidates"
+        action: "call"
+        target: "homeroom"
+        method: "action_fill_random"
+
+      - step: "Assert the candidates are exactly the three allowed students"
+        action: "assert"
+        target: "homeroom"
+        asserts:
+          candidate_student_ids:
+            type: "m2m"
+            check: "exact"
+            expected_records:
+              - "REC: student_1"
+              - "REC: student_2"
+              - "REC: student_3"
+
+      - step: "Assert the non draft student was not picked"
+        action: "search"
+        model: "school_student"
+        domain:
+          - ["id", "=", "REC: non_draft_student.id"]
+          - ["id", "in", "REC: homeroom.candidate_student_ids.ids"]
+        save_as: "picked_non_draft_student"
+        expect_count: 0
+
+      - step: "Assert the other school student was not picked"
+        action: "search"
+        model: "school_student"
+        domain:
+          - ["id", "=", "REC: other_school_student.id"]
+          - ["id", "in", "REC: homeroom.candidate_student_ids.ids"]
+        save_as: "picked_other_school_student"
+        expect_count: 0
+
+      - step: "Assert the other grade student was not picked"
+        action: "search"
+        model: "school_student"
+        domain:
+          - ["id", "=", "REC: other_grade_student.id"]
+          - ["id", "in", "REC: homeroom.candidate_student_ids.ids"]
+        save_as: "picked_other_grade_student"
+        expect_count: 0
+
+  - name: "Fill Random On First Term Uses Next Grade"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Fill Random 2"
+          code: "GTFR2"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Fill Random 2"
+          code: "SCHFR2"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create the previous grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_prev"
+        values:
+          name: "Grade Prev Fill Random 2"
+          code: "GFR2A"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create the target grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_target"
+        values:
+          name: "Grade Target Fill Random 2"
+          code: "GFR2B"
+          sequence: 20
+          type_id: "REC: grade_type.id"
+
+      - step: "Assert the target grade follows the previous grade"
+        action: "assert"
+        target: "grade_prev"
+        asserts:
+          next_grade_id:
+            type: "m2o"
+            expected: "REC: grade_target"
+
+      - step: "Setup - create grade class on the target grade"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class Fill Random 2"
+          code: "CLFR2"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade_target.id"
+          capacity: 50
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "Year Fill Random 2"
+          code: "AYFR2"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create the only academic term of the year"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Term Fill Random 2"
+          code: "TMFR2"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+
+      - step: "Assert that term opens the academic year"
+        action: "assert"
+        target: "academic_term"
+        asserts:
+          first_term:
+            type: "value"
+            operator: "is_truthy"
+
+      - step: "Setup - create contact of the eligible student"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_a"
+        values:
+          name: "Contact FR2 A"
+
+      - step: "Setup - create the eligible student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_a"
+        values:
+          name: "Student FR2 A"
+          code: "STUFR2A"
+          contact_id: "REC: contact_a.id"
+          school_id: "REC: school.id"
+          initial_grade_id: "REC: grade_prev.id"
+
+      - step: "Assert the eligible student moves up to the target grade"
+        action: "assert"
+        target: "student_a"
+        asserts:
+          next_grade_id:
+            type: "m2o"
+            expected: "REC: grade_target"
+
+      - step: "Setup - create contact of the non eligible student"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_b"
+        values:
+          name: "Contact FR2 B"
+
+      - step: "Setup - create the non eligible student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_b"
+        values:
+          name: "Student FR2 B"
+          code: "STUFR2B"
+          contact_id: "REC: contact_b.id"
+          school_id: "REC: school.id"
+          initial_grade_id: "REC: grade_target.id"
+
+      - step: "Assert the non eligible student already is in the target grade"
+        action: "assert"
+        target: "student_b"
+        asserts:
+          current_grade_id:
+            type: "m2o"
+            expected: "REC: grade_target"
+          next_grade_id:
+            type: "value"
+            operator: "not_equals"
+            expected: "REC: grade_target"
+
+      - step: "Create homeroom on the first term"
+        action: "create"
+        model: "school_homeroom"
+        save_as: "homeroom"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade_target.id"
+          grade_class_id: "REC: grade_class.id"
+          capacity: 50
+
+      - step: "Fill random candidates"
+        action: "call"
+        target: "homeroom"
+        method: "action_fill_random"
+
+      - step: "Assert only the student moving up was picked"
+        action: "assert"
+        target: "homeroom"
+        asserts:
+          candidate_student_ids:
+            type: "m2m"
+            check: "exact"
+            expected_records:
+              - "REC: student_a"
+
+      - step: "Assert the non eligible student was not picked"
+        action: "search"
+        model: "school_student"
+        domain:
+          - ["id", "=", "REC: student_b.id"]
+          - ["id", "in", "REC: homeroom.candidate_student_ids.ids"]
+        save_as: "picked_student_b"
+        expect_count: 0
+
+  - name: "Fill Random On Non First Term Uses Current Grade"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Fill Random 3"
+          code: "GTFR3"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Fill Random 3"
+          code: "SCHFR3"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create the previous grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_prev"
+        values:
+          name: "Grade Prev Fill Random 3"
+          code: "GFR3A"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create the target grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_target"
+        values:
+          name: "Grade Target Fill Random 3"
+          code: "GFR3B"
+          sequence: 20
+          type_id: "REC: grade_type.id"
+
+      - step: "Assert the target grade follows the previous grade"
+        action: "assert"
+        target: "grade_prev"
+        asserts:
+          next_grade_id:
+            type: "m2o"
+            expected: "REC: grade_target"
+
+      - step: "Setup - create grade class on the target grade"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class Fill Random 3"
+          code: "CLFR3"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade_target.id"
+          capacity: 50
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "Year Fill Random 3"
+          code: "AYFR3"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create first academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "term_1"
+        values:
+          name: "Term 1 Fill Random 3"
+          code: "TMFR3A"
+          date_start: "2024-07-01"
+          date_end: "2024-12-31"
+          year_id: "REC: academic_year.id"
+
+      - step: "Setup - create second academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "term_2"
+        values:
+          name: "Term 2 Fill Random 3"
+          code: "TMFR3B"
+          date_start: "2025-01-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+
+      - step: "Assert the first term opens the academic year"
+        action: "assert"
+        target: "term_1"
+        asserts:
+          first_term:
+            type: "value"
+            operator: "is_truthy"
+
+      - step: "Assert the second term does not open the academic year"
+        action: "assert"
+        target: "term_2"
+        asserts:
+          first_term:
+            type: "value"
+            operator: "is_falsy"
+
+      - step: "Setup - create contact of the eligible student"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_a"
+        values:
+          name: "Contact FR3 A"
+
+      - step: "Setup - create the eligible student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_a"
+        values:
+          name: "Student FR3 A"
+          code: "STUFR3A"
+          contact_id: "REC: contact_a.id"
+          school_id: "REC: school.id"
+          initial_grade_id: "REC: grade_target.id"
+
+      - step: "Assert the eligible student already is in the target grade"
+        action: "assert"
+        target: "student_a"
+        asserts:
+          current_grade_id:
+            type: "m2o"
+            expected: "REC: grade_target"
+
+      - step: "Setup - create contact of the non eligible student"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_b"
+        values:
+          name: "Contact FR3 B"
+
+      - step: "Setup - create the non eligible student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_b"
+        values:
+          name: "Student FR3 B"
+          code: "STUFR3B"
+          contact_id: "REC: contact_b.id"
+          school_id: "REC: school.id"
+          initial_grade_id: "REC: grade_prev.id"
+
+      - step: "Assert the non eligible student only moves up to that grade"
+        action: "assert"
+        target: "student_b"
+        asserts:
+          next_grade_id:
+            type: "m2o"
+            expected: "REC: grade_target"
+          current_grade_id:
+            type: "value"
+            operator: "not_equals"
+            expected: "REC: grade_target"
+
+      - step: "Create homeroom on the second term"
+        action: "create"
+        model: "school_homeroom"
+        save_as: "homeroom"
+        values:
+          date: "2025-01-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: term_2.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade_target.id"
+          grade_class_id: "REC: grade_class.id"
+          capacity: 50
+
+      - step: "Fill random candidates"
+        action: "call"
+        target: "homeroom"
+        method: "action_fill_random"
+
+      - step: "Assert only the student already in the grade was picked"
+        action: "assert"
+        target: "homeroom"
+        asserts:
+          candidate_student_ids:
+            type: "m2m"
+            check: "exact"
+            expected_records:
+              - "REC: student_a"
+
+      - step: "Assert the non eligible student was not picked"
+        action: "search"
+        model: "school_student"
+        domain:
+          - ["id", "=", "REC: student_b.id"]
+          - ["id", "in", "REC: homeroom.candidate_student_ids.ids"]
+        save_as: "picked_student_b"
+        expect_count: 0

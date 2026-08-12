@@ -11,5 +11,13 @@ from odoo.tests import tagged
 class TestSchoolEnrollmentPaymentDatePattern(
     YamlTransactionCase
 ):  # pylint: disable=too-few-public-methods
+    """Cover the invoice and due dates computed on a payment term.
+
+    The scenarios check that a term carrying a duration derives its
+    estimated invoice and due dates from that duration, and that a term
+    without any duration leaves both dates empty.
+    """
+
     def test_enrollment_payment_date_pattern(self):
+        """Run the payment term date computation scenarios."""
         self.run_yaml_scenario("test_data_enrollment_payment_date_pattern.yaml")

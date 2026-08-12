@@ -27,6 +27,16 @@ _logger = logging.getLogger(__name__)
 
 
 def _column_exists(cr, table, column):
+    """Report whether a column is still present in the database.
+
+    Used as the guard of ``migrate``: the rescue only makes sense while the
+    old ``school_student`` columns have not been dropped yet.
+
+    :param cr: database cursor
+    :param table: physical table name
+    :param column: physical column name
+    :return: True when the column exists, False otherwise
+    """
     cr.execute(
         "SELECT 1 FROM information_schema.columns "
         "WHERE table_name = %s AND column_name = %s",
@@ -36,6 +46,14 @@ def _column_exists(cr, table, column):
 
 
 def _migrate_father_id(cr):
+    """Copy ``school_student.father_id`` onto the linked contact.
+
+    Only rows whose ``res_partner.father_id`` is still NULL are written, so
+    a value already entered on ``res.partner`` always wins. Every conflict
+    that is therefore discarded is logged at INFO level.
+
+    :param cr: database cursor
+    """
     cr.execute(
         "UPDATE res_partner rp "
         "SET father_id = ss.father_id "
@@ -65,6 +83,14 @@ def _migrate_father_id(cr):
 
 
 def _migrate_mother_id(cr):
+    """Copy ``school_student.mother_id`` onto the linked contact.
+
+    Only rows whose ``res_partner.mother_id`` is still NULL are written, so
+    a value already entered on ``res.partner`` always wins. Every conflict
+    that is therefore discarded is logged at INFO level.
+
+    :param cr: database cursor
+    """
     cr.execute(
         "UPDATE res_partner rp "
         "SET mother_id = ss.mother_id "
@@ -94,6 +120,14 @@ def _migrate_mother_id(cr):
 
 
 def _migrate_guardian_id(cr):
+    """Copy ``school_student.guardian_id`` onto the linked contact.
+
+    Only rows whose ``res_partner.guardian_id`` is still NULL are written,
+    so a value already entered on ``res.partner`` always wins. Every
+    conflict that is therefore discarded is logged at INFO level.
+
+    :param cr: database cursor
+    """
     cr.execute(
         "UPDATE res_partner rp "
         "SET guardian_id = ss.guardian_id "
@@ -123,6 +157,17 @@ def _migrate_guardian_id(cr):
 
 
 def migrate(cr, version):
+    """Rescue the student family data before the fields become related.
+
+    Entry point called by Odoo before this version is loaded. Does nothing
+    on a fresh install (``version`` is falsy) or when the old
+    ``school_student.father_id`` column is already gone; otherwise the three
+    family columns are copied onto the linked ``res.partner`` rows.
+
+    :param cr: database cursor
+    :param version: version the module is upgraded from, or a falsy value
+        on a fresh install
+    """
     if not version:
         # Fresh install, nothing to rescue.
         return

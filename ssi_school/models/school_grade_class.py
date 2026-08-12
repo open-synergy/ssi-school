@@ -81,6 +81,14 @@ class SchoolGradeClass(models.Model):  # pylint: disable=too-few-public-methods
     # search_count and is unaffected by this field's caching.
     @api.depends("capacity")
     def _compute_student_count(self):
+        """Count the students sitting in this class and the free seats.
+
+        Runs a live ``search_count`` on ``school_enrollment`` for the
+        records pointing at this grade class with state ``open`` and
+        stores it in ``student_count``; ``available_seat`` is then
+        ``capacity`` minus that count, which is meaningless while
+        ``capacity`` is left at zero (unlimited).
+        """
         enrollment_model = self.env["school_enrollment"]
         for record in self:
             count = enrollment_model.search_count(

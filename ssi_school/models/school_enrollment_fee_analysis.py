@@ -209,12 +209,32 @@ class SchoolEnrollmentFeeAnalysis(models.Model):
     )
 
     def init(self):
+        """Create the SQL view that backs this analysis model.
+
+        Odoo calls this on every module install or update for an
+        ``_auto = False`` model. The existing view is dropped first and
+        recreated from ``_select_query``, so a changed query takes
+        effect as soon as the module is updated.
+
+        :return: None
+        """
         tools.drop_view_if_exists(self.env.cr, self._table)
         self.env.cr.execute(
             """CREATE VIEW %s AS (%s)""" % (self._table, self._select_query())
         )
 
     def _select_query(self):
+        """Return the SQL SELECT that feeds the analysis view.
+
+        Joins ``school_enrollment_payment_term_detail`` to its payment
+        term, its enrollment, and the school of that enrollment, and
+        exposes the detail line id as the row ``id`` so one analysis
+        row equals one fee line. Extension point: override to add
+        columns or joins; every added column must be matched by a
+        field declared on this model.
+
+        :return: str containing the SELECT statement
+        """
         return """
             SELECT
                 detail.id AS id,

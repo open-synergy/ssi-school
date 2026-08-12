@@ -1,3 +1,5 @@
+options:
+  auto_refresh: true
 scenarios:
   - name: "Student State - On Leave"
     steps:
@@ -51,11 +53,6 @@ scenarios:
         action: "call"
         target: "student"
         method: "action_set_to_on_leave"
-
-      - step: "Invalidate student cache"
-        action: "call"
-        target: "student"
-        method: "invalidate_cache"
 
       - step: "Assert student state is on_leave"
         action: "assert"
@@ -118,11 +115,6 @@ scenarios:
         target: "student"
         method: "action_set_to_suspended"
 
-      - step: "Invalidate student cache"
-        action: "call"
-        target: "student"
-        method: "invalidate_cache"
-
       - step: "Assert student state is suspended"
         action: "assert"
         target: "student"
@@ -183,11 +175,6 @@ scenarios:
         action: "call"
         target: "student"
         method: "action_set_to_transferred"
-
-      - step: "Invalidate student cache"
-        action: "call"
-        target: "student"
-        method: "invalidate_cache"
 
       - step: "Assert student state is transferred"
         action: "assert"
@@ -250,11 +237,6 @@ scenarios:
         target: "student"
         method: "action_set_to_dropped"
 
-      - step: "Invalidate student cache"
-        action: "call"
-        target: "student"
-        method: "invalidate_cache"
-
       - step: "Assert student state is dropped"
         action: "assert"
         target: "student"
@@ -315,11 +297,6 @@ scenarios:
         action: "call"
         target: "student"
         method: "action_set_to_resigned"
-
-      - step: "Invalidate student cache"
-        action: "call"
-        target: "student"
-        method: "invalidate_cache"
 
       - step: "Assert student state is resigned"
         action: "assert"
@@ -382,10 +359,56 @@ scenarios:
         target: "student"
         method: "action_set_to_deceased"
 
-      - step: "Invalidate student cache"
-        action: "call"
+      - step: "Assert student state is deceased"
+        action: "assert"
         target: "student"
-        method: "invalidate_cache"
+        asserts:
+          state:
+            type: "value"
+            expected: "deceased"
+
+  - name: "Student State - Deceased Cannot Go Back To Enrol"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Transition Deceased"
+          code: "GTTDCS"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Transition Deceased"
+          code: "SCHTDCS"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Transition Contact Deceased"
+
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Transition Student Deceased"
+          code: "STUTDCS"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Write the student into deceased"
+        action: "write"
+        target: "student"
+        values:
+          state: "deceased"
 
       - step: "Assert student state is deceased"
         action: "assert"
@@ -394,3 +417,149 @@ scenarios:
           state:
             type: "value"
             expected: "deceased"
+
+      - step: "Going back to enrol is rejected"
+        action: "write"
+        target: "student"
+        values:
+          state: "enrol"
+        expect_error:
+          type: "ValidationError"
+
+  - name: "Student State - Graduate Cannot Go Back To Enrol"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Transition Graduate"
+          code: "GTTGRD"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Transition Graduate"
+          code: "SCHTGRD"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Transition Contact Graduate"
+
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Transition Student Graduate"
+          code: "STUTGRD"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Write the student into graduate"
+        action: "write"
+        target: "student"
+        values:
+          state: "graduate"
+
+      - step: "Assert student state is graduate"
+        action: "assert"
+        target: "student"
+        asserts:
+          state:
+            type: "value"
+            expected: "graduate"
+
+      - step: "Going straight back to enrol is rejected"
+        action: "write"
+        target: "student"
+        values:
+          state: "enrol"
+        expect_error:
+          type: "ValidationError"
+
+  - name: "Student State - Dropped Back To Draft Then Enrol"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Transition Dropped"
+          code: "GTTDRP"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Transition Dropped"
+          code: "SCHTDRP"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Transition Contact Dropped"
+
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Transition Student Dropped"
+          code: "STUTDRP"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Write the student into dropped"
+        action: "write"
+        target: "student"
+        values:
+          state: "dropped"
+
+      - step: "Assert student state is dropped"
+        action: "assert"
+        target: "student"
+        asserts:
+          state:
+            type: "value"
+            expected: "dropped"
+
+      - step: "Reset the student back to draft"
+        action: "write"
+        target: "student"
+        values:
+          state: "draft"
+
+      - step: "Assert student state is draft"
+        action: "assert"
+        target: "student"
+        asserts:
+          state:
+            type: "value"
+            expected: "draft"
+
+      - step: "Enrol the student again"
+        action: "write"
+        target: "student"
+        values:
+          state: "enrol"
+
+      - step: "Assert student state is enrol"
+        action: "assert"
+        target: "student"
+        asserts:
+          state:
+            type: "value"
+            expected: "enrol"

@@ -191,11 +191,6 @@ scenarios:
         method: "action_confirm"
         as_user: "base.user_admin"
 
-      - step: "Invalidate enrollment cache before approve"
-        action: "call"
-        target: "enrollment"
-        method: "invalidate_cache"
-
       - step: "Approve enrollment"
         action: "call"
         target: "enrollment"
@@ -222,11 +217,6 @@ scenarios:
             type: "value"
             expected: true
 
-      - step: "Invalidate enrollment cache before cancel"
-        action: "call"
-        target: "enrollment"
-        method: "invalidate_cache"
-
       - step: "Cancel enrollment"
         action: "call"
         target: "enrollment"
@@ -236,11 +226,6 @@ scenarios:
           state:
             type: "value"
             expected: "cancel"
-
-      - step: "Invalidate enrollment cache before restart"
-        action: "call"
-        target: "enrollment"
-        method: "invalidate_cache"
 
       - step: "Restart enrollment"
         action: "call"
@@ -297,3 +282,822 @@ scenarios:
           price_unit:
             type: "value"
             expected: 750000.0
+
+  - name: "Restart - Lock Is Kept While The Enrollment Was Never Cancelled"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal"
+        limit: 1
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type"
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "School Fee Income RUYML1"
+          code: "RUYML14200"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          name: "School Receivable RUYML1"
+          code: "RUYML11100"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type RUYML1"
+          code: "CITRUYML1"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Fee RUYML1"
+          type: "service"
+          list_price: 1000000.0
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type RUYML1"
+          code: "GTRUYML1"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 RUYML1"
+          code: "AYRUYML1"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester RUYML1"
+          code: "SMRUYML1"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School RUYML1"
+          code: "SCHRUYML1"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade RUYML1"
+          code: "GRUYML1"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class RUYML1"
+          code: "CLARUYML1"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact RUYML1"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student RUYML1"
+          code: "STURUYML1"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Create enrollment owned by admin"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        as_user: "base.user_admin"
+        values:
+          user_id: "REF: base.user_admin"
+          customer_invoice_type_id: "REC: ci_type.id"
+          receivable_account_id: "REC: receivable_account.id"
+          pricelist_id: "REF: product.list0"
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+          receivable_journal_id: "REC: journal.id"
+
+      - step: "Create payment term"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term"
+        as_user: "base.user_admin"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term RUYML1"
+          sequence: 10
+
+      - step: "Create payment term detail"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        save_as: "detail"
+        as_user: "base.user_admin"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Fee RUYML1"
+          account_id: "REC: account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert enrollment is confirmed before approval"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Assert term is still locked without any cancel"
+        action: "assert"
+        target: "term"
+        asserts:
+          locked:
+            type: "value"
+            expected: true
+
+      - step: "Assert detail is still locked without any cancel"
+        action: "assert"
+        target: "detail"
+        asserts:
+          locked:
+            type: "value"
+            expected: true
+
+      - step: "Write on the still locked term is rejected"
+        action: "write"
+        target: "term"
+        expect_error:
+          type: "UserError"
+        values:
+          name: "Changed Name RUYML1"
+
+  - name: "Restart - Copy Payment Term Into A Restarted Enrollment"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal"
+        limit: 1
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type"
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "School Fee Income RUYML2"
+          code: "RUYML24200"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          name: "School Receivable RUYML2"
+          code: "RUYML21100"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type RUYML2"
+          code: "CITRUYML2"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Fee RUYML2"
+          type: "service"
+          list_price: 1000000.0
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type RUYML2"
+          code: "GTRUYML2"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 RUYML2"
+          code: "AYRUYML2"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester RUYML2"
+          code: "SMRUYML2"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School RUYML2"
+          code: "SCHRUYML2"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade RUYML2"
+          code: "GRUYML2"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class RUYML2"
+          code: "CLARUYML2"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Setup - create target student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "target_contact"
+        values:
+          name: "Student Contact RUYML2TGT"
+
+      - step: "Setup - create target student"
+        action: "create"
+        model: "school_student"
+        save_as: "target_student"
+        values:
+          name: "Student RUYML2TGT"
+          code: "STURUYML2TGT"
+          contact_id: "REC: target_contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Create target enrollment owned by admin"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "target"
+        as_user: "base.user_admin"
+        values:
+          user_id: "REF: base.user_admin"
+          customer_invoice_type_id: "REC: ci_type.id"
+          receivable_account_id: "REC: receivable_account.id"
+          pricelist_id: "REF: product.list0"
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: target_student.id"
+          currency_id: "REC: company.currency_id.id"
+          receivable_journal_id: "REC: journal.id"
+
+      - step: "Create the old payment term of the target"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "old_term"
+        as_user: "base.user_admin"
+        values:
+          enrollment_id: "REC: target.id"
+          name: "Term RUYML2OLD"
+          sequence: 10
+
+      - step: "Create the old payment term detail of the target"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        save_as: "old_detail"
+        as_user: "base.user_admin"
+        values:
+          term_id: "REC: old_term.id"
+          product_id: "REC: product.id"
+          name: "Fee RUYML2OLD"
+          account_id: "REC: account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+
+      - step: "Confirm target enrollment"
+        action: "call"
+        target: "target"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert target enrollment is confirmed before approval"
+        action: "assert"
+        target: "target"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve target enrollment"
+        action: "call"
+        target: "target"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Cancel target enrollment"
+        action: "call"
+        target: "target"
+        method: "action_cancel"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "cancel"
+
+      - step: "Restart target enrollment"
+        action: "call"
+        target: "target"
+        method: "action_restart"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "draft"
+
+      - step: "Assert the old term is unlocked again after restart"
+        action: "assert"
+        target: "old_term"
+        asserts:
+          locked:
+            type: "value"
+            expected: false
+
+      - step: "Setup - create source student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "source_contact"
+        values:
+          name: "Student Contact RUYML2SRC"
+
+      - step: "Setup - create source student"
+        action: "create"
+        model: "school_student"
+        save_as: "source_student"
+        values:
+          name: "Student RUYML2SRC"
+          code: "STURUYML2SRC"
+          contact_id: "REC: source_contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Create source enrollment owned by admin"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "source"
+        as_user: "base.user_admin"
+        values:
+          user_id: "REF: base.user_admin"
+          customer_invoice_type_id: "REC: ci_type.id"
+          receivable_account_id: "REC: receivable_account.id"
+          pricelist_id: "REF: product.list0"
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: source_student.id"
+          currency_id: "REC: company.currency_id.id"
+          receivable_journal_id: "REC: journal.id"
+
+      - step: "Create the source payment term"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "source_term"
+        as_user: "base.user_admin"
+        values:
+          enrollment_id: "REC: source.id"
+          name: "Term RUYML2NEW"
+          sequence: 10
+
+      - step: "Create the source payment term detail"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        save_as: "source_detail"
+        as_user: "base.user_admin"
+        values:
+          term_id: "REC: source_term.id"
+          product_id: "REC: product.id"
+          name: "Fee RUYML2NEW"
+          account_id: "REC: account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+
+      - step: "Open the copy payment term wizard on the restarted target"
+        action: "wizard"
+        model: "school_enrollment.wizard_copy_payment_term"
+        target: "target"
+        save_as: "wizard"
+        values:
+          source_enrollment_id: "REC: source.id"
+          mode: "replace"
+
+      - step: "Assert the restarted target may receive payment terms"
+        action: "assert"
+        target: "target"
+        asserts:
+          copy_payment_term_ok:
+            type: "value"
+            expected: true
+
+      - step: "Run copy payment term"
+        action: "call"
+        target: "wizard"
+        method: "action_copy_payment_term"
+
+      - step: "Assert the target holds exactly one payment term"
+        action: "assert"
+        target: "target"
+        asserts:
+          payment_term_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 1
+
+      - step: "Assert that single term is the one copied from the source"
+        action: "search"
+        model: "school_enrollment_payment_term"
+        domain:
+          - ["enrollment_id", "=", "REC: target.id"]
+          - ["name", "=", "Term RUYML2NEW"]
+        save_as: "copied_term"
+        expect_count: 1
+
+  - name: "Restart - Cancel Is Blocked While A Customer Invoice Exists"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal"
+        limit: 1
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type"
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "School Fee Income RUYML3"
+          code: "RUYML34200"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          name: "School Receivable RUYML3"
+          code: "RUYML31100"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type RUYML3"
+          code: "CITRUYML3"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Fee RUYML3"
+          type: "service"
+          list_price: 1000000.0
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type RUYML3"
+          code: "GTRUYML3"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 RUYML3"
+          code: "AYRUYML3"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester RUYML3"
+          code: "SMRUYML3"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School RUYML3"
+          code: "SCHRUYML3"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade RUYML3"
+          code: "GRUYML3"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class RUYML3"
+          code: "CLARUYML3"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact RUYML3"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student RUYML3"
+          code: "STURUYML3"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Create enrollment owned by admin"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        as_user: "base.user_admin"
+        values:
+          user_id: "REF: base.user_admin"
+          customer_invoice_type_id: "REC: ci_type.id"
+          receivable_account_id: "REC: receivable_account.id"
+          pricelist_id: "REF: product.list0"
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+          receivable_journal_id: "REC: journal.id"
+
+      - step: "Create payment term"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term"
+        as_user: "base.user_admin"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term RUYML3"
+          sequence: 10
+
+      - step: "Create payment term detail"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        save_as: "detail"
+        as_user: "base.user_admin"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Fee RUYML3"
+          account_id: "REC: account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert enrollment is confirmed before approval"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create the customer invoice of the payment term"
+        action: "call"
+        target: "term"
+        method: "action_create_invoice"
+
+      - step: "Assert the term now carries a customer invoice"
+        action: "assert"
+        target: "term"
+        asserts:
+          customer_invoice_id:
+            type: "value"
+            operator: "is_truthy"
+
+      - step: "Assert cancel is not allowed while the invoice exists"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          cancel_ok:
+            type: "value"
+            expected: false
+
+      - step: "Cancel is rejected while the invoice exists"
+        action: "call"
+        target: "enrollment"
+        method: "action_cancel"
+        as_user: "base.user_admin"
+        expect_error:
+          type: "UserError"
+
+      - step: "Delete the customer invoice of the payment term"
+        action: "call"
+        target: "term"
+        method: "action_delete_invoice"
+
+      - step: "Assert the term no longer carries a customer invoice"
+        action: "assert"
+        target: "term"
+        asserts:
+          customer_invoice_id:
+            type: "value"
+            operator: "is_falsy"
+
+      - step: "Assert cancel is allowed again once the invoice is gone"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          cancel_ok:
+            type: "value"
+            expected: true
+
+      - step: "Cancel the enrollment now that no invoice remains"
+        action: "call"
+        target: "enrollment"
+        method: "action_cancel"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "cancel"

@@ -151,6 +151,15 @@
                             <field name="usage_id" />
                             <field name="currency_id" />
                         </tree>
+                        <form>
+                            <group name="bank_account_form" colspan="4" col="2">
+                                <field name="acc_number" />
+                                <field name="bank_id" />
+                                <field name="acc_holder_name" />
+                                <field name="usage_id" />
+                                <field name="currency_id" />
+                            </group>
+                        </form>
                     </field>
                 </page>
             </xpath>

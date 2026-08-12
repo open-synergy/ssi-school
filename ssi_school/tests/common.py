@@ -4,20 +4,29 @@
 
 
 class CommonTestMixin:  # pylint: disable=too-few-public-methods
-    """Mixin yang menyediakan fixture bersama (product, account, pricelist)
-    yang dapat digunakan ulang di berbagai kelas unit test.
+    """Provide the shared billing fixtures reused across test classes.
 
-    Cara penggunaan::
+    The mixin builds one income account, one service product and one
+    pricelist so that unrelated test classes do not each invent their
+    own billing master data.
 
-        class TestMyCase(CommonTestMixin, SavepointCase):
+    Usage::
+
+        class TestMyCase(CommonTestMixin, YamlTransactionCase):
             @classmethod
             def setUpClass(cls):
                 super().setUpClass()
-                # cls.product, cls.account, cls.pricelist sudah tersedia
+                # cls.product, cls.account and cls.pricelist are ready
     """
 
     @classmethod
     def setUpClass(cls):  # pylint: disable=invalid-name
+        """Create the shared income account, product and pricelist.
+
+        The records are exposed as ``cls.account``, ``cls.product`` and
+        ``cls.pricelist`` so that every test class mixing this in starts
+        from the same billing master data.
+        """
         super().setUpClass()
 
         cls.account_type_income = cls.env.ref("account.data_account_type_revenue")

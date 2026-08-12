@@ -1,3 +1,5 @@
+options:
+  auto_refresh: true
 scenarios:
   - name: "Create Academic Term"
     steps:
@@ -168,10 +170,6 @@ scenarios:
           date_start: "2025-01-01"
           date_end: "2025-06-30"
           year_id: "EVAL: registry['year'].id"
-      - step: "Invalidate term caches"
-        action: "call"
-        target: "term_1"
-        method: "invalidate_cache"
       - step: "Assert term_1 is first_term"
         action: "assert"
         target: "term_1"
@@ -182,10 +180,6 @@ scenarios:
           last_term:
             type: "value"
             operator: "is_falsy"
-      - step: "Invalidate term_2 cache"
-        action: "call"
-        target: "term_2"
-        method: "invalidate_cache"
       - step: "Assert term_2 is last_term"
         action: "assert"
         target: "term_2"

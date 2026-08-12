@@ -1,3 +1,5 @@
+options:
+  auto_refresh: true
 scenarios:
   - name: "Create Student"
     steps:
@@ -225,10 +227,6 @@ scenarios:
           contact_id: "EVAL: registry['contact'].id"
           school_id: "EVAL: registry['school'].id"
           initial_grade_id: "EVAL: registry['grade'].id"
-      - step: "Invalidate cache"
-        action: "call"
-        target: "student"
-        method: "invalidate_cache"
       - step: "Assert current_grade_id equals initial_grade_id"
         action: "assert"
         target: "student"
@@ -296,10 +294,6 @@ scenarios:
           code: "STUFB"
           contact_id: "EVAL: registry['contact'].id"
           school_id: "EVAL: registry['school'].id"
-      - step: "Invalidate student cache"
-        action: "call"
-        target: "student"
-        method: "invalidate_cache"
       - step: "Assert next_grade_id is the junior high grade, not the elementary one"
         action: "search"
         model: "school_grade"
@@ -342,10 +336,6 @@ scenarios:
           code: "STUEFB"
           contact_id: "EVAL: registry['contact'].id"
           school_id: "EVAL: registry['school'].id"
-      - step: "Invalidate student cache"
-        action: "call"
-        target: "student"
-        method: "invalidate_cache"
       - step: "Assert next_grade_id is falsy (no error)"
         action: "assert"
         target: "student"
@@ -854,10 +844,6 @@ scenarios:
         target: "enrollment_early"
         values:
           state: "done"
-      - step: "Invalidate student cache"
-        action: "call"
-        target: "student"
-        method: "invalidate_cache"
       - step:
           "Assert current_grade_id is grade 2 (from the chronologically latest
           enrollment, not the last-created one)"
@@ -932,10 +918,6 @@ scenarios:
           contact_id: "EVAL: registry['contact'].id"
           school_id: "EVAL: registry['school'].id"
           initial_grade_id: "EVAL: registry['grade_1'].id"
-      - step: "Invalidate student cache"
-        action: "call"
-        target: "student"
-        method: "invalidate_cache"
       - step:
           "Assert next_grade_id is grade 2 (initial_grade_id.next_grade_id branch is
           unaffected)"
@@ -946,3 +928,184 @@ scenarios:
           - ["id", "=", "EVAL: registry['grade_2'].id"]
         save_as: "check_next_grade"
         expect_count: 1
+
+  - name: "Duplicate Code In The Same School Is Rejected"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Dup Constrain Same School"
+          code: "GTDCS"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Dup Constrain Same School"
+          code: "SCHDCS"
+          grade_type_id: "REC: grade_type.id"
+      - step: "Create contact for the first student"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_1"
+        values:
+          name: "Dup Constrain Contact DUPS1"
+      - step: "Create contact for the second student"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_2"
+        values:
+          name: "Dup Constrain Contact DUPS2"
+      - step: "Create the first student with code DUPS01"
+        action: "create"
+        model: "school_student"
+        save_as: "student_1"
+        values:
+          name: "Dup Constrain Student DUPS1"
+          code: "DUPS01"
+          contact_id: "REC: contact_1.id"
+          school_id: "REC: school.id"
+      - step: "Reusing the code in the same school is rejected"
+        action: "create"
+        model: "school_student"
+        expect_error:
+          type: "UserError"
+        values:
+          name: "Dup Constrain Student DUPS2"
+          code: "DUPS01"
+          contact_id: "REC: contact_2.id"
+          school_id: "REC: school.id"
+
+  - name: "Moving A Student Into A Duplicate Code School Is Rejected"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Dup Constrain Move"
+          code: "GTDCM"
+          sequence: 10
+      - step: "Create school A"
+        action: "create"
+        model: "school"
+        save_as: "school_a"
+        values:
+          name: "School Dup Constrain Move A"
+          code: "SCHDCMA"
+          grade_type_id: "REC: grade_type.id"
+      - step: "Create school B"
+        action: "create"
+        model: "school"
+        save_as: "school_b"
+        values:
+          name: "School Dup Constrain Move B"
+          code: "SCHDCMB"
+          grade_type_id: "REC: grade_type.id"
+      - step: "Create contact for the school B student"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_b"
+        values:
+          name: "Dup Constrain Contact DUPM B"
+      - step: "Create contact for the school A student"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_a"
+        values:
+          name: "Dup Constrain Contact DUPM A"
+      - step: "Create the student holding the code in school B"
+        action: "create"
+        model: "school_student"
+        save_as: "student_b"
+        values:
+          name: "Dup Constrain Student DUPM B"
+          code: "DUPM01"
+          contact_id: "REC: contact_b.id"
+          school_id: "REC: school_b.id"
+      - step: "Create the student with the same code in school A"
+        action: "create"
+        model: "school_student"
+        save_as: "student_a"
+        values:
+          name: "Dup Constrain Student DUPM A"
+          code: "DUPM01"
+          contact_id: "REC: contact_a.id"
+          school_id: "REC: school_a.id"
+      - step: "Moving that student into school B is rejected"
+        action: "write"
+        target: "student_a"
+        values:
+          school_id: "REC: school_b.id"
+        expect_error:
+          type: "UserError"
+
+  - name: "Onchange School Clears The Initial Grade"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Student Onchange"
+          code: "GTSOCF"
+          sequence: 10
+      - step: "Create the first school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Student Onchange"
+          code: "SCHSOCF"
+          grade_type_id: "REC: grade_type.id"
+      - step: "Create the second school"
+        action: "create"
+        model: "school"
+        save_as: "new_school"
+        values:
+          name: "Another School Student Onchange"
+          code: "SCHASOCF"
+          grade_type_id: "REC: grade_type.id"
+      - step: "Create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade Student Onchange"
+          code: "GSOCF"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+      - step: "Create contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Onchange Student Contact"
+      - step: "Changing the school clears the initial grade"
+        action: form
+        model: "school_student"
+        save: false
+        ops:
+          - set:
+              name: "Onchange Student"
+          - set:
+              code: "STUOCF"
+          - set:
+              contact_id: "REC: contact"
+          - set:
+              school_id: "REC: school"
+          - set:
+              initial_grade_id: "REC: grade"
+          - assert:
+              initial_grade_id:
+                type: "m2o"
+                expected: "REC: grade"
+          - set:
+              school_id: "REC: new_school"
+          - assert:
+              initial_grade_id:
+                type: "value"
+                operator: "is_falsy"

@@ -210,11 +210,6 @@ scenarios:
             type: "value"
             expected: "confirm"
 
-      - step: "Invalidate enrollment cache before approve"
-        action: "call"
-        target: "enrollment"
-        method: "invalidate_cache"
-
       - step: "Approve enrollment as admin"
         action: "call"
         target: "enrollment"
@@ -397,11 +392,6 @@ scenarios:
             type: "value"
             expected: "confirm"
 
-      - step: "Invalidate homeroom cache before approve"
-        action: "call"
-        target: "homeroom"
-        method: "invalidate_cache"
-
       - step: "Approve homeroom as admin"
         action: "call"
         target: "homeroom"
@@ -522,11 +512,6 @@ scenarios:
         target: "enrollment"
         method: "action_confirm"
         as_user: "base.user_admin"
-
-      - step: "Invalidate enrollment cache before approve"
-        action: "call"
-        target: "enrollment"
-        method: "invalidate_cache"
 
       - step: "Approve enrollment as admin so it becomes open"
         action: "call"
@@ -670,11 +655,6 @@ scenarios:
         method: "action_confirm"
         as_user: "base.user_admin"
 
-      - step: "Invalidate enrollment cache before approve"
-        action: "call"
-        target: "enrollment"
-        method: "invalidate_cache"
-
       - step: "Approve enrollment as admin so it becomes open"
         action: "call"
         target: "enrollment"
@@ -705,11 +685,6 @@ scenarios:
           state:
             type: "value"
             expected: "confirm"
-
-      - step: "Invalidate mutation cache before approve"
-        action: "call"
-        target: "mutation"
-        method: "invalidate_cache"
 
       - step: "Approve mutation as admin"
         action: "call"

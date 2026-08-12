@@ -1,3 +1,5 @@
+options:
+  auto_refresh: true
 scenarios:
   - name: "Create Grade Class"
     steps:
@@ -300,3 +302,58 @@ scenarios:
           available_seat:
             type: "value"
             expected: 5
+
+  - name: "Onchange School Clears Grade"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Class Onchange"
+          code: "GTCOC"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Class Onchange"
+          code: "SCHCOC"
+          grade_type_id: "REC: grade_type.id"
+      - step: "Create another school"
+        action: "create"
+        model: "school"
+        save_as: "new_school"
+        values:
+          name: "Another School Class Onchange"
+          code: "SCHACO"
+          grade_type_id: "REC: grade_type.id"
+      - step: "Create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade Class Onchange"
+          code: "GCOC"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+      - step: "Changing the school on the form clears the grade"
+        action: form
+        model: "school_grade_class"
+        save: false
+        ops:
+          - set:
+              name: "Onchange Test Class"
+          - set:
+              code: "OTCOC"
+          - set:
+              school_id: "REC: school"
+          - set:
+              grade_id: "REC: grade"
+          - set:
+              school_id: "REC: new_school"
+          - assert:
+              grade_id:
+                type: "value"
+                operator: "is_falsy"

@@ -1469,3 +1469,307 @@ scenarios:
             type: "o2m"
             check: "count"
             expected_count: 0
+
+  - name: "Onchange School Clears Grade"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type PMT OC"
+          code: "GTPMTOC"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School PMT OC"
+          code: "SCHPMTOC"
+          grade_type_id: "REC: grade_type.id"
+      - step: "Create another school"
+        action: "create"
+        model: "school"
+        save_as: "new_school"
+        values:
+          name: "Another School PMT OC"
+          code: "SCHAS3"
+          grade_type_id: "REC: grade_type.id"
+      - step: "Create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade PMT OC"
+          code: "GPMTOC"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+      - step: "Changing the school clears the grade"
+        action: form
+        model: "school_enrollment_payment_template"
+        save: false
+        ops:
+          - set: {name: "Onchange Template"}
+          - set: {code: "PMTOC"}
+          - set: {school_id: "REC: school"}
+          - set: {grade_id: "REC: grade"}
+          - set: {school_id: "REC: new_school"}
+          - assert:
+              grade_id:
+                type: "value"
+                operator: "is_falsy"
+
+  - name: "Onchange Product Fills Term Detail Description"
+    steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable PTPCI22"
+          code: "PTPCI22"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type PTPCI22"
+          code: "PTPCI22"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
+      - step: "Create account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+      - step: "Create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "Test Income Account Detail OC"
+          code: "TESTOC01"
+          user_type_id: "REC: account_type.id"
+      - step: "Create product carrying that income account"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "Test Fee Product OC"
+          type: "service"
+          list_price: 500000.0
+          property_account_income_id: "REC: account.id"
+      - step: "Create payment template"
+        action: "create"
+        model: "school_enrollment_payment_template"
+        save_as: "template"
+        values:
+          customer_invoice_type_id: "REC: ci_type.id"
+          name: "Template OC"
+          code: "PMTOC2"
+      - step: "Create term"
+        action: "create"
+        model: "school_enrollment_payment_template.term"
+        save_as: "term"
+        values:
+          name: "Term OC"
+          sequence: 10
+          template_id: "REC: template.id"
+      - step: "Selecting the product fills the description"
+        action: form
+        model: "school_enrollment_payment_template.term.detail"
+        ops:
+          - set: {term_id: "REC: term"}
+          - set: {sequence: 30}
+          - set: {product_id: "REC: product"}
+          - set: {account_id: "REC: account"}
+          - set: {uom_quantity: 1.0}
+          - assert:
+              name:
+                type: "value"
+                expected: "REC: product.name"
+
+  - name: "Onchange Product Fills Term Detail Uom"
+    steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable PTPCI23"
+          code: "PTPCI23"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type PTPCI23"
+          code: "PTPCI23"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
+      - step: "Create account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+      - step: "Create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "Test Income Account UOM OC"
+          code: "TESTOC02"
+          user_type_id: "REC: account_type.id"
+      - step: "Create product carrying that income account"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "Test Fee Product UOM"
+          type: "service"
+          list_price: 500000.0
+          property_account_income_id: "REC: account.id"
+      - step: "Create payment template"
+        action: "create"
+        model: "school_enrollment_payment_template"
+        save_as: "template"
+        values:
+          customer_invoice_type_id: "REC: ci_type.id"
+          name: "Template UOM OC"
+          code: "PMTOCUOM"
+      - step: "Create term"
+        action: "create"
+        model: "school_enrollment_payment_template.term"
+        save_as: "term"
+        values:
+          name: "Term UOM OC"
+          sequence: 10
+          template_id: "REC: template.id"
+      - step: "Selecting the product fills the unit of measure"
+        action: form
+        model: "school_enrollment_payment_template.term.detail"
+        ops:
+          - set: {term_id: "REC: term"}
+          - set: {sequence: 31}
+          - set: {product_id: "REC: product"}
+          - set: {account_id: "REC: account"}
+          - set: {uom_quantity: 1.0}
+          - assert:
+              uom_id:
+                type: "m2o"
+                expected: "REC: product.uom_id"
+
+  - name: "Onchange Product Fills Term Detail Account"
+    steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable PTPCI24"
+          code: "PTPCI24"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type PTPCI24"
+          code: "PTPCI24"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
+      - step: "Create account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+      - step: "Create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "Test Income Account ACC OC"
+          code: "TESTOC03"
+          user_type_id: "REC: account_type.id"
+      - step: "Create product carrying that income account"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "Test Fee Product ACC"
+          type: "service"
+          list_price: 500000.0
+          property_account_income_id: "REC: account.id"
+      - step: "Create payment template"
+        action: "create"
+        model: "school_enrollment_payment_template"
+        save_as: "template"
+        values:
+          customer_invoice_type_id: "REC: ci_type.id"
+          name: "Template ACC OC"
+          code: "PMTOCACC"
+      - step: "Create term"
+        action: "create"
+        model: "school_enrollment_payment_template.term"
+        save_as: "term"
+        values:
+          name: "Term ACC OC"
+          sequence: 10
+          template_id: "REC: template.id"
+      - step: "Selecting the product fills the income account"
+        action: form
+        model: "school_enrollment_payment_template.term.detail"
+        ops:
+          - set: {term_id: "REC: term"}
+          - set: {sequence: 32}
+          - set: {product_id: "REC: product"}
+          - set: {uom_quantity: 1.0}
+          - assert:
+              account_id:
+                type: "m2o"
+                expected: "REC: account"

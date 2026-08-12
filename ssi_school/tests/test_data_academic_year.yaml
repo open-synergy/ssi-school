@@ -1,3 +1,5 @@
+options:
+  auto_refresh: true
 scenarios:
   - name: "Create Academic Year"
     steps:
@@ -148,10 +150,6 @@ scenarios:
           date_start: "2025-01-01"
           date_end: "2025-06-30"
           year_id: "EVAL: registry['year'].id"
-      - step: "Invalidate year cache"
-        action: "call"
-        target: "year"
-        method: "invalidate_cache"
       - step: "Assert first_term_id and last_term_id"
         action: "assert"
         target: "year"

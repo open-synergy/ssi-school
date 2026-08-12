@@ -8,13 +8,14 @@ from odoo.exceptions import UserError
 
 class SchoolEnrollmentWizardCopyPaymentTerm(models.TransientModel):
     """
-    Wizard that copies all payment terms (and their detail lines) from one source
-    enrollment to one or more target enrollments selected from the school_enrollment
-    list view. Mode "replace" deletes the existing payment terms on each target before
-    copying; mode "add" appends the source terms to each target's existing terms. Every
-    target must be allowed by the copy_payment_term_ok policy (state and group,
-    configurable via Policy Template) and must share the same academic term, school,
-    and grade as the source. All targets are validated before any change is applied.
+    Wizard that copies all payment terms (and their detail lines) from one
+    source enrollment to one or more target enrollments selected from the
+    school_enrollment list view. Mode "replace" deletes the existing payment
+    terms on each target before copying; mode "add" appends the source terms
+    to each target's existing terms. Every target must be allowed by the
+    copy_payment_term_ok policy (state and group, configurable via Policy
+    Template) and must share the same academic term, school, and grade as
+    the source. All targets are validated before any change is applied.
     """
 
     _name = "school_enrollment.wizard_copy_payment_term"
@@ -55,6 +56,16 @@ class SchoolEnrollmentWizardCopyPaymentTerm(models.TransientModel):
 
     @api.model
     def default_get(self, fields_list):
+        """Preload the enrollments selected in the list view as targets.
+
+        Overridden so the wizard does not require the user to re-pick the
+        records already selected: when the wizard is opened from the
+        ``school_enrollment`` list view, ``active_ids`` becomes the value of
+        ``target_enrollment_ids``.
+
+        :param fields_list: list of field names Odoo asks defaults for
+        :return: dict of default values
+        """
         res = super().default_get(fields_list)
         if self.env.context.get("active_model") == "school_enrollment":
             active_ids = self.env.context.get("active_ids", [])
@@ -62,11 +73,33 @@ class SchoolEnrollmentWizardCopyPaymentTerm(models.TransientModel):
         return res
 
     def action_copy_payment_term(self):
+        """Copy the source payment terms onto every target enrollment.
+
+        Triggered by the wizard button. Delegates the work to
+        ``_copy_payment_term`` for each wizard record, then closes the
+        dialog. Payment terms and their detail lines are written on the
+        target enrollments.
+
+        :return: an ``ir.actions.act_window_close`` action
+        :raises UserError: when no target is selected or a target fails
+            ``_check_target_enrollments``
+        """
         for record in self.sudo():
             record._copy_payment_term()  # pylint: disable=protected-access
         return {"type": "ir.actions.act_window_close"}
 
     def _copy_payment_term(self):
+        """Duplicate the source payment terms onto each selected target.
+
+        Validates every target first, so a rejected target aborts the whole
+        run before any record is written. In ``replace`` mode the existing
+        ``payment_term_ids`` of each target are unlinked first; in ``add``
+        mode they are kept. Copied terms are detached from the source
+        invoice: ``customer_invoice_id`` and the detail lines'
+        ``customer_invoice_line_id`` are cleared.
+
+        :raises UserError: when no target enrollment is selected
+        """
         self.ensure_one()
         if not self.target_enrollment_ids:
             error_message = (
@@ -96,6 +129,15 @@ Solution: Select at least one draft enrollment from the list view before running
                 new_term.detail_ids.write({"customer_invoice_line_id": False})
 
     def _check_target_enrollments(self):
+        """Validate every target enrollment before anything is copied.
+
+        A target is rejected when ``copy_payment_term_ok`` is False (state
+        or group not allowed by the Policy Template), or when its academic
+        term, school, or grade differs from the source. All offending
+        targets are collected so the user sees them in a single message.
+
+        :raises UserError: when at least one target is rejected
+        """
         self.ensure_one()
         source = self.source_enrollment_id
         problems = []

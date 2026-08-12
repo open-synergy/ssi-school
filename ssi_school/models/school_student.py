@@ -333,6 +333,23 @@ class SchoolStudent(models.Model):
     }
 
     def write(self, values):
+        """Guard student state changes against illegal transitions.
+
+        Overridden to enforce the ``_STATE_TRANSITIONS`` map before the
+        data reaches the database: when ``values`` carries a ``state``,
+        every record of ``self`` is tested and the whole write is
+        refused unless the new state is reachable from the state the
+        record currently holds. This blocks nonsensical jumps such as
+        ``deceased`` to ``enrol`` or ``graduate`` to ``enrol``, which no
+        button guard would catch when the write comes from data import
+        or another module. Writes without ``state`` pass straight to the
+        parent implementation.
+
+        :param values: field values handed over to the parent ``write``.
+        :return: result of the parent ``write``.
+        :raises ValidationError: the requested state is not reachable
+            from the current state of one of the records.
+        """
         if values.get("state"):
             new_state = values["state"]
             state_labels = dict(self._fields["state"].selection)
@@ -359,6 +376,18 @@ Solution: Follow the allowed student state transition sequence
 
     @api.constrains("code", "school_id")
     def _check_duplicate_code(self):
+        """Enforce a student code unique within its school.
+
+        Runs on every create or write touching ``code`` or
+        ``school_id``. The ``/`` placeholder is skipped, so any number
+        of students may still be waiting for their number; any other
+        code is counted with ``search_count`` among the other students
+        of the same ``school_id`` and refused when already taken. The
+        same code may therefore be reused in another school.
+
+        :raises UserError: another student of the same school already
+            uses this ``code``.
+        """
         for record in self:
             if record.code == "/":
                 continue
@@ -383,6 +412,14 @@ Solution: Change the student code to be unique within the school
 
     @api.depends("enrollment_ids", "enrollment_ids.state")
     def _compute_active_enrollment_id(self):
+        """Point ``active_enrollment_id`` at the open enrollment.
+
+        Filters ``enrollment_ids`` on state ``open`` and keeps the first
+        match, since a student is expected to hold at most one open
+        enrollment at a time; the field falls back to ``False`` when no
+        enrollment is open. ``grade_class_id`` is related to this field,
+        so the student's current class follows it.
+        """
         for record in self:
             active_enrollment = record.enrollment_ids.filtered(
                 lambda enrollment: enrollment.state == "open"
@@ -393,6 +430,16 @@ Solution: Change the student code to be unique within the school
 
     @api.depends("initial_grade_id", "enrollment_ids", "enrollment_ids.state")
     def _compute_current_grade_id(self):
+        """Derive the grade the student is sitting in right now.
+
+        Searches the ``school_enrollment`` records of the student that
+        are in state ``open`` or ``done``, sorts them by the
+        ``date_start`` of their academic term (undated terms are sorted
+        as 1900-01-01) and then by ``id``, and keeps the ``grade_id`` of
+        the most recent one. A student without such an enrollment falls
+        back to ``initial_grade_id``, the grade recorded when they first
+        entered the school.
+        """
         for record in self:
             result = record.initial_grade_id
             criteria = [
@@ -421,6 +468,21 @@ Solution: Change the student code to be unique within the school
         "school_id",
     )
     def _compute_next_grade_id(self):
+        """Derive the grade the student should enroll into next.
+
+        Three situations are handled. A student with neither
+        ``initial_grade_id`` nor any enrollment is offered the lowest
+        grade (smallest ``sequence``) of the ``grade_type_id`` of their
+        school. A student with an ``initial_grade_id`` but still no
+        enrollment is offered ``initial_grade_id.next_grade_id``. Once
+        enrollments exist, the latest ``done`` enrollment, ordered by
+        academic term ``date_start`` then ``id``, decides: when it
+        closed the academic year (``last_term``) the student moves on to
+        its ``promote_to_grade_id``, falling back to its ``grade_id``
+        when no promotion was recorded; otherwise the student stays in
+        that same ``grade_id``. The value is ``False`` when no rule
+        applies.
+        """
         for record in self:
             result = False
             if not record.initial_grade_id and not record.enrollment_ids:
@@ -470,42 +532,117 @@ Solution: Change the student code to be unique within the school
         self.initial_grade_id = False
 
     def action_set_to_draft(self):
+        """Send the selected students back to Waiting for Enrollment.
+
+        Calls ``_set_to_draft`` as superuser on every record, which is
+        also the only way out of an exit state such as Graduated or
+        Dropped Out before a student may be enrolled again. Nothing is
+        returned and the client simply reloads the view.
+        """
         for record in self.sudo():
             record._set_to_draft()  # pylint: disable=protected-access
 
     def action_set_to_enroll(self):
+        """Mark the selected students as actively enrolled.
+
+        Calls ``_set_to_enroll`` as superuser on every record, so the
+        status bar moves to Enrolled. The guard in ``write`` only
+        accepts it from Waiting for Enrollment, On Leave or Suspended.
+        Nothing is returned and the client simply reloads the view.
+        """
         for record in self.sudo():
             record._set_to_enroll()  # pylint: disable=protected-access
 
     def action_set_to_on_leave(self):
+        """Put the selected students on leave.
+
+        Calls ``_set_to_on_leave`` as superuser on every record, so the
+        status bar moves to On Leave for a student temporarily away but
+        still expected back. Nothing is returned and the client simply
+        reloads the view.
+        """
         for record in self.sudo():
             record._set_to_on_leave()  # pylint: disable=protected-access
 
     def action_set_to_suspended(self):
+        """Suspend the selected students.
+
+        Calls ``_set_to_suspended`` as superuser on every record, so the
+        status bar moves to Suspended; from there the student may only
+        be re-enrolled, sent back to draft, or dropped out. Nothing is
+        returned and the client simply reloads the view.
+        """
         for record in self.sudo():
             record._set_to_suspended()  # pylint: disable=protected-access
 
     def action_set_to_graduate(self):
+        """Mark the selected students as graduated.
+
+        Calls ``_set_to_graduate`` as superuser on every record, moving
+        the status bar to Graduated. This is an exit state: the student
+        can only be sent back to Waiting for Enrollment afterwards.
+        Nothing is returned and the client simply reloads the view.
+        """
         for record in self.sudo():
             record._set_to_graduate()  # pylint: disable=protected-access
 
     def action_set_to_transferred(self):
+        """Mark the selected students as transferred out.
+
+        Calls ``_set_to_transferred`` as superuser on every record,
+        moving the status bar to Transferred Out for a student who left
+        for another school. This is an exit state: only a return to
+        Waiting for Enrollment is allowed afterwards. Nothing is
+        returned and the client simply reloads the view.
+        """
         for record in self.sudo():
             record._set_to_transferred()  # pylint: disable=protected-access
 
     def action_set_to_dropped(self):
+        """Mark the selected students as dropped out or expelled.
+
+        Calls ``_set_to_dropped`` as superuser on every record, moving
+        the status bar to Dropped Out / Expelled. This is an exit state:
+        only a return to Waiting for Enrollment is allowed afterwards.
+        Nothing is returned and the client simply reloads the view.
+        """
         for record in self.sudo():
             record._set_to_dropped()  # pylint: disable=protected-access
 
     def action_set_to_resigned(self):
+        """Mark the selected students as resigned.
+
+        Calls ``_set_to_resigned`` as superuser on every record, moving
+        the status bar to Resigned for a student who withdrew on their
+        own. This is an exit state: only a return to Waiting for
+        Enrollment is allowed afterwards. Nothing is returned and the
+        client simply reloads the view.
+        """
         for record in self.sudo():
             record._set_to_resigned()  # pylint: disable=protected-access
 
     def action_set_to_deceased(self):
+        """Mark the selected students as deceased.
+
+        Calls ``_set_to_deceased`` as superuser on every record, moving
+        the status bar to Deceased. This state is final: the guard in
+        ``write`` allows no transition out of it, so the action cannot
+        be undone. Nothing is returned and the client simply reloads the
+        view.
+        """
         for record in self.sudo():
             record._set_to_deceased()  # pylint: disable=protected-access
 
     def _set_to_draft(self):
+        """Write ``state`` to ``draft`` on a single student.
+
+        Implementation behind ``action_set_to_draft``, kept separate so
+        other modules can extend the transition itself. The write still
+        goes through the guard in ``write``.
+
+        :raises ValueError: ``self`` is not a single record.
+        :raises ValidationError: the transition is rejected by ``write``.
+        """
         self.ensure_one()
         self.write(
             {
@@ -514,6 +651,16 @@ Solution: Change the student code to be unique within the school
         )
 
     def _set_to_enroll(self):
+        """Write ``state`` to ``enrol`` on a single student.
+
+        Implementation behind ``action_set_to_enroll``, kept separate so
+        other modules can extend the transition itself. The write still
+        goes through the guard in ``write``, which refuses it from any
+        exit state.
+
+        :raises ValueError: ``self`` is not a single record.
+        :raises ValidationError: the transition is rejected by ``write``.
+        """
         self.ensure_one()
         self.write(
             {
@@ -522,6 +669,15 @@ Solution: Change the student code to be unique within the school
         )
 
     def _set_to_on_leave(self):
+        """Write ``state`` to ``on_leave`` on a single student.
+
+        Implementation behind ``action_set_to_on_leave``, kept separate
+        so other modules can extend the transition itself. The write
+        still goes through the guard in ``write``.
+
+        :raises ValueError: ``self`` is not a single record.
+        :raises ValidationError: the transition is rejected by ``write``.
+        """
         self.ensure_one()
         self.write(
             {
@@ -530,6 +686,15 @@ Solution: Change the student code to be unique within the school
         )
 
     def _set_to_suspended(self):
+        """Write ``state`` to ``suspended`` on a single student.
+
+        Implementation behind ``action_set_to_suspended``, kept separate
+        so other modules can extend the transition itself. The write
+        still goes through the guard in ``write``.
+
+        :raises ValueError: ``self`` is not a single record.
+        :raises ValidationError: the transition is rejected by ``write``.
+        """
         self.ensure_one()
         self.write(
             {
@@ -538,6 +703,16 @@ Solution: Change the student code to be unique within the school
         )
 
     def _set_to_graduate(self):
+        """Write ``state`` to ``graduate`` on a single student.
+
+        Implementation behind ``action_set_to_graduate``, kept separate
+        so other modules can extend the transition itself. The write
+        still goes through the guard in ``write``, which afterwards only
+        allows a return to ``draft``.
+
+        :raises ValueError: ``self`` is not a single record.
+        :raises ValidationError: the transition is rejected by ``write``.
+        """
         self.ensure_one()
         self.write(
             {
@@ -546,6 +721,16 @@ Solution: Change the student code to be unique within the school
         )
 
     def _set_to_transferred(self):
+        """Write ``state`` to ``transferred`` on a single student.
+
+        Implementation behind ``action_set_to_transferred``, kept
+        separate so other modules can extend the transition itself. The
+        write still goes through the guard in ``write``, which
+        afterwards only allows a return to ``draft``.
+
+        :raises ValueError: ``self`` is not a single record.
+        :raises ValidationError: the transition is rejected by ``write``.
+        """
         self.ensure_one()
         self.write(
             {
@@ -554,6 +739,16 @@ Solution: Change the student code to be unique within the school
         )
 
     def _set_to_dropped(self):
+        """Write ``state`` to ``dropped`` on a single student.
+
+        Implementation behind ``action_set_to_dropped``, kept separate
+        so other modules can extend the transition itself. The write
+        still goes through the guard in ``write``, which afterwards only
+        allows a return to ``draft``.
+
+        :raises ValueError: ``self`` is not a single record.
+        :raises ValidationError: the transition is rejected by ``write``.
+        """
         self.ensure_one()
         self.write(
             {
@@ -562,6 +757,16 @@ Solution: Change the student code to be unique within the school
         )
 
     def _set_to_resigned(self):
+        """Write ``state`` to ``resigned`` on a single student.
+
+        Implementation behind ``action_set_to_resigned``, kept separate
+        so other modules can extend the transition itself. The write
+        still goes through the guard in ``write``, which afterwards only
+        allows a return to ``draft``.
+
+        :raises ValueError: ``self`` is not a single record.
+        :raises ValidationError: the transition is rejected by ``write``.
+        """
         self.ensure_one()
         self.write(
             {
@@ -570,6 +775,16 @@ Solution: Change the student code to be unique within the school
         )
 
     def _set_to_deceased(self):
+        """Write ``state`` to ``deceased`` on a single student.
+
+        Implementation behind ``action_set_to_deceased``, kept separate
+        so other modules can extend the transition itself. The write
+        still goes through the guard in ``write``, which afterwards
+        allows no transition at all: the state is final.
+
+        :raises ValueError: ``self`` is not a single record.
+        :raises ValidationError: the transition is rejected by ``write``.
+        """
         self.ensure_one()
         self.write(
             {

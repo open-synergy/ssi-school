@@ -116,11 +116,6 @@ scenarios:
             type: "value"
             expected: "confirm"
 
-      - step: "Invalidate enrollment cache before approve"
-        action: "call"
-        target: "enrollment"
-        method: "invalidate_cache"
-
       - step: "Approve enrollment"
         action: "call"
         target: "enrollment"
@@ -315,11 +310,6 @@ scenarios:
             type: "value"
             expected: "confirm"
 
-      - step: "Invalidate enrollment cache before approve"
-        action: "call"
-        target: "enrollment"
-        method: "invalidate_cache"
-
       - step: "Approve enrollment"
         action: "call"
         target: "enrollment"
@@ -372,11 +362,6 @@ scenarios:
           state:
             type: "value"
             expected: "confirm"
-
-      - step: "Invalidate mutation cache before approve"
-        action: "call"
-        target: "mutation"
-        method: "invalidate_cache"
 
       - step: "Approve mutation"
         action: "call"
@@ -530,11 +515,6 @@ scenarios:
         method: "action_confirm"
         as_user: "base.user_admin"
 
-      - step: "Invalidate enrollment cache before approve"
-        action: "call"
-        target: "enrollment"
-        method: "invalidate_cache"
-
       - step: "Approve enrollment"
         action: "call"
         target: "enrollment"
@@ -686,11 +666,6 @@ scenarios:
         method: "action_confirm"
         as_user: "base.user_admin"
 
-      - step: "Invalidate enrollment cache before approve"
-        action: "call"
-        target: "enrollment"
-        method: "invalidate_cache"
-
       - step: "Approve enrollment"
         action: "call"
         target: "enrollment"
@@ -717,11 +692,6 @@ scenarios:
         target: "mutation_forward"
         method: "action_confirm"
         as_user: "base.user_admin"
-
-      - step: "Invalidate cache before approving forward mutation"
-        action: "call"
-        target: "mutation_forward"
-        method: "invalidate_cache"
 
       - step: "Approve forward mutation"
         action: "call"
@@ -759,11 +729,6 @@ scenarios:
         method: "action_confirm"
         as_user: "base.user_admin"
 
-      - step: "Invalidate cache before approving reverse mutation"
-        action: "call"
-        target: "mutation_reverse"
-        method: "invalidate_cache"
-
       - step: "Approve reverse mutation"
         action: "call"
         target: "mutation_reverse"
@@ -781,4 +746,1286 @@ scenarios:
           - ["id", "=", "EVAL: registry['enrollment'].id"]
           - ["grade_class_id", "=", "EVAL: registry['grade_class_a'].id"]
         save_as: "check_moved_back"
+        expect_count: 1
+
+  - name: "Onchange Enrollment From Student"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type for Mutation Test O1"
+          code: "GTSMO1"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School for Mutation Test O1"
+          code: "SCHSMO1"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade for Mutation Test O1"
+          code: "GSMO1"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create source grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_a"
+        values:
+          name: "Class A Mutation Test O1"
+          code: "CLSMO1A"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          capacity: 30
+
+      - step: "Setup - create destination grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_b"
+        values:
+          name: "Class B Mutation Test O1"
+          code: "CLSMO1B"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          capacity: 30
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "Year Mutation Test O1"
+          code: "AYSMO1"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Term Mutation Test O1"
+          code: "TMSMO1"
+          date_start: "2024-07-01"
+          date_end: "2024-12-31"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact Mutation Test O1"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student Mutation Test O1"
+          code: "STUSMO1"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Setup - create enrollment in source class"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class_a.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Fill the mutation form with the student"
+        action: form
+        model: "school_student_mutation"
+        save: false
+        values:
+          student_id: "REC: student"
+        asserts:
+          enrollment_id:
+            type: "m2o"
+            expected: "REC: enrollment"
+
+  - name: "Onchange Source Snapshot From Enrollment"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type for Mutation Test O2"
+          code: "GTSMO2"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School for Mutation Test O2"
+          code: "SCHSMO2"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade for Mutation Test O2"
+          code: "GSMO2"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create source grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_a"
+        values:
+          name: "Class A Mutation Test O2"
+          code: "CLSMO2A"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          capacity: 30
+
+      - step: "Setup - create destination grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_b"
+        values:
+          name: "Class B Mutation Test O2"
+          code: "CLSMO2B"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          capacity: 30
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "Year Mutation Test O2"
+          code: "AYSMO2"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Term Mutation Test O2"
+          code: "TMSMO2"
+          date_start: "2024-07-01"
+          date_end: "2024-12-31"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact Mutation Test O2"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student Mutation Test O2"
+          code: "STUSMO2"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Setup - create enrollment in source class"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class_a.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Setup - create source homeroom batch"
+        action: "create"
+        model: "school_homeroom"
+        save_as: "homeroom_a"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class_a.id"
+          capacity: 30
+
+      - step: "Link enrollment to source homeroom"
+        action: "write"
+        target: "enrollment"
+        values:
+          homeroom_id: "REC: homeroom_a.id"
+
+      - step: "Fill the mutation form with the student"
+        action: form
+        model: "school_student_mutation"
+        save: false
+        values:
+          student_id: "REC: student"
+        asserts:
+          source_grade_class_id:
+            type: "m2o"
+            expected: "REC: grade_class_a"
+          source_homeroom_id:
+            type: "m2o"
+            expected: "REC: homeroom_a"
+
+  - name: "Onchange Destination Homeroom From Destination Class"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type for Mutation Test O3"
+          code: "GTSMO3"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School for Mutation Test O3"
+          code: "SCHSMO3"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade for Mutation Test O3"
+          code: "GSMO3"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create source grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_a"
+        values:
+          name: "Class A Mutation Test O3"
+          code: "CLSMO3A"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          capacity: 30
+
+      - step: "Setup - create destination grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_b"
+        values:
+          name: "Class B Mutation Test O3"
+          code: "CLSMO3B"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          capacity: 30
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "Year Mutation Test O3"
+          code: "AYSMO3"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Term Mutation Test O3"
+          code: "TMSMO3"
+          date_start: "2024-07-01"
+          date_end: "2024-12-31"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact Mutation Test O3"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student Mutation Test O3"
+          code: "STUSMO3"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Setup - create enrollment in source class"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class_a.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Setup - create destination homeroom batch"
+        action: "create"
+        model: "school_homeroom"
+        save_as: "homeroom_b"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class_b.id"
+          capacity: 30
+
+      - step: "Confirm destination homeroom"
+        action: "call"
+        target: "homeroom_b"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve destination homeroom"
+        action: "call"
+        target: "homeroom_b"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Destination class fills the destination homeroom"
+        action: form
+        model: "school_student_mutation"
+        save: false
+        ops:
+          - set:
+              student_id: "REC: student"
+          - set:
+              destination_grade_class_id: "REC: grade_class_b"
+          - assert:
+              destination_homeroom_id:
+                type: "m2o"
+                expected: "REC: homeroom_b"
+
+  - name: "Destination Must Differ From Source"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type for Mutation Test D1"
+          code: "GTSMD1"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School for Mutation Test D1"
+          code: "SCHSMD1"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade for Mutation Test D1"
+          code: "GSMD1"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create source grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_a"
+        values:
+          name: "Class A Mutation Test D1"
+          code: "CLSMD1A"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          capacity: 30
+
+      - step: "Setup - create destination grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_b"
+        values:
+          name: "Class B Mutation Test D1"
+          code: "CLSMD1B"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          capacity: 30
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "Year Mutation Test D1"
+          code: "AYSMD1"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Term Mutation Test D1"
+          code: "TMSMD1"
+          date_start: "2024-07-01"
+          date_end: "2024-12-31"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact Mutation Test D1"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student Mutation Test D1"
+          code: "STUSMD1"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Setup - create enrollment in source class"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class_a.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Destination equal to the current class is rejected"
+        action: "create"
+        model: "school_student_mutation"
+        expect_error:
+          type: "ValidationError"
+        values:
+          date: "2024-07-01"
+          student_id: "REC: student.id"
+          enrollment_id: "REC: enrollment.id"
+          destination_grade_class_id: "REC: grade_class_a.id"
+
+  - name: "Destination Must Match Grade And School"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type for Mutation Test D2"
+          code: "GTSMD2"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School for Mutation Test D2"
+          code: "SCHSMD2"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade for Mutation Test D2"
+          code: "GSMD2"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create source grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_a"
+        values:
+          name: "Class A Mutation Test D2"
+          code: "CLSMD2A"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          capacity: 30
+
+      - step: "Setup - create destination grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_b"
+        values:
+          name: "Class B Mutation Test D2"
+          code: "CLSMD2B"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          capacity: 30
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "Year Mutation Test D2"
+          code: "AYSMD2"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Term Mutation Test D2"
+          code: "TMSMD2"
+          date_start: "2024-07-01"
+          date_end: "2024-12-31"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact Mutation Test D2"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student Mutation Test D2"
+          code: "STUSMD2"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Setup - create enrollment in source class"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class_a.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Setup - create a grade of another level"
+        action: "create"
+        model: "school_grade"
+        save_as: "other_grade"
+        values:
+          name: "Other Grade Mutation Test D2"
+          code: "GSMD2X"
+          sequence: 20
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create a class of that other grade"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "other_class"
+        values:
+          name: "Other Class Mutation Test D2"
+          code: "CLSMD2X"
+          school_id: "REC: school.id"
+          grade_id: "REC: other_grade.id"
+          capacity: 30
+
+      - step: "Destination from another grade is rejected"
+        action: "create"
+        model: "school_student_mutation"
+        expect_error:
+          type: "ValidationError"
+        values:
+          date: "2024-07-01"
+          student_id: "REC: student.id"
+          enrollment_id: "REC: enrollment.id"
+          destination_grade_class_id: "REC: other_class.id"
+
+  - name: "Enrollment Must Be Open To Confirm"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type for Mutation Test E1"
+          code: "GTSME1"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School for Mutation Test E1"
+          code: "SCHSME1"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade for Mutation Test E1"
+          code: "GSME1"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create source grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_a"
+        values:
+          name: "Class A Mutation Test E1"
+          code: "CLSME1A"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          capacity: 30
+
+      - step: "Setup - create destination grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_b"
+        values:
+          name: "Class B Mutation Test E1"
+          code: "CLSME1B"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          capacity: 30
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "Year Mutation Test E1"
+          code: "AYSME1"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Term Mutation Test E1"
+          code: "TMSME1"
+          date_start: "2024-07-01"
+          date_end: "2024-12-31"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact Mutation Test E1"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student Mutation Test E1"
+          code: "STUSME1"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Setup - create enrollment in source class"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class_a.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create class mutation draft"
+        action: "create"
+        model: "school_student_mutation"
+        save_as: "mutation"
+        values:
+          date: "2024-07-01"
+          student_id: "REC: student.id"
+          enrollment_id: "REC: enrollment.id"
+          destination_grade_class_id: "REC: grade_class_b.id"
+
+      - step: "Cancel the enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_cancel"
+        context:
+          bypass_policy_check: true
+
+      - step: "Confirming a closed enrollment is rejected"
+        action: "write"
+        target: "mutation"
+        values:
+          state: "confirm"
+        expect_error:
+          type: "ValidationError"
+
+  - name: "Single Active Mutation Per Enrollment"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type for Mutation Test M1"
+          code: "GTSMM1"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School for Mutation Test M1"
+          code: "SCHSMM1"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade for Mutation Test M1"
+          code: "GSMM1"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create source grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_a"
+        values:
+          name: "Class A Mutation Test M1"
+          code: "CLSMM1A"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          capacity: 30
+
+      - step: "Setup - create destination grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_b"
+        values:
+          name: "Class B Mutation Test M1"
+          code: "CLSMM1B"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          capacity: 30
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "Year Mutation Test M1"
+          code: "AYSMM1"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Term Mutation Test M1"
+          code: "TMSMM1"
+          date_start: "2024-07-01"
+          date_end: "2024-12-31"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact Mutation Test M1"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student Mutation Test M1"
+          code: "STUSMM1"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Setup - create enrollment in source class"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class_a.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create the first class mutation draft"
+        action: "create"
+        model: "school_student_mutation"
+        save_as: "mutation"
+        values:
+          date: "2024-07-01"
+          student_id: "REC: student.id"
+          enrollment_id: "REC: enrollment.id"
+          destination_grade_class_id: "REC: grade_class_b.id"
+
+      - step: "A second live mutation on the enrollment is rejected"
+        action: "create"
+        model: "school_student_mutation"
+        expect_error:
+          type: "ValidationError"
+        values:
+          date: "2024-07-01"
+          student_id: "REC: student.id"
+          enrollment_id: "REC: enrollment.id"
+          destination_grade_class_id: "REC: grade_class_b.id"
+
+  - name: "Quota Full Blocks Done"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type for Mutation Test Q1"
+          code: "GTSMQ1"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School for Mutation Test Q1"
+          code: "SCHSMQ1"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade for Mutation Test Q1"
+          code: "GSMQ1"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create source grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_a"
+        values:
+          name: "Class A Mutation Test Q1"
+          code: "CLSMQ1A"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          capacity: 30
+
+      - step: "Setup - create destination grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_b"
+        values:
+          name: "Class B Mutation Test Q1"
+          code: "CLSMQ1B"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          capacity: 30
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "Year Mutation Test Q1"
+          code: "AYSMQ1"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Term Mutation Test Q1"
+          code: "TMSMQ1"
+          date_start: "2024-07-01"
+          date_end: "2024-12-31"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact Mutation Test Q1"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student Mutation Test Q1"
+          code: "STUSMQ1"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Setup - create enrollment in source class"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class_a.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Shrink the destination class to a single seat"
+        action: "write"
+        target: "grade_class_b"
+        values:
+          capacity: 1
+
+      - step: "Setup - create filler contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "filler_contact"
+        values:
+          name: "Filler Contact Mutation Test Q1"
+
+      - step: "Setup - create filler student"
+        action: "create"
+        model: "school_student"
+        save_as: "filler_student"
+        values:
+          name: "Filler Student Mutation Test Q1"
+          code: "STUSMQ1F"
+          contact_id: "REC: filler_contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Setup - create filler enrollment taking the last seat"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "filler_enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class_b.id"
+          student_id: "REC: filler_student.id"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Confirm filler enrollment"
+        action: "call"
+        target: "filler_enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve filler enrollment"
+        action: "call"
+        target: "filler_enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create class mutation into the full class"
+        action: "create"
+        model: "school_student_mutation"
+        save_as: "mutation"
+        values:
+          date: "2024-07-01"
+          student_id: "REC: student.id"
+          enrollment_id: "REC: enrollment.id"
+          destination_grade_class_id: "REC: grade_class_b.id"
+
+      - step: "Confirm mutation"
+        action: "call"
+        target: "mutation"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approving into a full class is rejected"
+        action: "call"
+        target: "mutation"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        expect_error:
+          type: "ValidationError"
+
+      - step: "Assert mutation stayed in confirm"
+        action: "assert"
+        target: "mutation"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Assert enrollment stayed in the source class"
+        action: "search"
+        model: "school_enrollment"
+        domain:
+          - ["id", "=", "REC: enrollment.id"]
+          - ["grade_class_id", "=", "REC: grade_class_a.id"]
+        save_as: "check_untouched_enrollment"
         expect_count: 1

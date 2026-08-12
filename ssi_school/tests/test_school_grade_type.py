@@ -11,5 +11,13 @@ from odoo.tests import tagged
 class TestSchoolGradeType(
     YamlTransactionCase
 ):  # pylint: disable=too-few-public-methods
+    """Cover the ``school_grade_type`` model.
+
+    The scenarios exercise the create, edit name, edit sequence and
+    delete flows of a grade type, the master data every grade and school
+    is classified under.
+    """
+
     def test_grade_type(self):
+        """Run the grade type CRUD scenarios."""
         self.run_yaml_scenario("test_data_grade_type.yaml")

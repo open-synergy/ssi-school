@@ -706,3 +706,439 @@ scenarios:
           - ["name", "=", "Term Source CPTR3"]
         save_as: "target2_term"
         expect_count: 1
+
+  - name: "Copy Payment Terms - Blocked When The Target Is Not Draft"
+    steps:
+      - step: "Setup - get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "School Fee Income CPYML1"
+          code: "CPYML14200"
+          user_type_id: "REC: account_type.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Fee CPYML1"
+          type: "service"
+          list_price: 500000.0
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type CPYML1"
+          code: "GTCPYML1"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 CPYML1"
+          code: "AYCPYML1"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester CPYML1"
+          code: "SMCPYML1"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School CPYML1"
+          code: "SCHCPYML1"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade CPYML1"
+          code: "GCPYML1"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class CPYML1"
+          code: "CLACPYML1"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Setup - create source student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "source_contact"
+        values:
+          name: "Source Student Contact CPYML1"
+
+      - step: "Setup - create source student"
+        action: "create"
+        model: "school_student"
+        save_as: "source_student"
+        values:
+          name: "Source Student CPYML1"
+          code: "SSTUCPYML1"
+          contact_id: "REC: source_contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Setup - create source enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "source"
+        values:
+          user_id: "REF: base.user_admin"
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: source_student.id"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Setup - create source payment term with detail"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "source_term"
+        values:
+          enrollment_id: "REC: source.id"
+          name: "Term Source CPYML1"
+          sequence: 10
+          detail_ids:
+            - - 0
+              - 0
+              - product_id: "REC: product.id"
+                name: "Fee CPYML1"
+                account_id: "REC: account.id"
+                uom_quantity: 1.0
+                uom_id: "REF: uom.product_uom_unit"
+                price_unit: 500000.0
+
+      - step: "Setup - create target student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "target_contact"
+        values:
+          name: "Target Student Contact CPYML1"
+
+      - step: "Setup - create target student"
+        action: "create"
+        model: "school_student"
+        save_as: "target_student"
+        values:
+          name: "Target Student CPYML1"
+          code: "TSTUCPYML1"
+          contact_id: "REC: target_contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Setup - create target enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "target"
+        values:
+          user_id: "REF: base.user_admin"
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: target_student.id"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Push the target out of draft"
+        action: "write"
+        target: "target"
+        values:
+          state: "confirm"
+
+      - step: "Open the copy wizard on the confirmed target"
+        action: "wizard"
+        model: "school_enrollment.wizard_copy_payment_term"
+        target: "target"
+        save_as: "wizard"
+        values:
+          source_enrollment_id: "REC: source.id"
+          mode: "replace"
+
+      - step: "Assert the wizard picked up the selected target"
+        action: "assert"
+        target: "wizard"
+        asserts:
+          target_enrollment_ids:
+            type: "m2m"
+            check: "exact"
+            expected_records:
+              - "REC: target"
+
+      - step: "Assert the confirmed target may not receive payment terms"
+        action: "assert"
+        target: "target"
+        asserts:
+          copy_payment_term_ok:
+            type: "value"
+            expected: false
+
+      - step: "Copy into the confirmed target is rejected"
+        action: "call"
+        target: "wizard"
+        method: "action_copy_payment_term"
+        expect_error:
+          type: "UserError"
+
+      - step: "Assert no payment term reached the target"
+        action: "assert"
+        target: "target"
+        asserts:
+          payment_term_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 0
+
+  - name: "Copy Payment Terms - Blocked When The Grade Does Not Match"
+    steps:
+      - step: "Setup - get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "School Fee Income CPYML2"
+          code: "CPYML24200"
+          user_type_id: "REC: account_type.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Fee CPYML2"
+          type: "service"
+          list_price: 500000.0
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type CPYML2"
+          code: "GTCPYML2"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 CPYML2"
+          code: "AYCPYML2"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester CPYML2"
+          code: "SMCPYML2"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School CPYML2"
+          code: "SCHCPYML2"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade CPYML2"
+          code: "GCPYML2"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class CPYML2"
+          code: "CLACPYML2"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Setup - create source student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "source_contact"
+        values:
+          name: "Source Student Contact CPYML2"
+
+      - step: "Setup - create source student"
+        action: "create"
+        model: "school_student"
+        save_as: "source_student"
+        values:
+          name: "Source Student CPYML2"
+          code: "SSTUCPYML2"
+          contact_id: "REC: source_contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Setup - create source enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "source"
+        values:
+          user_id: "REF: base.user_admin"
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: source_student.id"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Setup - create source payment term with detail"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "source_term"
+        values:
+          enrollment_id: "REC: source.id"
+          name: "Term Source CPYML2"
+          sequence: 10
+          detail_ids:
+            - - 0
+              - 0
+              - product_id: "REC: product.id"
+                name: "Fee CPYML2"
+                account_id: "REC: account.id"
+                uom_quantity: 1.0
+                uom_id: "REF: uom.product_uom_unit"
+                price_unit: 500000.0
+
+      - step: "Setup - create another grade of the same grade type"
+        action: "create"
+        model: "school_grade"
+        save_as: "other_grade"
+        values:
+          name: "Other Grade CPYML2"
+          code: "OGCPYML2"
+          sequence: 20
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create the class of that other grade"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "other_grade_class"
+        values:
+          name: "Other Class CPYML2"
+          code: "OCLACPYML2"
+          school_id: "REC: school.id"
+          grade_id: "REC: other_grade.id"
+
+      - step: "Setup - create target student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "target_contact"
+        values:
+          name: "Target Student Contact CPYML2"
+
+      - step: "Setup - create target student"
+        action: "create"
+        model: "school_student"
+        save_as: "target_student"
+        values:
+          name: "Target Student CPYML2"
+          code: "TSTUCPYML2"
+          contact_id: "REC: target_contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Setup - create target enrollment in the other grade"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "target"
+        values:
+          user_id: "REF: base.user_admin"
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: other_grade.id"
+          grade_class_id: "REC: other_grade_class.id"
+          student_id: "REC: target_student.id"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Open the copy wizard on the draft target"
+        action: "wizard"
+        model: "school_enrollment.wizard_copy_payment_term"
+        target: "target"
+        save_as: "wizard"
+        values:
+          source_enrollment_id: "REC: source.id"
+          mode: "replace"
+
+      - step: "Assert the draft target is eligible on its own state"
+        action: "assert"
+        target: "target"
+        asserts:
+          copy_payment_term_ok:
+            type: "value"
+            expected: true
+
+      - step: "Copy across two different grades is rejected"
+        action: "call"
+        target: "wizard"
+        method: "action_copy_payment_term"
+        expect_error:
+          type: "UserError"
+
+      - step: "Assert no payment term reached the target"
+        action: "assert"
+        target: "target"
+        asserts:
+          payment_term_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 0

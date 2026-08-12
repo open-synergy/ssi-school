@@ -87,6 +87,14 @@ class SchoolAcademicTerm(models.Model):
         "year_id.first_term_id",
     )
     def _compute_first_term(self):
+        """Flag the term that opens its academic year.
+
+        ``first_term`` is ``True`` only for the record referenced by
+        ``year_id.first_term_id``, that is the term with the earliest
+        ``date_start`` of the year; every other term of the year gets
+        ``False``. Enrollment uses this flag to decide whether students
+        move up a grade or stay in the current one.
+        """
         for record in self:
             result = False
             if record == record.year_id.first_term_id:
@@ -98,6 +106,14 @@ class SchoolAcademicTerm(models.Model):
         "year_id.last_term_id",
     )
     def _compute_last_term(self):
+        """Flag the term that closes its academic year.
+
+        ``last_term`` is ``True`` only for the record referenced by
+        ``year_id.last_term_id``, that is the term with the latest
+        ``date_start`` of the year; every other term gets ``False``.
+        Enrollment uses this flag to decide whether a completed
+        enrollment promotes the student to the next grade.
+        """
         for record in self:
             result = False
             if record == record.year_id.last_term_id:
@@ -106,6 +122,18 @@ class SchoolAcademicTerm(models.Model):
 
     @api.constrains("date_start", "date_end", "year_id")
     def _check_date_coherence(self):
+        """Enforce term dates that are ordered and inside their year.
+
+        Runs on every create or write touching ``date_start``,
+        ``date_end`` or ``year_id``; records still missing one of the
+        three pass untouched. Two rules are applied: ``date_end`` must
+        be strictly later than ``date_start``, and the whole term range
+        must stay inside the ``date_start`` / ``date_end`` range of
+        ``year_id``.
+
+        :raises ValidationError: the term ends before it starts, or the
+            term range falls outside its academic year.
+        """
         for record in self:
             if not (record.date_start and record.date_end and record.year_id):
                 continue
@@ -138,26 +166,65 @@ Solution: Set term dates within the academic year's date range
                 raise ValidationError(error_message)
 
     def action_open(self):
+        """Start the selected terms from the Start button.
+
+        Calls ``_open`` as superuser on every record, so the user sees
+        the status bar move from Unstarted to On progress. Nothing is
+        returned and the client simply reloads the view.
+        """
         for record in self.sudo():
             record._open()  # pylint: disable=protected-access
 
     def action_done(self):
+        """Close the selected terms from the Done button.
+
+        Calls ``_done`` as superuser on every record, so the user sees
+        the status bar move to Done, marking the term as finished.
+        Nothing is returned and the client simply reloads the view.
+        """
         for record in self.sudo():
             record._done()  # pylint: disable=protected-access
 
     def action_restart(self):
+        """Send the selected terms back to Unstarted.
+
+        Calls ``_restart`` as superuser on every record, so a term
+        started or closed by mistake returns to the ``draft`` state.
+        Nothing is returned and the client simply reloads the view.
+        """
         for record in self.sudo():
             record._restart()  # pylint: disable=protected-access
 
     def action_open_enrollment(self):
+        """Open student admission for the selected terms.
+
+        Calls ``_open_enrollment`` as superuser on every record, which
+        switches ``enrollment_state`` to ``open`` so enrollments may be
+        registered against the term. Nothing is returned and the client
+        simply reloads the view.
+        """
         for record in self.sudo():
             record._open_enrollment()  # pylint: disable=protected-access
 
     def action_close_enrollment(self):
+        """Close student admission for the selected terms.
+
+        Calls ``_close_enrollment`` as superuser on every record, which
+        switches ``enrollment_state`` back to ``close`` so no further
+        enrollment may be registered against the term. Nothing is
+        returned and the client simply reloads the view.
+        """
         for record in self.sudo():
             record._close_enrollment()  # pylint: disable=protected-access
 
     def _open(self):
+        """Write ``state`` to ``open`` on a single term.
+
+        Implementation behind ``action_open``, kept separate so other
+        modules can extend the transition itself rather than the button.
+
+        :raises ValueError: ``self`` is not a single record.
+        """
         self.ensure_one()
         self.write(
             {
@@ -166,6 +233,13 @@ Solution: Set term dates within the academic year's date range
         )
 
     def _done(self):
+        """Write ``state`` to ``done`` on a single term.
+
+        Implementation behind ``action_done``, kept separate so other
+        modules can extend the transition itself rather than the button.
+
+        :raises ValueError: ``self`` is not a single record.
+        """
         self.ensure_one()
         self.write(
             {
@@ -174,6 +248,13 @@ Solution: Set term dates within the academic year's date range
         )
 
     def _restart(self):
+        """Write ``state`` back to ``draft`` on a single term.
+
+        Implementation behind ``action_restart``, kept separate so other
+        modules can extend the transition itself rather than the button.
+
+        :raises ValueError: ``self`` is not a single record.
+        """
         self.ensure_one()
         self.write(
             {
@@ -182,6 +263,15 @@ Solution: Set term dates within the academic year's date range
         )
 
     def _open_enrollment(self):
+        """Write ``enrollment_state`` to ``open`` on a single term.
+
+        Implementation behind ``action_open_enrollment``, kept separate
+        so other modules can extend the transition itself rather than
+        the button. It leaves ``state`` untouched: admission and
+        execution status of the term are independent.
+
+        :raises ValueError: ``self`` is not a single record.
+        """
         self.ensure_one()
         self.write(
             {
@@ -190,6 +280,15 @@ Solution: Set term dates within the academic year's date range
         )
 
     def _close_enrollment(self):
+        """Write ``enrollment_state`` to ``close`` on a single term.
+
+        Implementation behind ``action_close_enrollment``, kept separate
+        so other modules can extend the transition itself rather than
+        the button. It leaves ``state`` untouched: admission and
+        execution status of the term are independent.
+
+        :raises ValueError: ``self`` is not a single record.
+        """
         self.ensure_one()
         self.write(
             {

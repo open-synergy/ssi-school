@@ -60,6 +60,14 @@ class SchoolAcademicYear(models.Model):  # pylint: disable=too-few-public-method
         "term_ids",
     )
     def _compute_first_last_term(self):
+        """Pick the opening and closing term of the academic year.
+
+        ``term_ids`` is read in the model order of
+        ``school_academic_term`` (year, then ``date_start``, then
+        ``id``), so its first element becomes ``first_term_id`` and its
+        last element ``last_term_id``. Both fields are set to ``False``
+        while the year still has no term.
+        """
         for record in self:
             first_term = last_term = False
             if record.term_ids:
@@ -70,6 +78,16 @@ class SchoolAcademicYear(models.Model):  # pylint: disable=too-few-public-method
 
     @api.constrains("date_start", "date_end")
     def _check_date_coherence(self):
+        """Enforce that the academic year ends after it starts.
+
+        Runs on every create or write touching ``date_start`` or
+        ``date_end``. Records where either date is still empty pass
+        untouched; a year whose ``date_end`` is earlier than or equal to
+        its ``date_start`` is rejected.
+
+        :raises ValidationError: ``date_end`` is not strictly later than
+            ``date_start``.
+        """
         for record in self:
             if (
                 record.date_start

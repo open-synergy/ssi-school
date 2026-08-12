@@ -95,6 +95,16 @@ class SchoolEnrollmentPaymentTemplateTermDetail(models.Model):
 
     @api.depends("term_id.template_id")
     def _compute_allowed_product_ids(self):
+        """Compute the products selectable on this template fee line.
+
+        Resolves the Product Configuration of the payment template
+        owning this line (``term_id.template_id``) through
+        ``_m2o_configurator_get_filter``, honouring its selection
+        method, manual product list, domain, or python code. When the
+        term has no template the field is left empty.
+
+        :return: None
+        """
         for record in self:
             result = False
             template = record.term_id.template_id

@@ -141,6 +141,16 @@
                             <field name="student_id" />
                             <field name="state" />
                         </tree>
+                        <form create="false" edit="false" delete="false">
+                            <group name="enrollment_form" colspan="4" col="2">
+                                <field name="name" />
+                                <field name="student_id" />
+                                <field name="school_id" />
+                                <field name="academic_term_id" />
+                                <field name="grade_class_id" />
+                                <field name="state" />
+                            </group>
+                        </form>
                     </field>
                 </page>
             </xpath>

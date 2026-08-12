@@ -12,12 +12,14 @@ class SchoolEnrollmentPaymentTermDetail(
     models.Model
 ):  # pylint: disable=too-few-public-methods
     """
-    Represents a product/fee line detail on an actual enrollment payment term.
-    Inherits mixin.product_line_account which provides standard product line fields
-    such as name, account_id, uom_id, uom_quantity, price_unit, tax_ids,
-    price_subtotal, price_tax, and price_total. If the term is linked to a customer
-    invoice, each detail line will reference the corresponding customer invoice line
-    (customer_invoice_line_id) created when the customer invoice is generated.
+    Represents a product/fee line detail on an actual enrollment payment
+    term. Inherits mixin.product_line_account which provides standard
+    product line fields such as name, account_id, uom_id, uom_quantity,
+    price_unit, tax_ids, price_subtotal, price_tax, and price_total. If
+    the term is linked to a customer invoice, each detail line will
+    reference the corresponding customer invoice line
+    (customer_invoice_line_id) created when the customer invoice is
+    generated.
     """
 
     _name = "school_enrollment_payment_term_detail"
@@ -90,6 +92,22 @@ class SchoolEnrollmentPaymentTermDetail(
     )
 
     def _check_addendum_lock(self, vals):
+        """Reject writes on a locked payment term detail.
+
+        Guard called from ``write``. The write passes when the context
+        carries ``bypass_addendum_lock``, or when every key of ``vals``
+        belongs to ``ADDENDUM_LOCK_ALLOWED_FIELDS``
+        (``customer_invoice_line_id``, ``locked``, ``sequence``) -- the
+        bookkeeping fields that stay writable even after locking.
+        Otherwise a locked detail line may not be changed and a new
+        line has to be added through the addendum mechanism.
+
+        :param vals: write values whose keys are checked against the
+            allowed field set
+        :raises UserError: when a locked detail line is written with a
+            field outside the allowed set
+        :return: None
+        """
         if self.env.context.get("bypass_addendum_lock"):
             return
         if set(vals.keys()) <= ADDENDUM_LOCK_ALLOWED_FIELDS:
@@ -110,6 +128,17 @@ Solution: Add a new detail line via the addendum mechanism instead of editing th
                 raise UserError(error_message)
 
     def _check_addendum_lock_unlink(self):
+        """Reject deletion of a locked payment term detail.
+
+        Guard called from ``unlink``. Deletion only passes when the
+        context carries ``bypass_addendum_lock``; a locked detail line
+        is permanent because it may already be reflected in a customer
+        invoice line, so a correction has to be booked as a new
+        addendum line.
+
+        :raises UserError: when a locked detail line is deleted
+        :return: None
+        """
         if self.env.context.get("bypass_addendum_lock"):
             return
         for record in self:
@@ -129,6 +158,17 @@ Solution: Locked detail lines are permanent; create a new one via the addendum m
 
     @api.depends("term_id.enrollment_id.payment_template_id")
     def _compute_allowed_product_ids(self):
+        """Compute the products selectable on this fee line.
+
+        Resolves the Product Configuration of the payment template of
+        the owning enrollment
+        (``term_id.enrollment_id.payment_template_id``) through
+        ``_m2o_configurator_get_filter``, honouring its selection
+        method, manual product list, domain, or python code. When the
+        enrollment has no payment template the field is left empty.
+
+        :return: None
+        """
         for record in self:
             result = False
             template = record.term_id.enrollment_id.payment_template_id
@@ -170,6 +210,19 @@ Solution: Locked detail lines are permanent; create a new one via the addendum m
 
     @api.model
     def create(self, vals):
+        """Refresh the enrollment payment summary after creation.
+
+        Overridden so that a detail line created outside the
+        enrollment form -- by the payment template computation or the
+        duplicate wizard -- still triggers
+        ``_recompute_product_summaries`` on the enrollment of its
+        term, keeping ``product_summary_ids`` in step with the fee
+        lines.
+
+        :param vals: values of the payment term detail to create
+        :return: created ``school_enrollment_payment_term_detail``
+            record
+        """
         result = super().create(vals)
         enrollment = result.term_id.enrollment_id
         if enrollment:
@@ -177,6 +230,17 @@ Solution: Locked detail lines are permanent; create a new one via the addendum m
         return result
 
     def write(self, vals):
+        """Enforce the addendum lock and refresh the payment summary.
+
+        Overridden to run ``_check_addendum_lock`` before the write, so
+        locked detail lines cannot be modified, and to recompute
+        ``product_summary_ids`` on every touched enrollment afterwards.
+
+        :param vals: values to write
+        :raises UserError: when a locked detail line is written with a
+            field outside ``ADDENDUM_LOCK_ALLOWED_FIELDS``
+        :return: ``True``
+        """
         self._check_addendum_lock(vals)
         result = super().write(vals)
         self.mapped(
@@ -185,6 +249,16 @@ Solution: Locked detail lines are permanent; create a new one via the addendum m
         return result
 
     def unlink(self):
+        """Enforce the addendum lock and refresh the payment summary.
+
+        Overridden to run ``_check_addendum_lock_unlink`` before the
+        deletion, so locked detail lines cannot be removed, and to
+        recompute ``product_summary_ids`` on the enrollments collected
+        before the records disappear.
+
+        :raises UserError: when a locked detail line is deleted
+        :return: ``True``
+        """
         self._check_addendum_lock_unlink()
         enrollments = self.mapped("term_id.enrollment_id")
         result = super().unlink()

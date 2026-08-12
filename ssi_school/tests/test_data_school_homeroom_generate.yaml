@@ -233,11 +233,6 @@ scenarios:
         method: "action_confirm"
         as_user: "base.user_admin"
 
-      - step: "Invalidate homeroom cache before approve"
-        action: "call"
-        target: "homeroom"
-        method: "invalidate_cache"
-
       - step: "Approve homeroom"
         action: "call"
         target: "homeroom"
@@ -859,11 +854,6 @@ scenarios:
         method: "action_confirm"
         as_user: "base.user_admin"
 
-      - step: "Invalidate homeroom cache before approve"
-        action: "call"
-        target: "homeroom"
-        method: "invalidate_cache"
-
       - step: "Approve homeroom"
         action: "call"
         target: "homeroom"
@@ -1103,11 +1093,6 @@ scenarios:
         method: "action_confirm"
         as_user: "base.user_admin"
 
-      - step: "Invalidate homeroom cache before approve"
-        action: "call"
-        target: "homeroom"
-        method: "invalidate_cache"
-
       - step: "Approve homeroom"
         action: "call"
         target: "homeroom"
@@ -1159,3 +1144,177 @@ scenarios:
           - ["receivable_account_id", "=", "EVAL: registry['account'].id"]
         save_as: "_check_account"
         expect_count: 1
+
+  - name: "Homeroom Regenerate Rejects Dropping A Non Draft Enrollment"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Homeroom Generate 5"
+          code: "GTHG5"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Homeroom Generate 5"
+          code: "SCHHG5"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade 1 Homeroom Generate 5"
+          code: "G1HG5"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class A Homeroom Generate 5"
+          code: "CLAHG5"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          capacity: 5
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 Homeroom Generate 5"
+          code: "AYHG5"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term (first term, enrollment open)"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester 1 Homeroom Generate 5"
+          code: "SMHG5"
+          date_start: "2024-07-01"
+          date_end: "2024-12-31"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Contact Homeroom Generate 5"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student Homeroom Generate 5"
+          code: "STUHG5"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      # user_id is set on purpose: the record is created by the superuser
+      # env, so mixin.transaction._default_user_id() would make OdooBot its
+      # owner and the later `as_user: base.user_admin` steps would be read
+      # through school_homeroom_internal_user_rule as somebody else's record.
+      - step: "Create homeroom with the student as its only candidate"
+        action: "create"
+        model: "school_homeroom"
+        save_as: "homeroom"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          capacity: 5
+          user_id: "REF: base.user_admin"
+          candidate_student_ids:
+            - - 6
+              - 0
+              - - "REC: student.id"
+
+      - step: "Confirm homeroom"
+        action: "call"
+        target: "homeroom"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve homeroom"
+        action: "call"
+        target: "homeroom"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Generate the enrollment synchronously"
+        action: "call"
+        target: "homeroom"
+        method: "action_generate_enrollments"
+        context:
+          queue_job__no_delay: true
+
+      - step: "Get the generated enrollment"
+        action: "search"
+        model: "school_enrollment"
+        domain:
+          - ["homeroom_id", "=", "REC: homeroom.id"]
+          - ["student_id", "=", "REC: student.id"]
+        save_as: "enrollment"
+        expect_count: 1
+
+      - step: "Confirm the generated enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the generated enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Empty the candidate list"
+        action: "write"
+        target: "homeroom"
+        values:
+          candidate_student_ids:
+            - - 6
+              - 0
+              - []
+
+      - step: "Regenerating must refuse to drop the open enrollment"
+        action: "call"
+        target: "homeroom"
+        method: "action_generate_enrollments"
+        expect_error:
+          type: "ValidationError"

@@ -425,6 +425,19 @@ class SchoolEnrollment(models.Model):
     )
 
     def _recompute_product_summaries(self):
+        """Rebuild ``product_summary_ids`` from the payment term lines.
+
+        Aggregates ``uom_quantity``, ``price_subtotal``, ``price_tax``,
+        and ``price_total`` of all ``payment_term_ids.detail_ids`` per
+        product, deletes the existing summary records of the
+        enrollment, and creates one
+        ``school_enrollment.product_summary`` record per product.
+        Detail lines without a product are skipped. Runs in ``sudo``
+        and is called from ``create``, ``write``, and ``unlink`` of the
+        payment term and payment term detail models.
+
+        :return: None
+        """
         for record in self.sudo():
             summary_data = {}
             for term in record.payment_term_ids:
@@ -453,6 +466,18 @@ class SchoolEnrollment(models.Model):
                 Summary.create(data)
 
     def _compute_policy(self):  # pylint: disable=missing-return
+        """Delegate policy computation to the transaction mixins.
+
+        Overridden only to give this model its own ``_compute_policy``
+        entry point for the extra policy fields declared here
+        (``pass_ok``, ``fail_ok``, ``drop_out_ok``, ``graduate_ok``,
+        ``copy_payment_term_ok``, ``addendum_ok``,
+        ``create_invoice_ok``); the values themselves are still
+        produced by the mixin implementation reached through
+        ``super()``.
+
+        :return: None
+        """
         _super = super()
         _super._compute_policy()  # pylint: disable=protected-access
 
@@ -460,6 +485,15 @@ class SchoolEnrollment(models.Model):
         "currency_id",
     )
     def _compute_allowed_pricelist_ids(self):
+        """Compute the pricelists selectable on this enrollment.
+
+        Fills ``allowed_pricelist_ids`` with every ``product.pricelist``
+        whose ``currency_id`` equals the enrollment currency, so
+        ``pricelist_id`` can only offer pricelists expressed in the
+        same currency. Without a currency the field is left empty.
+
+        :return: None
+        """
         Pricelist = self.env["product.pricelist"]  # pylint: disable=invalid-name
         for record in self:
             result = []
@@ -476,6 +510,18 @@ class SchoolEnrollment(models.Model):
 
     @api.depends("academic_term_id", "grade_id", "school_id")
     def _compute_allowed_student_ids(self):
+        """Compute the students selectable on this enrollment.
+
+        Fills ``allowed_student_ids`` with the ``draft`` students of
+        the same ``school_id``, matched on grade according to the
+        term: in a first term the student's ``next_grade_id`` must
+        equal ``grade_id`` (the student is being promoted into it),
+        in any other term the student's ``current_grade_id`` must
+        equal ``grade_id``. The field stays empty until academic term,
+        grade, and school are all set.
+
+        :return: None
+        """
         for record in self:
             result = False
             if record.academic_term_id and record.grade_id and record.school_id:
@@ -555,6 +601,15 @@ class SchoolEnrollment(models.Model):
 
     @api.constrains("academic_term_id", "academic_year_id")
     def _check_term_year_match(self):
+        """Validate that the academic term belongs to the year.
+
+        Rejects a record whose ``academic_term_id.year_id`` differs
+        from its ``academic_year_id``; records where either field is
+        still empty pass.
+
+        :raises ValidationError: on academic term/year mismatch
+        :return: None
+        """
         for record in self:
             if (
                 record.academic_term_id
@@ -580,6 +635,15 @@ Solution: Select an Academic Term that belongs to the selected Academic Year
 
     @api.constrains("grade_class_id", "grade_id", "school_id")
     def _check_grade_class_match(self):
+        """Validate the grade class against the grade and school.
+
+        Rejects a record whose ``grade_class_id`` belongs to a
+        different ``grade_id`` or a different ``school_id`` than the
+        enrollment itself. Records without a grade class are skipped.
+
+        :raises ValidationError: on grade class mismatch
+        :return: None
+        """
         for record in self:
             if not record.grade_class_id:
                 continue
@@ -602,6 +666,17 @@ Solution: Select a Grade Class that belongs to the selected Grade and School
 
     @api.constrains("state")
     def _check_enrollment_window(self):
+        """Validate that the term's enrollment window is open.
+
+        Re-checked on every ``state`` change: an enrollment may only
+        reach ``open`` while ``academic_term_id.enrollment_state`` is
+        ``open``, so no student is enrolled outside the registration
+        period of the academic term.
+
+        :raises ValidationError: when the document reaches ``open``
+            while the academic term is not open for enrollment
+        :return: None
+        """
         for record in self:
             if (
                 record.state == "open"
@@ -622,6 +697,17 @@ Solution: Open the enrollment window on the academic term before opening this en
 
     @api.constrains("state", "student_id", "academic_term_id")
     def _check_duplicate_active_enrollment(self):
+        """Validate one active enrollment per student and term.
+
+        Searches for another ``school_enrollment`` in state ``open``
+        carrying the same ``student_id`` and ``academic_term_id``. Only
+        records that are themselves ``open`` and have both fields set
+        are checked, so drafts and cancelled documents may coexist.
+
+        :raises ValidationError: when another open enrollment already
+            exists for the same student and academic term
+        :return: None
+        """
         for record in self:
             if (
                 record.state != "open"
@@ -653,6 +739,17 @@ Solution: Cancel or close the existing enrollment before opening a new one
 
     @api.constrains("state", "grade_class_id")
     def _check_grade_class_capacity(self):
+        """Validate that the grade class capacity is not exceeded.
+
+        Counts the enrollments already in state ``open`` for the same
+        ``grade_class_id``, this one included, and rejects the record
+        when that count exceeds ``grade_class_id.capacity``. Skipped
+        while the record is not ``open`` or the class carries no
+        capacity.
+
+        :raises ValidationError: when the grade class is over capacity
+        :return: None
+        """
         for record in self:
             grade_class = record.grade_class_id
             if record.state != "open" or not grade_class or not grade_class.capacity:
@@ -683,14 +780,48 @@ Solution: Choose a different Grade Class or increase its capacity
                 raise ValidationError(error_message)
 
     def action_set_result_to_passed(self):
+        """Close the enrollment with a Passed academic year result.
+
+        Triggered by the Pass button. For every selected record, runs
+        ``_set_result_to_passed`` in ``sudo``, which moves the document
+        to Done, records the promotion grade, and returns the student
+        to draft so the next enrollment can be made.
+
+        :return: None
+        """
         for record in self.sudo():
             record._set_result_to_passed()  # pylint: disable=protected-access
 
     def action_compute_payment(self):
+        """Regenerate the payment terms from the payment template.
+
+        Triggered by the Compute Payment button. For every selected
+        record, runs ``_compute_payment_from_template`` in ``sudo``,
+        which replaces the current ``payment_term_ids`` with terms and
+        detail lines rebuilt from ``payment_template_id``.
+
+        :return: None
+        """
         for record in self.sudo():
             record._compute_payment_from_template()  # pylint: disable=protected-access
 
     def _compute_payment_from_template(self):
+        """Rebuild the payment terms from ``payment_template_id``.
+
+        Deletes every existing ``payment_term_ids`` record, then
+        creates one ``school_enrollment_payment_term`` per template
+        term (ordered by ``sequence``) and one
+        ``school_enrollment_payment_term_detail`` per template detail,
+        copying product, description, account, quantity, unit of
+        measure, unit price, and taxes. ``date_invoice`` comes from the
+        template term's ``date_invoice_duration_id`` applied to
+        ``date``, and ``date_due`` from ``date_due_duration_id``
+        applied to that invoice date, falling back to ``date``. Returns
+        immediately when no template is set, leaving the existing terms
+        untouched.
+
+        :return: None
+        """
         self.ensure_one()
         template = self.payment_template_id
         if not template:
@@ -735,20 +866,54 @@ Solution: Choose a different Grade Class or increase its capacity
                 )
 
     def action_set_result_to_failed(self):
+        """Close the enrollment with a Failed academic year result.
+
+        Triggered by the Fail button. For every selected record, runs
+        ``_set_result_to_failed`` in ``sudo``, which moves the document
+        to Done and returns the student to draft without recording a
+        promotion grade, so the same grade can be enrolled again.
+
+        :return: None
+        """
         for record in self.sudo():
             record._set_result_to_failed()  # pylint: disable=protected-access
 
     def action_set_result_to_drop_out(self):
+        """Close the enrollment with a Drop Out academic year result.
+
+        Triggered by the Drop Out button on a single record. Runs
+        ``_set_result_to_drop_out`` in ``sudo``, which moves the
+        document to Done and sets the student to dropped.
+
+        :return: None
+        """
         self.ensure_one()
         for record in self.sudo():
             record._set_result_to_drop_out()  # pylint: disable=protected-access
 
     def action_set_result_to_graduate(self):
+        """Close the enrollment with a Graduate academic year result.
+
+        Triggered by the Graduate button on a single record. Runs
+        ``_set_result_to_graduate`` in ``sudo``, which moves the
+        document to Done and sets the student to graduated.
+
+        :return: None
+        """
         self.ensure_one()
         for record in self.sudo():
             record._set_result_to_graduate()  # pylint: disable=protected-access
 
     def _set_result_to_graduate(self):
+        """Mark this enrollment Done and graduate the student.
+
+        Calls ``action_done`` with ``bypass_policy_check`` so the
+        transition is not blocked by the done policy, writes
+        ``academic_year_result`` as ``graduate``, then calls
+        ``action_set_to_graduate`` on ``student_id``.
+
+        :return: None
+        """
         self.ensure_one()
         self.with_context(bypass_policy_check=True).action_done()
         self.write(
@@ -759,6 +924,15 @@ Solution: Choose a different Grade Class or increase its capacity
         self.student_id.action_set_to_graduate()  # pylint: disable=no-member
 
     def _set_result_to_drop_out(self):
+        """Mark this enrollment Done and drop the student out.
+
+        Calls ``action_done`` with ``bypass_policy_check`` so the
+        transition is not blocked by the done policy, writes
+        ``academic_year_result`` as ``drop_out``, then calls
+        ``action_set_to_dropped`` on ``student_id``.
+
+        :return: None
+        """
         self.ensure_one()
         self.with_context(bypass_policy_check=True).action_done()
         self.write(
@@ -769,6 +943,16 @@ Solution: Choose a different Grade Class or increase its capacity
         self.student_id.action_set_to_dropped()  # pylint: disable=no-member
 
     def _set_result_to_failed(self):
+        """Mark this enrollment Done with the student held back.
+
+        Calls ``action_done`` with ``bypass_policy_check`` so the
+        transition is not blocked by the done policy, writes
+        ``academic_year_result`` as ``failed``, then returns
+        ``student_id`` to draft so the same grade can be enrolled
+        again. No ``promote_to_grade_id`` is recorded.
+
+        :return: None
+        """
         self.ensure_one()
         self.with_context(bypass_policy_check=True).action_done()
         self.write(
@@ -779,6 +963,17 @@ Solution: Choose a different Grade Class or increase its capacity
         self.student_id.action_set_to_draft()  # pylint: disable=no-member
 
     def _set_result_to_passed(self):
+        """Mark this enrollment Done and promote the student.
+
+        Calls ``action_done`` with ``bypass_policy_check`` so the
+        transition is not blocked by the done policy, writes
+        ``academic_year_result`` as ``passed`` together with
+        ``promote_to_grade_id`` taken from ``grade_id.next_grade_id``,
+        then returns ``student_id`` to draft so the enrollment into
+        that next grade can be made.
+
+        :return: None
+        """
         self.ensure_one()
         self.with_context(bypass_policy_check=True).action_done()
         next_grade_id = self.grade_id.next_grade_id.id  # pylint: disable=no-member
@@ -792,30 +987,85 @@ Solution: Choose a different Grade Class or increase its capacity
 
     @ssi_decorator.post_open_action()
     def _10_enroll_student(self):
+        """Set the student to enrolled once the document is opened.
+
+        Post-open hook: runs right after the enrollment reaches
+        ``open`` and calls ``action_set_to_enroll`` on ``student_id``.
+
+        :return: None
+        """
         self.ensure_one()
         self.student_id.action_set_to_enroll()  # pylint: disable=no-member
 
     @ssi_decorator.post_open_action()
     def _20_lock_existing_payment_term(self):
+        """Lock the existing payment terms when the document opens.
+
+        Post-open hook: runs after ``_10_enroll_student`` once the
+        enrollment reaches ``open`` and calls ``_lock_payment_term``,
+        freezing the terms and detail lines that exist at that moment.
+        Terms added later through the addendum mechanism stay unlocked
+        until Close Addendum is used.
+
+        :return: None
+        """
         self.ensure_one()
         self._lock_payment_term()
 
     @ssi_decorator.post_done_action()
     def _30_unenroll_or_graduate_student(self):
+        """Release the student once the enrollment is done.
+
+        Post-done hook: runs after the enrollment reaches ``done`` and
+        returns ``student_id`` to draft. The final student status for a
+        passed, failed, dropped out, or graduated result is applied
+        afterwards by the matching ``_set_result_to_*`` method, which
+        is what called ``action_done`` in the first place.
+
+        :return: None
+        """
         self.ensure_one()
         self.student_id.action_set_to_draft()  # pylint: disable=no-member
 
     def action_close_addendum(self):
+        """Close the addendum and lock the payment terms again.
+
+        Triggered by the Close Addendum button. For every selected
+        record, runs ``_lock_payment_term`` in ``sudo`` so the terms
+        and detail lines added during the addendum become locked and
+        can no longer be edited or deleted.
+
+        :return: None
+        """
         for record in self.sudo():
             record._lock_payment_term()  # pylint: disable=protected-access
 
     def action_open_create_due_invoice_wizard(self):
+        """Open the Create Due Invoice wizard for this enrollment.
+
+        Triggered by the Create Due Invoice button. Builds the wizard
+        action through ``_open_create_due_invoice_wizard`` in ``sudo``;
+        when several records are selected only the action of the last
+        one is returned.
+
+        :return: dict window action of the Create Due Invoice wizard
+        """
         for record in self.sudo():
             # pylint: disable=protected-access
             result = record._open_create_due_invoice_wizard()
         return result
 
     def _open_create_due_invoice_wizard(self):
+        """Build the window action of the Create Due Invoice wizard.
+
+        Reads the
+        ``ssi_school.school_enrollment_wizard_create_due_invoice_action``
+        action and injects a context whose ``active_model``,
+        ``active_id``, and ``active_ids`` point at this enrollment, so
+        the wizard knows which document to invoice.
+
+        :return: dict window action of the Create Due Invoice wizard
+        """
         self.ensure_one()
         waction = self.env.ref(
             "ssi_school.school_enrollment_wizard_create_due_invoice_action"
@@ -832,12 +1082,40 @@ Solution: Choose a different Grade Class or increase its capacity
         return waction
 
     def _create_due_invoice(self, date_start=False, date_end=False):
+        """Invoice every payment term that is due in a date range.
+
+        Enforces the create-invoice policy first, then calls
+        ``_create_invoice`` on each payment term returned by
+        ``_get_due_payment_term``. Every such call creates one
+        ``customer_invoice`` document with its lines and links it to
+        the term. Called by the Create Due Invoice wizard.
+
+        :param date_start: optional lower bound on the term
+            ``date_invoice``; falsy means no lower bound
+        :param date_end: optional upper bound on the term
+            ``date_invoice``; falsy means today
+        :raises UserError: when ``create_invoice_ok`` is not satisfied
+        :return: None
+        """
         self.ensure_one()
         self._check_create_invoice_policy()
         for term in self._get_due_payment_term(date_start, date_end):
             term._create_invoice()  # pylint: disable=protected-access
 
     def _get_due_payment_term(self, date_start=False, date_end=False):
+        """Return the payment terms that are due for invoicing.
+
+        Filters ``payment_term_ids`` down to the terms still in state
+        ``uninvoiced`` that carry a ``date_invoice`` inside the given
+        range. Extension point: override to change which terms the
+        Create Due Invoice wizard picks up.
+
+        :param date_start: optional lower bound on ``date_invoice``;
+            falsy means no lower bound
+        :param date_end: optional upper bound on ``date_invoice``;
+            falsy means today in the user's timezone
+        :return: ``school_enrollment_payment_term`` recordset
+        """
         self.ensure_one()
         date_end = date_end or fields.Date.context_today(self)
         return self.payment_term_ids.filtered(
@@ -848,6 +1126,15 @@ Solution: Choose a different Grade Class or increase its capacity
         )
 
     def _check_create_invoice_policy(self):
+        """Check the policy that guards due invoice creation.
+
+        Passes immediately when ``bypass_policy_check`` is present in
+        the context; otherwise the ``create_invoice_ok`` policy field
+        must be satisfied before any invoice may be created.
+
+        :raises UserError: when ``create_invoice_ok`` is not satisfied
+        :return: ``True`` when the check is bypassed, otherwise None
+        """
         self.ensure_one()
         if self.env.context.get("bypass_policy_check", False):
             return True
@@ -866,6 +1153,16 @@ Solution: Check create due invoice policy prerequisite
             raise UserError(error_message)
 
     def _lock_payment_term(self):
+        """Lock every payment term and detail of this enrollment.
+
+        Searches the ``school_enrollment_payment_term`` and
+        ``school_enrollment_payment_term_detail`` records of this
+        enrollment that are still unlocked and writes ``locked`` to
+        ``True`` on them, passing ``bypass_addendum_lock`` in the
+        context so the lock guards do not reject that very write.
+
+        :return: None
+        """
         self.ensure_one()
         Term = self.env[
             "school_enrollment_payment_term"
@@ -883,6 +1180,17 @@ Solution: Check create due invoice policy prerequisite
             details.with_context(bypass_addendum_lock=True).write({"locked": True})
 
     def _unlock_payment_term(self):
+        """Unlock every payment term and detail of this enrollment.
+
+        Reverse of ``_lock_payment_term``: the locked
+        ``school_enrollment_payment_term`` and
+        ``school_enrollment_payment_term_detail`` records of this
+        enrollment get ``locked`` written back to ``False``, passing
+        ``bypass_addendum_lock`` in the context so the lock guards do
+        not reject that very write.
+
+        :return: None
+        """
         self.ensure_one()
         Term = self.env[
             "school_enrollment_payment_term"
@@ -901,11 +1209,30 @@ Solution: Check create due invoice policy prerequisite
 
     @ssi_decorator.post_restart_action()
     def _10_unlock_payment_term(self):
+        """Unlock the payment terms when the document is restarted.
+
+        Post-restart hook: runs after the enrollment goes back to
+        ``draft`` and calls ``_unlock_payment_term``, so the terms and
+        detail lines become editable and deletable again.
+
+        :return: None
+        """
         self.ensure_one()
         self._unlock_payment_term()
 
     @ssi_decorator.pre_cancel_action()
     def _10_check_payment_term_invoice(self):
+        """Block cancellation while a payment term is still invoiced.
+
+        Pre-cancel hook: runs before the enrollment moves to ``cancel``
+        and refuses the transition while any ``payment_term_ids``
+        record still carries a ``customer_invoice_id``, so no invoice
+        is left pointing at a cancelled enrollment.
+
+        :raises UserError: when a payment term is still linked to a
+            customer invoice
+        :return: None
+        """
         self.ensure_one()
         invoiced_terms = self.payment_term_ids.filtered(lambda r: r.customer_invoice_id)
         if invoiced_terms:
@@ -924,6 +1251,15 @@ Solution: Delete or disconnect the invoice on the payment term before cancelling
 
     @ssi_decorator.post_cancel_action()
     def _10_unenroll_student(self):
+        """Return the student to draft on cancellation.
+
+        Post-cancel hook: runs after the enrollment reaches ``cancel``
+        and calls ``action_set_to_draft`` on ``student_id``, so the
+        student is no longer counted as enrolled and can be enrolled
+        again.
+
+        :return: None
+        """
         self.ensure_one()
         self.student_id.action_set_to_draft()  # pylint: disable=no-member
 
