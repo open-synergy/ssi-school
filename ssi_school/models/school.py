@@ -56,6 +56,16 @@ class School(models.Model):  # pylint: disable=too-few-public-methods
 
     @api.constrains("company_id", "branch_id")
     def _check_branch_company(self):
+        """Enforce that the branch belongs to the school's center.
+
+        Runs on every create or write touching ``company_id`` or
+        ``branch_id``: each record delegates the test to
+        ``_check_branch_company_condition``, so a school can never be
+        attached to a branch owned by another ``res.company``.
+
+        :raises ValidationError: the branch's center differs from the
+            center of the school.
+        """
         for record in self.sudo():
             if not record._check_branch_company_condition():
                 error_message = (
@@ -76,6 +86,17 @@ Solution: Select a Branch whose Center matches the school's Center
                 raise ValidationError(error_message)
 
     def _check_branch_company_condition(self):
+        """Return whether the branch matches the school's center.
+
+        Extension point of the ``_check_branch_company`` constraint:
+        override it to widen or narrow the accepted combinations. A
+        school without ``branch_id`` is always valid, since it is then
+        overseen directly by the center; otherwise
+        ``branch_id.company_id`` must equal ``company_id``.
+
+        :return: ``True`` when the combination is valid.
+        :raises ValueError: ``self`` is not a single record.
+        """
         self.ensure_one()
         if not self.branch_id:
             return True

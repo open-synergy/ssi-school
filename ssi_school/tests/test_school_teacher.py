@@ -9,5 +9,13 @@ from odoo.tests import tagged
 
 @tagged("post_install", "-at_install")
 class TestSchoolTeacher(YamlTransactionCase):  # pylint: disable=too-few-public-methods
+    """Cover the ``school_teacher`` model and its home address.
+
+    The scenarios exercise CRUD on a teacher, changing the employee it
+    points to, the fields related from the home address contact, and
+    writing personal information back to that contact.
+    """
+
     def test_teacher(self):
+        """Run the teacher CRUD and home address relation scenarios."""
         self.run_yaml_scenario("test_data_teacher.yaml")

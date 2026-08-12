@@ -279,11 +279,6 @@ scenarios:
         target: "all_terms"
         method: "action_create_invoice"
 
-      - step: "Invalidate enrollment cache after invoicing"
-        action: "call"
-        target: "enrollment"
-        method: "invalidate_cache"
-
       - step: "Assert enrollment done"
         action: "call"
         target: "enrollment"
@@ -530,10 +525,13 @@ scenarios:
         method: "action_compute_payment"
         as_user: "base.user_admin"
 
-      - step: "Invalidate enrollment cache"
-        action: "call"
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
         target: "enrollment"
-        method: "invalidate_cache"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
 
       - step: "Approve enrollment"
         action: "call"
@@ -601,3 +599,202 @@ scenarios:
           state:
             type: "value"
             expected: "done"
+
+  - name: "Onchange Payment Template Fills Receivable Journal"
+    steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable ENRCI03"
+          code: "ENRCI03"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type ENRCI03"
+          code: "ENRCI03"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
+      - step: "Setup - create payment template carrying a journal"
+        action: "create"
+        model: "school_enrollment_payment_template"
+        save_as: "payment_template"
+        values:
+          name: "Template Receivable Journal OC"
+          code: "PMTRJOC"
+          journal_id: "REC: ci_journal.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+
+      - step: "Selecting the template fills the receivable journal"
+        action: form
+        model: "school_enrollment"
+        save: false
+        values:
+          payment_template_id: "REC: payment_template"
+        asserts:
+          receivable_journal_id:
+            type: "m2o"
+            expected: "REC: ci_journal"
+
+  - name: "Onchange Payment Template Fills Receivable Account"
+    steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable ENRCI04"
+          code: "ENRCI04"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type ENRCI04"
+          code: "ENRCI04"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
+      - step: "Setup - get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create the account carried by the template"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "Test Receivable Account OC"
+          code: "TESTRAOC"
+          user_type_id: "REC: account_type.id"
+
+      - step: "Setup - create payment template carrying an account"
+        action: "create"
+        model: "school_enrollment_payment_template"
+        save_as: "payment_template"
+        values:
+          name: "Template Receivable Account OC"
+          code: "PMTRAOC"
+          receivable_account_id: "REC: account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+
+      - step: "Selecting the template fills the receivable account"
+        action: form
+        model: "school_enrollment"
+        save: false
+        values:
+          payment_template_id: "REC: payment_template"
+        asserts:
+          receivable_account_id:
+            type: "m2o"
+            expected: "REC: account"
+
+  - name: "Onchange Clearing Payment Template Resets Receivable Fields"
+    steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable ENRCI05"
+          code: "ENRCI05"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type ENRCI05"
+          code: "ENRCI05"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
+      - step: "Setup - get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create the account carried by the template"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "Test Receivable Account Reset OC"
+          code: "TESTRARST"
+          user_type_id: "REC: account_type.id"
+
+      - step: "Setup - create payment template carrying journal and account"
+        action: "create"
+        model: "school_enrollment_payment_template"
+        save_as: "payment_template"
+        values:
+          name: "Template Receivable Reset OC"
+          code: "PMTRRST"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+
+      - step: "Clearing the template resets both receivable fields"
+        action: form
+        model: "school_enrollment"
+        save: false
+        ops:
+          - set: {payment_template_id: "REC: payment_template"}
+          - set:
+              payment_template_id: "EVAL: env['school_enrollment_payment_template']"
+          - assert:
+              receivable_journal_id:
+                type: "value"
+                operator: "is_falsy"
+              receivable_account_id:
+                type: "value"
+                operator: "is_falsy"

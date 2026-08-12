@@ -210,10 +210,13 @@ scenarios:
             type: "value"
             expected: "confirm"
 
-      - step: "Invalidate enrollment cache before approve"
-        action: "call"
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
         target: "enrollment"
-        method: "invalidate_cache"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
 
       - step: "Approve enrollment as admin"
         action: "call"
@@ -397,10 +400,13 @@ scenarios:
             type: "value"
             expected: "confirm"
 
-      - step: "Invalidate homeroom cache before approve"
-        action: "call"
+      - step: "Assert homeroom is confirm before approve (forces refresh, T-04)"
+        action: "assert"
         target: "homeroom"
-        method: "invalidate_cache"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
 
       - step: "Approve homeroom as admin"
         action: "call"
@@ -523,10 +529,13 @@ scenarios:
         method: "action_confirm"
         as_user: "base.user_admin"
 
-      - step: "Invalidate enrollment cache before approve"
-        action: "call"
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
         target: "enrollment"
-        method: "invalidate_cache"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
 
       - step: "Approve enrollment as admin so it becomes open"
         action: "call"
@@ -670,10 +679,13 @@ scenarios:
         method: "action_confirm"
         as_user: "base.user_admin"
 
-      - step: "Invalidate enrollment cache before approve"
-        action: "call"
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
         target: "enrollment"
-        method: "invalidate_cache"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
 
       - step: "Approve enrollment as admin so it becomes open"
         action: "call"
@@ -706,10 +718,13 @@ scenarios:
             type: "value"
             expected: "confirm"
 
-      - step: "Invalidate mutation cache before approve"
-        action: "call"
+      - step: "Assert mutation is confirm before approve (forces refresh, T-04)"
+        action: "assert"
         target: "mutation"
-        method: "invalidate_cache"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
 
       - step: "Approve mutation as admin"
         action: "call"

@@ -11,5 +11,14 @@ from odoo.tests import tagged
 class TestSchoolEnrollmentPaymentProductConfigurator(
     YamlTransactionCase
 ):  # pylint: disable=too-few-public-methods
+    """Cover the products allowed on a payment term detail.
+
+    The scenarios exercise the manual, domain and Python code selection
+    strategies on both the payment template detail and the enrollment
+    payment term detail, including an empty manual selection and a
+    detail whose enrollment has no payment template at all.
+    """
+
     def test_enrollment_payment_product_configurator(self):
+        """Run the allowed product selection strategy scenarios."""
         self.run_yaml_scenario("test_data_enrollment_payment_product_configurator.yaml")

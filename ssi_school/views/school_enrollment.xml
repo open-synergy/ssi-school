@@ -283,6 +283,16 @@
                             <field name="amount_tax" />
                             <field name="amount_total" />
                         </tree>
+                        <form create="false" edit="false" delete="false">
+                            <group name="product_summary_form" colspan="4" col="2">
+                                <field name="product_id" />
+                                <field name="uom_quantity" />
+                                <field name="currency_id" invisible="1" />
+                                <field name="amount_untaxed" />
+                                <field name="amount_tax" />
+                                <field name="amount_total" />
+                            </group>
+                        </form>
                     </field>
                 </page>
                 <page name="accounting" string="Accounting">

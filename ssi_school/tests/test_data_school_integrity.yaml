@@ -1,0 +1,140 @@
+options:
+  auto_refresh: true
+scenarios:
+  - name: School with a branch of its own center is accepted
+    steps:
+      - step: Setup - create grade type (s1)
+        action: create
+        model: school_grade_type
+        save_as: grade_type
+        values:
+          name: Grade Type Integrity 1
+          code: GTSCHINT1
+          sequence: 10
+      - step: Setup - create the other center (s1)
+        action: create
+        model: res.company
+        save_as: other_company
+        values:
+          name: Other Center Integrity 1
+      - step: Setup - create a branch of the current center (s1)
+        action: create
+        model: school_branch
+        save_as: branch
+        values:
+          name: Branch Integrity 1
+          code: BRSCHINT1
+          company_id: "REC: company.id"
+      - step: Setup - create a branch of the other center (s1)
+        action: create
+        model: school_branch
+        save_as: other_branch
+        values:
+          name: Other Center Branch Integrity 1
+          code: BRSCHINT21
+          company_id: "REC: other_company.id"
+      - step: Create the school on the matching branch
+        action: create
+        model: school
+        save_as: school
+        values:
+          name: School Integrity 1
+          code: SCHBRINT1
+          grade_type_id: "REC: grade_type.id"
+          branch_id: "REC: branch.id"
+      - step: Assert the branch is the one that was set
+        action: assert
+        target: school
+        asserts:
+          branch_id:
+            type: m2o
+            expected: "REC: branch"
+  - name: School on a branch of another center is rejected on create
+    steps:
+      - step: Setup - create grade type (s2)
+        action: create
+        model: school_grade_type
+        save_as: grade_type
+        values:
+          name: Grade Type Integrity 2
+          code: GTSCHINT2
+          sequence: 10
+      - step: Setup - create the other center (s2)
+        action: create
+        model: res.company
+        save_as: other_company
+        values:
+          name: Other Center Integrity 2
+      - step: Setup - create a branch of the current center (s2)
+        action: create
+        model: school_branch
+        save_as: branch
+        values:
+          name: Branch Integrity 2
+          code: BRSCHINT2
+          company_id: "REC: company.id"
+      - step: Setup - create a branch of the other center (s2)
+        action: create
+        model: school_branch
+        save_as: other_branch
+        values:
+          name: Other Center Branch Integrity 2
+          code: BRSCHINT22
+          company_id: "REC: other_company.id"
+      - step: Create the school on the branch of the other center
+        action: create
+        model: school
+        expect_error:
+          type: ValidationError
+        values:
+          name: School Integrity 2
+          code: SCHBRINT2
+          grade_type_id: "REC: grade_type.id"
+          branch_id: "REC: other_branch.id"
+  - name: School moved to a branch of another center is rejected
+    steps:
+      - step: Setup - create grade type (s3)
+        action: create
+        model: school_grade_type
+        save_as: grade_type
+        values:
+          name: Grade Type Integrity 3
+          code: GTSCHINT3
+          sequence: 10
+      - step: Setup - create the other center (s3)
+        action: create
+        model: res.company
+        save_as: other_company
+        values:
+          name: Other Center Integrity 3
+      - step: Setup - create a branch of the current center (s3)
+        action: create
+        model: school_branch
+        save_as: branch
+        values:
+          name: Branch Integrity 3
+          code: BRSCHINT3
+          company_id: "REC: company.id"
+      - step: Setup - create a branch of the other center (s3)
+        action: create
+        model: school_branch
+        save_as: other_branch
+        values:
+          name: Other Center Branch Integrity 3
+          code: BRSCHINT23
+          company_id: "REC: other_company.id"
+      - step: Create the school without any branch
+        action: create
+        model: school
+        save_as: school
+        values:
+          name: School Integrity 3
+          code: SCHBRINT3
+          grade_type_id: "REC: grade_type.id"
+      - step: Write the branch of the other center on that school
+        action: write
+        target: school
+        expect_error:
+          type: ValidationError
+        values:
+          branch_id: "REC: other_branch.id"

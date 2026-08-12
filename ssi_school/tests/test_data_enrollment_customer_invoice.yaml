@@ -221,10 +221,13 @@ scenarios:
         method: "action_confirm"
         as_user: "base.user_admin"
 
-      - step: "Invalidate enrollment cache before approve"
-        action: "call"
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
         target: "enrollment"
-        method: "invalidate_cache"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
 
       - step: "Approve enrollment"
         action: "call"
@@ -522,10 +525,13 @@ scenarios:
         method: "action_confirm"
         as_user: "base.user_admin"
 
-      - step: "Invalidate enrollment cache before approve"
-        action: "call"
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
         target: "enrollment"
-        method: "invalidate_cache"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
 
       - step: "Approve enrollment"
         action: "call"
@@ -782,10 +788,13 @@ scenarios:
         method: "action_confirm"
         as_user: "base.user_admin"
 
-      - step: "Invalidate enrollment cache before approve"
-        action: "call"
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
         target: "enrollment"
-        method: "invalidate_cache"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
 
       - step: "Approve enrollment"
         action: "call"
@@ -1047,10 +1056,13 @@ scenarios:
         method: "action_confirm"
         as_user: "base.user_admin"
 
-      - step: "Invalidate enrollment cache before approve"
-        action: "call"
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
         target: "enrollment"
-        method: "invalidate_cache"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
 
       - step: "Approve enrollment"
         action: "call"
@@ -1328,10 +1340,13 @@ scenarios:
         method: "action_confirm"
         as_user: "base.user_admin"
 
-      - step: "Invalidate enrollment cache before approve"
-        action: "call"
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
         target: "enrollment"
-        method: "invalidate_cache"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
 
       - step: "Approve enrollment"
         action: "call"
@@ -1606,10 +1621,13 @@ scenarios:
         method: "action_confirm"
         as_user: "base.user_admin"
 
-      - step: "Invalidate enrollment cache before approve"
-        action: "call"
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
         target: "enrollment"
-        method: "invalidate_cache"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
 
       - step: "Approve enrollment"
         action: "call"
@@ -1801,7 +1819,7 @@ scenarios:
           auto_confirm_customer_invoice: true
 
       - step: "Selecting the payment template fills the customer invoice fields"
-        action: "form"
+        action: form
         model: "school_enrollment"
         save: false
         values:

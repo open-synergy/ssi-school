@@ -243,6 +243,14 @@ class SchoolStudentMutation(models.Model):
 
     @api.depends("student_id")
     def _compute_allowed_enrollment_ids(self):
+        """List the enrollments this mutation may be applied to.
+
+        Nothing is proposed until ``student_id`` is set; otherwise the
+        ``school_enrollment`` records matching
+        ``_get_allowed_enrollment_criteria`` — the enrollments of that
+        student still in state ``open`` — are collected. The view uses
+        the field to restrict the ``enrollment_id`` selection.
+        """
         for record in self:
             result = False
             if record.student_id:
@@ -251,6 +259,15 @@ class SchoolStudentMutation(models.Model):
             record.allowed_enrollment_ids = result
 
     def _get_allowed_enrollment_criteria(self):
+        """Return the domain of enrollments eligible for mutation.
+
+        Extension point of ``_compute_allowed_enrollment_ids``: override
+        it to widen or narrow the selection. Matches the enrollments of
+        ``student_id`` whose state is ``open``.
+
+        :return: search domain for ``school_enrollment``.
+        :raises ValueError: ``self`` is not a single record.
+        """
         self.ensure_one()
         return [
             ("student_id", "=", self.student_id.id),
@@ -259,6 +276,14 @@ class SchoolStudentMutation(models.Model):
 
     @api.depends("enrollment_id")
     def _compute_allowed_destination_grade_class_ids(self):
+        """List the classes the student may be moved into.
+
+        Nothing is proposed until ``enrollment_id`` is set; otherwise
+        the ``school_grade_class`` records matching
+        ``_get_allowed_destination_grade_class_criteria`` are collected.
+        The view uses the field to restrict the
+        ``destination_grade_class_id`` selection.
+        """
         for record in self:
             result = False
             if record.enrollment_id:
@@ -267,6 +292,17 @@ class SchoolStudentMutation(models.Model):
             record.allowed_destination_grade_class_ids = result
 
     def _get_allowed_destination_grade_class_criteria(self):
+        """Return the domain of eligible destination classes.
+
+        Extension point of
+        ``_compute_allowed_destination_grade_class_ids``: override it to
+        change which classes may be picked. Matches the grade classes of
+        the same grade and school as ``enrollment_id``, excluding the
+        class the enrollment already sits in.
+
+        :return: search domain for ``school_grade_class``.
+        :raises ValueError: ``self`` is not a single record.
+        """
         self.ensure_one()
         return [
             ("grade_id", "=", self.enrollment_id.grade_id.id),
@@ -309,6 +345,14 @@ class SchoolStudentMutation(models.Model):
         "destination_grade_class_id",
     )
     def onchange_destination_homeroom_id(self):
+        """Propose the open Homeroom batch of the destination class.
+
+        Clears ``destination_homeroom_id`` whenever ``enrollment_id`` or
+        ``destination_grade_class_id`` changes, then fills it with the
+        first ``school_homeroom`` matching
+        ``_get_destination_homeroom_criteria``. The field legitimately
+        stays empty when the destination class has no open batch.
+        """
         self.destination_homeroom_id = False
         if self.destination_grade_class_id:
             criteria = self._get_destination_homeroom_criteria()
@@ -317,6 +361,17 @@ class SchoolStudentMutation(models.Model):
             )
 
     def _get_destination_homeroom_criteria(self):
+        """Return the domain locating the destination Homeroom batch.
+
+        Extension point of ``onchange_destination_homeroom_id``:
+        override it to change how the batch is matched. Requires the
+        same academic year, academic term and grade as
+        ``enrollment_id``, the chosen ``destination_grade_class_id``,
+        and state ``open``.
+
+        :return: search domain for ``school_homeroom``.
+        :raises ValueError: ``self`` is not a single record.
+        """
         self.ensure_one()
         return [
             ("academic_year_id", "=", self.enrollment_id.academic_year_id.id),
@@ -328,6 +383,16 @@ class SchoolStudentMutation(models.Model):
 
     @api.constrains("destination_grade_class_id", "enrollment_id")
     def _check_destination_distinct(self):
+        """Enforce that the mutation really changes the class.
+
+        Runs on every create or write touching
+        ``destination_grade_class_id`` or ``enrollment_id`` and
+        delegates the test to ``_check_destination_distinct_condition``,
+        so an empty mutation can never be recorded.
+
+        :raises ValidationError: the destination class is the class the
+            enrollment already sits in.
+        """
         for record in self.sudo():
             if not record._check_destination_distinct_condition():
                 error_message = (
@@ -347,6 +412,17 @@ Solution: Select a different Grade Class as the mutation destination
                 raise ValidationError(error_message)
 
     def _check_destination_distinct_condition(self):
+        """Return whether the destination differs from the source.
+
+        Extension point of the ``_check_destination_distinct``
+        constraint: override it to change the rule. A record still
+        missing the destination class or the enrollment is accepted,
+        otherwise ``destination_grade_class_id`` must differ from
+        ``enrollment_id.grade_class_id``.
+
+        :return: ``True`` when the destination is another class.
+        :raises ValueError: ``self`` is not a single record.
+        """
         self.ensure_one()
         if not self.destination_grade_class_id or not self.enrollment_id:
             return True
@@ -354,6 +430,17 @@ Solution: Select a different Grade Class as the mutation destination
 
     @api.constrains("destination_grade_class_id", "enrollment_id")
     def _check_same_grade_school(self):
+        """Enforce a destination inside the same grade and school.
+
+        Runs on every create or write touching
+        ``destination_grade_class_id`` or ``enrollment_id`` and
+        delegates the test to ``_check_same_grade_school_condition``.
+        This is what keeps a mutation a lateral move between classes
+        instead of a grade change or a school transfer.
+
+        :raises ValidationError: the destination class belongs to
+            another grade or another school than the enrollment.
+        """
         for record in self.sudo():
             if not record._check_same_grade_school_condition():
                 error_message = (
@@ -375,6 +462,18 @@ School as the enrollment
                 raise ValidationError(error_message)
 
     def _check_same_grade_school_condition(self):
+        """Return whether destination grade and school match.
+
+        Extension point of the ``_check_same_grade_school`` constraint:
+        override it to change the rule. A record still missing the
+        destination class or the enrollment is accepted, otherwise both
+        ``grade_id`` and ``school_id`` of
+        ``destination_grade_class_id`` must equal those of
+        ``enrollment_id``.
+
+        :return: ``True`` when the combination is valid.
+        :raises ValueError: ``self`` is not a single record.
+        """
         self.ensure_one()
         if not self.destination_grade_class_id or not self.enrollment_id:
             return True
@@ -386,6 +485,17 @@ School as the enrollment
 
     @api.constrains("state", "enrollment_id")
     def _check_enrollment_open(self):
+        """Enforce an open enrollment once the document advances.
+
+        Runs on every create or write touching ``state`` or
+        ``enrollment_id`` and delegates the test to
+        ``_check_enrollment_open_condition``, so a mutation cannot be
+        confirmed or completed against an enrollment closed or
+        cancelled in the meantime.
+
+        :raises ValidationError: the document is ``confirm`` or ``done``
+            while its enrollment is not ``open``.
+        """
         for record in self.sudo():
             if not record._check_enrollment_open_condition():
                 error_message = (
@@ -407,6 +517,17 @@ confirmed or completed
                 raise ValidationError(error_message)
 
     def _check_enrollment_open_condition(self):
+        """Return whether the enrollment may still be mutated.
+
+        Extension point of the ``_check_enrollment_open`` constraint:
+        override it to change the rule. Documents outside ``confirm``
+        and ``done`` are always accepted, so a draft may be prepared
+        freely; in those two states ``enrollment_id.state`` must be
+        ``open``.
+
+        :return: ``True`` when the state combination is valid.
+        :raises ValueError: ``self`` is not a single record.
+        """
         self.ensure_one()
         if self.state not in ("confirm", "done"):
             return True
@@ -414,6 +535,17 @@ confirmed or completed
 
     @api.constrains("state", "enrollment_id")
     def _check_single_active_mutation(self):
+        """Enforce a single live mutation per enrollment.
+
+        Runs on every create or write touching ``state`` or
+        ``enrollment_id`` and delegates the test to
+        ``_check_single_active_mutation_condition``, preventing two
+        competing documents from moving the same enrollment into
+        different classes.
+
+        :raises ValidationError: another draft or confirmed mutation
+            already targets the same enrollment.
+        """
         for record in self.sudo():
             if not record._check_single_active_mutation_condition():
                 error_message = (
@@ -436,6 +568,17 @@ confirming this one
                 raise ValidationError(error_message)
 
     def _check_single_active_mutation_condition(self):
+        """Return whether no rival mutation targets the enrollment.
+
+        Extension point of the ``_check_single_active_mutation``
+        constraint: override it to change the rule. Documents outside
+        ``draft`` and ``confirm``, or without an enrollment, are always
+        accepted; otherwise the search built by
+        ``_get_single_active_mutation_criteria`` must come back empty.
+
+        :return: ``True`` when no other mutation is pending.
+        :raises ValueError: ``self`` is not a single record.
+        """
         self.ensure_one()
         if self.state not in ("draft", "confirm") or not self.enrollment_id:
             return True
@@ -445,6 +588,17 @@ confirming this one
         return not duplicate
 
     def _get_single_active_mutation_criteria(self):
+        """Return the domain finding rival mutation documents.
+
+        Extension point of
+        ``_check_single_active_mutation_condition``: override it to
+        change what counts as a rival. Matches the other mutations (an
+        ``id`` different from this one) on the same ``enrollment_id``
+        whose state is ``draft`` or ``confirm``.
+
+        :return: search domain for ``school_student_mutation``.
+        :raises ValueError: ``self`` is not a single record.
+        """
         self.ensure_one()
         return [
             ("id", "!=", self.id),
@@ -454,11 +608,35 @@ confirming this one
 
     @ssi_decorator.pre_done_check()
     def _10_check_ready(self):
+        """Validate the mutation right before it turns done.
+
+        ``pre_done_check`` hook fired by ``action_done`` while the
+        document is still in ``confirm``, before the state moves to
+        ``done`` and before ``_20_apply_mutation`` touches the
+        enrollment. It replays two guards against live data: the
+        enrollment must still be ``open`` and the destination class must
+        still have a free seat.
+
+        :raises ValueError: ``self`` is not a single record.
+        :raises ValidationError: propagated from
+            ``_check_done_enrollment_open`` or
+            ``_check_done_destination_capacity``.
+        """
         self.ensure_one()
         self._check_done_enrollment_open()
         self._check_done_destination_capacity()
 
     def _check_done_enrollment_open(self):
+        """Refuse completion when the enrollment left the open state.
+
+        Re-reads ``enrollment_id.state`` at completion time, because the
+        enrollment may have been closed or cancelled after the mutation
+        was approved; the user is then told to cancel the mutation
+        instead of applying it.
+
+        :raises ValueError: ``self`` is not a single record.
+        :raises ValidationError: the enrollment is no longer ``open``.
+        """
         self.ensure_one()
         if self.enrollment_id.state != "open":
             error_message = (
@@ -479,6 +657,17 @@ the mutation is completed
             raise ValidationError(error_message)
 
     def _check_done_destination_capacity(self):
+        """Refuse completion when the destination class is full.
+
+        A destination class whose ``capacity`` is left at zero counts as
+        unlimited and passes at once. Otherwise the open enrollments of
+        ``destination_grade_class_id`` are counted through
+        ``_get_destination_capacity_criteria`` and the mutation is
+        rejected as soon as that count already reaches the capacity.
+
+        :raises ValueError: ``self`` is not a single record.
+        :raises ValidationError: the destination class has no seat left.
+        """
         self.ensure_one()
         grade_class = self.destination_grade_class_id
         if not grade_class.capacity:
@@ -508,6 +697,16 @@ capacity
             raise ValidationError(error_message)
 
     def _get_destination_capacity_criteria(self):
+        """Return the domain counting seats taken in the destination.
+
+        Extension point of ``_check_done_destination_capacity``:
+        override it to change which enrollments consume a seat. Matches
+        the enrollments of ``destination_grade_class_id`` in state
+        ``open``.
+
+        :return: search domain for ``school_enrollment``.
+        :raises ValueError: ``self`` is not a single record.
+        """
         self.ensure_one()
         return [
             ("grade_class_id", "=", self.destination_grade_class_id.id),
@@ -516,10 +715,33 @@ capacity
 
     @ssi_decorator.post_done_action()
     def _20_apply_mutation(self):
+        """Move the enrollment into the destination class.
+
+        ``post_done_action`` hook fired by ``action_done`` once the
+        document reached ``done``. It writes
+        ``_prepare_mutation_enrollment_vals`` on ``enrollment_id`` as
+        superuser, which cascades into ``school_student.grade_class_id``
+        and into the enrolled counts of the source and destination
+        Homerooms. Nothing reverts it, since ``done`` is terminal: an
+        opposite mutation document is required to undo the move.
+
+        :raises ValueError: ``self`` is not a single record.
+        """
         self.ensure_one()
         self.enrollment_id.sudo().write(self._prepare_mutation_enrollment_vals())
 
     def _prepare_mutation_enrollment_vals(self):
+        """Build the values written on the mutated enrollment.
+
+        Points the enrollment at ``destination_grade_class_id`` and at
+        ``destination_homeroom_id`` (``False`` when the destination
+        class has no open batch), leaving grade, academic year and term,
+        and billing untouched. Extension point: override it to carry
+        more fields over to the enrollment.
+
+        :return: dictionary of values for ``school_enrollment.write``.
+        :raises ValueError: ``self`` is not a single record.
+        """
         self.ensure_one()
         return {
             "grade_class_id": self.destination_grade_class_id.id,

@@ -1,3 +1,5 @@
+options:
+  auto_refresh: true
 scenarios:
   - name: "Create School"
     steps:
@@ -238,3 +240,42 @@ scenarios:
         domain: [["code", "=", "SCHDEL"]]
         save_as: "result"
         expect_count: 0
+
+  - name: "Onchange Company Clears Branch Of Another Center"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Branch Onchange"
+          code: "GTBOC"
+          sequence: 10
+      - step: "Create another center"
+        action: "create"
+        model: "res.company"
+        save_as: "other_company"
+        values:
+          name: "Other Center"
+      - step: "Create branch under the active center"
+        action: "create"
+        model: "school_branch"
+        save_as: "branch"
+        values:
+          name: "Branch Onchange"
+          code: "BROC"
+          company_id: "REC: company.id"
+      - step: "Changing the center clears a branch of the old center"
+        action: form
+        model: "school"
+        save: false
+        ops:
+          - set: {name: "School Onchange Branch"}
+          - set: {code: "SCHOCB"}
+          - set: {grade_type_id: "REC: grade_type"}
+          - set: {branch_id: "REC: branch"}
+          - set: {company_id: "REC: other_company"}
+          - assert:
+              branch_id:
+                type: "value"
+                operator: "is_falsy"

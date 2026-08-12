@@ -35,6 +35,17 @@ class SchoolEnrollmentPaymentTerm(models.Model):
         "manually_control",
     )
     def _compute_state(self):
+        """Derive the billing state from the enrollment and invoice.
+
+        ``draft`` while the enrollment is in ``draft`` or ``confirm``.
+        Once the enrollment is ``open`` or ``done`` the value becomes
+        ``invoiced`` when ``customer_invoice_id`` is set, ``manual``
+        when ``manually_control`` is enabled, and ``uninvoiced``
+        otherwise. Any other enrollment state (cancelled, rejected)
+        yields ``cancelled``.
+
+        :return: None
+        """
         for record in self:
             if record.enrollment_id.state in ["draft", "confirm"]:
                 state = "draft"
@@ -56,6 +67,15 @@ class SchoolEnrollmentPaymentTerm(models.Model):
         "detail_ids.price_total",
     )
     def _compute_total(self):
+        """Sum the detail lines into the payment term totals.
+
+        ``amount_untaxed``, ``amount_tax``, and ``amount_total`` are
+        the sums of ``price_subtotal``, ``price_tax``, and
+        ``price_total`` over ``detail_ids``; a term without detail
+        lines totals zero.
+
+        :return: None
+        """
         for record in self:
             amount_untaxed = amount_tax = amount_total = 0.0
             for detail in record.detail_ids:
@@ -222,6 +242,22 @@ class SchoolEnrollmentPaymentTerm(models.Model):
     )
 
     def _check_addendum_lock(self, vals):
+        """Reject writes on a locked payment term.
+
+        Guard called from ``write``. The write passes when the context
+        carries ``bypass_addendum_lock``, or when every key of ``vals``
+        belongs to ``ADDENDUM_LOCK_ALLOWED_FIELDS``
+        (``customer_invoice_id``, ``manually_control``, ``locked``,
+        ``sequence``) -- the bookkeeping fields that stay writable even
+        after locking. Otherwise a locked term may not be changed and a
+        new term has to be added through the addendum mechanism.
+
+        :param vals: write values whose keys are checked against the
+            allowed field set
+        :raises UserError: when a locked term is written with a field
+            outside the allowed set
+        :return: None
+        """
         if self.env.context.get("bypass_addendum_lock"):
             return
         if set(vals.keys()) <= ADDENDUM_LOCK_ALLOWED_FIELDS:
@@ -242,6 +278,17 @@ Solution: Add a new payment term via the addendum mechanism instead of editing t
                 raise UserError(error_message)
 
     def _check_addendum_lock_unlink(self):
+        """Reject deletion of a locked payment term.
+
+        Guard called from ``unlink``. Deletion only passes when the
+        context carries ``bypass_addendum_lock``; a locked term is
+        permanent because it may already be reflected in a customer
+        invoice, so a correction has to be booked as a new addendum
+        term.
+
+        :raises UserError: when a locked term is deleted
+        :return: None
+        """
         if self.env.context.get("bypass_addendum_lock"):
             return
         for record in self:
@@ -260,31 +307,97 @@ Solution: Locked payment terms are permanent; create a new one via addendum inst
                 raise UserError(error_message)
 
     def action_create_invoice(self):
+        """Create the customer invoice of the selected payment terms.
+
+        Triggered by the Create Invoice button on the payment term
+        line. For every selected record, runs ``_create_invoice`` in
+        ``sudo``, which creates one ``customer_invoice`` document with
+        one line per detail and links it to the term. The term then
+        shows as ``invoiced``.
+
+        :return: None
+        """
         for record in self.sudo():
             record._create_invoice()  # pylint: disable=protected-access
 
     def action_delete_invoice(self):
+        """Delete the customer invoice of the selected payment terms.
+
+        Triggered by the Delete Invoice button. For every selected
+        record, runs ``_delete_invoice`` in ``sudo``, which detaches
+        the detail lines and the term and then deletes the document --
+        possible only while that document is still draft.
+
+        :raises UserError: when the customer invoice is no longer draft
+        :return: None
+        """
         for record in self.sudo():
             record._delete_invoice()  # pylint: disable=protected-access
 
     def action_disconnect_invoice(self):
+        """Detach the customer invoice from the selected terms.
+
+        Triggered by the Disconnect Invoice button. For every selected
+        record, runs ``_disconnect_invoice`` in ``sudo``, which clears
+        ``customer_invoice_id`` so the term falls back to
+        ``uninvoiced`` while the ``customer_invoice`` document itself
+        is kept.
+
+        :return: None
+        """
         for record in self.sudo():
             record._disconnect_invoice()  # pylint: disable=protected-access
 
     def action_mark_as_manual(self):
+        """Mark the selected payment terms as manually controlled.
+
+        Triggered by the Mark as Manual button. For every selected
+        record, runs ``_mark_as_manual`` in ``sudo``, which enables
+        ``manually_control`` so the term is settled outside Odoo and
+        shows as ``manual`` instead of ``uninvoiced``.
+
+        :return: None
+        """
         for record in self.sudo():
             record._mark_as_manual()  # pylint: disable=protected-access
 
     def action_unmark_as_manual(self):
+        """Return the selected payment terms to invoice control.
+
+        Triggered by the Unmark as Manual button. For every selected
+        record, runs ``_unmark_as_manual`` in ``sudo``, which disables
+        ``manually_control`` so the term shows as ``uninvoiced`` again
+        and can be invoiced.
+
+        :return: None
+        """
         for record in self.sudo():
             record._unmark_as_manual()  # pylint: disable=protected-access
 
     def action_open_duplicate_wizard(self):
+        """Open the duplicate wizard for this payment term.
+
+        Triggered by the Duplicate button on the payment term line.
+        Builds the wizard action through ``_open_duplicate_wizard`` in
+        ``sudo``; when several records are selected only the action of
+        the last one is returned.
+
+        :return: dict window action of the duplicate wizard
+        """
         for record in self.sudo():
             result = record._open_duplicate_wizard()
         return result
 
     def _open_duplicate_wizard(self):
+        """Build the window action of the duplicate wizard.
+
+        Reads the
+        ``ssi_school.school_enrollment_payment_term_action_duplicate``
+        action and injects a context whose ``active_id`` points at this
+        term, so the wizard knows which term to copy.
+
+        :return: dict window action of the duplicate wizard
+        """
         self.ensure_one()
         waction = self.env.ref(
             "ssi_school.school_enrollment_payment_term_action_duplicate"
@@ -293,10 +406,26 @@ Solution: Locked payment terms are permanent; create a new one via addendum inst
         return waction
 
     def _mark_as_manual(self):
+        """Enable manual control on this payment term.
+
+        Writes ``manually_control`` to ``True``, which moves the
+        computed ``state`` to ``manual`` so the term is no longer
+        expected to produce a customer invoice.
+
+        :return: None
+        """
         self.ensure_one()
         self.write({"manually_control": True})
 
     def _unmark_as_manual(self):
+        """Disable manual control on this payment term.
+
+        Writes ``manually_control`` to ``False``, which moves the
+        computed ``state`` back to ``uninvoiced`` so the term is
+        expected to produce a customer invoice again.
+
+        :return: None
+        """
         self.ensure_one()
         self.write({"manually_control": False})
 
@@ -396,6 +525,17 @@ Solution: Use Disconnect Invoice to detach it from the payment term instead
 
     @api.model
     def create(self, vals):
+        """Refresh the enrollment payment summary after creation.
+
+        Overridden so that a term created outside the enrollment form
+        -- by the payment template computation or the duplicate wizard
+        -- still triggers ``_recompute_product_summaries`` on its
+        enrollment, keeping ``product_summary_ids`` in step with the
+        payment terms.
+
+        :param vals: values of the payment term to create
+        :return: created ``school_enrollment_payment_term`` record
+        """
         result = super().create(vals)
         if result.enrollment_id:
             enrollment = result.enrollment_id
@@ -403,6 +543,17 @@ Solution: Use Disconnect Invoice to detach it from the payment term instead
         return result
 
     def write(self, vals):
+        """Enforce the addendum lock and refresh the payment summary.
+
+        Overridden to run ``_check_addendum_lock`` before the write, so
+        locked terms cannot be modified, and to recompute
+        ``product_summary_ids`` on every touched enrollment afterwards.
+
+        :param vals: values to write
+        :raises UserError: when a locked term is written with a field
+            outside ``ADDENDUM_LOCK_ALLOWED_FIELDS``
+        :return: ``True``
+        """
         self._check_addendum_lock(vals)
         result = super().write(vals)
         self.mapped(
@@ -411,6 +562,16 @@ Solution: Use Disconnect Invoice to detach it from the payment term instead
         return result
 
     def unlink(self):
+        """Enforce the addendum lock and refresh the payment summary.
+
+        Overridden to run ``_check_addendum_lock_unlink`` before the
+        deletion, so locked terms cannot be removed, and to recompute
+        ``product_summary_ids`` on the enrollments collected before the
+        records disappear.
+
+        :raises UserError: when a locked term is deleted
+        :return: ``True``
+        """
         self._check_addendum_lock_unlink()
         enrollments = self.mapped("enrollment_id")
         result = super().unlink()

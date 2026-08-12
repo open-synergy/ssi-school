@@ -11,5 +11,13 @@ from odoo.tests import tagged
 class TestSchoolEnrollmentPaymentTermManagement(
     YamlTransactionCase
 ):  # pylint: disable=too-few-public-methods
+    """Cover the maintenance actions of an enrollment payment term.
+
+    The scenarios exercise deleting the customer invoice generated from
+    the term, disconnecting that invoice without deleting it, and
+    unmarking a term that had been flagged as manual.
+    """
+
     def test_enrollment_payment_term_management(self):
+        """Run the delete, disconnect and unmark manual scenarios."""
         self.run_yaml_scenario("test_data_enrollment_payment_term_management.yaml")

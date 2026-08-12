@@ -238,10 +238,13 @@ scenarios:
             type: "value"
             expected: false
 
-      - step: "Invalidate enrollment cache before approve"
-        action: "call"
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
         target: "enrollment"
-        method: "invalidate_cache"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
 
       - step: "Approve enrollment"
         action: "call"
@@ -362,3 +365,729 @@ scenarios:
           locked:
             type: "value"
             expected: true
+
+  - name: "Addendum - Locked Term And Detail Reject Write And Unlink"
+    steps:
+      - step: "Setup - get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "School Fee Income ADYML1"
+          code: "ADYML14200"
+          user_type_id: "REC: account_type.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Fee ADYML1"
+          type: "service"
+          list_price: 1000000.0
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type ADYML1"
+          code: "GTADYML1"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 ADYML1"
+          code: "AYADYML1"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester ADYML1"
+          code: "SMADYML1"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School ADYML1"
+          code: "SCHADYML1"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade ADYML1"
+          code: "GADYML1"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class ADYML1"
+          code: "CLAADYML1"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact ADYML1"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student ADYML1"
+          code: "STUADYML1"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Setup - get receivable journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "receivable_journal"
+        limit: 1
+
+      - step: "Create enrollment owned by admin"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        as_user: "base.user_admin"
+        values:
+          user_id: "REF: base.user_admin"
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+          receivable_journal_id: "REC: receivable_journal.id"
+
+      - step: "Create payment term"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term"
+        as_user: "base.user_admin"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term 1 ADYML1"
+          sequence: 10
+
+      - step: "Create payment term detail"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        save_as: "detail"
+        as_user: "base.user_admin"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Fee ADYML1"
+          account_id: "REC: account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert enrollment is confirmed before approval"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Assert term locked after opening"
+        action: "assert"
+        target: "term"
+        asserts:
+          locked:
+            type: "value"
+            expected: true
+
+      - step: "Assert detail locked after opening"
+        action: "assert"
+        target: "detail"
+        asserts:
+          locked:
+            type: "value"
+            expected: true
+
+      - step: "Write on the locked term is rejected"
+        action: "write"
+        target: "term"
+        expect_error:
+          type: "UserError"
+        values:
+          name: "Changed Name ADYML1"
+
+      - step: "Unlink of the locked term is rejected"
+        action: "unlink"
+        target: "term"
+        expect_error:
+          type: "UserError"
+
+      - step: "Write on the locked detail is rejected"
+        action: "write"
+        target: "detail"
+        expect_error:
+          type: "UserError"
+        values:
+          price_unit: 500000.0
+
+      - step: "Unlink of the locked detail is rejected"
+        action: "unlink"
+        target: "detail"
+        expect_error:
+          type: "UserError"
+
+  - name: "Addendum - Close Addendum Locks Only The Newly Added Term"
+    steps:
+      - step: "Setup - get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "School Fee Income ADYML2"
+          code: "ADYML24200"
+          user_type_id: "REC: account_type.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Fee ADYML2"
+          type: "service"
+          list_price: 1000000.0
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type ADYML2"
+          code: "GTADYML2"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 ADYML2"
+          code: "AYADYML2"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester ADYML2"
+          code: "SMADYML2"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School ADYML2"
+          code: "SCHADYML2"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade ADYML2"
+          code: "GADYML2"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class ADYML2"
+          code: "CLAADYML2"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact ADYML2"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student ADYML2"
+          code: "STUADYML2"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Setup - get receivable journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "receivable_journal"
+        limit: 1
+
+      - step: "Create enrollment owned by admin"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        as_user: "base.user_admin"
+        values:
+          user_id: "REF: base.user_admin"
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+          receivable_journal_id: "REC: receivable_journal.id"
+
+      - step: "Create payment term"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term"
+        as_user: "base.user_admin"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term 1 ADYML2"
+          sequence: 10
+
+      - step: "Create payment term detail"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        save_as: "detail"
+        as_user: "base.user_admin"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Fee ADYML2"
+          account_id: "REC: account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert enrollment is confirmed before approval"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Assert term locked after opening"
+        action: "assert"
+        target: "term"
+        asserts:
+          locked:
+            type: "value"
+            expected: true
+
+      - step: "Assert detail locked after opening"
+        action: "assert"
+        target: "detail"
+        asserts:
+          locked:
+            type: "value"
+            expected: true
+
+      - step: "Addendum - add a new payment term while open"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "addendum_term"
+        as_user: "base.user_admin"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Addendum Term ADYML2"
+          sequence: 20
+
+      - step: "Assert new addendum term is not locked"
+        action: "assert"
+        target: "addendum_term"
+        asserts:
+          locked:
+            type: "value"
+            expected: false
+
+      - step: "Close addendum"
+        action: "call"
+        target: "enrollment"
+        method: "action_close_addendum"
+        as_user: "base.user_admin"
+
+      - step: "Assert addendum term is locked after closing"
+        action: "assert"
+        target: "addendum_term"
+        asserts:
+          locked:
+            type: "value"
+            expected: true
+
+      - step: "Assert enrollment is still open after closing addendum"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Write on the locked addendum term is rejected"
+        action: "write"
+        target: "addendum_term"
+        expect_error:
+          type: "UserError"
+        values:
+          name: "Changed Name ADYML2"
+
+      - step: "Assert the already locked term is unaffected"
+        action: "assert"
+        target: "term"
+        asserts:
+          locked:
+            type: "value"
+            expected: true
+
+      - step: "Assert the already locked detail is unaffected"
+        action: "assert"
+        target: "detail"
+        asserts:
+          locked:
+            type: "value"
+            expected: true
+
+  - name: "Addendum - Close Addendum Can Run More Than Once"
+    steps:
+      - step: "Setup - get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "School Fee Income ADYML3"
+          code: "ADYML34200"
+          user_type_id: "REC: account_type.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Fee ADYML3"
+          type: "service"
+          list_price: 1000000.0
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type ADYML3"
+          code: "GTADYML3"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 ADYML3"
+          code: "AYADYML3"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester ADYML3"
+          code: "SMADYML3"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School ADYML3"
+          code: "SCHADYML3"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade ADYML3"
+          code: "GADYML3"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class ADYML3"
+          code: "CLAADYML3"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact ADYML3"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student ADYML3"
+          code: "STUADYML3"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Setup - get receivable journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "receivable_journal"
+        limit: 1
+
+      - step: "Create enrollment owned by admin"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        as_user: "base.user_admin"
+        values:
+          user_id: "REF: base.user_admin"
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+          receivable_journal_id: "REC: receivable_journal.id"
+
+      - step: "Create payment term"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term"
+        as_user: "base.user_admin"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term 1 ADYML3"
+          sequence: 10
+
+      - step: "Create payment term detail"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        save_as: "detail"
+        as_user: "base.user_admin"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Fee ADYML3"
+          account_id: "REC: account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert enrollment is confirmed before approval"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Assert term locked after opening"
+        action: "assert"
+        target: "term"
+        asserts:
+          locked:
+            type: "value"
+            expected: true
+
+      - step: "Assert detail locked after opening"
+        action: "assert"
+        target: "detail"
+        asserts:
+          locked:
+            type: "value"
+            expected: true
+
+      - step: "Addendum round 1 - add a payment term"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "first_round"
+        as_user: "base.user_admin"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Addendum Round 1 ADYML3"
+          sequence: 20
+
+      - step: "Close addendum round 1"
+        action: "call"
+        target: "enrollment"
+        method: "action_close_addendum"
+        as_user: "base.user_admin"
+
+      - step: "Assert round 1 term is locked"
+        action: "assert"
+        target: "first_round"
+        asserts:
+          locked:
+            type: "value"
+            expected: true
+
+      - step: "Addendum round 2 - add another payment term"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "second_round"
+        as_user: "base.user_admin"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Addendum Round 2 ADYML3"
+          sequence: 30
+
+      - step: "Assert round 2 term is not locked yet"
+        action: "assert"
+        target: "second_round"
+        asserts:
+          locked:
+            type: "value"
+            expected: false
+
+      - step: "Close addendum round 2"
+        action: "call"
+        target: "enrollment"
+        method: "action_close_addendum"
+        as_user: "base.user_admin"
+
+      - step: "Assert round 2 term is locked after closing again"
+        action: "assert"
+        target: "second_round"
+        asserts:
+          locked:
+            type: "value"
+            expected: true
+
+      - step: "Write on the locked round 2 term is rejected"
+        action: "write"
+        target: "second_round"
+        expect_error:
+          type: "UserError"
+        values:
+          name: "Changed Name ADYML3"

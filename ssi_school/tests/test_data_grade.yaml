@@ -1,3 +1,5 @@
+options:
+  auto_refresh: true
 scenarios:
   - name: "Create Grade"
     steps:
@@ -154,14 +156,9 @@ scenarios:
           code: "SGB"
           sequence: 20
           type_id: "EVAL: registry['grade_type'].id"
-      - step: "Invalidate grade caches"
-        action: "call"
-        target: "grade_a"
-        method: "invalidate_cache"
       - step: "Assert grade_b has previous_grade_id"
-        action: "call"
+        action: "assert"
         target: "grade_b"
-        method: "invalidate_cache"
         asserts:
           previous_grade_id:
             type: "value"
@@ -212,18 +209,6 @@ scenarios:
           code: "JHG1"
           sequence: 10
           type_id: "EVAL: registry['type_junior'].id"
-      - step: "Invalidate cache on elementary grade 1"
-        action: "call"
-        target: "el_grade_1"
-        method: "invalidate_cache"
-      - step: "Invalidate cache on elementary grade 2"
-        action: "call"
-        target: "el_grade_2"
-        method: "invalidate_cache"
-      - step: "Invalidate cache on junior high grade 1"
-        action: "call"
-        target: "jh_grade_1"
-        method: "invalidate_cache"
       - step:
           "Assert last elementary grade has no next grade (does not cross into junior
           high)"

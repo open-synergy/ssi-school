@@ -1,0 +1,22 @@
+# Penyimpangan yang diterima untuk modul ssi_school.
+# Format: <validator> <kunci-temuan> -- <alasan>
+# Kunci disalin apa adanya dari `verify-module.sh ssi_school 14.0 --findings`.
+#
+# Ketiga wizard di bawah adalah bentuk WARISAN. `_name`-nya sudah dirujuk
+# `ir.model.access` (XML ID `model_<nama>`), view, dan action di repo ini,
+# sehingga mengubahnya berarti mengubah nama tabel/model beserta seluruh
+# perujuknya — dilarang `odoo-development` -> 02-core-principles.md §1.
+# `10-wizard.md` §1 secara eksplisit menyebut bentuk ini warisan yang
+# dipertahankan. Wizard BARU di modul ini tetap wajib memakai bentuk benar:
+# frasa kerja snake_case datar, tanpa prefix model induk, tanpa kata
+# 'wizard', tanpa notasi titik. Lihat open-synergy/ssi-school#256.
+
+module nama-berkas-py-name-model|wizards/school_enrollment_copy_payment_term.py: _name='school_enrollment.wizard_copy_payment_term' menuntut berkas school_enrollment_wizard_copy_payment_term.py -- _name wizard warisan; mengubahnya memutus ir.model.access, view, dan action yang sudah merujuk XML ID model_<nama> (issue #256, Keputusan Desain).
+module nama-berkas-py-name-model|wizards/school_enrollment_create_due_invoice.py: _name='school_enrollment.wizard_create_due_invoice' menuntut berkas school_enrollment_wizard_create_due_invoice.py -- _name wizard warisan; mengubahnya memutus ir.model.access, view, dan action yang sudah merujuk XML ID model_<nama> (issue #256, Keputusan Desain).
+module nama-berkas-py-name-model|wizards/school_enrollment_payment_term_duplicate.py: _name='school_enrollment_payment_term.wizard_duplicate' menuntut berkas school_enrollment_payment_term_wizard_duplicate.py -- _name wizard warisan; mengubahnya memutus ir.model.access, view, dan action yang sudah merujuk XML ID model_<nama> (issue #256, Keputusan Desain).
+module name-wizard-tanpa-notasi-titik|wizards/school_enrollment_copy_payment_term.py: _name 'school_enrollment.wizard_copy_payment_term' memakai notasi titik -- _name wizard warisan; mengubahnya memutus ir.model.access, view, dan action yang sudah merujuk XML ID model_<nama> (issue #256, Keputusan Desain).
+module name-wizard-tanpa-notasi-titik|wizards/school_enrollment_create_due_invoice.py: _name 'school_enrollment.wizard_create_due_invoice' memakai notasi titik -- _name wizard warisan; mengubahnya memutus ir.model.access, view, dan action yang sudah merujuk XML ID model_<nama> (issue #256, Keputusan Desain).
+module name-wizard-tanpa-notasi-titik|wizards/school_enrollment_payment_term_duplicate.py: _name 'school_enrollment_payment_term.wizard_duplicate' memakai notasi titik -- _name wizard warisan; mengubahnya memutus ir.model.access, view, dan action yang sudah merujuk XML ID model_<nama> (issue #256, Keputusan Desain).
+module name-wizard-tanpa-kata-wizard|wizards/school_enrollment_copy_payment_term.py: _name 'school_enrollment.wizard_copy_payment_term' memuat kata 'wizard' -- _name wizard warisan; mengubahnya memutus ir.model.access, view, dan action yang sudah merujuk XML ID model_<nama> (issue #256, Keputusan Desain).
+module name-wizard-tanpa-kata-wizard|wizards/school_enrollment_create_due_invoice.py: _name 'school_enrollment.wizard_create_due_invoice' memuat kata 'wizard' -- _name wizard warisan; mengubahnya memutus ir.model.access, view, dan action yang sudah merujuk XML ID model_<nama> (issue #256, Keputusan Desain).
+module name-wizard-tanpa-kata-wizard|wizards/school_enrollment_payment_term_duplicate.py: _name 'school_enrollment_payment_term.wizard_duplicate' memuat kata 'wizard' -- _name wizard warisan; mengubahnya memutus ir.model.access, view, dan action yang sudah merujuk XML ID model_<nama> (issue #256, Keputusan Desain).

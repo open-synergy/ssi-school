@@ -1,0 +1,327 @@
+options:
+  auto_refresh: true
+scenarios:
+  - name: Fully consistent homeroom data is accepted
+    steps:
+      - step: Setup - create grade type (s1)
+        action: create
+        model: school_grade_type
+        save_as: grade_type
+        values:
+          name: Grade Type Homeroom Integrity 1
+          code: GTHRI1
+          sequence: 10
+      - step: Setup - create school (s1)
+        action: create
+        model: school
+        save_as: school
+        values:
+          name: School Homeroom Integrity 1
+          code: SCHHRI1
+          grade_type_id: "REC: grade_type.id"
+      - step: Setup - create the other school (s1)
+        action: create
+        model: school
+        save_as: other_school
+        values:
+          name: Other School Homeroom Integrity 1
+          code: SCHHRI21
+          grade_type_id: "REC: grade_type.id"
+      - step: Setup - create grade (s1)
+        action: create
+        model: school_grade
+        save_as: grade
+        values:
+          name: Grade Homeroom Integrity 1
+          code: GHRI1
+          sequence: 10
+          type_id: "REC: grade_type.id"
+      - step: Setup - create the grade of the other school (s1)
+        action: create
+        model: school_grade
+        save_as: other_school_grade
+        values:
+          name: Grade Other School Homeroom Integrity 1
+          code: GHRI21
+          sequence: 20
+          type_id: "REC: grade_type.id"
+      - step: Setup - create grade class (s1)
+        action: create
+        model: school_grade_class
+        save_as: grade_class
+        values:
+          name: Class Homeroom Integrity 1
+          code: CLHRI1
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          capacity: 30
+      - step: Setup - create the grade class of the other school (s1)
+        action: create
+        model: school_grade_class
+        save_as: other_grade_class
+        values:
+          name: Class Other School Homeroom Integrity 1
+          code: CLHRI21
+          school_id: "REC: other_school.id"
+          grade_id: "REC: other_school_grade.id"
+          capacity: 30
+      - step: Setup - create academic year (s1)
+        action: create
+        model: school_academic_year
+        save_as: year
+        values:
+          name: Year Homeroom Integrity 1
+          code: AYHRI1
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+      - step: Setup - create the other academic year (s1)
+        action: create
+        model: school_academic_year
+        save_as: other_year
+        values:
+          name: Other Year Homeroom Integrity 1
+          code: AYHRI21
+          date_start: "2025-07-01"
+          date_end: "2026-06-30"
+      - step: Setup - create academic term of the first year (s1)
+        action: create
+        model: school_academic_term
+        save_as: term
+        values:
+          name: Term Homeroom Integrity 1
+          code: TMHRI1
+          date_start: "2024-07-01"
+          date_end: "2024-12-31"
+          year_id: "REC: year.id"
+          enrollment_state: open
+      - step: Create the consistent homeroom
+        action: create
+        model: school_homeroom
+        save_as: homeroom
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: year.id"
+          academic_term_id: "REC: term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          capacity: 30
+      - step: Assert the homeroom is created in draft
+        action: assert
+        target: homeroom
+        asserts:
+          state:
+            type: value
+            expected: draft
+  - name: Homeroom whose term is from another year is rejected
+    steps:
+      - step: Setup - create grade type (s2)
+        action: create
+        model: school_grade_type
+        save_as: grade_type
+        values:
+          name: Grade Type Homeroom Integrity 2
+          code: GTHRI2
+          sequence: 10
+      - step: Setup - create school (s2)
+        action: create
+        model: school
+        save_as: school
+        values:
+          name: School Homeroom Integrity 2
+          code: SCHHRI2
+          grade_type_id: "REC: grade_type.id"
+      - step: Setup - create the other school (s2)
+        action: create
+        model: school
+        save_as: other_school
+        values:
+          name: Other School Homeroom Integrity 2
+          code: SCHHRI22
+          grade_type_id: "REC: grade_type.id"
+      - step: Setup - create grade (s2)
+        action: create
+        model: school_grade
+        save_as: grade
+        values:
+          name: Grade Homeroom Integrity 2
+          code: GHRI2
+          sequence: 10
+          type_id: "REC: grade_type.id"
+      - step: Setup - create the grade of the other school (s2)
+        action: create
+        model: school_grade
+        save_as: other_school_grade
+        values:
+          name: Grade Other School Homeroom Integrity 2
+          code: GHRI22
+          sequence: 20
+          type_id: "REC: grade_type.id"
+      - step: Setup - create grade class (s2)
+        action: create
+        model: school_grade_class
+        save_as: grade_class
+        values:
+          name: Class Homeroom Integrity 2
+          code: CLHRI2
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          capacity: 30
+      - step: Setup - create the grade class of the other school (s2)
+        action: create
+        model: school_grade_class
+        save_as: other_grade_class
+        values:
+          name: Class Other School Homeroom Integrity 2
+          code: CLHRI22
+          school_id: "REC: other_school.id"
+          grade_id: "REC: other_school_grade.id"
+          capacity: 30
+      - step: Setup - create academic year (s2)
+        action: create
+        model: school_academic_year
+        save_as: year
+        values:
+          name: Year Homeroom Integrity 2
+          code: AYHRI2
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+      - step: Setup - create the other academic year (s2)
+        action: create
+        model: school_academic_year
+        save_as: other_year
+        values:
+          name: Other Year Homeroom Integrity 2
+          code: AYHRI22
+          date_start: "2025-07-01"
+          date_end: "2026-06-30"
+      - step: Setup - create academic term of the first year (s2)
+        action: create
+        model: school_academic_term
+        save_as: term
+        values:
+          name: Term Homeroom Integrity 2
+          code: TMHRI2
+          date_start: "2024-07-01"
+          date_end: "2024-12-31"
+          year_id: "REC: year.id"
+          enrollment_state: open
+      - step: Create the homeroom on a year that does not own the term
+        action: create
+        model: school_homeroom
+        expect_error:
+          type: ValidationError
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: other_year.id"
+          academic_term_id: "REC: term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          capacity: 30
+  - name: Homeroom whose class is from another school is rejected
+    steps:
+      - step: Setup - create grade type (s3)
+        action: create
+        model: school_grade_type
+        save_as: grade_type
+        values:
+          name: Grade Type Homeroom Integrity 3
+          code: GTHRI3
+          sequence: 10
+      - step: Setup - create school (s3)
+        action: create
+        model: school
+        save_as: school
+        values:
+          name: School Homeroom Integrity 3
+          code: SCHHRI3
+          grade_type_id: "REC: grade_type.id"
+      - step: Setup - create the other school (s3)
+        action: create
+        model: school
+        save_as: other_school
+        values:
+          name: Other School Homeroom Integrity 3
+          code: SCHHRI23
+          grade_type_id: "REC: grade_type.id"
+      - step: Setup - create grade (s3)
+        action: create
+        model: school_grade
+        save_as: grade
+        values:
+          name: Grade Homeroom Integrity 3
+          code: GHRI3
+          sequence: 10
+          type_id: "REC: grade_type.id"
+      - step: Setup - create the grade of the other school (s3)
+        action: create
+        model: school_grade
+        save_as: other_school_grade
+        values:
+          name: Grade Other School Homeroom Integrity 3
+          code: GHRI23
+          sequence: 20
+          type_id: "REC: grade_type.id"
+      - step: Setup - create grade class (s3)
+        action: create
+        model: school_grade_class
+        save_as: grade_class
+        values:
+          name: Class Homeroom Integrity 3
+          code: CLHRI3
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          capacity: 30
+      - step: Setup - create the grade class of the other school (s3)
+        action: create
+        model: school_grade_class
+        save_as: other_grade_class
+        values:
+          name: Class Other School Homeroom Integrity 3
+          code: CLHRI23
+          school_id: "REC: other_school.id"
+          grade_id: "REC: other_school_grade.id"
+          capacity: 30
+      - step: Setup - create academic year (s3)
+        action: create
+        model: school_academic_year
+        save_as: year
+        values:
+          name: Year Homeroom Integrity 3
+          code: AYHRI3
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+      - step: Setup - create the other academic year (s3)
+        action: create
+        model: school_academic_year
+        save_as: other_year
+        values:
+          name: Other Year Homeroom Integrity 3
+          code: AYHRI23
+          date_start: "2025-07-01"
+          date_end: "2026-06-30"
+      - step: Setup - create academic term of the first year (s3)
+        action: create
+        model: school_academic_term
+        save_as: term
+        values:
+          name: Term Homeroom Integrity 3
+          code: TMHRI3
+          date_start: "2024-07-01"
+          date_end: "2024-12-31"
+          year_id: "REC: year.id"
+          enrollment_state: open
+      - step: Create the homeroom on the class of the other school
+        action: create
+        model: school_homeroom
+        expect_error:
+          type: ValidationError
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: year.id"
+          academic_term_id: "REC: term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: other_grade_class.id"
+          capacity: 30

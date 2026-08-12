@@ -40,5 +40,12 @@ class SchoolBranch(models.Model):  # pylint: disable=too-few-public-methods
 
     @api.depends("school_ids")
     def _compute_school_count(self):
+        """Count the school units overseen by this branch.
+
+        ``school_count`` is the number of ``school`` records whose
+        ``branch_id`` points at this branch, i.e. the length of
+        ``school_ids``. The field is not stored, so it is refreshed on
+        every read.
+        """
         for record in self:
             record.school_count = len(record.school_ids)
