@@ -10,10 +10,19 @@ from odoo.tests import tagged
 
 @tagged("post_install", "-at_install")
 class TestSchoolAdmissionCopyPaymentTerm(YamlTransactionCase):
+    """Cover the Copy Payment Term wizard between admissions."""
+
     def test_admission_copy_payment_term(self):
+        """Run the copy payment term scenario."""
         self.run_yaml_scenario("test_data_admission_copy_payment_term.yaml")
 
     def _create_base_data(self, suffix):
+        """Create the shared master data used by the copy scenarios.
+
+        :param suffix: string appended to every code/name so parallel
+            scenarios do not clash on unique constraints
+        :return: dict of the created records, keyed by role
+        """
         account_type = self.env.ref("account.data_account_type_revenue")
         account = self.env["account.account"].create(
             {
@@ -79,6 +88,13 @@ class TestSchoolAdmissionCopyPaymentTerm(YamlTransactionCase):
         }
 
     def _create_admission(self, base, name_suffix, grade=None):
+        """Create a draft admission on top of the base fixture.
+
+        :param base: dict returned by ``_create_base_data``
+        :param name_suffix: suffix for the student contact name
+        :param grade: grade to use instead of the fixture grade
+        :return: the created ``school_admission`` record
+        """
         contact = self.env["res.partner"].create(
             {"name": "Student Contact %s" % name_suffix}
         )
@@ -95,6 +111,12 @@ class TestSchoolAdmissionCopyPaymentTerm(YamlTransactionCase):
         )
 
     def _create_source_term(self, base, source):
+        """Add one payment term with a single detail to an admission.
+
+        :param base: dict returned by ``_create_base_data``
+        :param source: the admission receiving the term
+        :return: the created ``school_admission_payment_term`` record
+        """
         term = self.env["school_admission_payment_term"].create(
             {
                 "admission_id": source.id,
@@ -116,6 +138,11 @@ class TestSchoolAdmissionCopyPaymentTerm(YamlTransactionCase):
         return term
 
     def test_copy_payment_term_blocked_when_target_not_draft(self):
+        """Copying into a non-draft admission is rejected.
+
+        Pure Python -- trigger P10 (L-09/L-11): the target has to be
+        driven through the workflow before the wizard runs.
+        """
         base = self._create_base_data("BLK1")
         source = self._create_admission(base, "BLK1SRC")
         self._create_source_term(base, source)
@@ -141,6 +168,11 @@ class TestSchoolAdmissionCopyPaymentTerm(YamlTransactionCase):
         self.assertFalse(target.payment_term_ids)
 
     def test_copy_payment_term_blocked_when_grade_mismatch(self):
+        """Copying into an admission of another grade is rejected.
+
+        Pure Python -- trigger P10 (L-09/L-11): the fixture builds a
+        second grade programmatically before the wizard runs.
+        """
         base = self._create_base_data("BLK2")
         source = self._create_admission(base, "BLK2SRC")
         self._create_source_term(base, source)

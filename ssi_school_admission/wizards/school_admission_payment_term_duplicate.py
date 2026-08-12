@@ -48,6 +48,14 @@ class SchoolAdmissionPaymentTermWizardDuplicate(models.TransientModel):
 
     @api.model
     def default_get(self, fields_list):
+        """Prefill the wizard from the payment term being duplicated.
+
+        The new term name defaults to the source name suffixed with
+        ``(copy)``; sequence and dates are copied as-is.
+
+        :param fields_list: names of the fields to default
+        :return: dict of default values
+        """
         res = super().default_get(fields_list)
         active_id = self.env.context.get("active_id")
         if active_id:
@@ -60,17 +68,38 @@ class SchoolAdmissionPaymentTermWizardDuplicate(models.TransientModel):
         return res
 
     def action_duplicate(self):
+        """Duplicate the source payment term on the same admission.
+
+        User-facing wizard button; runs as superuser so the new term may
+        be created regardless of the acting user's rights.
+
+        :return: an ``ir.actions.act_window_close`` dict
+        """
         for record in self.sudo():
             result = record._duplicate_term()
         return result
 
     def _duplicate_term(self):
+        """Copy the source term with the header values of the wizard.
+
+        Every detail line is copied along with the term, and the copies
+        are detached from any customer invoice line.
+
+        :return: an ``ir.actions.act_window_close`` dict
+        """
         self.ensure_one()
         new_term = self.term_id.copy(self._prepare_duplicate_defaults())
         new_term.detail_ids.write({"customer_invoice_line_id": False})
         return {"type": "ir.actions.act_window_close"}
 
     def _prepare_duplicate_defaults(self):
+        """Build the override values applied to the duplicated term.
+
+        Extension point: override to carry extra header values onto the
+        new term without touching ``_duplicate_term``.
+
+        :return: dict of ``school_admission_payment_term`` values
+        """
         self.ensure_one()
         return {
             "name": self.name,

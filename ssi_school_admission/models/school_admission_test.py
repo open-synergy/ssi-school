@@ -182,6 +182,12 @@ class SchoolAdmissionTest(models.Model):  # pylint: disable=too-few-public-metho
 
     @api.constrains("admission_form_id")
     def _check_admission_form_uniqueness(self):
+        """Ensure one admission form yields at most one admission test.
+
+        :return: ``None``
+        :raises ValidationError: when another admission test already
+            references the same ``admission_form_id``
+        """
         for record in self:
             if record.admission_form_id:
                 existing = self.search(

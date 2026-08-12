@@ -11,5 +11,8 @@ from odoo.tests import tagged
 class TestSchoolAdmissionPaymentTerm(
     YamlTransactionCase
 ):  # pylint: disable=too-few-public-methods
+    """Cover the ``school_admission_payment_term`` model."""
+
     def test_admission_payment_term(self):
+        """Run the admission payment term scenario."""
         self.run_yaml_scenario("test_data_admission_payment_term.yaml")

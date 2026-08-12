@@ -11,5 +11,8 @@ from odoo.tests import tagged
 class TestSchoolAdmissionPaymentDatePattern(
     YamlTransactionCase
 ):  # pylint: disable=too-few-public-methods
+    """Cover the invoice/due date pattern of admission payment terms."""
+
     def test_admission_payment_date_pattern(self):
+        """Run the admission payment date pattern scenario."""
         self.run_yaml_scenario("test_data_admission_payment_date_pattern.yaml")

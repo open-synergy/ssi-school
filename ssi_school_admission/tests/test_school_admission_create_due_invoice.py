@@ -9,5 +9,8 @@ from odoo.tests import tagged
 
 @tagged("post_install", "-at_install")
 class TestSchoolAdmissionCreateDueInvoice(YamlTransactionCase):
+    """Cover the Create Due Invoice wizard of ``school_admission``."""
+
     def test_admission_create_due_invoice(self):
+        """Run the create due invoice scenario."""
         self.run_yaml_scenario("test_data_admission_create_due_invoice.yaml")

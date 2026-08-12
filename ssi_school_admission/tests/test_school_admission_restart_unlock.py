@@ -10,7 +10,10 @@ from odoo.tests import tagged
 
 @tagged("post_install", "-at_install")
 class TestSchoolAdmissionRestartUnlock(YamlTransactionCase):
+    """Cover the payment term unlock triggered by a restart."""
+
     def test_admission_restart_unlock(self):
+        """Run the admission restart unlock scenario."""
         self.run_yaml_scenario("test_data_admission_restart_unlock.yaml")
 
     def _create_base_data(self, suffix):
@@ -122,6 +125,13 @@ class TestSchoolAdmissionRestartUnlock(YamlTransactionCase):
         )
 
     def _add_term(self, base, admission, suffix):
+        """Add one payment term with a single detail to an admission.
+
+        :param base: dict returned by ``_create_base_data``
+        :param admission: the admission receiving the term
+        :param suffix: suffix for the term and detail names
+        :return: tuple of the created term and its detail
+        """
         term = self.env["school_admission_payment_term"].create(
             {
                 "admission_id": admission.id,
@@ -143,6 +153,11 @@ class TestSchoolAdmissionRestartUnlock(YamlTransactionCase):
         return term, detail
 
     def _open_admission(self, admission):
+        """Confirm and approve the admission so it reaches ``open``.
+
+        :param admission: the admission to drive through the workflow
+        :return: ``None``
+        """
         admin = self.env.ref("base.user_admin")
         admission.with_user(admin).action_confirm()
         admission.invalidate_cache()
@@ -150,6 +165,11 @@ class TestSchoolAdmissionRestartUnlock(YamlTransactionCase):
         self.assertEqual(admission.state, "open")
 
     def test_lock_not_leaked_without_cancel(self):
+        """Terms stay locked while the admission is not restarted.
+
+        Pure Python -- trigger P10 (L-09/L-11): the fixture drives the
+        admission through its workflow before asserting.
+        """
         base = self._create_base_data("NOREG1")
         admission = self._create_admission(base, "NOREG1")
         term, detail = self._add_term(base, admission, "NOREG1")
@@ -162,6 +182,11 @@ class TestSchoolAdmissionRestartUnlock(YamlTransactionCase):
             term.write({"name": "Changed Name NOREG1"})
 
     def test_copy_payment_term_after_restart(self):
+        """Payment terms may be copied again after a restart.
+
+        Pure Python -- trigger P10 (L-09/L-11): the fixture drives the
+        admission through open and back to draft before asserting.
+        """
         base = self._create_base_data("CPTRST1")
         target = self._create_admission(base, "CPTRST1TGT")
         old_term, _old_detail = self._add_term(base, target, "CPTRST1OLD")
@@ -198,6 +223,11 @@ class TestSchoolAdmissionRestartUnlock(YamlTransactionCase):
         self.assertEqual(target.payment_term_ids.name, "Admission Term CPTRST1NEW")
 
     def test_cancel_blocked_when_invoice_exists(self):
+        """Cancelling is rejected while a term carries an invoice.
+
+        Pure Python -- trigger P10 (L-09/L-11): the fixture drives the
+        admission through its workflow and creates the invoice first.
+        """
         base = self._create_base_data("CXLINV1")
         admission = self._create_admission(base, "CXLINV1")
         term, _detail = self._add_term(base, admission, "CXLINV1")

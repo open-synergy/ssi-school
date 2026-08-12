@@ -45,6 +45,11 @@ class SchoolAdmissionWizardCreateDueInvoice(models.TransientModel):
 
     @api.model
     def default_get(self, fields_list):
+        """Prefill the admissions from the list view or form selection.
+
+        :param fields_list: names of the fields to default
+        :return: dict of default values
+        """
         res = super().default_get(fields_list)
         if self.env.context.get("active_model") == "school_admission":
             active_ids = self.env.context.get("active_ids", [])
@@ -52,11 +57,29 @@ class SchoolAdmissionWizardCreateDueInvoice(models.TransientModel):
         return res
 
     def action_create_due_invoice(self):
+        """Invoice the due payment terms of the selected admissions.
+
+        User-facing wizard button; runs as superuser so invoices may be
+        created regardless of the acting user's accounting rights.
+
+        :return: an ``ir.actions.act_window_close`` dict
+        :raises UserError: when no admission is selected, an admission
+            fails the policy check, or the date range is inverted
+        """
         for record in self.sudo():
             record._create_due_invoice()  # pylint: disable=protected-access
         return {"type": "ir.actions.act_window_close"}
 
     def _create_due_invoice(self):
+        """Validate the input, then invoice every due payment term.
+
+        Each selected admission invoices its uninvoiced payment terms
+        whose estimated invoice date falls within the wizard range.
+
+        :return: ``None``
+        :raises UserError: when no admission is selected, an admission
+            fails the policy check, or the date range is inverted
+        """
         self.ensure_one()
         self._check_admissions()
         self._check_date_range()
@@ -66,6 +89,15 @@ class SchoolAdmissionWizardCreateDueInvoice(models.TransientModel):
             )
 
     def _check_admissions(self):
+        """Verify every selected admission may create due invoices.
+
+        All admissions are checked before any is reported, so the error
+        lists every problem at once.
+
+        :return: ``None``
+        :raises UserError: when nothing is selected, or when at least
+            one admission fails ``create_invoice_ok``
+        """
         self.ensure_one()
         if not self.admission_ids:
             error_message = (
@@ -107,6 +139,14 @@ by the create due invoice policy
             raise UserError(error_message)
 
     def _check_date_range(self):
+        """Verify the invoice date range is not inverted.
+
+        An empty ``date_end`` is treated as today.
+
+        :return: ``None``
+        :raises UserError: when ``date_start`` is later than the
+            effective end date
+        """
         self.ensure_one()
         effective_end = self.date_end or fields.Date.context_today(self)
         if self.date_start and self.date_start > effective_end:

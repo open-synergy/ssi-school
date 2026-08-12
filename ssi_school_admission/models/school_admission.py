@@ -331,6 +331,14 @@ class SchoolAdmission(models.Model):
     )
 
     def _compute_policy(self):  # pylint: disable=missing-return
+        """Recompute every ``*_ok`` policy field of this admission.
+
+        Delegates to the mixin implementation; it is redefined here only
+        so the extra policy fields declared by this model (
+        ``copy_payment_term_ok``, ``addendum_ok``, ``create_invoice_ok``,
+        ``create_enrollment_ok``) are evaluated together with the
+        standard workflow policies.
+        """
         _super = super()
         _super._compute_policy()  # pylint: disable=protected-access
 
@@ -338,6 +346,12 @@ class SchoolAdmission(models.Model):
         "currency_id",
     )
     def _compute_allowed_pricelist_ids(self):
+        """List the pricelists usable with the selected currency.
+
+        Searches ``product.pricelist`` for records whose currency equals
+        ``currency_id``; the result feeds the domain of ``pricelist_id``.
+        Empty when no currency is set yet.
+        """
         Pricelist = self.env["product.pricelist"]  # pylint: disable=invalid-name
         for record in self:
             result = []
@@ -401,10 +415,31 @@ class SchoolAdmission(models.Model):
             )
 
     def action_compute_payment(self):
+        """Regenerate the payment terms from the payment template.
+
+        User-facing button. Runs as superuser so the terms and their
+        details can be replaced regardless of the acting user's rights
+        on those models.
+
+        :return: ``None``
+        """
         for record in self.sudo():
             record._compute_payment_from_template()  # pylint: disable=protected-access
 
     def _compute_payment_from_template(self):
+        """Rebuild ``payment_term_ids`` from ``payment_template_id``.
+
+        Deletes every existing payment term of this admission, then
+        recreates one ``school_admission_payment_term`` per template
+        term and one ``school_admission_payment_term_detail`` per
+        template detail. Invoice and due dates are derived from the
+        template duration records, relative to ``date``. Finally
+        refreshes the product summary lines.
+
+        Does nothing when no payment template is set.
+
+        :return: ``None``
+        """
         self.ensure_one()
         template = self.payment_template_id
         if not template:
@@ -448,6 +483,14 @@ class SchoolAdmission(models.Model):
         self._recompute_product_summary()
 
     def _recompute_product_summary(self):
+        """Rebuild ``product_summary_ids`` from the payment terms.
+
+        Drops the existing summary lines, then aggregates the subtotal,
+        tax and total of every payment term detail per product and
+        creates one summary line per product.
+
+        :return: ``None``
+        """
         for record in self:
             record.product_summary_ids.unlink()
             product_data = {}
@@ -480,20 +523,47 @@ class SchoolAdmission(models.Model):
 
     @ssi_decorator.post_open_action()
     def _20_lock_existing_payment_term(self):
+        """Lock every payment term once the admission is opened.
+
+        ``ssi_decorator`` hook executed after the transition to the
+        ``open`` state, so terms agreed upon at admission time can no
+        longer be edited except through the addendum mechanism.
+
+        :return: ``None``
+        """
         self.ensure_one()
         self._lock_payment_term()
 
     def action_close_addendum(self):
+        """Close the addendum period by locking all payment terms.
+
+        User-facing button available while the admission is on progress.
+        Every payment term and term detail that is still unlocked is
+        locked, so further changes require a new addendum.
+
+        :return: ``None``
+        """
         for record in self.sudo():
             record._lock_payment_term()  # pylint: disable=protected-access
 
     def action_open_create_due_invoice_wizard(self):
+        """Open the Create Due Invoice wizard for this admission.
+
+        :return: an ``ir.actions.act_window`` dict
+        """
         for record in self.sudo():
             # pylint: disable=protected-access
             result = record._open_create_due_invoice_wizard()
         return result
 
     def _open_create_due_invoice_wizard(self):
+        """Build the act_window opening the Create Due Invoice wizard.
+
+        Reads the wizard action and injects this admission as the active
+        record so the wizard can read its due payment terms.
+
+        :return: an ``ir.actions.act_window`` dict
+        """
         self.ensure_one()
         waction = self.env.ref(
             "ssi_school_admission.school_admission_wizard_create_due_invoice_action"
@@ -557,12 +627,35 @@ class SchoolAdmission(models.Model):
         return waction
 
     def _create_due_invoice(self, date_start=False, date_end=False):
+        """Create a customer invoice for every due payment term.
+
+        Checks the create-invoice policy first, then invoices each
+        uninvoiced payment term whose invoice date falls in the given
+        range.
+
+        :param date_start: lower bound of ``date_invoice``, or ``False``
+        :param date_end: upper bound of ``date_invoice``; defaults to
+            today when omitted
+        :return: ``None``
+        :raises UserError: when ``create_invoice_ok`` is not satisfied
+        """
         self.ensure_one()
         self._check_create_invoice_policy()
         for term in self._get_due_payment_term(date_start, date_end):
             term._create_invoice()  # pylint: disable=protected-access
 
     def _get_due_payment_term(self, date_start=False, date_end=False):
+        """Select the payment terms that are due for invoicing.
+
+        Extension point: override to change which terms are considered
+        due without touching ``_create_due_invoice``.
+
+        :param date_start: lower bound of ``date_invoice``, or ``False``
+        :param date_end: upper bound of ``date_invoice``; defaults to
+            today when omitted
+        :return: a ``school_admission_payment_term`` recordset in state
+            ``uninvoiced``
+        """
         self.ensure_one()
         date_end = date_end or fields.Date.context_today(self)
         return self.payment_term_ids.filtered(
@@ -573,6 +666,13 @@ class SchoolAdmission(models.Model):
         )
 
     def _check_create_invoice_policy(self):
+        """Verify this admission may create invoices for due terms.
+
+        Skipped when the context flag ``bypass_policy_check`` is set.
+
+        :return: ``True`` when the check is bypassed
+        :raises UserError: when ``create_invoice_ok`` is ``False``
+        """
         self.ensure_one()
         if self.env.context.get("bypass_policy_check", False):
             return True
@@ -591,6 +691,14 @@ Solution: Check create due invoice policy prerequisite
             raise UserError(error_message)
 
     def _lock_payment_term(self):
+        """Lock every unlocked payment term and term detail.
+
+        Writes ``locked = True`` with ``bypass_addendum_lock`` in the
+        context, because the addendum constraint itself forbids writing
+        on locked records.
+
+        :return: ``None``
+        """
         self.ensure_one()
         Term = self.env["school_admission_payment_term"]  # pylint: disable=invalid-name
         Detail = self.env[  # pylint: disable=invalid-name
@@ -606,6 +714,13 @@ Solution: Check create due invoice policy prerequisite
             details.with_context(bypass_addendum_lock=True).write({"locked": True})
 
     def _unlock_payment_term(self):
+        """Unlock every locked payment term and term detail.
+
+        Counterpart of ``_lock_payment_term``, used when the admission
+        goes back to draft so its payment plan becomes editable again.
+
+        :return: ``None``
+        """
         self.ensure_one()
         Term = self.env["school_admission_payment_term"]  # pylint: disable=invalid-name
         Detail = self.env[  # pylint: disable=invalid-name
@@ -622,11 +737,27 @@ Solution: Check create due invoice policy prerequisite
 
     @ssi_decorator.post_restart_action()
     def _10_unlock_payment_term(self):
+        """Unlock all payment terms when the admission is restarted.
+
+        ``ssi_decorator`` hook executed after the transition back to
+        ``draft``.
+
+        :return: ``None``
+        """
         self.ensure_one()
         self._unlock_payment_term()
 
     @ssi_decorator.pre_cancel_action()
     def _10_check_payment_term_invoice(self):
+        """Forbid cancelling while a payment term is invoiced.
+
+        ``ssi_decorator`` hook executed before the transition to the
+        ``cancel`` state.
+
+        :return: ``None``
+        :raises UserError: when at least one payment term still links to
+            a customer invoice
+        """
         self.ensure_one()
         invoiced_terms = self.payment_term_ids.filtered(lambda r: r.customer_invoice_id)
         if invoiced_terms:
@@ -645,6 +776,15 @@ Solution: Delete or disconnect the invoice on the payment term before cancelling
 
     @ssi_decorator.post_open_action()
     def _10_create_school_student(self):
+        """Create the student profile when the admission is opened.
+
+        ``ssi_decorator`` hook executed after the transition to the
+        ``open`` state. Creates one ``school_student`` from the admitted
+        contact and stores it in ``school_student_id``. Does nothing
+        when the profile already exists.
+
+        :return: ``None``
+        """
         self.ensure_one()
         if self.school_student_id:
             return

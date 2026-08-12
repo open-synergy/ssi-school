@@ -11,5 +11,8 @@ from odoo.tests import tagged
 class TestSchoolAcademicTermAdmission(
     YamlTransactionCase
 ):  # pylint: disable=too-few-public-methods
+    """Cover the admission flag added to ``school_academic_term``."""
+
     def test_school_academic_term_admission(self):
+        """Run the academic term admission scenario."""
         self.run_yaml_scenario("test_data_academic_term.yaml")

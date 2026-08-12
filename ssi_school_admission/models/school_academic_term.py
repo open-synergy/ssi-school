@@ -6,6 +6,12 @@ from odoo import fields, models
 
 
 class SchoolAcademicTerm(models.Model):
+    """
+    Extends the academic term with an admission availability flag,
+    so only terms explicitly opened for admission can be selected on
+    admission forms, admission tests, and admissions.
+    """
+
     _name = "school_academic_term"
     _inherit = [
         "school_academic_term",

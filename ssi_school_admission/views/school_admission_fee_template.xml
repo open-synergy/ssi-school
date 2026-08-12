@@ -82,6 +82,33 @@
                                 />
                             <field name="price_subtotal" />
                         </tree>
+                        <form>
+                            <group name="fee_line_group_1" colspan="4" col="2">
+                                <group name="fee_line_group_1_1" colspan="1" col="2">
+                                    <field name="sequence" />
+                                    <field name="product_id" />
+                                    <field name="name" />
+                                    <field name="usage_id" />
+                                </group>
+                                <group name="fee_line_group_1_2" colspan="1" col="2">
+                                    <field name="account_id" />
+                                    <field name="analytic_account_id" />
+                                    <field name="uom_quantity" string="Quantity" />
+                                    <field name="uom_id" />
+                                </group>
+                            </group>
+                            <group name="fee_line_group_2" colspan="4" col="2">
+                                <group name="fee_line_group_2_1" colspan="1" col="2">
+                                    <field name="price_unit" />
+                                    <field name="tax_ids" widget="many2many_tags" />
+                                </group>
+                                <group name="fee_line_group_2_2" colspan="1" col="2">
+                                    <field name="price_subtotal" />
+                                    <field name="price_tax" />
+                                    <field name="price_total" />
+                                </group>
+                            </group>
+                        </form>
                     </field>
                 </page>
             </xpath>

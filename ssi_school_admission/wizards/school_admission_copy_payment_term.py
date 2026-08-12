@@ -8,13 +8,15 @@ from odoo.exceptions import UserError
 
 class SchoolAdmissionWizardCopyPaymentTerm(models.TransientModel):
     """
-    Wizard that copies all payment terms (and their detail lines) from one source
-    admission to one or more target admissions selected from the school_admission list
-    view. Mode "replace" deletes the existing payment terms on each target before
-    copying; mode "add" appends the source terms to each target's existing terms. Every
-    target must be allowed by the copy_payment_term_ok policy (state and group,
-    configurable via Policy Template) and must share the same academic term, school,
-    and grade as the source. All targets are validated before any change is applied.
+    Wizard that copies all payment terms (and their detail lines) from
+    one source admission to one or more target admissions selected from
+    the school_admission list view. Mode "replace" deletes the existing
+    payment terms on each target before copying; mode "add" appends the
+    source terms to each target's existing terms. Every target must be
+    allowed by the copy_payment_term_ok policy (state and group,
+    configurable via Policy Template) and must share the same academic
+    term, school, and grade as the source. All targets are validated
+    before any change is applied.
     """
 
     _name = "school_admission.wizard_copy_payment_term"
@@ -55,6 +57,11 @@ class SchoolAdmissionWizardCopyPaymentTerm(models.TransientModel):
 
     @api.model
     def default_get(self, fields_list):
+        """Prefill the target admissions from the list view selection.
+
+        :param fields_list: names of the fields to default
+        :return: dict of default values
+        """
         res = super().default_get(fields_list)
         if self.env.context.get("active_model") == "school_admission":
             active_ids = self.env.context.get("active_ids", [])
@@ -62,11 +69,30 @@ class SchoolAdmissionWizardCopyPaymentTerm(models.TransientModel):
         return res
 
     def action_copy_payment_term(self):
+        """Copy the source payment terms into every target admission.
+
+        User-facing wizard button; runs as superuser so terms may be
+        replaced regardless of the acting user's rights.
+
+        :return: an ``ir.actions.act_window_close`` dict
+        :raises UserError: when no target is selected, or when a target
+            fails the policy/consistency checks
+        """
         for record in self.sudo():
             record._copy_payment_term()  # pylint: disable=protected-access
         return {"type": "ir.actions.act_window_close"}
 
     def _copy_payment_term(self):
+        """Validate the targets, then copy the source payment terms.
+
+        In ``replace`` mode the existing terms of each target are
+        deleted first. Copied terms are detached from any customer
+        invoice, and their detail lines from any invoice line.
+
+        :return: ``None``
+        :raises UserError: when no target is selected, or when a target
+            fails the policy/consistency checks
+        """
         self.ensure_one()
         if not self.target_admission_ids:
             error_message = (
@@ -96,6 +122,16 @@ Solution: Select at least one draft admission from the list view before running 
                 new_term.detail_ids.write({"customer_invoice_line_id": False})
 
     def _check_target_admissions(self):
+        """Verify every target may receive the source payment terms.
+
+        A target is rejected when ``copy_payment_term_ok`` is not
+        satisfied, or when its academic term, school or grade differs
+        from the source. All targets are checked before any is reported,
+        so the error lists every problem at once.
+
+        :return: ``None``
+        :raises UserError: when at least one target is rejected
+        """
         self.ensure_one()
         source = self.source_admission_id
         problems = []

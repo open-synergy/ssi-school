@@ -84,6 +84,13 @@ class SchoolAdmissionPaymentTemplateTermDetail(models.Model):
 
     @api.depends("term_id.template_id")
     def _compute_allowed_product_ids(self):
+        """List the products allowed on this template detail line.
+
+        Delegates to the m2o configurator of the owning payment
+        template, so the selection method, manual recordset, domain and
+        python code configured there decide the result. Empty when the
+        line is not attached to a template yet.
+        """
         for record in self:
             result = False
             template = record.term_id.template_id
