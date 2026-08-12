@@ -210,6 +210,14 @@ scenarios:
             type: "value"
             expected: "confirm"
 
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
       - step: "Approve enrollment as admin"
         action: "call"
         target: "enrollment"
@@ -392,6 +400,14 @@ scenarios:
             type: "value"
             expected: "confirm"
 
+      - step: "Assert homeroom is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "homeroom"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
       - step: "Approve homeroom as admin"
         action: "call"
         target: "homeroom"
@@ -512,6 +528,14 @@ scenarios:
         target: "enrollment"
         method: "action_confirm"
         as_user: "base.user_admin"
+
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
 
       - step: "Approve enrollment as admin so it becomes open"
         action: "call"
@@ -655,6 +679,14 @@ scenarios:
         method: "action_confirm"
         as_user: "base.user_admin"
 
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
       - step: "Approve enrollment as admin so it becomes open"
         action: "call"
         target: "enrollment"
@@ -681,6 +713,14 @@ scenarios:
         target: "mutation"
         method: "action_confirm"
         as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Assert mutation is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "mutation"
         asserts:
           state:
             type: "value"

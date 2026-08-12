@@ -233,6 +233,14 @@ scenarios:
         method: "action_confirm"
         as_user: "base.user_admin"
 
+      - step: "Assert homeroom is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "homeroom"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
       - step: "Approve homeroom"
         action: "call"
         target: "homeroom"
@@ -854,6 +862,14 @@ scenarios:
         method: "action_confirm"
         as_user: "base.user_admin"
 
+      - step: "Assert homeroom is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "homeroom"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
       - step: "Approve homeroom"
         action: "call"
         target: "homeroom"
@@ -1093,6 +1109,14 @@ scenarios:
         method: "action_confirm"
         as_user: "base.user_admin"
 
+      - step: "Assert homeroom is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "homeroom"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
       - step: "Approve homeroom"
         action: "call"
         target: "homeroom"
@@ -1257,6 +1281,14 @@ scenarios:
             type: "value"
             expected: "confirm"
 
+      - step: "Assert homeroom is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "homeroom"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
       - step: "Approve homeroom"
         action: "call"
         target: "homeroom"
@@ -1288,6 +1320,14 @@ scenarios:
         target: "enrollment"
         method: "action_confirm"
         as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "enrollment"
         asserts:
           state:
             type: "value"

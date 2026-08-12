@@ -348,6 +348,14 @@ scenarios:
             type: "value"
             expected: "confirm"
 
+      - step: "Assert homeroom is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "homeroom"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
       - step: "Approve homeroom"
         action: "call"
         target: "homeroom"

@@ -116,6 +116,14 @@ scenarios:
             type: "value"
             expected: "confirm"
 
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
       - step: "Approve enrollment"
         action: "call"
         target: "enrollment"
@@ -310,6 +318,14 @@ scenarios:
             type: "value"
             expected: "confirm"
 
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
       - step: "Approve enrollment"
         action: "call"
         target: "enrollment"
@@ -358,6 +374,14 @@ scenarios:
         target: "mutation"
         method: "action_confirm"
         as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Assert mutation is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "mutation"
         asserts:
           state:
             type: "value"
@@ -515,6 +539,14 @@ scenarios:
         method: "action_confirm"
         as_user: "base.user_admin"
 
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
       - step: "Approve enrollment"
         action: "call"
         target: "enrollment"
@@ -666,6 +698,14 @@ scenarios:
         method: "action_confirm"
         as_user: "base.user_admin"
 
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
       - step: "Approve enrollment"
         action: "call"
         target: "enrollment"
@@ -692,6 +732,14 @@ scenarios:
         target: "mutation_forward"
         method: "action_confirm"
         as_user: "base.user_admin"
+
+      - step: "Assert mutation_forward is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "mutation_forward"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
 
       - step: "Approve forward mutation"
         action: "call"
@@ -728,6 +776,14 @@ scenarios:
         target: "mutation_reverse"
         method: "action_confirm"
         as_user: "base.user_admin"
+
+      - step: "Assert mutation_reverse is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "mutation_reverse"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
 
       - step: "Approve reverse mutation"
         action: "call"
@@ -858,6 +914,14 @@ scenarios:
         target: "enrollment"
         method: "action_confirm"
         as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "enrollment"
         asserts:
           state:
             type: "value"
@@ -994,6 +1058,14 @@ scenarios:
         target: "enrollment"
         method: "action_confirm"
         as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "enrollment"
         asserts:
           state:
             type: "value"
@@ -1157,6 +1229,14 @@ scenarios:
             type: "value"
             expected: "confirm"
 
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
       - step: "Approve enrollment"
         action: "call"
         target: "enrollment"
@@ -1185,6 +1265,14 @@ scenarios:
         target: "homeroom_b"
         method: "action_confirm"
         as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Assert homeroom_b is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "homeroom_b"
         asserts:
           state:
             type: "value"
@@ -1329,6 +1417,14 @@ scenarios:
             type: "value"
             expected: "confirm"
 
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
       - step: "Approve enrollment"
         action: "call"
         target: "enrollment"
@@ -1460,6 +1556,14 @@ scenarios:
         target: "enrollment"
         method: "action_confirm"
         as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "enrollment"
         asserts:
           state:
             type: "value"
@@ -1622,6 +1726,14 @@ scenarios:
             type: "value"
             expected: "confirm"
 
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
       - step: "Approve enrollment"
         action: "call"
         target: "enrollment"
@@ -1767,6 +1879,14 @@ scenarios:
         target: "enrollment"
         method: "action_confirm"
         as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "enrollment"
         asserts:
           state:
             type: "value"
@@ -1918,6 +2038,14 @@ scenarios:
             type: "value"
             expected: "confirm"
 
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
       - step: "Approve enrollment"
         action: "call"
         target: "enrollment"
@@ -1975,6 +2103,15 @@ scenarios:
             type: "value"
             expected: "confirm"
 
+      - step:
+          "Assert filler_enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "filler_enrollment"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
       - step: "Approve filler enrollment"
         action: "call"
         target: "filler_enrollment"
@@ -2000,6 +2137,14 @@ scenarios:
         target: "mutation"
         method: "action_confirm"
         as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Assert mutation is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "mutation"
         asserts:
           state:
             type: "value"
