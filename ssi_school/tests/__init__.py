@@ -19,6 +19,7 @@ from . import (  # noqa: F401
     test_school_student_personal_data,
     test_school_student_family,
     test_school_student_states,
+    test_school_student_transfer_in,
     test_school_enrollment_payment_template,
     test_school_enrollment_payment_product_configurator,
     test_school_enrollment,

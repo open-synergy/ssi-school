@@ -510,15 +510,16 @@ class SchoolEnrollment(models.Model):
 
     @api.depends("academic_term_id", "grade_id", "school_id")
     def _compute_allowed_student_ids(self):
-        """Compute the students selectable on this enrollment.
+        """Determine which students may be selected for this enrollment.
 
-        Fills ``allowed_student_ids`` with the ``draft`` students of
-        the same ``school_id``, matched on grade according to the
-        term: in a first term the student's ``next_grade_id`` must
-        equal ``grade_id`` (the student is being promoted into it),
-        in any other term the student's ``current_grade_id`` must
-        equal ``grade_id``. The field stays empty until academic term,
-        grade, and school are all set.
+        Two criteria are unioned: (1) regular eligibility, matching
+        ``next_grade_id`` on the academic year's first term or
+        ``current_grade_id`` on any other term; and (2) transfer-in
+        eligibility, which admits any ``draft`` student flagged
+        ``is_transfer_in`` in the same school, regardless of grade,
+        so a student transferring in mid-year can be enrolled directly
+        into the target grade of any term. The field stays empty until
+        academic term, grade, and school are all set.
 
         :return: None
         """
@@ -533,7 +534,20 @@ class SchoolEnrollment(models.Model):
                     criteria += [("next_grade_id", "=", record.grade_id.id)]
                 else:
                     criteria += [("current_grade_id", "=", record.grade_id.id)]
-                result = self.env["school_student"].search(criteria).ids
+                student_ids = set(self.env["school_student"].search(criteria).ids)
+
+                # Transfer-in students may be enrolled into any grade of any
+                # term, regardless of their computed current/next grade.
+                transfer_in_criteria = [
+                    ("state", "=", "draft"),
+                    ("school_id", "=", record.school_id.id),
+                    ("is_transfer_in", "=", True),
+                ]
+                student_ids |= set(
+                    self.env["school_student"].search(transfer_in_criteria).ids
+                )
+
+                result = list(student_ids)
             record.allowed_student_ids = result
 
     @api.onchange(
