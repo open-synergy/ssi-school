@@ -229,6 +229,13 @@
                     </group>
                     <field name="enrollment_ids" />
                 </page>
+                <page name="transfer_in" string="Transfer In">
+                    <group name="transfer_in_1" colspan="4" col="2">
+                        <field name="is_transfer_in" />
+                        <field name="origin_school" />
+                        <field name="transfer_date" />
+                    </group>
+                </page>
                 <page name="family" string="Family">
                     <group name="family_1" colspan="4" col="2">
                         <field name="father_id" />

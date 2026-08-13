@@ -1,0 +1,249 @@
+options:
+  auto_refresh: true
+scenarios:
+  - name: "Transfer-in Student Allowed On Non-First Term Middle Grade"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type for Transfer In Test"
+          code: "GTTRIN"
+          sequence: 10
+
+      - step: "Setup - create grade 3"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_3"
+        values:
+          name: "Grade 3 for Transfer In"
+          code: "G3TRIN"
+          sequence: 30
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade 4"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_4"
+        values:
+          name: "Grade 4 for Transfer In"
+          code: "G4TRIN"
+          sequence: 40
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School for Transfer In Test"
+          code: "SCHTRIN"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade class for grade 3"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_3"
+        values:
+          name: "Class A Grade 3 Transfer In"
+          code: "CLAG3TRIN"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade_3.id"
+
+      - step: "Setup - create grade class for grade 4"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class_4"
+        values:
+          name: "Class A Grade 4 Transfer In"
+          code: "CLAG4TRIN"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade_4.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 Transfer In Test"
+          code: "AYTRIN"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term 1 (first term)"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_1"
+        values:
+          name: "Semester 1 Transfer In Test"
+          code: "SMTRIN1"
+          date_start: "2024-07-01"
+          date_end: "2024-12-31"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "close"
+
+      - step: "Setup - create academic term 2 (non-first term, enrollment open)"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_2"
+        values:
+          name: "Semester 2 Transfer In Test"
+          code: "SMTRIN2"
+          date_start: "2025-01-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Assert academic term 2 is not the first term"
+        action: "assert"
+        target: "academic_term_2"
+        asserts:
+          first_term:
+            type: "value"
+            expected: false
+
+      - step: "Setup - create transfer-in student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_transfer_in"
+        values:
+          name: "Transfer In Student Contact"
+          phone: "081234500001"
+          email: "transferin@test.com"
+
+      - step: "Setup - create transfer-in student"
+        action: "create"
+        model: "school_student"
+        save_as: "student_transfer_in"
+        values:
+          name: "Transfer In Student"
+          code: "STUTRIN01"
+          contact_id: "REC: contact_transfer_in.id"
+          school_id: "REC: school.id"
+          initial_grade_id: "REC: grade_3.id"
+          is_transfer_in: true
+          origin_school: "Origin School Example"
+          transfer_date: "2025-01-05"
+
+      - step: "Assert transfer-in fields stored correctly"
+        action: "assert"
+        target: "student_transfer_in"
+        asserts:
+          is_transfer_in:
+            type: "value"
+            expected: true
+          origin_school:
+            type: "value"
+            expected: "Origin School Example"
+          transfer_date:
+            type: "value"
+            expected: 2025-01-05
+          state:
+            type: "value"
+            expected: "draft"
+
+      - step: "Setup - create regular (non transfer-in) student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_regular"
+        values:
+          name: "Regular Student Contact"
+          phone: "081234500002"
+          email: "regularstudent@test.com"
+
+      - step: "Setup - create regular student with current grade 3"
+        action: "create"
+        model: "school_student"
+        save_as: "student_regular"
+        values:
+          name: "Regular Student"
+          code: "STUREG01"
+          contact_id: "REC: contact_regular.id"
+          school_id: "REC: school.id"
+          initial_grade_id: "REC: grade_3.id"
+          is_transfer_in: false
+
+      - step: "Assert regular student current grade is grade 3"
+        action: "assert"
+        target: "student_regular"
+        asserts:
+          current_grade_id:
+            type: "m2o"
+            expected: "REC: grade_3"
+
+      - step: "Create enrollment for transfer-in student on grade 4, non-first term"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_transfer_in"
+        values:
+          date: "2025-01-06"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term_2.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade_4.id"
+          grade_class_id: "REC: grade_class_4.id"
+          student_id: "REC: student_transfer_in.id"
+
+      - step:
+          "Assert allowed_student_ids for grade 4 is exactly the transfer-in student
+          (regular student excluded)"
+        action: "assert"
+        target: "enrollment_transfer_in"
+        asserts:
+          allowed_student_ids:
+            type: "m2m"
+            check: "exact"
+            expected_records:
+              - "REC: student_transfer_in"
+
+      - step: "Create second draft enrollment for transfer-in student on grade 3"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_transfer_in_other_grade"
+        values:
+          date: "2025-01-06"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term_2.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade_3.id"
+          grade_class_id: "REC: grade_class_3.id"
+          student_id: "REC: student_transfer_in.id"
+
+      - step: "Assert transfer-in student is also allowed on a different grade"
+        action: "assert"
+        target: "enrollment_transfer_in_other_grade"
+        asserts:
+          allowed_student_ids:
+            type: "m2m"
+            check: "contains"
+            expected_records:
+              - "REC: student_transfer_in"
+
+      - step: "Confirm transfer-in enrollment"
+        action: "call"
+        target: "enrollment_transfer_in"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve and open transfer-in enrollment"
+        action: "call"
+        target: "enrollment_transfer_in"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Assert transfer-in student current grade follows enrollment grade"
+        action: "assert"
+        target: "student_transfer_in"
+        asserts:
+          current_grade_id:
+            type: "m2o"
+            expected: "REC: grade_4"

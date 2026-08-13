@@ -277,6 +277,26 @@ class SchoolStudent(models.Model):
         domain=[("is_company", "=", False)],
         help="Contact data of the student's guardian if parents cannot be reached.",
     )
+
+    # Transfer In
+    is_transfer_in = fields.Boolean(
+        string="Transfer In",
+        help=(
+            "Indicates that this student transferred in from another "
+            "school, and may therefore be enrolled directly into any "
+            "grade of any term, regardless of the computed current/next "
+            "grade."
+        ),
+    )
+    origin_school = fields.Char(
+        string="Origin School",
+        help="Name of the school this transfer-in student came from.",
+    )
+    transfer_date = fields.Date(
+        string="Transfer Date",
+        help="Date on which this student transferred in from the origin school.",
+    )
+
     state = fields.Selection(
         string="State",
         selection=[
