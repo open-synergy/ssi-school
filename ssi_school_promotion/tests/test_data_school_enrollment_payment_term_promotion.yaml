@@ -1,0 +1,1712 @@
+options:
+  auto_refresh: true
+
+scenarios:
+  - name:
+      "Apply Promotion Code wizard creates a usage from an enrollment payment term,
+      counted only on that term"
+    steps:
+      - step: "Get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type"
+      - step: "Get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type"
+      - step: "Create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account"
+        values:
+          code: "SEPT1-INC"
+          name: "School Enrollment Promotion Test 1 Income"
+          user_type_id: "REC: revenue_type.id"
+      - step: "Create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          code: "SEPT1-RECV"
+          name: "School Enrollment Promotion Test 1 Receivable"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+      - step: "Create sales journal"
+        action: "create"
+        model: "account.journal"
+        save_as: "journal"
+        values:
+          name: "School Enrollment Promotion Test 1 Journal"
+          code: "SEPT1J"
+          type: "sale"
+      - step: "Create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "School Enrollment Promotion Test 1 Invoice Type"
+          code: "SEPT1CIT"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+      - step: "Create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Enrollment Promotion Test 1 Product"
+          type: "service"
+          list_price: 1000000.0
+      - step: "Create pricelist"
+        action: "create"
+        model: "product.pricelist"
+        save_as: "pricelist"
+        values:
+          name: "School Enrollment Promotion Test 1 Pricelist"
+          currency_id: "REC: company.currency_id.id"
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "School Enrollment Promotion Test 1 Grade Type"
+          code: "SEPT1GT"
+          sequence: 10
+      - step: "Create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 SEPT1"
+          code: "SEPT1AY"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+      - step: "Create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester SEPT1"
+          code: "SEPT1AT"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School SEPT1"
+          code: "SEPT1SCH"
+          grade_type_id: "REC: grade_type.id"
+      - step: "Create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade SEPT1"
+          code: "SEPT1G"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+      - step: "Create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class SEPT1"
+          code: "SEPT1GC"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+      - step: "Create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact SEPT1"
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student SEPT1"
+          code: "SEPT1STU"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+      - step: "Create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+          pricelist_id: "REC: pricelist.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+          auto_confirm_customer_invoice: false
+      - step: "Create payment term A"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_a"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term A SEPT1"
+          sequence: 10
+          date_invoice: "2024-07-05"
+          date_due: "2024-07-20"
+      - step: "Create payment term A detail"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        save_as: "detail_a"
+        values:
+          term_id: "REC: term_a.id"
+          product_id: "REC: product.id"
+          name: "Registration Fee SEPT1"
+          account_id: "REC: income_account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+      - step: "Create sibling payment term B (left uninvoiced)"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_b"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term B SEPT1"
+          sequence: 20
+          date_invoice: "2024-08-05"
+          date_due: "2024-08-20"
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+      - step: "Create customer invoice from term A"
+        action: "call"
+        target: "term_a"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+      - step: "Find the customer invoice created for term A"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["id", "=", "REC: term_a.customer_invoice_id.id"]]
+        save_as: "invoice_a"
+        expect_count: 1
+      - step: "Confirm the customer invoice"
+        action: "call"
+        target: "invoice_a"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+      - step: "Assert invoice is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "invoice_a"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+      - step: "Approve the customer invoice"
+        action: "call"
+        target: "invoice_a"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+      - step: "Find the invoice's own receivable move line"
+        action: "search"
+        model: "account.move.line"
+        domain: [["id", "=", "REC: invoice_a.receivable_move_line_id.id"]]
+        save_as: "move_line_a"
+        expect_count: 1
+      - step: "Assert the receivable line's residual"
+        action: "assert"
+        target: "move_line_a"
+        asserts:
+          amount_residual:
+            type: "value"
+            expected: 1000000.0
+      - step: "Find school_enrollment_payment_term model"
+        action: "search"
+        model: "ir.model"
+        domain: [["model", "=", "school_enrollment_payment_term"]]
+        save_as: "spt_model"
+        limit: 1
+        expect_count: 1
+      - step:
+          "Create promotion type allowing school_enrollment_payment_term as reference"
+        action: "create"
+        model: "promotion_type"
+        save_as: "ptype"
+        values:
+          name: "School Enrollment Promotion Test 1 Type"
+          code: "/"
+          discount_type: "fixed"
+          discount_amount: 100000.0
+          journal_id: "REC: journal.id"
+          product_id: "REC: product.id"
+          allowed_model_ids:
+            - - 6
+              - 0
+              - - "REC: spt_model.id"
+      - step: "Create promotion code"
+        action: "create"
+        model: "promotion_code"
+        save_as: "code"
+        values:
+          voucher_code: "SEPT1-001"
+          type_id: "REC: ptype.id"
+          user_id: "REF: base.user_admin"
+      - step: "Confirm promotion code"
+        action: "call"
+        target: "code"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+      - step: "Refresh code before approval (fresh policy field read)"
+        action: "assert"
+        target: "code"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+      - step: "Approve promotion code"
+        action: "call"
+        target: "code"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+      - step: "Assert term A has no promotion usage yet"
+        action: "assert"
+        target: "term_a"
+        asserts:
+          promotion_usage_count:
+            type: "value"
+            expected: 0
+      - step: "Run the Apply Promotion Code wizard from term A"
+        action: "wizard"
+        model: "apply_promotion_code"
+        target: "term_a"
+        as_user: "base.user_admin"
+        values:
+          promotion_code_id: "REC: code.id"
+        method: "action_apply_promotion_code"
+      - step: "Exactly one usage is created for this code and term A"
+        action: "search"
+        model: "promotion_code_usage"
+        domain:
+          [
+            ["promotion_code_id", "=", "REC: code.id"],
+            [
+              "document_reference",
+              "=",
+              "EVAL: 'school_enrollment_payment_term,%d' % registry['term_a'].id",
+            ],
+          ]
+        save_as: "usage"
+        expect_count: 1
+      - step: "The usage is Draft, referencing term A and its own partner"
+        action: "assert"
+        target: "usage"
+        asserts:
+          state:
+            type: "value"
+            expected: "draft"
+          document_reference:
+            type: "m2o"
+            expected: "REC: term_a"
+          partner_id:
+            type: "m2o"
+            expected: "REC: contact"
+      - step: "Term A now counts the new usage"
+        action: "assert"
+        target: "term_a"
+        asserts:
+          promotion_usage_count:
+            type: "value"
+            expected: 1
+          promotion_usage_ids:
+            type: "m2m"
+            check: "contains"
+            expected_records:
+              - "REC: usage"
+      - step: "Sibling term B still counts zero"
+        action: "assert"
+        target: "term_b"
+        asserts:
+          promotion_usage_count:
+            type: "value"
+            expected: 0
+      - step: "Exactly one allocation row is created"
+        action: "search"
+        model: "promotion_code_usage_allocation"
+        domain: [["usage_id", "=", "REC: usage.id"]]
+        save_as: "alloc_row"
+        expect_count: 1
+      - step: "The allocation row targets term A's own receivable line"
+        action: "assert"
+        target: "alloc_row"
+        asserts:
+          source:
+            type: "value"
+            expected: "customer"
+          move_line_id:
+            type: "m2o"
+            expected: "REC: move_line_a"
+
+  - name: "Approving the usage reduces the term's own invoice residual"
+    steps:
+      - step: "Get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type"
+      - step: "Get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type"
+      - step: "Create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account"
+        values:
+          code: "SEPT2-INC"
+          name: "School Enrollment Promotion Test 2 Income"
+          user_type_id: "REC: revenue_type.id"
+      - step: "Create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          code: "SEPT2-RECV"
+          name: "School Enrollment Promotion Test 2 Receivable"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+      - step: "Create sales journal"
+        action: "create"
+        model: "account.journal"
+        save_as: "journal"
+        values:
+          name: "School Enrollment Promotion Test 2 Journal"
+          code: "SEPT2J"
+          type: "sale"
+      - step: "Create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "School Enrollment Promotion Test 2 Invoice Type"
+          code: "SEPT2CIT"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+      - step: "Create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Enrollment Promotion Test 2 Product"
+          type: "service"
+          list_price: 1000000.0
+          property_account_income_id: "REC: income_account.id"
+      - step: "Create pricelist"
+        action: "create"
+        model: "product.pricelist"
+        save_as: "pricelist"
+        values:
+          name: "School Enrollment Promotion Test 2 Pricelist"
+          currency_id: "REC: company.currency_id.id"
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "School Enrollment Promotion Test 2 Grade Type"
+          code: "SEPT2GT"
+          sequence: 10
+      - step: "Create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 SEPT2"
+          code: "SEPT2AY"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+      - step: "Create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester SEPT2"
+          code: "SEPT2AT"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School SEPT2"
+          code: "SEPT2SCH"
+          grade_type_id: "REC: grade_type.id"
+      - step: "Create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade SEPT2"
+          code: "SEPT2G"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+      - step: "Create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class SEPT2"
+          code: "SEPT2GC"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+      - step: "Create the student contact on the same receivable account"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact SEPT2"
+          property_account_receivable_id: "REC: receivable_account.id"
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student SEPT2"
+          code: "SEPT2STU"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+      - step: "Create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+          pricelist_id: "REC: pricelist.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+          auto_confirm_customer_invoice: false
+      - step: "Create payment term A"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_a"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term A SEPT2"
+          sequence: 10
+          date_invoice: "2024-07-05"
+          date_due: "2024-07-20"
+      - step: "Create payment term A detail"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        save_as: "detail_a"
+        values:
+          term_id: "REC: term_a.id"
+          product_id: "REC: product.id"
+          name: "Registration Fee SEPT2"
+          account_id: "REC: income_account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+      - step: "Create customer invoice from term A"
+        action: "call"
+        target: "term_a"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+      - step: "Find the customer invoice created for term A"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["id", "=", "REC: term_a.customer_invoice_id.id"]]
+        save_as: "invoice_a"
+        expect_count: 1
+      - step: "Confirm the customer invoice"
+        action: "call"
+        target: "invoice_a"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+      - step: "Assert invoice is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "invoice_a"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+      - step: "Approve the customer invoice"
+        action: "call"
+        target: "invoice_a"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+      - step: "Find the invoice's own receivable move line"
+        action: "search"
+        model: "account.move.line"
+        domain: [["id", "=", "REC: invoice_a.receivable_move_line_id.id"]]
+        save_as: "move_line_a"
+        expect_count: 1
+      - step: "Assert the receivable line's residual before promotion"
+        action: "assert"
+        target: "move_line_a"
+        asserts:
+          amount_residual:
+            type: "value"
+            expected: 1000000.0
+      - step: "Find school_enrollment_payment_term model"
+        action: "search"
+        model: "ir.model"
+        domain: [["model", "=", "school_enrollment_payment_term"]]
+        save_as: "spt_model"
+        limit: 1
+        expect_count: 1
+      - step:
+          "Create promotion type allowing school_enrollment_payment_term as reference"
+        action: "create"
+        model: "promotion_type"
+        save_as: "ptype"
+        values:
+          name: "School Enrollment Promotion Test 2 Type"
+          code: "/"
+          discount_type: "fixed"
+          discount_amount: 200000.0
+          journal_id: "REC: journal.id"
+          product_id: "REC: product.id"
+          allowed_model_ids:
+            - - 6
+              - 0
+              - - "REC: spt_model.id"
+      - step: "Create promotion code"
+        action: "create"
+        model: "promotion_code"
+        save_as: "code"
+        values:
+          voucher_code: "SEPT2-001"
+          type_id: "REC: ptype.id"
+          user_id: "REF: base.user_admin"
+      - step: "Confirm promotion code"
+        action: "call"
+        target: "code"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+      - step: "Refresh code before approval (fresh policy field read)"
+        action: "assert"
+        target: "code"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+      - step: "Approve promotion code"
+        action: "call"
+        target: "code"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+      - step: "Run the Apply Promotion Code wizard from term A"
+        action: "wizard"
+        model: "apply_promotion_code"
+        target: "term_a"
+        as_user: "base.user_admin"
+        values:
+          promotion_code_id: "REC: code.id"
+        method: "action_apply_promotion_code"
+      - step: "Exactly one usage is created for this code and term A"
+        action: "search"
+        model: "promotion_code_usage"
+        domain:
+          [
+            ["promotion_code_id", "=", "REC: code.id"],
+            [
+              "document_reference",
+              "=",
+              "EVAL: 'school_enrollment_payment_term,%d' % registry['term_a'].id",
+            ],
+          ]
+        save_as: "usage"
+        expect_count: 1
+      - step: "Assert the usage's own discount amount"
+        action: "assert"
+        target: "usage"
+        asserts:
+          state:
+            type: "value"
+            expected: "draft"
+          discount_amount:
+            type: "value"
+            expected: 200000.0
+      - step: "Confirm the usage"
+        action: "call"
+        target: "usage"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+      - step: "Refresh usage before approval (fresh policy field read)"
+        action: "assert"
+        target: "usage"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+      - step: "Approve the usage"
+        action: "call"
+        target: "usage"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+      - step: "The term's own receivable residual is reduced by the discount"
+        action: "assert"
+        target: "move_line_a"
+        asserts:
+          amount_residual:
+            type: "value"
+            expected: 800000.0
+
+  - name: "Populate Allocation succeeds on a locked payment term"
+    steps:
+      - step: "Get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type"
+      - step: "Get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type"
+      - step: "Create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account"
+        values:
+          code: "SEPT3-INC"
+          name: "School Enrollment Promotion Test 3 Income"
+          user_type_id: "REC: revenue_type.id"
+      - step: "Create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          code: "SEPT3-RECV"
+          name: "School Enrollment Promotion Test 3 Receivable"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+      - step: "Create sales journal"
+        action: "create"
+        model: "account.journal"
+        save_as: "journal"
+        values:
+          name: "School Enrollment Promotion Test 3 Journal"
+          code: "SEPT3J"
+          type: "sale"
+      - step: "Create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "School Enrollment Promotion Test 3 Invoice Type"
+          code: "SEPT3CIT"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+      - step: "Create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Enrollment Promotion Test 3 Product"
+          type: "service"
+          list_price: 1000000.0
+      - step: "Create pricelist"
+        action: "create"
+        model: "product.pricelist"
+        save_as: "pricelist"
+        values:
+          name: "School Enrollment Promotion Test 3 Pricelist"
+          currency_id: "REC: company.currency_id.id"
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "School Enrollment Promotion Test 3 Grade Type"
+          code: "SEPT3GT"
+          sequence: 10
+      - step: "Create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 SEPT3"
+          code: "SEPT3AY"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+      - step: "Create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester SEPT3"
+          code: "SEPT3AT"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School SEPT3"
+          code: "SEPT3SCH"
+          grade_type_id: "REC: grade_type.id"
+      - step: "Create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade SEPT3"
+          code: "SEPT3G"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+      - step: "Create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class SEPT3"
+          code: "SEPT3GC"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+      - step: "Create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact SEPT3"
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student SEPT3"
+          code: "SEPT3STU"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+      - step: "Create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+          pricelist_id: "REC: pricelist.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+          auto_confirm_customer_invoice: false
+      - step: "Create payment term A"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_a"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term A SEPT3"
+          sequence: 10
+          date_invoice: "2024-07-05"
+          date_due: "2024-07-20"
+      - step: "Create payment term A detail"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        save_as: "detail_a"
+        values:
+          term_id: "REC: term_a.id"
+          product_id: "REC: product.id"
+          name: "Registration Fee SEPT3"
+          account_id: "REC: income_account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+      - step: "Create customer invoice from term A"
+        action: "call"
+        target: "term_a"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+      - step: "Find the customer invoice created for term A"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["id", "=", "REC: term_a.customer_invoice_id.id"]]
+        save_as: "invoice_a"
+        expect_count: 1
+      - step: "Confirm the customer invoice"
+        action: "call"
+        target: "invoice_a"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+      - step: "Assert invoice is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "invoice_a"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+      - step: "Approve the customer invoice"
+        action: "call"
+        target: "invoice_a"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+      - step: "Find the invoice's own receivable move line"
+        action: "search"
+        model: "account.move.line"
+        domain: [["id", "=", "REC: invoice_a.receivable_move_line_id.id"]]
+        save_as: "move_line_a"
+        expect_count: 1
+      - step: "Lock the payment term (bookkeeping field, always writable)"
+        action: "write"
+        target: "term_a"
+        values:
+          locked: true
+      - step: "Assert term A is now locked"
+        action: "assert"
+        target: "term_a"
+        asserts:
+          locked:
+            type: "value"
+            expected: true
+      - step: "Find school_enrollment_payment_term model"
+        action: "search"
+        model: "ir.model"
+        domain: [["model", "=", "school_enrollment_payment_term"]]
+        save_as: "spt_model"
+        limit: 1
+        expect_count: 1
+      - step:
+          "Create promotion type allowing school_enrollment_payment_term as reference"
+        action: "create"
+        model: "promotion_type"
+        save_as: "ptype"
+        values:
+          name: "School Enrollment Promotion Test 3 Type"
+          code: "/"
+          discount_type: "fixed"
+          discount_amount: 50000.0
+          journal_id: "REC: journal.id"
+          product_id: "REC: product.id"
+          allowed_model_ids:
+            - - 6
+              - 0
+              - - "REC: spt_model.id"
+      - step: "Create promotion code"
+        action: "create"
+        model: "promotion_code"
+        save_as: "code"
+        values:
+          voucher_code: "SEPT3-001"
+          type_id: "REC: ptype.id"
+          user_id: "REF: base.user_admin"
+      - step: "Confirm promotion code"
+        action: "call"
+        target: "code"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+      - step: "Refresh code before approval (fresh policy field read)"
+        action: "assert"
+        target: "code"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+      - step: "Approve promotion code"
+        action: "call"
+        target: "code"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+      - step: "Run the Apply Promotion Code wizard from the locked term A"
+        action: "wizard"
+        model: "apply_promotion_code"
+        target: "term_a"
+        as_user: "base.user_admin"
+        values:
+          promotion_code_id: "REC: code.id"
+        method: "action_apply_promotion_code"
+      - step: "Exactly one usage is created for this code and term A"
+        action: "search"
+        model: "promotion_code_usage"
+        domain:
+          [
+            ["promotion_code_id", "=", "REC: code.id"],
+            [
+              "document_reference",
+              "=",
+              "EVAL: 'school_enrollment_payment_term,%d' % registry['term_a'].id",
+            ],
+          ]
+        save_as: "usage"
+        expect_count: 1
+      - step: "Exactly one allocation row is created despite the lock"
+        action: "search"
+        model: "promotion_code_usage_allocation"
+        domain: [["usage_id", "=", "REC: usage.id"]]
+        save_as: "alloc_row"
+        expect_count: 1
+      - step: "The allocation row targets term A's own receivable line"
+        action: "assert"
+        target: "alloc_row"
+        asserts:
+          move_line_id:
+            type: "m2o"
+            expected: "REC: move_line_a"
+
+  - name: "Populate Allocation on a payment term without an invoice is rejected"
+    steps:
+      - step: "Get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type"
+      - step: "Get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type"
+      - step: "Create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account"
+        values:
+          code: "SEPT4-INC"
+          name: "School Enrollment Promotion Test 4 Income"
+          user_type_id: "REC: revenue_type.id"
+      - step: "Create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          code: "SEPT4-RECV"
+          name: "School Enrollment Promotion Test 4 Receivable"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+      - step: "Create sales journal"
+        action: "create"
+        model: "account.journal"
+        save_as: "journal"
+        values:
+          name: "School Enrollment Promotion Test 4 Journal"
+          code: "SEPT4J"
+          type: "sale"
+      - step: "Create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "School Enrollment Promotion Test 4 Invoice Type"
+          code: "SEPT4CIT"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+      - step: "Create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Enrollment Promotion Test 4 Product"
+          type: "service"
+          list_price: 1000000.0
+      - step: "Create pricelist"
+        action: "create"
+        model: "product.pricelist"
+        save_as: "pricelist"
+        values:
+          name: "School Enrollment Promotion Test 4 Pricelist"
+          currency_id: "REC: company.currency_id.id"
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "School Enrollment Promotion Test 4 Grade Type"
+          code: "SEPT4GT"
+          sequence: 10
+      - step: "Create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 SEPT4"
+          code: "SEPT4AY"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+      - step: "Create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester SEPT4"
+          code: "SEPT4AT"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School SEPT4"
+          code: "SEPT4SCH"
+          grade_type_id: "REC: grade_type.id"
+      - step: "Create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade SEPT4"
+          code: "SEPT4G"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+      - step: "Create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class SEPT4"
+          code: "SEPT4GC"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+      - step: "Create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact SEPT4"
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student SEPT4"
+          code: "SEPT4STU"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+      - step: "Create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+          pricelist_id: "REC: pricelist.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+          auto_confirm_customer_invoice: false
+      - step: "Create payment term A (never invoiced)"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_a"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term A SEPT4"
+          sequence: 10
+          date_invoice: "2024-07-05"
+          date_due: "2024-07-20"
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+      - step: "Find school_enrollment_payment_term model"
+        action: "search"
+        model: "ir.model"
+        domain: [["model", "=", "school_enrollment_payment_term"]]
+        save_as: "spt_model"
+        limit: 1
+        expect_count: 1
+      - step:
+          "Create promotion type allowing school_enrollment_payment_term as reference"
+        action: "create"
+        model: "promotion_type"
+        save_as: "ptype"
+        values:
+          name: "School Enrollment Promotion Test 4 Type"
+          code: "/"
+          discount_type: "fixed"
+          discount_amount: 50000.0
+          journal_id: "REC: journal.id"
+          product_id: "REC: product.id"
+          allowed_model_ids:
+            - - 6
+              - 0
+              - - "REC: spt_model.id"
+      - step: "Create promotion code"
+        action: "create"
+        model: "promotion_code"
+        save_as: "code"
+        values:
+          voucher_code: "SEPT4-001"
+          type_id: "REC: ptype.id"
+          user_id: "REF: base.user_admin"
+      - step: "Confirm promotion code"
+        action: "call"
+        target: "code"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+      - step: "Refresh code before approval (fresh policy field read)"
+        action: "assert"
+        target: "code"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+      - step: "Approve promotion code"
+        action: "call"
+        target: "code"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+      - step: "Running the wizard against an uninvoiced term must fail"
+        action: "wizard"
+        model: "apply_promotion_code"
+        target: "term_a"
+        as_user: "base.user_admin"
+        values:
+          promotion_code_id: "REC: code.id"
+        method: "action_apply_promotion_code"
+        expect_error:
+          type: "UserError"
+          message_contains: "eligible journal item"
+
+  - name:
+      "An allocation row pointing at a different payment term's own invoice is rejected"
+    steps:
+      - step: "Get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type"
+      - step: "Get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type"
+      - step: "Create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account"
+        values:
+          code: "SEPT5-INC"
+          name: "School Enrollment Promotion Test 5 Income"
+          user_type_id: "REC: revenue_type.id"
+      - step: "Create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          code: "SEPT5-RECV"
+          name: "School Enrollment Promotion Test 5 Receivable"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+      - step: "Create sales journal"
+        action: "create"
+        model: "account.journal"
+        save_as: "journal"
+        values:
+          name: "School Enrollment Promotion Test 5 Journal"
+          code: "SEPT5J"
+          type: "sale"
+      - step: "Create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "School Enrollment Promotion Test 5 Invoice Type"
+          code: "SEPT5CIT"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+      - step: "Create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Enrollment Promotion Test 5 Product"
+          type: "service"
+          list_price: 1000000.0
+      - step: "Create pricelist"
+        action: "create"
+        model: "product.pricelist"
+        save_as: "pricelist"
+        values:
+          name: "School Enrollment Promotion Test 5 Pricelist"
+          currency_id: "REC: company.currency_id.id"
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "School Enrollment Promotion Test 5 Grade Type"
+          code: "SEPT5GT"
+          sequence: 10
+      - step: "Create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 SEPT5"
+          code: "SEPT5AY"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+      - step: "Create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester SEPT5"
+          code: "SEPT5AT"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School SEPT5"
+          code: "SEPT5SCH"
+          grade_type_id: "REC: grade_type.id"
+      - step: "Create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade SEPT5"
+          code: "SEPT5G"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+      - step: "Create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class SEPT5"
+          code: "SEPT5GC"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+      - step: "Create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact SEPT5"
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student SEPT5"
+          code: "SEPT5STU"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+      - step: "Create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+          pricelist_id: "REC: pricelist.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+          auto_confirm_customer_invoice: false
+      - step: "Create payment term A"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_a"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term A SEPT5"
+          sequence: 10
+          date_invoice: "2024-07-05"
+          date_due: "2024-07-20"
+      - step: "Create payment term A detail"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        save_as: "detail_a"
+        values:
+          term_id: "REC: term_a.id"
+          product_id: "REC: product.id"
+          name: "Registration Fee A SEPT5"
+          account_id: "REC: income_account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+      - step: "Create payment term B"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_b"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term B SEPT5"
+          sequence: 20
+          date_invoice: "2024-08-05"
+          date_due: "2024-08-20"
+      - step: "Create payment term B detail"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        save_as: "detail_b"
+        values:
+          term_id: "REC: term_b.id"
+          product_id: "REC: product.id"
+          name: "Registration Fee B SEPT5"
+          account_id: "REC: income_account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 500000.0
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+      - step: "Create customer invoice from term A"
+        action: "call"
+        target: "term_a"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+      - step: "Find the customer invoice created for term A"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["id", "=", "REC: term_a.customer_invoice_id.id"]]
+        save_as: "invoice_a"
+        expect_count: 1
+      - step: "Confirm the customer invoice A"
+        action: "call"
+        target: "invoice_a"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+      - step: "Assert invoice A is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "invoice_a"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+      - step: "Approve the customer invoice A"
+        action: "call"
+        target: "invoice_a"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+      - step: "Find invoice A's own receivable move line"
+        action: "search"
+        model: "account.move.line"
+        domain: [["id", "=", "REC: invoice_a.receivable_move_line_id.id"]]
+        save_as: "move_line_a"
+        expect_count: 1
+      - step: "Create customer invoice from term B"
+        action: "call"
+        target: "term_b"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+      - step: "Find the customer invoice created for term B"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["id", "=", "REC: term_b.customer_invoice_id.id"]]
+        save_as: "invoice_b"
+        expect_count: 1
+      - step: "Confirm the customer invoice B"
+        action: "call"
+        target: "invoice_b"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+      - step: "Assert invoice B is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "invoice_b"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+      - step: "Approve the customer invoice B"
+        action: "call"
+        target: "invoice_b"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+      - step: "Find invoice B's own receivable move line"
+        action: "search"
+        model: "account.move.line"
+        domain: [["id", "=", "REC: invoice_b.receivable_move_line_id.id"]]
+        save_as: "move_line_b"
+        expect_count: 1
+      - step: "Find school_enrollment_payment_term model"
+        action: "search"
+        model: "ir.model"
+        domain: [["model", "=", "school_enrollment_payment_term"]]
+        save_as: "spt_model"
+        limit: 1
+        expect_count: 1
+      - step:
+          "Create promotion type allowing school_enrollment_payment_term as reference"
+        action: "create"
+        model: "promotion_type"
+        save_as: "ptype"
+        values:
+          name: "School Enrollment Promotion Test 5 Type"
+          code: "/"
+          discount_type: "fixed"
+          discount_amount: 50000.0
+          journal_id: "REC: journal.id"
+          product_id: "REC: product.id"
+          allowed_model_ids:
+            - - 6
+              - 0
+              - - "REC: spt_model.id"
+      - step: "Create promotion code"
+        action: "create"
+        model: "promotion_code"
+        save_as: "code"
+        values:
+          voucher_code: "SEPT5-001"
+          type_id: "REC: ptype.id"
+          user_id: "REF: base.user_admin"
+      - step: "Confirm promotion code"
+        action: "call"
+        target: "code"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+      - step: "Refresh code before approval (fresh policy field read)"
+        action: "assert"
+        target: "code"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+      - step: "Approve promotion code"
+        action: "call"
+        target: "code"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+      - step: "Run the Apply Promotion Code wizard from term A"
+        action: "wizard"
+        model: "apply_promotion_code"
+        target: "term_a"
+        as_user: "base.user_admin"
+        values:
+          promotion_code_id: "REC: code.id"
+        method: "action_apply_promotion_code"
+      - step: "Exactly one usage is created for this code and term A"
+        action: "search"
+        model: "promotion_code_usage"
+        domain:
+          [
+            ["promotion_code_id", "=", "REC: code.id"],
+            [
+              "document_reference",
+              "=",
+              "EVAL: 'school_enrollment_payment_term,%d' % registry['term_a'].id",
+            ],
+          ]
+        save_as: "usage"
+        expect_count: 1
+      - step: "Adding an allocation row pointing at term B's own line must be rejected"
+        action: "create"
+        model: "promotion_code_usage_allocation"
+        expect_error:
+          type: "ValidationError"
+        values:
+          usage_id: "REC: usage.id"
+          move_line_id: "REC: move_line_b.id"
+          source: "customer"
