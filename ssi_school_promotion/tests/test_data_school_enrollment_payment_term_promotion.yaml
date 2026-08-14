@@ -438,6 +438,7 @@ scenarios:
           name: "School Enrollment Promotion Test 2 Product"
           type: "service"
           list_price: 1000000.0
+          property_account_income_id: "REC: income_account.id"
       - step: "Create pricelist"
         action: "create"
         model: "product.pricelist"
@@ -499,12 +500,13 @@ scenarios:
           code: "SEPT2GC"
           school_id: "REC: school.id"
           grade_id: "REC: grade.id"
-      - step: "Create student contact"
+      - step: "Create the student contact on the same receivable account"
         action: "create"
         model: "res.partner"
         save_as: "contact"
         values:
           name: "Student Contact SEPT2"
+          property_account_receivable_id: "REC: receivable_account.id"
       - step: "Create student"
         action: "create"
         model: "school_student"
