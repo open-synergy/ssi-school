@@ -1,7 +1,7 @@
 # Edit Enrollment
 
-> **Module:** ssi_school_promotion
-> **Extends:** ssi_school — model `school_enrollment`, aksi `02-edit`
+> **Module:** ssi_school_promotion\
+> **Extends:** ssi_school — model `school_enrollment`, aksi `02-edit`\
 > **Inline Actions:** `action_apply_promotion_code` (Apply Promotion Code)
 
 ## Modified Flow

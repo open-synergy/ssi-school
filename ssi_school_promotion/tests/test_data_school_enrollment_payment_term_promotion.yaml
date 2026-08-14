@@ -2,7 +2,9 @@ options:
   auto_refresh: true
 
 scenarios:
-  - name: "Apply Promotion Code wizard creates a usage from an enrollment payment term, counted only on that term"
+  - name:
+      "Apply Promotion Code wizard creates a usage from an enrollment payment term,
+      counted only on that term"
     steps:
       - step: "Get revenue account type"
         action: "ref"
@@ -257,7 +259,8 @@ scenarios:
         save_as: "spt_model"
         limit: 1
         expect_count: 1
-      - step: "Create promotion type allowing school_enrollment_payment_term as reference"
+      - step:
+          "Create promotion type allowing school_enrollment_payment_term as reference"
         action: "create"
         model: "promotion_type"
         save_as: "ptype"
@@ -628,7 +631,8 @@ scenarios:
         save_as: "spt_model"
         limit: 1
         expect_count: 1
-      - step: "Create promotion type allowing school_enrollment_payment_term as reference"
+      - step:
+          "Create promotion type allowing school_enrollment_payment_term as reference"
         action: "create"
         model: "promotion_type"
         save_as: "ptype"
@@ -991,7 +995,8 @@ scenarios:
         save_as: "spt_model"
         limit: 1
         expect_count: 1
-      - step: "Create promotion type allowing school_enrollment_payment_term as reference"
+      - step:
+          "Create promotion type allowing school_enrollment_payment_term as reference"
         action: "create"
         model: "promotion_type"
         save_as: "ptype"
@@ -1259,7 +1264,8 @@ scenarios:
         save_as: "spt_model"
         limit: 1
         expect_count: 1
-      - step: "Create promotion type allowing school_enrollment_payment_term as reference"
+      - step:
+          "Create promotion type allowing school_enrollment_payment_term as reference"
         action: "create"
         model: "promotion_type"
         save_as: "ptype"
@@ -1319,7 +1325,8 @@ scenarios:
           type: "UserError"
           message_contains: "eligible journal item"
 
-  - name: "An allocation row pointing at a different payment term's own invoice is rejected"
+  - name:
+      "An allocation row pointing at a different payment term's own invoice is rejected"
     steps:
       - step: "Get revenue account type"
         action: "ref"
@@ -1621,7 +1628,8 @@ scenarios:
         save_as: "spt_model"
         limit: 1
         expect_count: 1
-      - step: "Create promotion type allowing school_enrollment_payment_term as reference"
+      - step:
+          "Create promotion type allowing school_enrollment_payment_term as reference"
         action: "create"
         model: "promotion_type"
         save_as: "ptype"
