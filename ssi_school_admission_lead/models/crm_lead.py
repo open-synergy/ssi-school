@@ -2,7 +2,12 @@
 # Copyright 2024 PT. Simetri Sinergi Indonesia
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import api, fields, models
+import re
+
+from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
+
+FAMILY_CARD_NUMBER_RE = re.compile(r"^\d{16}$")
 
 
 class CrmLead(models.Model):  # pylint: disable=too-few-public-methods
@@ -150,6 +155,16 @@ class CrmLead(models.Model):  # pylint: disable=too-few-public-methods
             "Method (manual/domain/code)."
         ),
     )
+    family_card_number = fields.Char(
+        string="Family Card Number",
+        tracking=True,
+        help=(
+            "Family Card Number (Nomor Kartu Keluarga/No. KK) of the "
+            "prospective student, captured on the lead itself. Left "
+            "empty, it stays valid; when filled, it must be exactly 16 "
+            "digits."
+        ),
+    )
 
     @api.depends("admission_form_id")
     def _compute_create_admission_form_ok(self):
@@ -192,6 +207,33 @@ class CrmLead(models.Model):  # pylint: disable=too-few-public-methods
                     python_code=record.company_id.previous_school_python_code,
                 )
             record.allowed_previous_school_ids = result
+
+    @api.constrains("family_card_number")
+    def _check_family_card_number(self):
+        """Enforce the Family Card Number (No. KK) format when filled.
+
+        An empty value is always accepted - the field is optional
+        capture data. When filled, it must be exactly 16 digits, the
+        standard length of an Indonesian Family Card Number.
+
+        :raises ValidationError: ``family_card_number`` is filled but is
+            not exactly 16 digits.
+        """
+        for record in self:
+            value = record.family_card_number
+            if value and not FAMILY_CARD_NUMBER_RE.match(value):
+                error_message = (
+                    _(
+                        """
+Context: Set Family Card Number
+Database ID: %s
+Problem: Family Card Number must be exactly 16 digits
+Solution: Enter a 16-digit numeric Family Card Number, or leave it empty
+"""
+                    )
+                    % (record.id,)
+                )
+                raise ValidationError(error_message)
 
     def action_create_admission_form(self):
         """Open the admission form of this lead, or the wizard creating it.

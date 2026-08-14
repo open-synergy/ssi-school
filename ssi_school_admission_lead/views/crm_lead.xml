@@ -24,6 +24,7 @@
                         name="previous_school_id"
                         domain="[('id', 'in', allowed_previous_school_ids)]"
                     />
+                <field name="family_card_number" />
             </xpath>
             <xpath
                     expr="//group[@name='school_lead_admission_target']//field[@name='school_id']"
