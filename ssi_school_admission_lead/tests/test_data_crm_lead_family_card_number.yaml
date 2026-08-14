@@ -1,0 +1,92 @@
+options:
+  auto_refresh: true
+
+scenarios:
+  - name: "CRM Lead - Family Card Number with 16 digits is saved"
+    steps:
+      - step: "Write a 16-digit Family Card Number on the lead"
+        action: "create"
+        model: "crm.lead"
+        save_as: "lead"
+        values:
+          name: "Lead Family Card Number Valid"
+          family_card_number: "3374012345670001"
+
+      - step: "Assert the Family Card Number was stored as given"
+        action: "assert"
+        target: "lead"
+        refresh: true
+        asserts:
+          family_card_number:
+            type: "value"
+            expected: "3374012345670001"
+
+  - name: "CRM Lead - Family Card Number stays empty when not given"
+    steps:
+      - step: "Create lead without a Family Card Number"
+        action: "create"
+        model: "crm.lead"
+        save_as: "lead"
+        values:
+          name: "Lead Without Family Card Number"
+
+      - step: "Assert lead exists with an empty Family Card Number"
+        action: "assert"
+        target: "lead"
+        refresh: true
+        asserts:
+          id:
+            type: "value"
+            operator: "is_truthy"
+          family_card_number:
+            type: "value"
+            operator: "is_falsy"
+
+  - name: "CRM Lead - Family Card Number shorter than 16 digits is rejected"
+    steps:
+      - step: "Create lead with a 4-digit Family Card Number"
+        action: "create"
+        model: "crm.lead"
+        expect_error:
+          type: "ValidationError"
+        values:
+          name: "Lead Family Card Number Too Short"
+          family_card_number: "1234"
+
+  - name: "CRM Lead - Family Card Number with letters is rejected"
+    steps:
+      - step: "Create lead with a 16-character Family Card Number containing letters"
+        action: "create"
+        model: "crm.lead"
+        expect_error:
+          type: "ValidationError"
+        values:
+          name: "Lead Family Card Number Non Numeric"
+          family_card_number: "33740123456700AB"
+
+  - name: "CRM Lead - Writing an invalid Family Card Number on a valid lead is rejected"
+    steps:
+      - step: "Create lead with a valid 16-digit Family Card Number"
+        action: "create"
+        model: "crm.lead"
+        save_as: "lead"
+        values:
+          name: "Lead Family Card Number Write Invalid"
+          family_card_number: "3374012345670002"
+
+      - step: "Write a 5-digit Family Card Number on the previously valid lead"
+        action: "write"
+        target: "lead"
+        expect_error:
+          type: "ValidationError"
+        values:
+          family_card_number: "12345"
+
+      - step: "Assert the original valid value was not overwritten"
+        action: "assert"
+        target: "lead"
+        refresh: true
+        asserts:
+          family_card_number:
+            type: "value"
+            expected: "3374012345670002"
