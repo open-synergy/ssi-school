@@ -15,6 +15,7 @@ setuptools.setup(
         'odoo14-addon-ssi_school_admission_lead',
         'odoo14-addon-ssi_school_admission_lead_operating_unit',
         'odoo14-addon-ssi_school_admission_operating_unit',
+        'odoo14-addon-ssi_school_admission_promotion',
         'odoo14-addon-ssi_school_customer_invoice_export',
         'odoo14-addon-ssi_school_customer_invoice_export_operating_unit',
         'odoo14-addon-ssi_school_health',
