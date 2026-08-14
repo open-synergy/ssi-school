@@ -133,6 +133,15 @@ scenarios:
           receivable_account_id: "REC: receivable_account.id"
           customer_invoice_type_id: "REC: ci_type.id"
           auto_confirm_customer_invoice: false
+          # WAJIB (jebakan T-05): record rule
+          # school_admission_internal_user_rule berlaku atas base.group_user
+          # dengan domain [('user_id','=',user.id)], dan base.user_admin
+          # BUKAN anggota school_admission_all_group -- beda dari
+          # customer_invoice_all_group yang memang memuatnya. Tanpa baris ini
+          # admission ini dimiliki superuser, sehingga setiap pembacaan ulang
+          # di env as_user (termasuk assert yang menempel pada step
+          # action_approve_approval) berakhir AccessError.
+          user_id: "REF: base.user_admin"
       - step: "Create payment term A"
         action: "create"
         model: "school_admission_payment_term"
@@ -478,6 +487,15 @@ scenarios:
           receivable_account_id: "REC: receivable_account.id"
           customer_invoice_type_id: "REC: ci_type.id"
           auto_confirm_customer_invoice: false
+          # WAJIB (jebakan T-05): record rule
+          # school_admission_internal_user_rule berlaku atas base.group_user
+          # dengan domain [('user_id','=',user.id)], dan base.user_admin
+          # BUKAN anggota school_admission_all_group -- beda dari
+          # customer_invoice_all_group yang memang memuatnya. Tanpa baris ini
+          # admission ini dimiliki superuser, sehingga setiap pembacaan ulang
+          # di env as_user (termasuk assert yang menempel pada step
+          # action_approve_approval) berakhir AccessError.
+          user_id: "REF: base.user_admin"
       - step: "Create payment term A"
         action: "create"
         model: "school_admission_payment_term"
@@ -819,6 +837,15 @@ scenarios:
           receivable_account_id: "REC: receivable_account.id"
           customer_invoice_type_id: "REC: ci_type.id"
           auto_confirm_customer_invoice: false
+          # WAJIB (jebakan T-05): record rule
+          # school_admission_internal_user_rule berlaku atas base.group_user
+          # dengan domain [('user_id','=',user.id)], dan base.user_admin
+          # BUKAN anggota school_admission_all_group -- beda dari
+          # customer_invoice_all_group yang memang memuatnya. Tanpa baris ini
+          # admission ini dimiliki superuser, sehingga setiap pembacaan ulang
+          # di env as_user (termasuk assert yang menempel pada step
+          # action_approve_approval) berakhir AccessError.
+          user_id: "REF: base.user_admin"
       - step: "Create payment term A"
         action: "create"
         model: "school_admission_payment_term"
@@ -1142,6 +1169,15 @@ scenarios:
           receivable_account_id: "REC: receivable_account.id"
           customer_invoice_type_id: "REC: ci_type.id"
           auto_confirm_customer_invoice: false
+          # WAJIB (jebakan T-05): record rule
+          # school_admission_internal_user_rule berlaku atas base.group_user
+          # dengan domain [('user_id','=',user.id)], dan base.user_admin
+          # BUKAN anggota school_admission_all_group -- beda dari
+          # customer_invoice_all_group yang memang memuatnya. Tanpa baris ini
+          # admission ini dimiliki superuser, sehingga setiap pembacaan ulang
+          # di env as_user (termasuk assert yang menempel pada step
+          # action_approve_approval) berakhir AccessError.
+          user_id: "REF: base.user_admin"
       - step: "Create payment term A"
         action: "create"
         model: "school_admission_payment_term"
@@ -1473,6 +1509,15 @@ scenarios:
           receivable_account_id: "REC: receivable_account.id"
           customer_invoice_type_id: "REC: ci_type.id"
           auto_confirm_customer_invoice: false
+          # WAJIB (jebakan T-05): record rule
+          # school_admission_internal_user_rule berlaku atas base.group_user
+          # dengan domain [('user_id','=',user.id)], dan base.user_admin
+          # BUKAN anggota school_admission_all_group -- beda dari
+          # customer_invoice_all_group yang memang memuatnya. Tanpa baris ini
+          # admission ini dimiliki superuser, sehingga setiap pembacaan ulang
+          # di env as_user (termasuk assert yang menempel pada step
+          # action_approve_approval) berakhir AccessError.
+          user_id: "REF: base.user_admin"
       - step: "Create payment term A (never invoiced)"
         action: "create"
         model: "school_admission_payment_term"
@@ -1716,6 +1761,15 @@ scenarios:
           receivable_account_id: "REC: receivable_account.id"
           customer_invoice_type_id: "REC: ci_type.id"
           auto_confirm_customer_invoice: false
+          # WAJIB (jebakan T-05): record rule
+          # school_admission_internal_user_rule berlaku atas base.group_user
+          # dengan domain [('user_id','=',user.id)], dan base.user_admin
+          # BUKAN anggota school_admission_all_group -- beda dari
+          # customer_invoice_all_group yang memang memuatnya. Tanpa baris ini
+          # admission ini dimiliki superuser, sehingga setiap pembacaan ulang
+          # di env as_user (termasuk assert yang menempel pada step
+          # action_approve_approval) berakhir AccessError.
+          user_id: "REF: base.user_admin"
       - step: "Create payment term A"
         action: "create"
         model: "school_admission_payment_term"
