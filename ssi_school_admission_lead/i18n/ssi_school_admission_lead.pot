@@ -14,6 +14,17 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: ssi_school_admission_lead
+#: code:addons/ssi_school_admission_lead/models/crm_lead.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Set Family Card Number\n"
+"Database ID: %s\n"
+"Problem: Family Card Number must be exactly 16 digits\n"
+"Solution: Enter a 16-digit numeric Family Card Number, or leave it empty\n"
+msgstr ""
+
+#. module: ssi_school_admission_lead
 #: model_terms:ir.ui.view,arch_db:ssi_school_admission_lead.crm_lead_admission_kanban_view
 msgid "<strong>Admission: </strong>"
 msgstr ""
@@ -132,6 +143,19 @@ msgstr ""
 #. module: ssi_school_admission_lead
 #: model:ir.model.fields.selection,name:ssi_school_admission_lead.selection__res_company__previous_school_selection_method__domain
 msgid "Domain"
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead__family_card_number
+msgid "Family Card Number"
+msgstr ""
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead__family_card_number
+msgid ""
+"Family Card Number (Nomor Kartu Keluarga/No. KK) of the prospective student,"
+" captured on the lead itself. Left empty, it stays valid; when filled, it "
+"must be exactly 16 digits."
 msgstr ""
 
 #. module: ssi_school_admission_lead
