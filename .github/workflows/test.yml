@@ -71,26 +71,6 @@ jobs:
         run: |
           oca_wait_for_postgres
           odoo -d "$PGDATABASE" -i l10n_generic_coa --http-interface=127.0.0.1 --stop-after-init
-      - name: Pre-install ssi_promotion
-        # ssi_school_promotion (open-synergy/ssi-school#306) adalah modul pertama di
-        # repo ini yang depends ke ssi_promotion (repo open-synergy/ssi-promotion).
-        # `manifestoo --select-addons-dir . list-depends` yang dipakai
-        # `oca_init_test_database` hanya membaca manifest modul DI REPO INI, jadi ia
-        # tidak bisa melihat dependensi ssi_promotion sendiri (mis.
-        # ssi_transaction_partner_mixin, ssi_transaction_date_duration_mixin) --
-        # keduanya memang tetap ter-install lewat cascade `button_install()` biasa.
-        # Tanpa langkah eksplisit ini, `oca_run_tests` (yang meng-install addons repo
-        # ini SENDIRIAN lewat `-i`, tanpa ssi_promotion disebut) berakhir dengan
-        # `TypeError: Model 'school_enrollment_payment_term' inherits from
-        # non-existing model 'mixin.promotion_object'` -- ssi_promotion sudah
-        # `state=installed` dari langkah di atas, tapi modelnya tidak ikut termuat ke
-        # registry proses `oca_run_tests` yang terpisah. Meng-install-nya di sini,
-        # sendirian, SEBELUM `oca_init_test_database`, memastikan seluruh rantai
-        # dependensinya (termasuk yang tidak terlihat oleh manifestoo) sudah bersih
-        # ter-install sebelum alur dua-tahap standar berjalan.
-        run: |
-          oca_wait_for_postgres
-          odoo -d "$PGDATABASE" -i ssi_promotion --http-interface=127.0.0.1 --stop-after-init
       - name: Check licenses
         run: manifestoo -d . check-licenses
         continue-on-error: true
