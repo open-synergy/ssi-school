@@ -1,3 +1,6 @@
+options:
+  auto_refresh: true
+
 scenarios:
   - name: "Wizard - Create Enrollment from School Admission"
     steps:
@@ -150,6 +153,7 @@ scenarios:
         model: "school_admission"
         save_as: "admission"
         values:
+          user_id: "REF: base.user_admin"
           date: "2024-07-01"
           academic_year_id: "REC: academic_year.id"
           academic_term_id: "REC: academic_term.id"
@@ -171,11 +175,6 @@ scenarios:
             type: "value"
             expected: "confirm"
 
-      - step: "Invalidate admission cache after confirm"
-        action: "call"
-        target: "admission"
-        method: "invalidate_cache"
-
       - step: "Approve admission (moves to open, creates school student)"
         action: "call"
         target: "admission"
@@ -185,11 +184,6 @@ scenarios:
           state:
             type: "value"
             expected: "open"
-
-      - step: "Invalidate admission cache after approve"
-        action: "call"
-        target: "admission"
-        method: "invalidate_cache"
 
       - step: "Assert admission has school student and is allowed to create enrollment"
         action: "assert"
@@ -225,11 +219,6 @@ scenarios:
         target: "wizard"
         method: "action_create_enrollment"
         as_user: "base.user_admin"
-
-      - step: "Invalidate admission cache after wizard call"
-        action: "call"
-        target: "admission"
-        method: "invalidate_cache"
 
       - step: "Search for created enrollment"
         action: "search"

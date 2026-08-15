@@ -1,3 +1,6 @@
+options:
+  auto_refresh: true
+
 scenarios:
   - name: "Product Summary - satu produk satu term tercompute saat detail ditambah"
     steps:
@@ -124,11 +127,6 @@ scenarios:
           uom_quantity: 1.0
           uom_id: "REF: uom.product_uom_unit"
           price_unit: 1000000.0
-
-      - step: "Invalidate admission cache"
-        action: "call"
-        target: "admission"
-        method: "invalidate_cache"
 
       - step: "Assert product_summary_ids berisi 1 record"
         action: "assert"
@@ -274,11 +272,6 @@ scenarios:
           uom_id: "REF: uom.product_uom_unit"
           price_unit: 500000.0
 
-      - step: "Invalidate admission cache setelah create detail"
-        action: "call"
-        target: "admission"
-        method: "invalidate_cache"
-
       - step: "Cari summary record setelah create"
         action: "search"
         model: "school_admission_product_summary"
@@ -299,11 +292,6 @@ scenarios:
         target: "detail"
         values:
           uom_quantity: 3.0
-
-      - step: "Invalidate admission cache setelah write quantity"
-        action: "call"
-        target: "admission"
-        method: "invalidate_cache"
 
       - step: "Cari summary record setelah write quantity"
         action: "search"
@@ -328,11 +316,6 @@ scenarios:
         target: "detail"
         values:
           price_unit: 700000.0
-
-      - step: "Invalidate admission cache setelah write price_unit"
-        action: "call"
-        target: "admission"
-        method: "invalidate_cache"
 
       - step: "Cari summary record setelah write price_unit"
         action: "search"
@@ -489,11 +472,6 @@ scenarios:
           uom_id: "REF: uom.product_uom_unit"
           price_unit: 500000.0
 
-      - step: "Invalidate admission cache"
-        action: "call"
-        target: "admission"
-        method: "invalidate_cache"
-
       - step: "Assert product_summary_ids hanya 1 record meski 2 term"
         action: "assert"
         target: "admission"
@@ -638,11 +616,6 @@ scenarios:
           uom_id: "REF: uom.product_uom_unit"
           price_unit: 750000.0
 
-      - step: "Invalidate admission cache"
-        action: "call"
-        target: "admission"
-        method: "invalidate_cache"
-
       - step: "Assert summary ada sebelum detail dihapus"
         action: "assert"
         target: "admission"
@@ -656,11 +629,6 @@ scenarios:
         action: "call"
         target: "detail"
         method: "unlink"
-
-      - step: "Invalidate admission cache setelah hapus detail"
-        action: "call"
-        target: "admission"
-        method: "invalidate_cache"
 
       - step: "Assert summary kosong setelah detail dihapus"
         action: "assert"
@@ -787,11 +755,6 @@ scenarios:
           uom_id: "REF: uom.product_uom_unit"
           price_unit: 250000.0
 
-      - step: "Invalidate admission cache"
-        action: "call"
-        target: "admission"
-        method: "invalidate_cache"
-
       - step: "Assert summary ada sebelum term dihapus"
         action: "assert"
         target: "admission"
@@ -805,11 +768,6 @@ scenarios:
         action: "call"
         target: "term"
         method: "unlink"
-
-      - step: "Invalidate admission cache setelah hapus term"
-        action: "call"
-        target: "admission"
-        method: "invalidate_cache"
 
       - step: "Assert summary kosong setelah term dihapus"
         action: "assert"

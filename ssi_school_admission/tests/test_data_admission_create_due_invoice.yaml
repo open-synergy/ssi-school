@@ -1,3 +1,6 @@
+options:
+  auto_refresh: true
+
 scenarios:
   - name: "Create Due Invoice - No Range Invoices Only Due Terms"
     steps:
@@ -125,6 +128,7 @@ scenarios:
         model: "school_admission"
         save_as: "admission"
         values:
+          user_id: "REF: base.user_admin"
           customer_invoice_type_id: "REC: ci_type.id"
           receivable_account_id: "REC: ci_account.id"
           pricelist_id: "REF: product.list0"
@@ -142,11 +146,10 @@ scenarios:
         target: "admission"
         method: "action_confirm"
         as_user: "base.user_admin"
-
-      - step: "Invalidate admission cache before approve"
-        action: "call"
-        target: "admission"
-        method: "invalidate_cache"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
 
       - step: "Approve admission"
         action: "call"
@@ -157,11 +160,6 @@ scenarios:
           state:
             type: "value"
             expected: "open"
-
-      - step: "Invalidate admission cache after approve"
-        action: "call"
-        target: "admission"
-        method: "invalidate_cache"
 
       - step: "Assert admission is allowed to create due invoice"
         action: "assert"
@@ -444,6 +442,7 @@ scenarios:
         model: "school_admission"
         save_as: "admission"
         values:
+          user_id: "REF: base.user_admin"
           customer_invoice_type_id: "REC: ci_type.id"
           receivable_account_id: "REC: ci_account.id"
           pricelist_id: "REF: product.list0"
@@ -461,11 +460,10 @@ scenarios:
         target: "admission"
         method: "action_confirm"
         as_user: "base.user_admin"
-
-      - step: "Invalidate admission cache before approve"
-        action: "call"
-        target: "admission"
-        method: "invalidate_cache"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
 
       - step: "Approve admission"
         action: "call"
@@ -739,6 +737,7 @@ scenarios:
         model: "school_admission"
         save_as: "admission"
         values:
+          user_id: "REF: base.user_admin"
           customer_invoice_type_id: "REC: ci_type.id"
           receivable_account_id: "REC: ci_account.id"
           pricelist_id: "REF: product.list0"
@@ -756,11 +755,10 @@ scenarios:
         target: "admission"
         method: "action_confirm"
         as_user: "base.user_admin"
-
-      - step: "Invalidate admission cache before approve"
-        action: "call"
-        target: "admission"
-        method: "invalidate_cache"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
 
       - step: "Approve admission"
         action: "call"
@@ -1034,6 +1032,7 @@ scenarios:
         model: "school_admission"
         save_as: "admission"
         values:
+          user_id: "REF: base.user_admin"
           customer_invoice_type_id: "REC: ci_type.id"
           receivable_account_id: "REC: ci_account.id"
           pricelist_id: "REF: product.list0"
@@ -1051,11 +1050,10 @@ scenarios:
         target: "admission"
         method: "action_confirm"
         as_user: "base.user_admin"
-
-      - step: "Invalidate admission cache before approve"
-        action: "call"
-        target: "admission"
-        method: "invalidate_cache"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
 
       - step: "Approve admission"
         action: "call"
@@ -1330,6 +1328,7 @@ scenarios:
         model: "school_admission"
         save_as: "admission"
         values:
+          user_id: "REF: base.user_admin"
           customer_invoice_type_id: "REC: ci_type.id"
           receivable_account_id: "REC: ci_account.id"
           pricelist_id: "REF: product.list0"
@@ -1347,11 +1346,10 @@ scenarios:
         target: "admission"
         method: "action_confirm"
         as_user: "base.user_admin"
-
-      - step: "Invalidate admission cache before approve"
-        action: "call"
-        target: "admission"
-        method: "invalidate_cache"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
 
       - step: "Approve admission"
         action: "call"
@@ -1583,6 +1581,7 @@ scenarios:
         model: "school_admission"
         save_as: "admission"
         values:
+          user_id: "REF: base.user_admin"
           customer_invoice_type_id: "REC: ci_type.id"
           receivable_account_id: "REC: ci_account.id"
           pricelist_id: "REF: product.list0"
@@ -1600,11 +1599,10 @@ scenarios:
         target: "admission"
         method: "action_confirm"
         as_user: "base.user_admin"
-
-      - step: "Invalidate admission cache before approve"
-        action: "call"
-        target: "admission"
-        method: "invalidate_cache"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
 
       - step: "Approve admission"
         action: "call"
@@ -1647,6 +1645,7 @@ scenarios:
         model: "school_admission"
         save_as: "admission_draft"
         values:
+          user_id: "REF: base.user_admin"
           customer_invoice_type_id: "REC: ci_type.id"
           receivable_account_id: "REC: ci_account.id"
           pricelist_id: "REF: product.list0"
@@ -1828,6 +1827,7 @@ scenarios:
         model: "school_admission"
         save_as: "admission"
         values:
+          user_id: "REF: base.user_admin"
           customer_invoice_type_id: "REC: ci_type.id"
           receivable_account_id: "REC: ci_account.id"
           pricelist_id: "REF: product.list0"
@@ -1845,11 +1845,10 @@ scenarios:
         target: "admission"
         method: "action_confirm"
         as_user: "base.user_admin"
-
-      - step: "Invalidate admission cache before approve"
-        action: "call"
-        target: "admission"
-        method: "invalidate_cache"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
 
       - step: "Approve admission"
         action: "call"

@@ -1,0 +1,101 @@
+options:
+  auto_refresh: true
+
+scenarios:
+  - name: "Payment Template Onchange Fills And Clears Receivable Accounting"
+    steps:
+      - step: "Setup - get receivable journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "account_type"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "Admission Receivable Onchange"
+          code: "ADMREC01"
+          user_type_id: "REC: account_type.id"
+          reconcile: true
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Onchange"
+          code: "GTONC1"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Onchange"
+          code: "SCHONC1"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade Onchange"
+          code: "GONC1"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "customer_invoice_type"
+        values:
+          name: "Customer Invoice Type Onchange"
+          code: "ADMCITONC1"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: account.id"
+
+      - step: "Setup - create admission payment template"
+        action: "create"
+        model: "school_admission_payment_template"
+        save_as: "template"
+        values:
+          name: "Admission Payment Template Onchange"
+          code: "ADMPMTONC1"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: account.id"
+          customer_invoice_type_id: "REC: customer_invoice_type.id"
+
+      - step: "Payment template sets then clears the receivable fields"
+        action: "form"
+        model: "school_admission"
+        save: false
+        ops:
+          - set: {payment_template_id: "REC: template"}
+          - assert:
+              receivable_journal_id:
+                type: "m2o"
+                expected: "REC: journal"
+              receivable_account_id:
+                type: "m2o"
+                expected: "REC: account"
+          - set:
+              payment_template_id: "EVAL: env['school_admission_payment_template']"
+          - assert:
+              receivable_journal_id:
+                type: "value"
+                operator: "is_falsy"
+              receivable_account_id:
+                type: "value"
+                operator: "is_falsy"

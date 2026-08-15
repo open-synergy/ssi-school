@@ -1,3 +1,6 @@
+options:
+  auto_refresh: true
+
 scenarios:
   - name: "Admission Payment Term - Create and Delete Invoice"
     steps:
@@ -159,6 +162,7 @@ scenarios:
         model: "school_admission"
         save_as: "admission"
         values:
+          user_id: "REF: base.user_admin"
           customer_invoice_type_id: "REC: ci_type.id"
           receivable_account_id: "REC: ci_account.id"
           date: "2024-07-01"
@@ -183,11 +187,6 @@ scenarios:
         target: "admission"
         method: "action_compute_payment"
         as_user: "base.user_admin"
-
-      - step: "Invalidate admission cache after compute"
-        action: "call"
-        target: "admission"
-        method: "invalidate_cache"
 
       - step: "Approve admission"
         action: "call"
@@ -219,11 +218,6 @@ scenarios:
         target: "term"
         method: "action_create_invoice"
 
-      - step: "Invalidate term cache after invoice"
-        action: "call"
-        target: "term"
-        method: "invalidate_cache"
-
       - step: "Assert invoice created"
         action: "assert"
         target: "term"
@@ -239,11 +233,6 @@ scenarios:
         action: "call"
         target: "term"
         method: "action_delete_invoice"
-
-      - step: "Invalidate term cache after delete"
-        action: "call"
-        target: "term"
-        method: "invalidate_cache"
 
       - step: "Assert invoice deleted"
         action: "assert"
@@ -448,6 +437,7 @@ scenarios:
         model: "school_admission"
         save_as: "admission"
         values:
+          user_id: "REF: base.user_admin"
           customer_invoice_type_id: "REC: ci_type.id"
           receivable_account_id: "REC: ci_account.id"
           date: "2024-07-01"
@@ -473,11 +463,6 @@ scenarios:
         method: "action_compute_payment"
         as_user: "base.user_admin"
 
-      - step: "Invalidate admission cache after compute"
-        action: "call"
-        target: "admission"
-        method: "invalidate_cache"
-
       - step: "Approve admission"
         action: "call"
         target: "admission"
@@ -496,11 +481,6 @@ scenarios:
         target: "term"
         method: "action_create_invoice"
 
-      - step: "Invalidate term cache"
-        action: "call"
-        target: "term"
-        method: "invalidate_cache"
-
       - step: "Assert invoice exists"
         action: "assert"
         target: "term"
@@ -513,11 +493,6 @@ scenarios:
         action: "call"
         target: "term"
         method: "action_disconnect_invoice"
-
-      - step: "Invalidate term cache after disconnect"
-        action: "call"
-        target: "term"
-        method: "invalidate_cache"
 
       - step: "Assert invoice disconnected"
         action: "assert"
@@ -722,6 +697,7 @@ scenarios:
         model: "school_admission"
         save_as: "admission"
         values:
+          user_id: "REF: base.user_admin"
           customer_invoice_type_id: "REC: ci_type.id"
           receivable_account_id: "REC: ci_account.id"
           date: "2024-07-01"
@@ -747,11 +723,6 @@ scenarios:
         method: "action_compute_payment"
         as_user: "base.user_admin"
 
-      - step: "Invalidate admission cache after compute"
-        action: "call"
-        target: "admission"
-        method: "invalidate_cache"
-
       - step: "Approve admission"
         action: "call"
         target: "admission"
@@ -770,11 +741,6 @@ scenarios:
         target: "term"
         method: "action_mark_as_manual"
 
-      - step: "Invalidate term cache"
-        action: "call"
-        target: "term"
-        method: "invalidate_cache"
-
       - step: "Assert term is manually controlled"
         action: "assert"
         target: "term"
@@ -790,11 +756,6 @@ scenarios:
         action: "call"
         target: "term"
         method: "action_unmark_as_manual"
-
-      - step: "Invalidate term cache after unmark"
-        action: "call"
-        target: "term"
-        method: "invalidate_cache"
 
       - step: "Assert term is back to uninvoiced"
         action: "assert"
