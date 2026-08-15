@@ -27,6 +27,7 @@
         "ssi_m2o_configurator_mixin",
         "base_automation",
         "base_duration",
+        "web_tour",
     ],
     "data": [
         "ir_module_category/school_admission_form.xml",
