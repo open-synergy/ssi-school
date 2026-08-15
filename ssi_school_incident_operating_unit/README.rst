@@ -8,7 +8,9 @@ School Incident - Operating Unit
 
 Operating Unit support for SSI School Incident module.
 Adds operating unit access control for the transactional models
-school_incident and school_incident_weekly_review.
+school_incident, school_incident_weekly_review and school_academic_alert.
+The operating unit of a School Academic Alert is also propagated to the
+School Incident created from it.
 
 
 Work Instruction
@@ -23,6 +25,12 @@ Incident Weekly Review
 ------------------------
 
 * `Create School Incident Weekly Review <docs/school_incident_weekly_review/01-create.html>`_
+
+Academic Alert
+----------------
+
+* `Create School Academic Alert <docs/school_academic_alert/01-create.html>`_
+* `Create Incident from School Academic Alert <docs/school_academic_alert/15-create-incident.html>`_
 
 
 Bug Tracker

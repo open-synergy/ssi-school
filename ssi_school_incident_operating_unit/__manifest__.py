@@ -25,9 +25,12 @@
         "security/ir_rule/school_incident.xml",
         # Security - transactional (school_incident_weekly_review)
         "security/ir_rule/school_incident_weekly_review.xml",
+        # Security - transactional (school_academic_alert)
+        "security/ir_rule/school_academic_alert.xml",
         # Views
         "views/school_incident.xml",
         "views/school_incident_weekly_review.xml",
+        "views/school_academic_alert.xml",
     ],
     "demo": [],
 }
