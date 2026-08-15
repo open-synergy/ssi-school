@@ -411,3 +411,223 @@ scenarios:
           state:
             type: "value"
             expected: "draft"
+
+  - name: "School Academic Alert Operating Unit - Alert stores its operating unit"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Academic Alert OU Test"
+          code: "GTOUAA1"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Academic Alert OU Test"
+          code: "SCHOUAA1"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "student_contact"
+        values:
+          name: "Student Academic Alert OU Test Contact"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student Academic Alert OU Test"
+          code: "STUOUAA1"
+          contact_id: "EVAL: registry['student_contact'].id"
+          school_id: "EVAL: registry['school'].id"
+
+      - step: "Create academic alert with an operating unit"
+        action: "create"
+        model: "school_academic_alert"
+        save_as: "alert"
+        values:
+          date_alert: 2026-07-05
+          student_id: "EVAL: registry['student'].id"
+          subject_note: "Mathematics, Science"
+          operating_unit_id: "REF: operating_unit.main_operating_unit"
+
+      - step: "Assert the academic alert carries the operating unit"
+        action: "assert"
+        target: "alert"
+        asserts:
+          operating_unit_id:
+            type: "value"
+            operator: "is_truthy"
+          state:
+            type: "value"
+            expected: "draft"
+
+      - step: "Assert the operating unit is the one that was set"
+        action: "assert"
+        target: "alert"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected_xml_id: "operating_unit.main_operating_unit"
+
+  - name:
+      "School Academic Alert Operating Unit - Generated incident keeps the alert's
+      operating unit"
+    steps:
+      - step: "Setup - create partner for Operating Unit A"
+        action: "create"
+        model: "res.partner"
+        save_as: "ou_a_partner"
+        values:
+          name: "Academic Alert Operating Unit A Partner"
+
+      - step: "Setup - create Operating Unit A (owner of the alert)"
+        action: "create"
+        model: "operating.unit"
+        save_as: "ou_a"
+        values:
+          name: "Academic Alert Operating Unit A"
+          code: "OUINCAA"
+          company_id: "REF: base.main_company"
+          partner_id: "EVAL: registry['ou_a_partner'].id"
+
+      - step: "Setup - create partner for Operating Unit B"
+        action: "create"
+        model: "res.partner"
+        save_as: "ou_b_partner"
+        values:
+          name: "Academic Alert Operating Unit B Partner"
+
+      - step: "Setup - create Operating Unit B (the acting user's own unit)"
+        action: "create"
+        model: "operating.unit"
+        save_as: "ou_b"
+        values:
+          name: "Academic Alert Operating Unit B"
+          code: "OUINCAB"
+          company_id: "REF: base.main_company"
+          partner_id: "EVAL: registry['ou_b_partner'].id"
+
+      # The acting user deliberately defaults to Operating Unit B while the
+      # alert belongs to Operating Unit A. Without the propagation override
+      # in models/school_academic_alert.py, the incident created below would
+      # silently take this user's default (B) instead of the alert's own
+      # operating unit (A) -- that is exactly the defect this scenario
+      # guards. base.group_user is required for basic ORM functionality
+      # (see the note in the first scenario of this file).
+      - step: "Setup - create officer user whose default operating unit is B"
+        action: "create"
+        model: "res.users"
+        save_as: "user_ou_b"
+        values:
+          name: "Academic Alert Officer OU-B"
+          login: "test_academic_alert_ou_b@ssi-school.test"
+          company_id: "REF: base.main_company"
+          groups_id:
+            - - 6
+              - 0
+              - - "REF: base.group_user"
+                - "REF: ssi_school_incident.school_incident_officer_group"
+                - "REF:
+                  ssi_school_incident_operating_unit.school_incident_operating_unit_group"
+          assigned_operating_unit_ids:
+            - - 6
+              - 0
+              - - "EVAL: registry['ou_b'].id"
+          default_operating_unit_id: "EVAL: registry['ou_b'].id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Academic Alert OU Propagation Test"
+          code: "GTOUAA2"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Academic Alert OU Propagation Test"
+          code: "SCHOUAA2"
+          grade_type_id: "EVAL: registry['grade_type'].id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "student_contact"
+        values:
+          name: "Student Academic Alert OU Propagation Contact"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student Academic Alert OU Propagation"
+          code: "STUOUAA2"
+          contact_id: "EVAL: registry['student_contact'].id"
+          school_id: "EVAL: registry['school'].id"
+
+      - step: "Create academic alert owned by Operating Unit A"
+        action: "create"
+        model: "school_academic_alert"
+        save_as: "alert"
+        values:
+          date_alert: 2026-07-06
+          student_id: "EVAL: registry['student'].id"
+          subject_note: "Mathematics, Science, English"
+          evaluation_context: "trigger_count = 3"
+          operating_unit_id: "EVAL: registry['ou_a'].id"
+
+      - step: "Evaluate the alert so it reaches the Orange level"
+        action: "call"
+        target: "alert"
+        method: "action_evaluate"
+        asserts:
+          color:
+            type: "value"
+            expected: "orange"
+
+      # The odoo-yaml-test "as_user" key only accepts an XML ID, so it cannot
+      # address the res.users record created earlier in this scenario;
+      # with_user() is used inside an EVAL leaf instead (same technique as
+      # the school_incident scenarios above). The surrounding search asserts
+      # in one step both that the incident was created and that it carries
+      # Operating Unit A -- the alert's unit -- and not Operating Unit B,
+      # which is what the acting user would have contributed by default.
+      - step:
+          "Create the incident as the Operating Unit B user (incident must keep
+          Operating Unit A)"
+        action: "search"
+        model: "school_incident"
+        domain:
+          - - "id"
+            - "="
+            - >-
+              EVAL:
+              env['school_academic_alert'].browse(registry['alert'].id).with_user(registry['user_ou_b']).action_create_incident()['res_id']
+          - ["operating_unit_id", "=", "EVAL: registry['ou_a'].id"]
+        save_as: "incident"
+        expect_count: 1
+
+      - step: "Assert the generated incident is the academic one for this student"
+        action: "assert"
+        target: "incident"
+        asserts:
+          student_id:
+            type: "m2o"
+            expected: "REC: student"
+          incident_type_id:
+            type: "m2o"
+            expected_xml_id: "ssi_school_incident.school_incident_type_academic"
