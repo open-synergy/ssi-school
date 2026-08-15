@@ -1,3 +1,6 @@
+options:
+  auto_refresh: true
+
 scenarios:
   - name: "Admission Payment Term - Create and Delete Invoice"
     steps:
@@ -184,11 +187,6 @@ scenarios:
         method: "action_compute_payment"
         as_user: "base.user_admin"
 
-      - step: "Invalidate admission cache after compute"
-        action: "call"
-        target: "admission"
-        method: "invalidate_cache"
-
       - step: "Approve admission"
         action: "call"
         target: "admission"
@@ -219,11 +217,6 @@ scenarios:
         target: "term"
         method: "action_create_invoice"
 
-      - step: "Invalidate term cache after invoice"
-        action: "call"
-        target: "term"
-        method: "invalidate_cache"
-
       - step: "Assert invoice created"
         action: "assert"
         target: "term"
@@ -239,11 +232,6 @@ scenarios:
         action: "call"
         target: "term"
         method: "action_delete_invoice"
-
-      - step: "Invalidate term cache after delete"
-        action: "call"
-        target: "term"
-        method: "invalidate_cache"
 
       - step: "Assert invoice deleted"
         action: "assert"
@@ -473,11 +461,6 @@ scenarios:
         method: "action_compute_payment"
         as_user: "base.user_admin"
 
-      - step: "Invalidate admission cache after compute"
-        action: "call"
-        target: "admission"
-        method: "invalidate_cache"
-
       - step: "Approve admission"
         action: "call"
         target: "admission"
@@ -496,11 +479,6 @@ scenarios:
         target: "term"
         method: "action_create_invoice"
 
-      - step: "Invalidate term cache"
-        action: "call"
-        target: "term"
-        method: "invalidate_cache"
-
       - step: "Assert invoice exists"
         action: "assert"
         target: "term"
@@ -513,11 +491,6 @@ scenarios:
         action: "call"
         target: "term"
         method: "action_disconnect_invoice"
-
-      - step: "Invalidate term cache after disconnect"
-        action: "call"
-        target: "term"
-        method: "invalidate_cache"
 
       - step: "Assert invoice disconnected"
         action: "assert"
@@ -747,11 +720,6 @@ scenarios:
         method: "action_compute_payment"
         as_user: "base.user_admin"
 
-      - step: "Invalidate admission cache after compute"
-        action: "call"
-        target: "admission"
-        method: "invalidate_cache"
-
       - step: "Approve admission"
         action: "call"
         target: "admission"
@@ -770,11 +738,6 @@ scenarios:
         target: "term"
         method: "action_mark_as_manual"
 
-      - step: "Invalidate term cache"
-        action: "call"
-        target: "term"
-        method: "invalidate_cache"
-
       - step: "Assert term is manually controlled"
         action: "assert"
         target: "term"
@@ -790,11 +753,6 @@ scenarios:
         action: "call"
         target: "term"
         method: "action_unmark_as_manual"
-
-      - step: "Invalidate term cache after unmark"
-        action: "call"
-        target: "term"
-        method: "invalidate_cache"
 
       - step: "Assert term is back to uninvoiced"
         action: "assert"

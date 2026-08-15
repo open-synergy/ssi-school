@@ -1,3 +1,6 @@
+options:
+  auto_refresh: true
+
 scenarios:
   - name: "Admission Full Workflow: Confirm Approve Done With Payment Template"
     steps:
@@ -219,21 +222,11 @@ scenarios:
             type: "value"
             expected: "confirm"
 
-      - step: "Invalidate cache after confirm"
-        action: "call"
-        target: "admission"
-        method: "invalidate_cache"
-
       - step: "Compute payment"
         action: "call"
         target: "admission"
         method: "action_compute_payment"
         as_user: "base.user_admin"
-
-      - step: "Invalidate admission cache after compute"
-        action: "call"
-        target: "admission"
-        method: "invalidate_cache"
 
       - step: "Assert payment terms created"
         action: "assert"
@@ -254,11 +247,6 @@ scenarios:
             type: "value"
             expected: "open"
 
-      - step: "Invalidate admission cache after approve"
-        action: "call"
-        target: "admission"
-        method: "invalidate_cache"
-
       - step: "Assert school student created on open"
         action: "assert"
         target: "admission"
@@ -276,11 +264,6 @@ scenarios:
           state:
             type: "value"
             expected: "done"
-
-      - step: "Invalidate admission cache after done"
-        action: "call"
-        target: "admission"
-        method: "invalidate_cache"
 
   - name: "Admission Simple Workflow: Confirm Approve Done Without Payment Template"
     steps:
@@ -377,11 +360,6 @@ scenarios:
             type: "value"
             expected: "confirm"
 
-      - step: "Invalidate cache after confirm"
-        action: "call"
-        target: "admission"
-        method: "invalidate_cache"
-
       - step: "Approve admission"
         action: "call"
         target: "admission"
@@ -391,11 +369,6 @@ scenarios:
           state:
             type: "value"
             expected: "open"
-
-      - step: "Invalidate admission cache after approve"
-        action: "call"
-        target: "admission"
-        method: "invalidate_cache"
 
       - step: "Assert school student created on open"
         action: "assert"
@@ -414,8 +387,3 @@ scenarios:
           state:
             type: "value"
             expected: "done"
-
-      - step: "Invalidate admission cache after done"
-        action: "call"
-        target: "admission"
-        method: "invalidate_cache"
