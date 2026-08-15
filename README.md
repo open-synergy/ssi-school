@@ -19,7 +19,7 @@ Available addons
 addon | version | maintainers | summary
 --- | --- | --- | ---
 [ssi_school](ssi_school/) | 14.0.5.13.0 |  | School
-[ssi_school_admission](ssi_school_admission/) | 14.0.2.24.0 |  | School Admission
+[ssi_school_admission](ssi_school_admission/) | 14.0.2.24.1 |  | School Admission
 [ssi_school_admission_customer_invoice_export](ssi_school_admission_customer_invoice_export/) | 14.0.1.1.2 |  | School Admission - Customer Invoice Export
 [ssi_school_admission_customer_invoice_export_operating_unit](ssi_school_admission_customer_invoice_export_operating_unit/) | 14.0.1.1.0 |  | School Admission - Customer Invoice Export - Operating Unit
 [ssi_school_admission_lead](ssi_school_admission_lead/) | 14.0.1.12.0 |  | School Admission Lead
