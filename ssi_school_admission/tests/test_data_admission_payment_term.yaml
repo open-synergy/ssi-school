@@ -162,6 +162,7 @@ scenarios:
         model: "school_admission"
         save_as: "admission"
         values:
+          user_id: "REF: base.user_admin"
           customer_invoice_type_id: "REC: ci_type.id"
           receivable_account_id: "REC: ci_account.id"
           date: "2024-07-01"
@@ -436,6 +437,7 @@ scenarios:
         model: "school_admission"
         save_as: "admission"
         values:
+          user_id: "REF: base.user_admin"
           customer_invoice_type_id: "REC: ci_type.id"
           receivable_account_id: "REC: ci_account.id"
           date: "2024-07-01"
@@ -695,6 +697,7 @@ scenarios:
         model: "school_admission"
         save_as: "admission"
         values:
+          user_id: "REF: base.user_admin"
           customer_invoice_type_id: "REC: ci_type.id"
           receivable_account_id: "REC: ci_account.id"
           date: "2024-07-01"

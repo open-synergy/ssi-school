@@ -153,6 +153,7 @@ scenarios:
         model: "school_admission"
         save_as: "admission"
         values:
+          user_id: "REF: base.user_admin"
           date: "2024-07-01"
           academic_year_id: "REC: academic_year.id"
           academic_term_id: "REC: academic_term.id"

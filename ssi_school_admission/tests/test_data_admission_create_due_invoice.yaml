@@ -128,6 +128,7 @@ scenarios:
         model: "school_admission"
         save_as: "admission"
         values:
+          user_id: "REF: base.user_admin"
           customer_invoice_type_id: "REC: ci_type.id"
           receivable_account_id: "REC: ci_account.id"
           pricelist_id: "REF: product.list0"
@@ -145,6 +146,10 @@ scenarios:
         target: "admission"
         method: "action_confirm"
         as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
 
       - step: "Approve admission"
         action: "call"
@@ -437,6 +442,7 @@ scenarios:
         model: "school_admission"
         save_as: "admission"
         values:
+          user_id: "REF: base.user_admin"
           customer_invoice_type_id: "REC: ci_type.id"
           receivable_account_id: "REC: ci_account.id"
           pricelist_id: "REF: product.list0"
@@ -454,6 +460,10 @@ scenarios:
         target: "admission"
         method: "action_confirm"
         as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
 
       - step: "Approve admission"
         action: "call"
@@ -727,6 +737,7 @@ scenarios:
         model: "school_admission"
         save_as: "admission"
         values:
+          user_id: "REF: base.user_admin"
           customer_invoice_type_id: "REC: ci_type.id"
           receivable_account_id: "REC: ci_account.id"
           pricelist_id: "REF: product.list0"
@@ -744,6 +755,10 @@ scenarios:
         target: "admission"
         method: "action_confirm"
         as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
 
       - step: "Approve admission"
         action: "call"
@@ -1017,6 +1032,7 @@ scenarios:
         model: "school_admission"
         save_as: "admission"
         values:
+          user_id: "REF: base.user_admin"
           customer_invoice_type_id: "REC: ci_type.id"
           receivable_account_id: "REC: ci_account.id"
           pricelist_id: "REF: product.list0"
@@ -1034,6 +1050,10 @@ scenarios:
         target: "admission"
         method: "action_confirm"
         as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
 
       - step: "Approve admission"
         action: "call"
@@ -1308,6 +1328,7 @@ scenarios:
         model: "school_admission"
         save_as: "admission"
         values:
+          user_id: "REF: base.user_admin"
           customer_invoice_type_id: "REC: ci_type.id"
           receivable_account_id: "REC: ci_account.id"
           pricelist_id: "REF: product.list0"
@@ -1325,6 +1346,10 @@ scenarios:
         target: "admission"
         method: "action_confirm"
         as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
 
       - step: "Approve admission"
         action: "call"
@@ -1556,6 +1581,7 @@ scenarios:
         model: "school_admission"
         save_as: "admission"
         values:
+          user_id: "REF: base.user_admin"
           customer_invoice_type_id: "REC: ci_type.id"
           receivable_account_id: "REC: ci_account.id"
           pricelist_id: "REF: product.list0"
@@ -1573,6 +1599,10 @@ scenarios:
         target: "admission"
         method: "action_confirm"
         as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
 
       - step: "Approve admission"
         action: "call"
@@ -1615,6 +1645,7 @@ scenarios:
         model: "school_admission"
         save_as: "admission_draft"
         values:
+          user_id: "REF: base.user_admin"
           customer_invoice_type_id: "REC: ci_type.id"
           receivable_account_id: "REC: ci_account.id"
           pricelist_id: "REF: product.list0"
@@ -1796,6 +1827,7 @@ scenarios:
         model: "school_admission"
         save_as: "admission"
         values:
+          user_id: "REF: base.user_admin"
           customer_invoice_type_id: "REC: ci_type.id"
           receivable_account_id: "REC: ci_account.id"
           pricelist_id: "REF: product.list0"
@@ -1813,6 +1845,10 @@ scenarios:
         target: "admission"
         method: "action_confirm"
         as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
 
       - step: "Approve admission"
         action: "call"

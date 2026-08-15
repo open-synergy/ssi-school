@@ -66,6 +66,7 @@ scenarios:
         model: "school_admission_test"
         save_as: "admission_test"
         values:
+          user_id: "REF: base.user_admin"
           date: "2024-07-01"
           academic_year_id: "EVAL: registry['academic_year'].id"
           academic_term_id: "EVAL: registry['academic_term'].id"
@@ -189,6 +190,7 @@ scenarios:
         model: "school_admission_test"
         save_as: "admission_test"
         values:
+          user_id: "REF: base.user_admin"
           date: "2024-07-01"
           academic_year_id: "EVAL: registry['academic_year'].id"
           academic_term_id: "EVAL: registry['academic_term'].id"
@@ -304,6 +306,7 @@ scenarios:
         model: "school_admission_form"
         save_as: "admission_form"
         values:
+          user_id: "REF: base.user_admin"
           date: "2024-07-01"
           academic_year_id: "REC: academic_year.id"
           academic_term_id: "REC: academic_term.id"
@@ -321,6 +324,7 @@ scenarios:
         model: "school_admission_test"
         save_as: "admission_test"
         values:
+          user_id: "REF: base.user_admin"
           date: "2024-07-01"
           academic_year_id: "REC: academic_year.id"
           academic_term_id: "REC: academic_term.id"
@@ -336,6 +340,7 @@ scenarios:
           type: "ValidationError"
           message_contains: "already has an Admission Test"
         values:
+          user_id: "REF: base.user_admin"
           date: "2024-07-01"
           academic_year_id: "REC: academic_year.id"
           academic_term_id: "REC: academic_term.id"

@@ -133,6 +133,7 @@ scenarios:
         save_as: "admission_form"
         as_user: "base.user_admin"
         values:
+          user_id: "REF: base.user_admin"
           date: "2024-07-01"
           academic_year_id: "EVAL: registry['academic_year'].id"
           academic_term_id: "EVAL: registry['academic_term'].id"
@@ -296,6 +297,7 @@ scenarios:
         save_as: "admission_form"
         as_user: "base.user_admin"
         values:
+          user_id: "REF: base.user_admin"
           date: "2024-07-01"
           academic_year_id: "EVAL: registry['academic_year'].id"
           academic_term_id: "EVAL: registry['academic_term'].id"
@@ -429,6 +431,7 @@ scenarios:
         save_as: "admission_form"
         as_user: "base.user_admin"
         values:
+          user_id: "REF: base.user_admin"
           date: "2024-07-01"
           academic_year_id: "EVAL: registry['academic_year'].id"
           academic_term_id: "EVAL: registry['academic_term'].id"

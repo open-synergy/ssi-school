@@ -144,6 +144,7 @@ scenarios:
         model: "school_admission"
         save_as: "admission"
         values:
+          user_id: "REF: base.user_admin"
           date: "2024-07-01"
           academic_year_id: "REC: academic_year.id"
           academic_term_id: "REC: academic_term.id"
@@ -200,6 +201,10 @@ scenarios:
         target: "admission"
         method: "action_confirm"
         as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
 
       - step: "Approve admission"
         action: "call"
@@ -423,6 +428,7 @@ scenarios:
         model: "school_admission"
         save_as: "admission"
         values:
+          user_id: "REF: base.user_admin"
           date: "2024-07-01"
           academic_year_id: "REC: academic_year.id"
           academic_term_id: "REC: academic_term.id"
@@ -479,6 +485,10 @@ scenarios:
         target: "admission"
         method: "action_confirm"
         as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
 
       - step: "Approve admission"
         action: "call"
@@ -661,6 +671,7 @@ scenarios:
         model: "school_admission"
         save_as: "admission"
         values:
+          user_id: "REF: base.user_admin"
           date: "2024-07-01"
           academic_year_id: "REC: academic_year.id"
           academic_term_id: "REC: academic_term.id"
@@ -717,6 +728,10 @@ scenarios:
         target: "admission"
         method: "action_confirm"
         as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
 
       - step: "Approve admission"
         action: "call"
@@ -904,6 +919,7 @@ scenarios:
         model: "school_admission"
         save_as: "admission"
         values:
+          user_id: "REF: base.user_admin"
           date: "2024-07-01"
           academic_year_id: "REC: academic_year.id"
           academic_term_id: "REC: academic_term.id"
@@ -960,6 +976,10 @@ scenarios:
         target: "admission"
         method: "action_confirm"
         as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
 
       - step: "Approve admission"
         action: "call"
@@ -1163,6 +1183,7 @@ scenarios:
         model: "school_admission"
         save_as: "admission"
         values:
+          user_id: "REF: base.user_admin"
           date: "2024-07-01"
           academic_year_id: "REC: academic_year.id"
           academic_term_id: "REC: academic_term.id"
@@ -1219,6 +1240,10 @@ scenarios:
         target: "admission"
         method: "action_confirm"
         as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
 
       - step: "Approve admission"
         action: "call"
@@ -1246,6 +1271,12 @@ scenarios:
         domain: [["customer_document_number", "=", "REC: admission.name"]]
         save_as: "invoice"
         expect_count: 1
+
+      - step: "Own the generated invoice so the next step may read it back"
+        action: "write"
+        target: "invoice"
+        values:
+          user_id: "REF: base.user_admin"
 
       - step: "Confirm the customer invoice"
         action: "call"
@@ -1419,6 +1450,7 @@ scenarios:
         model: "school_admission"
         save_as: "admission"
         values:
+          user_id: "REF: base.user_admin"
           date: "2024-07-01"
           academic_year_id: "REC: academic_year.id"
           academic_term_id: "REC: academic_term.id"
@@ -1475,6 +1507,10 @@ scenarios:
         target: "admission"
         method: "action_confirm"
         as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
 
       - step: "Approve admission"
         action: "call"
