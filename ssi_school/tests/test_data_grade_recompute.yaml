@@ -1,0 +1,248 @@
+options:
+  auto_refresh: true
+scenarios:
+  - name: "Recompute Repairs Cross Type Chain"
+    steps:
+      - step: "Create grade type A"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "type_a"
+        values:
+          name: "Recompute Type A"
+          code: "RCTA"
+          sequence: 10
+      - step: "Create grade type B"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "type_b"
+        values:
+          name: "Recompute Type B"
+          code: "RCTB"
+          sequence: 20
+      - step: "Create grade A1 (first of type A)"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_a1"
+        values:
+          name: "Recompute A1"
+          code: "RCA1"
+          sequence: 10
+          type_id: "REC: type_a.id"
+      - step: "Create grade A2 (last of type A)"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_a2"
+        values:
+          name: "Recompute A2"
+          code: "RCA2"
+          sequence: 20
+          type_id: "REC: type_a.id"
+      - step: "Create grade B1 (first of type B)"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_b1"
+        values:
+          name: "Recompute B1"
+          code: "RCB1"
+          sequence: 10
+          type_id: "REC: type_b.id"
+      - step: "Create grade B2 (last of type B)"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_b2"
+        values:
+          name: "Recompute B2"
+          code: "RCB2"
+          sequence: 20
+          type_id: "REC: type_b.id"
+      - step:
+          "Forge the legacy cross type link on the last grade of type A (readonly only
+          guards the UI, the ORM may still write)"
+        action: "write"
+        target: "grade_a2"
+        values:
+          next_grade_id: "REC: grade_b1.id"
+      - step: "Forge the legacy cross type link on the first grade of type B"
+        action: "write"
+        target: "grade_b1"
+        values:
+          previous_grade_id: "REC: grade_a2.id"
+      - step: "Assert the forged cross type link is really in place"
+        action: "assert"
+        target: "grade_a2"
+        asserts:
+          next_grade_id:
+            type: "m2o"
+            expected: "REC: grade_b1"
+      - step: "Recompute the whole chain"
+        action: "call"
+        target: "grade_a1"
+        method: "_recompute_next_previous"
+      - step: "Assert the last grade of type A no longer points into type B"
+        action: "assert"
+        target: "grade_a2"
+        asserts:
+          next_grade_id:
+            type: "value"
+            operator: "is_falsy"
+      - step: "Assert the first grade of type B no longer points into type A"
+        action: "assert"
+        target: "grade_b1"
+        asserts:
+          previous_grade_id:
+            type: "value"
+            operator: "is_falsy"
+      - step: "Assert the chain inside type A is intact"
+        action: "assert"
+        target: "grade_a1"
+        asserts:
+          previous_grade_id:
+            type: "value"
+            operator: "is_falsy"
+          next_grade_id:
+            type: "m2o"
+            expected: "REC: grade_a2"
+      - step: "Assert the predecessor of the last grade of type A is intact"
+        action: "assert"
+        target: "grade_a2"
+        asserts:
+          previous_grade_id:
+            type: "m2o"
+            expected: "REC: grade_a1"
+      - step: "Assert the chain inside type B is intact"
+        action: "assert"
+        target: "grade_b1"
+        asserts:
+          next_grade_id:
+            type: "m2o"
+            expected: "REC: grade_b2"
+      - step: "Assert the last grade of type B closes its own chain"
+        action: "assert"
+        target: "grade_b2"
+        asserts:
+          previous_grade_id:
+            type: "m2o"
+            expected: "REC: grade_b1"
+          next_grade_id:
+            type: "value"
+            operator: "is_falsy"
+
+  - name: "Recompute Is Idempotent"
+    steps:
+      - step: "Create grade type C"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "type_c"
+        values:
+          name: "Recompute Type C"
+          code: "RCTC"
+          sequence: 30
+      - step: "Create grade C1"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_c1"
+        values:
+          name: "Recompute C1"
+          code: "RCC1"
+          sequence: 10
+          type_id: "REC: type_c.id"
+      - step: "Create grade C2"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_c2"
+        values:
+          name: "Recompute C2"
+          code: "RCC2"
+          sequence: 20
+          type_id: "REC: type_c.id"
+      - step: "Create grade C3"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_c3"
+        values:
+          name: "Recompute C3"
+          code: "RCC3"
+          sequence: 30
+          type_id: "REC: type_c.id"
+      - step: "Recompute a first time"
+        action: "call"
+        target: "grade_c1"
+        method: "_recompute_next_previous"
+      - step: "Assert the chain after the first recompute"
+        action: "assert"
+        target: "grade_c2"
+        asserts:
+          previous_grade_id:
+            type: "m2o"
+            expected: "REC: grade_c1"
+          next_grade_id:
+            type: "m2o"
+            expected: "REC: grade_c3"
+      - step: "Recompute a second time"
+        action: "call"
+        target: "grade_c1"
+        method: "_recompute_next_previous"
+      - step: "Assert the middle grade kept both links"
+        action: "assert"
+        target: "grade_c2"
+        asserts:
+          previous_grade_id:
+            type: "m2o"
+            expected: "REC: grade_c1"
+          next_grade_id:
+            type: "m2o"
+            expected: "REC: grade_c3"
+      - step: "Assert the first grade kept its boundary"
+        action: "assert"
+        target: "grade_c1"
+        asserts:
+          previous_grade_id:
+            type: "value"
+            operator: "is_falsy"
+          next_grade_id:
+            type: "m2o"
+            expected: "REC: grade_c2"
+      - step: "Assert the last grade kept its boundary"
+        action: "assert"
+        target: "grade_c3"
+        asserts:
+          previous_grade_id:
+            type: "m2o"
+            expected: "REC: grade_c2"
+          next_grade_id:
+            type: "value"
+            operator: "is_falsy"
+
+  - name: "Recompute Leaves A Lone Grade Unlinked"
+    steps:
+      - step: "Create grade type D"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "type_d"
+        values:
+          name: "Recompute Type D"
+          code: "RCTD"
+          sequence: 40
+      - step: "Create the only grade of type D"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade_d1"
+        values:
+          name: "Recompute D1"
+          code: "RCD1"
+          sequence: 10
+          type_id: "REC: type_d.id"
+      - step: "Recompute the whole chain"
+        action: "call"
+        target: "grade_d1"
+        method: "_recompute_next_previous"
+      - step: "Assert the lone grade borrows no neighbour from another grade type"
+        action: "assert"
+        target: "grade_d1"
+        asserts:
+          previous_grade_id:
+            type: "value"
+            operator: "is_falsy"
+          next_grade_id:
+            type: "value"
+            operator: "is_falsy"

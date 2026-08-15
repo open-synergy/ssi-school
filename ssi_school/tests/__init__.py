@@ -8,6 +8,7 @@ from . import (  # noqa: F401
     test_hr_employee,
     test_school_grade_type,
     test_school_grade,
+    test_school_grade_recompute,
     test_school_branch,
     test_school,
     test_school_integrity,
