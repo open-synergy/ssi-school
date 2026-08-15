@@ -269,6 +269,7 @@ scenarios:
           code: "/"
           discount_usage_id:
             "REF: ssi_product_usage_account_type.product_usage_type_income"
+          account_id: "REC: income_account.id"
           discount_type: "fixed"
           discount_amount: 100000.0
           journal_id: "REC: journal.id"
@@ -645,6 +646,7 @@ scenarios:
           code: "/"
           discount_usage_id:
             "REF: ssi_product_usage_account_type.product_usage_type_income"
+          account_id: "REC: income_account.id"
           discount_type: "fixed"
           discount_amount: 200000.0
           journal_id: "REC: journal.id"
@@ -1011,6 +1013,7 @@ scenarios:
           code: "/"
           discount_usage_id:
             "REF: ssi_product_usage_account_type.product_usage_type_income"
+          account_id: "REC: income_account.id"
           discount_type: "fixed"
           discount_amount: 50000.0
           journal_id: "REC: journal.id"
@@ -1282,6 +1285,7 @@ scenarios:
           code: "/"
           discount_usage_id:
             "REF: ssi_product_usage_account_type.product_usage_type_income"
+          account_id: "REC: income_account.id"
           discount_type: "fixed"
           discount_amount: 50000.0
           journal_id: "REC: journal.id"
@@ -1648,6 +1652,7 @@ scenarios:
           code: "/"
           discount_usage_id:
             "REF: ssi_product_usage_account_type.product_usage_type_income"
+          account_id: "REC: income_account.id"
           discount_type: "fixed"
           discount_amount: 50000.0
           journal_id: "REC: journal.id"
