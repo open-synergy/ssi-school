@@ -271,6 +271,12 @@ scenarios:
           academic_term_id: "EVAL: registry['academic_term'].id"
           expected_return_date: "2024-09-01"
           reason: "Medical leave."
+          # Required because later steps read this document back as
+          # base.user_admin: school_student_leave_internal_user_rule
+          # only exposes records the reading user owns, and the
+          # default responsible would otherwise be the superuser
+          # that created it.
+          user_id: "REF: base.user_admin"
 
       - step: "Confirm leave"
         action: "call"
@@ -437,6 +443,12 @@ scenarios:
           academic_term_id: "EVAL: registry['academic_term'].id"
           expected_return_date: "2024-09-01"
           reason: "Personal leave."
+          # Required because later steps read this document back as
+          # base.user_admin: school_student_leave_internal_user_rule
+          # only exposes records the reading user owns, and the
+          # default responsible would otherwise be the superuser
+          # that created it.
+          user_id: "REF: base.user_admin"
 
       - step: "Confirm leave"
         action: "call"
