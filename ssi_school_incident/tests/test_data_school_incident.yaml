@@ -1,3 +1,6 @@
+options:
+  auto_refresh: true
+
 scenarios:
   - name: "Incident Full Workflow Create Confirm Approve Done"
     steps:
@@ -79,11 +82,6 @@ scenarios:
             type: "value"
             expected: "confirm"
 
-      - step: "Invalidate incident cache before approve"
-        action: "call"
-        target: "incident"
-        method: "invalidate_cache"
-
       - step: "Approve incident"
         action: "call"
         target: "incident"
@@ -102,11 +100,6 @@ scenarios:
             type: "value"
             operator: "contains"
             expected: "INC"
-
-      - step: "Invalidate incident cache before done"
-        action: "call"
-        target: "incident"
-        method: "invalidate_cache"
 
       - step: "Done incident"
         action: "call"
@@ -544,11 +537,6 @@ scenarios:
             type: "value"
             expected: "confirm"
 
-      - step: "Invalidate incident cache before approve"
-        action: "call"
-        target: "incident"
-        method: "invalidate_cache"
-
       - step: "Approve incident"
         action: "call"
         target: "incident"
@@ -588,3 +576,611 @@ scenarios:
           escalated_to_level:
             type: "value"
             expected: "2"
+
+  - name: "Onchange Enrollment Derived From Student Open Enrollment"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type for Incident Onchange Enrollment Test"
+          code: "GTINCOCE"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School for Incident Onchange Enrollment Test"
+          code: "SCHINCOCE"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade for Incident Onchange Enrollment Test"
+          code: "GINCOCE"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class for Incident Onchange Enrollment Test"
+          code: "CLINCOCE"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "Year for Incident Onchange Enrollment Test"
+          code: "AYINCOCE"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Term for Incident Onchange Enrollment Test"
+          code: "TMINCOCE"
+          date_start: "2024-07-01"
+          date_end: "2024-12-31"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Incident Onchange Enrollment Student Contact"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student for Incident Onchange Enrollment"
+          code: "STUINCOCE"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Setup - create enrollment for that student"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+
+      - step: "Open the enrollment so it becomes the student's active one"
+        action: "write"
+        target: "enrollment"
+        values:
+          state: "open"
+
+      - step: "Assert the enrollment is now the student's active enrollment"
+        action: "assert"
+        target: "student"
+        asserts:
+          active_enrollment_id:
+            type: "m2o"
+            expected: "REC: enrollment"
+
+      - step: "Selecting the student fills the incident's enrollment"
+        action: "form"
+        model: "school_incident"
+        save: false
+        values:
+          student_id: "REC: student"
+        asserts:
+          enrollment_id:
+            type: "m2o"
+            expected: "REC: enrollment"
+
+  - name: "Onchange Grade Class Derived From Student Active Enrollment"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type for Incident Onchange Grade Class Test"
+          code: "GTINCOCG"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School for Incident Onchange Grade Class Test"
+          code: "SCHINCOCG"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade for Incident Onchange Grade Class Test"
+          code: "GINCOCG"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class for Incident Onchange Grade Class Test"
+          code: "CLINCOCG"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "Year for Incident Onchange Grade Class Test"
+          code: "AYINCOCG"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Term for Incident Onchange Grade Class Test"
+          code: "TMINCOCG"
+          date_start: "2024-07-01"
+          date_end: "2024-12-31"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Incident Onchange Grade Class Student Contact"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student for Incident Onchange Grade Class"
+          code: "STUINCOCG"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Setup - create enrollment for that student"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+
+      - step: "Open the enrollment so it becomes the student's active one"
+        action: "write"
+        target: "enrollment"
+        values:
+          state: "open"
+
+      - step: "Assert the student's homeroom class follows the open enrollment"
+        action: "assert"
+        target: "student"
+        asserts:
+          grade_class_id:
+            type: "m2o"
+            expected: "REC: grade_class"
+
+      - step: "Selecting the student fills the incident's grade class"
+        action: "form"
+        model: "school_incident"
+        save: false
+        values:
+          student_id: "REC: student"
+        asserts:
+          grade_class_id:
+            type: "m2o"
+            expected: "REC: grade_class"
+
+  - name: "Onchange Parent Contact Derived From Student Father"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type for Incident Onchange Father Test"
+          code: "GTINCOCF"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School for Incident Onchange Father Test"
+          code: "SCHINCOCF"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Incident Onchange Father Student Contact"
+
+      - step: "Setup - create father contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "father"
+        values:
+          name: "Incident Onchange Father Contact"
+
+      - step: "Setup - create student with a father contact"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student for Incident Onchange Father"
+          code: "STUINCOCF"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+          father_id: "REC: father.id"
+
+      - step: "Selecting the student fills the parent contact with the father"
+        action: "form"
+        model: "school_incident"
+        save: false
+        values:
+          student_id: "REC: student"
+        asserts:
+          parent_partner_id:
+            type: "m2o"
+            expected: "REC: father"
+
+  - name: "Onchange Parent Contact Falls Back To Student Guardian"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type for Incident Onchange Guardian Test"
+          code: "GTINCOCU"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School for Incident Onchange Guardian Test"
+          code: "SCHINCOCU"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Incident Onchange Guardian Student Contact"
+
+      - step: "Setup - create guardian contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "guardian"
+        values:
+          name: "Incident Onchange Guardian Contact"
+
+      - step: "Setup - create student with a guardian but no father or mother"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student for Incident Onchange Guardian"
+          code: "STUINCOCU"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+          guardian_id: "REC: guardian.id"
+
+      - step: "Assert the student really has no father and no mother"
+        action: "assert"
+        target: "student"
+        asserts:
+          father_id:
+            type: "value"
+            operator: "is_falsy"
+          mother_id:
+            type: "value"
+            operator: "is_falsy"
+
+      - step: "Selecting the student falls back to the guardian contact"
+        action: "form"
+        model: "school_incident"
+        save: false
+        values:
+          student_id: "REC: student"
+        asserts:
+          parent_partner_id:
+            type: "m2o"
+            expected: "REC: guardian"
+
+  - name: "Onchange Handling Level Derived From Incident Type Default"
+    steps:
+      - step: "Setup - create incident type with a default handling level"
+        action: "create"
+        model: "school_incident_type"
+        save_as: "incident_type"
+        values:
+          name: "Injury Case Onchange"
+          code: "INCTYPE-OC-INJURY"
+          default_handling_level: "2"
+
+      - step: "Selecting the incident type fills the handling level"
+        action: "form"
+        model: "school_incident"
+        save: false
+        values:
+          incident_type_id: "REC: incident_type"
+        asserts:
+          handling_level:
+            type: "value"
+            expected: "2"
+
+  - name: "Resolution Status Requires A Resolution Date"
+    steps:
+      - step: "Setup - create incident type"
+        action: "create"
+        model: "school_incident_type"
+        save_as: "incident_type"
+        values:
+          name: "Resolution Constraint Case"
+          code: "INCTYPE-OC-RESOLUTION"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type for Resolution Constraint Test"
+          code: "GTINCRES"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School for Resolution Constraint Test"
+          code: "SCHINCRES"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Resolution Constraint Student Contact"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student for Resolution Constraint"
+          code: "STUINCRES"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Create incident"
+        action: "create"
+        model: "school_incident"
+        save_as: "incident"
+        values:
+          date_incident: 2026-07-10
+          student_id: "REC: student.id"
+          incident_type_id: "REC: incident_type.id"
+          description: "Case used to verify the resolution constraint."
+
+      - step: "Resolving with a resolution date is accepted"
+        action: "write"
+        target: "incident"
+        values:
+          resolution_status: "resolved_satisfied"
+          date_resolved: 2026-07-11
+
+      - step: "Assert the incident is recorded as resolved"
+        action: "assert"
+        target: "incident"
+        asserts:
+          resolution_status:
+            type: "value"
+            expected: "resolved_satisfied"
+          date_resolved:
+            type: "value"
+            expected: 2026-07-11
+
+      - step: "Clearing the resolution date while still resolved must be rejected"
+        action: "write"
+        target: "incident"
+        values:
+          date_resolved: false
+        expect_error:
+          type: "UserError"
+          message_contains:
+            "Resolution Date is empty while Resolution Status is Resolved"
+
+  - name: "Escalate Rejected When No Escalation Criteria Selected"
+    steps:
+      - step: "Setup - create incident type"
+        action: "create"
+        model: "school_incident_type"
+        save_as: "incident_type"
+        values:
+          name: "Escalation Guard Case - No Criteria"
+          code: "INCTYPE-OC-ESC-NOCRIT"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type for Escalation No Criteria Test"
+          code: "GTINCENC"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School for Escalation No Criteria Test"
+          code: "SCHINCENC"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Escalation No Criteria Student Contact"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student for Escalation No Criteria"
+          code: "STUINCENC"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Create incident"
+        action: "create"
+        model: "school_incident"
+        save_as: "incident"
+        values:
+          date_incident: 2026-07-12
+          student_id: "REC: student.id"
+          incident_type_id: "REC: incident_type.id"
+          description: "Case used to verify the no-criteria escalation guard."
+
+      - step: "Escalating without any criterion must be rejected"
+        action: "call"
+        target: "incident"
+        method: "action_escalate"
+        as_user: "base.user_admin"
+        kwargs:
+          target_level: "2"
+          escalation_criteria_ids: "EVAL: env['school_incident_escalation_criteria']"
+          escalation_reason: "Attempt without any criteria selected."
+        expect_error:
+          type: "UserError"
+          message_contains: "No escalation criteria selected"
+
+  - name: "Escalate Rejected When Criteria Do Not Target The Requested Tier"
+    steps:
+      - step: "Setup - create incident type"
+        action: "create"
+        model: "school_incident_type"
+        save_as: "incident_type"
+        values:
+          name: "Escalation Guard Case - Mismatch"
+          code: "INCTYPE-OC-ESC-MISMATCH"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type for Escalation Mismatch Test"
+          code: "GTINCEMM"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School for Escalation Mismatch Test"
+          code: "SCHINCEMM"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Escalation Mismatch Student Contact"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student for Escalation Mismatch"
+          code: "STUINCEMM"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Setup - create a tier 3 escalation criterion"
+        action: "create"
+        model: "school_incident_escalation_criteria"
+        save_as: "criteria"
+        values:
+          name: "Physical Harm Involved (Guard Test)"
+          code: "ESC-GUARD-L3"
+          sequence: 10
+          target_level: "level_3"
+
+      - step: "Create incident"
+        action: "create"
+        model: "school_incident"
+        save_as: "incident"
+        values:
+          date_incident: 2026-07-13
+          student_id: "REC: student.id"
+          incident_type_id: "REC: incident_type.id"
+          description: "Case used to verify the mismatched-criteria escalation guard."
+
+      - step: "Escalating to tier 2 with a tier 3 criterion must be rejected"
+        action: "call"
+        target: "incident"
+        method: "action_escalate"
+        as_user: "base.user_admin"
+        kwargs:
+          target_level: "2"
+          escalation_criteria_ids: "REC: criteria"
+          escalation_reason: "Attempt to escalate to tier 2 using a tier-3 criterion."
+        expect_error:
+          type: "UserError"
+          message_contains: "do not target this tier"
