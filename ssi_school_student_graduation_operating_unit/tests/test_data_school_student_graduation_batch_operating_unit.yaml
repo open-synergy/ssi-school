@@ -63,6 +63,7 @@ scenarios:
         save_as: "batch"
         values:
           date: "2025-06-30"
+          user_id: "REF: base.user_admin"
           operating_unit_id: "EVAL: registry['ou'].id"
           line_ids:
             - - 0
