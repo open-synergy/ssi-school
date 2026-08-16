@@ -1,3 +1,5 @@
+options:
+  auto_refresh: true
 scenarios:
   # NOTE: this scenario MUST stay first in this file. All scenarios in a
   # single YAML file share one DB transaction without rollback, so any
@@ -37,10 +39,6 @@ scenarios:
           code: "STUQR001"
           contact_id: "EVAL: registry['contact'].id"
           school_id: "EVAL: registry['school'].id"
-      - step: "Invalidate student cache before reading computed QR image"
-        action: "call"
-        target: "student"
-        method: "invalidate_cache"
       - step: "Assert student created and qr_image left empty"
         action: "assert"
         target: "student"
@@ -100,10 +98,6 @@ scenarios:
           code: "STUQR002"
           contact_id: "EVAL: registry['contact'].id"
           school_id: "EVAL: registry['school'].id"
-      - step: "Invalidate student cache before reading computed QR image"
-        action: "call"
-        target: "student"
-        method: "invalidate_cache"
       - step: "Assert qr_image is generated from the standard content"
         action: "assert"
         target: "student"
@@ -161,10 +155,6 @@ scenarios:
           code: "STUQR003"
           contact_id: "EVAL: registry['contact'].id"
           school_id: "EVAL: registry['school'].id"
-      - step: "Invalidate student cache before reading computed QR image"
-        action: "call"
-        target: "student"
-        method: "invalidate_cache"
       - step: "Assert qr_image is generated from the custom content"
         action: "assert"
         target: "student"
@@ -222,10 +212,6 @@ scenarios:
           code: "STUQR004"
           contact_id: "EVAL: registry['contact'].id"
           school_id: "EVAL: registry['school'].id"
-      - step: "Invalidate student cache before reading computed QR image"
-        action: "call"
-        target: "student"
-        method: "invalidate_cache"
       - step: "Assert qr_image stays empty without leaking an exception"
         action: "assert"
         target: "student"
