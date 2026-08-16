@@ -1,3 +1,6 @@
+options:
+  auto_refresh: true
+
 scenarios:
   - name:
       "Enrollment Wizard OU - enrollment inherits the admission's operating unit,
@@ -140,11 +143,6 @@ scenarios:
             type: "value"
             expected: "confirm"
 
-      - step: "Invalidate admission cache after confirm"
-        action: "call"
-        target: "admission"
-        method: "invalidate_cache"
-
       - step: "Approve admission (moves to open, creates the school student)"
         action: "call"
         target: "admission"
@@ -154,11 +152,6 @@ scenarios:
           state:
             type: "value"
             expected: "open"
-
-      - step: "Invalidate admission cache after approve"
-        action: "call"
-        target: "admission"
-        method: "invalidate_cache"
 
       - step: "Assert admission is ready to create its enrollment"
         action: "assert"
@@ -185,11 +178,6 @@ scenarios:
         target: "wizard"
         method: "action_create_enrollment"
         as_user: "base.user_admin"
-
-      - step: "Invalidate admission cache after wizard call"
-        action: "call"
-        target: "admission"
-        method: "invalidate_cache"
 
       - step: "Search for the created enrollment"
         action: "search"
@@ -345,11 +333,6 @@ scenarios:
             type: "value"
             expected: "confirm"
 
-      - step: "Invalidate admission cache after confirm"
-        action: "call"
-        target: "admission"
-        method: "invalidate_cache"
-
       - step: "Approve admission"
         action: "call"
         target: "admission"
@@ -359,11 +342,6 @@ scenarios:
           state:
             type: "value"
             expected: "open"
-
-      - step: "Invalidate admission cache after approve"
-        action: "call"
-        target: "admission"
-        method: "invalidate_cache"
 
       - step: "Create wizard to create the enrollment"
         action: "create"
@@ -379,11 +357,6 @@ scenarios:
         target: "wizard"
         method: "action_create_enrollment"
         as_user: "base.user_admin"
-
-      - step: "Invalidate admission cache after first wizard call"
-        action: "call"
-        target: "admission"
-        method: "invalidate_cache"
 
       - step: "Search for the created enrollment"
         action: "search"
@@ -412,11 +385,6 @@ scenarios:
         target: "wizard"
         method: "action_create_enrollment"
         as_user: "base.user_admin"
-
-      - step: "Invalidate enrollment cache after second wizard call"
-        action: "call"
-        target: "created_enrollment"
-        method: "invalidate_cache"
 
       - step:
           "Assert the manually set operating unit was not overwritten by the repeated
@@ -538,11 +506,6 @@ scenarios:
             type: "value"
             expected: "confirm"
 
-      - step: "Invalidate admission cache after confirm"
-        action: "call"
-        target: "admission"
-        method: "invalidate_cache"
-
       - step: "Approve admission"
         action: "call"
         target: "admission"
@@ -552,11 +515,6 @@ scenarios:
           state:
             type: "value"
             expected: "open"
-
-      - step: "Invalidate admission cache after approve"
-        action: "call"
-        target: "admission"
-        method: "invalidate_cache"
 
       - step: "Create wizard to create the enrollment"
         action: "create"
@@ -572,11 +530,6 @@ scenarios:
         target: "wizard"
         method: "action_create_enrollment"
         as_user: "base.user_admin"
-
-      - step: "Invalidate admission cache after wizard call"
-        action: "call"
-        target: "admission"
-        method: "invalidate_cache"
 
       - step: "Assert the admission is now linked to an enrollment"
         action: "assert"
