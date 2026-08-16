@@ -1,3 +1,6 @@
+options:
+  auto_refresh: true
+
 scenarios:
   - name: "Student Graduation Batch propagates Operating Unit to generated Graduation"
     steps:
@@ -60,6 +63,7 @@ scenarios:
         save_as: "batch"
         values:
           date: "2025-06-30"
+          user_id: "REF: base.user_admin"
           operating_unit_id: "EVAL: registry['ou'].id"
           line_ids:
             - - 0
@@ -84,11 +88,6 @@ scenarios:
           state:
             type: "value"
             expected: "confirm"
-
-      - step: "Invalidate batch cache before approve"
-        action: "call"
-        target: "batch"
-        method: "invalidate_cache"
 
       - step: "Approve batch, triggering done and graduation generation"
         action: "call"
