@@ -1,3 +1,6 @@
+options:
+  auto_refresh: true
+
 scenarios:
   - name: "Student Graduation Batch propagates Operating Unit to generated Graduation"
     steps:
@@ -84,11 +87,6 @@ scenarios:
           state:
             type: "value"
             expected: "confirm"
-
-      - step: "Invalidate batch cache before approve"
-        action: "call"
-        target: "batch"
-        method: "invalidate_cache"
 
       - step: "Approve batch, triggering done and graduation generation"
         action: "call"
