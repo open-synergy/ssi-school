@@ -1,3 +1,6 @@
+options:
+  auto_refresh: true
+
 scenarios:
   - name: "Academic Alert Full Workflow Create Confirm Approve Done"
     steps:
@@ -69,11 +72,6 @@ scenarios:
             type: "value"
             expected: "confirm"
 
-      - step: "Invalidate alert cache before approve"
-        action: "call"
-        target: "alert"
-        method: "invalidate_cache"
-
       - step: "Approve alert"
         action: "call"
         target: "alert"
@@ -92,11 +90,6 @@ scenarios:
             type: "value"
             operator: "contains"
             expected: "ALERT"
-
-      - step: "Invalidate alert cache before done"
-        action: "call"
-        target: "alert"
-        method: "invalidate_cache"
 
       - step: "Done alert"
         action: "call"
@@ -506,3 +499,334 @@ scenarios:
           handling_level:
             type: "value"
             expected: "2"
+
+  - name: "Onchange Grade Class Derived From Student Active Enrollment"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type for Alert Onchange Grade Class Test"
+          code: "GTALOCGC"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School for Alert Onchange Grade Class Test"
+          code: "SCHALOCGC"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade for Alert Onchange Grade Class Test"
+          code: "GALOCGC"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class for Alert Onchange Grade Class Test"
+          code: "CLALOCGC"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "Year for Alert Onchange Grade Class Test"
+          code: "AYALOCGC"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Term for Alert Onchange Grade Class Test"
+          code: "TMALOCGC"
+          date_start: "2024-07-01"
+          date_end: "2024-12-31"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Alert Onchange Grade Class Student Contact"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student for Alert Onchange Grade Class"
+          code: "STUALOCGC"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Setup - create enrollment for that student"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+
+      - step: "Open the enrollment so it becomes the student's active one"
+        action: "write"
+        target: "enrollment"
+        values:
+          state: "open"
+
+      - step: "Assert the student's homeroom class follows the open enrollment"
+        action: "assert"
+        target: "student"
+        asserts:
+          active_enrollment_id:
+            type: "m2o"
+            expected: "REC: enrollment"
+          grade_class_id:
+            type: "m2o"
+            expected: "REC: grade_class"
+
+      - step: "Selecting the student fills the alert's grade class"
+        action: "form"
+        model: "school_academic_alert"
+        save: false
+        values:
+          student_id: "REC: student"
+        asserts:
+          grade_class_id:
+            type: "m2o"
+            expected: "REC: grade_class"
+
+  - name: "Create Incident Rejected For Yellow Academic Alert Level"
+    steps:
+      - step: "Setup - create yellow level"
+        action: "create"
+        model: "school_academic_alert_level"
+        save_as: "level_yellow"
+        values:
+          name: "Yellow Level Yellow Guard Scenario"
+          code: "ALERT-YELLOW-S6"
+          color: "yellow"
+          sequence: 10
+          python_code: "result = trigger_count >= 2"
+
+      - step: "Setup - create orange level"
+        action: "create"
+        model: "school_academic_alert_level"
+        save_as: "level_orange"
+        values:
+          name: "Orange Level Yellow Guard Scenario"
+          code: "ALERT-ORANGE-S6"
+          color: "orange"
+          sequence: 20
+          python_code: "result = trigger_count >= 3"
+
+      - step: "Setup - create red level"
+        action: "create"
+        model: "school_academic_alert_level"
+        save_as: "level_red"
+        values:
+          name: "Red Level Yellow Guard Scenario"
+          code: "ALERT-RED-S6"
+          color: "red"
+          sequence: 30
+          python_code: "result = trigger_count >= 4"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type for Yellow Guard Test"
+          code: "GTALCIYL"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School for Yellow Guard Test"
+          code: "SCHALCIYL"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Yellow Guard Student Contact"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student for Yellow Guard"
+          code: "STUALCIYL"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Create academic alert with trigger_count = 2"
+        action: "create"
+        model: "school_academic_alert"
+        save_as: "alert"
+        values:
+          date_alert: 2026-07-06
+          student_id: "REC: student.id"
+          evaluation_context: "trigger_count = 2"
+
+      - step: "Evaluate alert so only a yellow level triggers"
+        action: "call"
+        target: "alert"
+        method: "action_evaluate"
+        asserts:
+          color:
+            type: "value"
+            expected: "yellow"
+
+      - step: "Creating an incident from a yellow alert must be rejected"
+        action: "call"
+        target: "alert"
+        method: "action_create_incident"
+        expect_error:
+          type: "UserError"
+          message_contains: "only allowed for Orange or Red alert"
+
+  - name: "Create Incident Rejected When Alert Was Never Evaluated"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type for Never Evaluated Guard Test"
+          code: "GTALCINE"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School for Never Evaluated Guard Test"
+          code: "SCHALCINE"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Never Evaluated Guard Student Contact"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student for Never Evaluated Guard"
+          code: "STUALCINE"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Create academic alert without ever evaluating it"
+        action: "create"
+        model: "school_academic_alert"
+        save_as: "alert"
+        values:
+          date_alert: 2026-07-07
+          student_id: "REC: student.id"
+
+      - step: "Assert no alert level has been triggered yet"
+        action: "assert"
+        target: "alert"
+        asserts:
+          alert_level_id:
+            type: "value"
+            operator: "is_falsy"
+
+      - step: "Creating an incident without an alert level must be rejected"
+        action: "call"
+        target: "alert"
+        method: "action_create_incident"
+        expect_error:
+          type: "UserError"
+          message_contains: "only allowed for Orange or Red alert"
+
+  - name: "Evaluate Rejected When Evaluation Context Is Invalid Python"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type for Invalid Context Test"
+          code: "GTALEVIC"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School for Invalid Context Test"
+          code: "SCHALEVIC"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Invalid Context Student Contact"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student for Invalid Context"
+          code: "STUALEVIC"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Create academic alert whose evaluation context is not valid Python"
+        action: "create"
+        model: "school_academic_alert"
+        save_as: "alert"
+        values:
+          date_alert: 2026-07-08
+          student_id: "REC: student.id"
+          evaluation_context: "trigger_count ==="
+
+      - step: "Evaluating an invalid evaluation context must be rejected"
+        action: "call"
+        target: "alert"
+        method: "action_evaluate"
+        expect_error:
+          type: "UserError"
+          message_contains: "Evaluation Context could not be evaluated"

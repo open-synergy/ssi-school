@@ -186,3 +186,89 @@ scenarios:
           - ["incident_id", "=", "EVAL: registry['incident'].id"]
         save_as: "contacts_after_delete"
         expect_count: 0
+
+  - name: "Onchange Parent Contact Derived From The Incident"
+    steps:
+      - step: "Setup - create incident type"
+        action: "create"
+        model: "school_incident_type"
+        save_as: "incident_type"
+        values:
+          name: "Parent Contact Onchange Case"
+          code: "INCTYPE-OC-PARENT-CONTACT-ONCHANGE"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type for Parent Contact Onchange Test"
+          code: "GTPCOCI"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School for Parent Contact Onchange Test"
+          code: "SCHPCOCI"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Parent Contact Onchange Student Contact"
+
+      - step: "Setup - create father contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "father"
+        values:
+          name: "Parent Contact Onchange Father"
+
+      - step: "Setup - create student with a father contact"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student for Parent Contact Onchange"
+          code: "STUPCOCI"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+          father_id: "REC: father.id"
+
+      - step: "Create the incident through the form so its onchange runs"
+        action: "form"
+        model: "school_incident"
+        save_as: "incident"
+        values:
+          date_incident: 2026-07-01
+          student_id: "REC: student"
+          incident_type_id: "REC: incident_type"
+          description: "Case used to verify the contact onchange."
+        asserts:
+          parent_partner_id:
+            type: "m2o"
+            expected: "REC: father"
+
+      - step: "Assert the saved incident kept the parent contact"
+        action: "assert"
+        target: "incident"
+        asserts:
+          parent_partner_id:
+            type: "m2o"
+            expected: "REC: father"
+
+      - step: "Selecting the incident fills the log line's parent contact"
+        action: "form"
+        model: "school_incident_parent_contact"
+        save: false
+        values:
+          incident_id: "REC: incident"
+        asserts:
+          parent_partner_id:
+            type: "m2o"
+            expected: "REC: father"
