@@ -1,3 +1,6 @@
+options:
+  auto_refresh: true
+
 scenarios:
   - name: "CRM Lead - Create Admission Form via Wizard"
     steps:
@@ -145,11 +148,6 @@ scenarios:
         target: "wizard"
         method: "action_confirm"
         as_user: "base.user_admin"
-
-      - step: "Invalidate lead cache"
-        action: "call"
-        target: "lead"
-        method: "invalidate_cache"
 
       - step: "Assert admission form created and linked to lead"
         action: "assert"
