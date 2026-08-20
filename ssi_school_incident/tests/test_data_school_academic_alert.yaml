@@ -876,7 +876,16 @@ scenarios:
           name: "Academic Alert User Group Member"
           login: "academic_alert_user_336@example.com"
           groups_id:
-            [[6, 0, ["REF: base.group_user", "REF: school_academic_alert_user_group"]]]
+            [
+              [
+                6,
+                0,
+                [
+                  "REF: base.group_user",
+                  "REF: ssi_school_incident.school_academic_alert_user_group",
+                ],
+              ],
+            ]
 
       - step: "Setup - create a user in none of the alert groups"
         action: "create"

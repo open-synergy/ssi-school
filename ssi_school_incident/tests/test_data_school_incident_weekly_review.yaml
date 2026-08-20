@@ -601,7 +601,7 @@ scenarios:
                 0,
                 [
                   "REF: base.group_user",
-                  "REF: school_incident_weekly_review_user_group",
+                  "REF: ssi_school_incident.school_incident_weekly_review_user_group",
                 ],
               ],
             ]
