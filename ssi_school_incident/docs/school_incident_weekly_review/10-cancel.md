@@ -3,14 +3,14 @@
 > **Module:** ssi*school_incident\
 > **Model:** `school_incident_weekly_review`\
 > **Menu:** School > Incident > Weekly Case Reviews\
-> **Actor:** user in group \_Manager (Principal)*\
+> **Actor:** user in group \_Weekly Review Validator*\
 > **State:** `draft` | `confirm` | `reject` → `cancel`\
 > **Requires:** `01-create`
 
 ## Pre-Condition
 
 - **Record:** Status is **Draft**, **Waiting for Approval**, or **Rejected**.
-- **Access:** User has _Can Cancel_ access right (belongs to the Manager (Principal)
+- **Access:** User has _Can Cancel_ access right (belongs to the Weekly Review Validator
   group).
 
 ## Flow

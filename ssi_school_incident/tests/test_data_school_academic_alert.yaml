@@ -830,3 +830,91 @@ scenarios:
         expect_error:
           type: "UserError"
           message_contains: "Evaluation Context could not be evaluated"
+
+  - name: "Academic Alert Own Workflow Group Is Enforced"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type for Alert Group Test"
+          code: "GTALERTGRP"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School for Alert Group Test"
+          code: "SCHALERTGRP"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Alert Group Test Student Contact"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student for Alert Group Test"
+          code: "STUALERTGRP"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Setup - create a user in school_academic_alert_user_group"
+        action: "create"
+        model: "res.users"
+        save_as: "alert_user"
+        values:
+          name: "Academic Alert User Group Member"
+          login: "academic_alert_user_336@example.com"
+          groups_id:
+            [[6, 0, ["REF: base.group_user", "REF: school_academic_alert_user_group"]]]
+
+      - step: "Setup - create a user in none of the alert groups"
+        action: "create"
+        model: "res.users"
+        save_as: "alert_outsider"
+        values:
+          name: "Academic Alert Outsider"
+          login: "academic_alert_outsider_336@example.com"
+          groups_id: [[6, 0, ["REF: base.group_user"]]]
+
+      - step: "school_academic_alert_user_group member can create the alert"
+        action: "create"
+        model: "school_academic_alert"
+        save_as: "alert_group_test"
+        as_user: "alert_user"
+        values:
+          date_alert: 2026-07-09
+          student_id: "REC: student.id"
+        asserts:
+          state:
+            type: "value"
+            expected: "draft"
+
+      - step: "school_academic_alert_user_group member can confirm the alert"
+        action: "call"
+        target: "alert_group_test"
+        method: "action_confirm"
+        as_user: "alert_user"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Outsider (no alert group) cannot write the alert"
+        action: "write"
+        target: "alert_group_test"
+        as_user: "alert_outsider"
+        values:
+          subject_note: "Should not be allowed"
+        expect_error:
+          type: "AccessError"

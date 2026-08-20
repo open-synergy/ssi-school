@@ -2,7 +2,7 @@
 
 > **Module:** ssi*school_incident\
 > **Model:** `school_incident_escalation_criteria`\
-> **Menu:** School > Configuration > Configuration > Escalation Criteria\
+> **Menu:** School > Configuration > Incident > Escalation Criteria\
 > **Actor:** user in group \_Manager (Principal)*\
 > **Requires:** `01-create`
 
@@ -12,7 +12,7 @@
 
 ## Flow
 
-1. Open the **School > Configuration > Configuration > Escalation Criteria** menu.
+1. Open the **School > Configuration > Incident > Escalation Criteria** menu.
 2. Find and open the Escalation Criteria record to edit.
 3. Change the required fields (Code, Name, Sequence, Target Level, Verification Method).
 4. Click **Save**.

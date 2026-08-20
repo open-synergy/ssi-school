@@ -2,7 +2,7 @@
 
 > **Module:** ssi*school_incident\
 > **Model:** `school_academic_alert_level`\
-> **Menu:** School > Configuration > Configuration > Academic Alert Levels\
+> **Menu:** School > Configuration > Incident > Academic Alert Levels\
 > **Actor:** user in group \_Manager (Principal)*
 
 ## Pre-Condition
@@ -11,7 +11,7 @@
 
 ## Flow
 
-1. Open the **School > Configuration > Configuration > Academic Alert Levels** menu.
+1. Open the **School > Configuration > Incident > Academic Alert Levels** menu.
 2. Click the **New** button.
 3. Fill in the required fields:
    - **Code**: Enter a unique code identifying this alert level.

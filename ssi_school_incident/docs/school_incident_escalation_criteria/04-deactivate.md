@@ -2,7 +2,7 @@
 
 > **Module:** ssi*school_incident\
 > **Model:** `school_incident_escalation_criteria`\
-> **Menu:** School > Configuration > Configuration > Escalation Criteria\
+> **Menu:** School > Configuration > Incident > Escalation Criteria\
 > **Actor:** user in group \_Manager (Principal)*\
 > **Active:** `true` → `false`\
 > **Requires:** `01-create`
@@ -13,7 +13,7 @@
 
 ## Flow
 
-1. Open the **School > Configuration > Configuration > Escalation Criteria** menu.
+1. Open the **School > Configuration > Incident > Escalation Criteria** menu.
 2. Select one or more records to deactivate (check the checkbox).
 3. Click **Action** > **Archive**.
 4. Click **OK** to confirm.

@@ -284,6 +284,7 @@ class SchoolIncidentWeeklyReview(models.Model):
         "incident_ids",
     )
     def _compute_count_total(self):
+        """Count the collected School Incidents for each record in self."""
         for record in self:
             record.count_total = len(record.incident_ids)
 
@@ -291,10 +292,15 @@ class SchoolIncidentWeeklyReview(models.Model):
         "incident_ids.is_overdue",
     )
     def _compute_count_overdue(self):
+        """Count the collected incidents whose ``is_overdue`` is set."""
         for record in self:
             record.count_overdue = len(record._get_overdue_incidents())
 
     def _get_overdue_incidents(self):
+        """Return the collected incidents whose ``is_overdue`` is set.
+
+        :return: ``school_incident`` recordset
+        """
         self.ensure_one()
         return self.incident_ids.filtered("is_overdue")
 
@@ -302,10 +308,18 @@ class SchoolIncidentWeeklyReview(models.Model):
         "incident_ids.resolution_status",
     )
     def _compute_count_escalated(self):
+        """Count the collected incidents whose Resolution Status is
+        Escalated.
+        """
         for record in self:
             record.count_escalated = len(record._get_escalated_incidents())
 
     def _get_escalated_incidents(self):
+        """Return the collected incidents whose Resolution Status is
+        Escalated.
+
+        :return: ``school_incident`` recordset
+        """
         self.ensure_one()
         return self.incident_ids.filtered(
             lambda incident: incident.resolution_status == "escalated"
@@ -317,6 +331,11 @@ class SchoolIncidentWeeklyReview(models.Model):
         "date_end",
     )
     def _compute_count_unresolved_over_7d(self):
+        """Count collected incidents unresolved for more than 7 days.
+
+        Delegates to ``_get_unresolved_over_7d_incidents`` for the
+        actual selection rule.
+        """
         for record in self:
             record.count_unresolved_over_7d = len(
                 record._get_unresolved_over_7d_incidents()
@@ -357,57 +376,123 @@ class SchoolIncidentWeeklyReview(models.Model):
         return criteria
 
     def action_collect_incidents(self):
+        """(Re)collect incidents into every record in self.
+
+        Runs as ``sudo()`` so a user who only passed the
+        ``collect_ok`` policy check does not also need read access to
+        every matched ``school_incident``.
+        """
         for record in self.sudo():
             record._collect_incidents()
 
     def _collect_incidents(self):
+        """Re-run ``_get_incident_criteria`` and replace ``incident_ids``.
+
+        Fully replaces the current list with the fresh search result
+        (never merges), so a Collect after Date Start/Date End/School
+        changes always reflects only the current criteria.
+        """
         self.ensure_one()
         incidents = self.env["school_incident"].search(self._get_incident_criteria())
         self.write({"incident_ids": [(6, 0, incidents.ids)]})
 
     def action_view_total_incidents(self):
+        """Open the collected incidents in a list/form action.
+
+        Runs as ``sudo()`` so a user who only passed a read-oriented
+        policy check does not also need read access to
+        ``school_incident``.
+
+        :return: an ``ir.actions.act_window`` dict
+        """
         result = None
         for record in self.sudo():
             result = record._view_total_incidents()
         return result
 
     def _view_total_incidents(self):
+        """Build the stat action for every collected incident.
+
+        :return: an ``ir.actions.act_window`` dict
+        """
         self.ensure_one()
         return self._prepare_incident_stat_action(self.incident_ids)
 
     def action_view_overdue_incidents(self):
+        """Open the collected overdue incidents in a list/form action.
+
+        Runs as ``sudo()``, same rationale as
+        ``action_view_total_incidents``.
+
+        :return: an ``ir.actions.act_window`` dict
+        """
         result = None
         for record in self.sudo():
             result = record._view_overdue_incidents()
         return result
 
     def _view_overdue_incidents(self):
+        """Build the stat action for the collected overdue incidents.
+
+        :return: an ``ir.actions.act_window`` dict
+        """
         self.ensure_one()
         return self._prepare_incident_stat_action(self._get_overdue_incidents())
 
     def action_view_unresolved_over_7d_incidents(self):
+        """Open the collected Not Resolved > 7 Days incidents.
+
+        Runs as ``sudo()``, same rationale as
+        ``action_view_total_incidents``.
+
+        :return: an ``ir.actions.act_window`` dict
+        """
         result = None
         for record in self.sudo():
             result = record._view_unresolved_over_7d_incidents()
         return result
 
     def _view_unresolved_over_7d_incidents(self):
+        """Build the stat action for the Not Resolved > 7 Days incidents.
+
+        :return: an ``ir.actions.act_window`` dict
+        """
         self.ensure_one()
         return self._prepare_incident_stat_action(
             self._get_unresolved_over_7d_incidents()
         )
 
     def action_view_escalated_incidents(self):
+        """Open the collected escalated incidents in a list/form action.
+
+        Runs as ``sudo()``, same rationale as
+        ``action_view_total_incidents``.
+
+        :return: an ``ir.actions.act_window`` dict
+        """
         result = None
         for record in self.sudo():
             result = record._view_escalated_incidents()
         return result
 
     def _view_escalated_incidents(self):
+        """Build the stat action for the collected escalated incidents.
+
+        :return: an ``ir.actions.act_window`` dict
+        """
         self.ensure_one()
         return self._prepare_incident_stat_action(self._get_escalated_incidents())
 
     def _prepare_incident_stat_action(self, incidents):
+        """Build a tree/form action showing exactly ``incidents``.
+
+        Reuses ``school_incident_action`` as a base, then overrides
+        its domain/name/views so it opens scoped to the given
+        recordset instead of the full Incidents list.
+
+        :param incidents: ``school_incident`` recordset to show
+        :return: an ``ir.actions.act_window`` dict
+        """
         self.ensure_one()
         waction = self.env.ref("ssi_school_incident.school_incident_action").read()[0]
         waction.update(

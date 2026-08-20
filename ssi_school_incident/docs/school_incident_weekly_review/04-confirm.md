@@ -3,15 +3,15 @@
 > **Module:** ssi*school_incident\
 > **Model:** `school_incident_weekly_review`\
 > **Menu:** School > Incident > Weekly Case Reviews\
-> **Actor:** user in group \_Officer (Counselor/Vice Principal)* or higher\
+> **Actor:** user in group \_Weekly Review User* or higher\
 > **State:** `draft` → `confirm`\
 > **Requires:** `01-create`
 
 ## Pre-Condition
 
 - **Record:** Status is **Draft**.
-- **Access:** User has _Can Confirm_ access right (belongs to the Officer
-  (Counselor/Vice Principal) group or higher).
+- **Access:** User has _Can Confirm_ access right (belongs to the Weekly Review User
+  group or higher).
 
 ## Flow
 

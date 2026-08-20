@@ -12,7 +12,7 @@
 
 <menuitem
         id="menu_incident_configuration"
-        name="Configuration"
+        name="Incident"
         parent="ssi_school.menu_school_configuration"
         sequence="150"
     />

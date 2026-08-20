@@ -2,7 +2,7 @@
 
 > **Module:** ssi*school_incident\
 > **Model:** `school_incident_type`\
-> **Menu:** School > Configuration > Configuration > Incident Types\
+> **Menu:** School > Configuration > Incident > Incident Types\
 > **Actor:** user in group \_Manager (Principal)*
 
 ## Pre-Condition
@@ -11,7 +11,7 @@
 
 ## Flow
 
-1. Open the **School > Configuration > Configuration > Incident Types** menu.
+1. Open the **School > Configuration > Incident > Incident Types** menu.
 2. Click the **New** button.
 3. Fill in the required fields:
    - **Code**: Enter a unique code identifying this incident type.

@@ -95,6 +95,14 @@ class SchoolIncidentParentContact(models.Model):
         "incident_id.parent_contact_ids.contact_datetime",
     )
     def _compute_is_first_contact(self):
+        """Flag the earliest contact entry of each incident as first.
+
+        ``is_first_contact`` is True only for the entry with the
+        earliest ``contact_datetime`` (ties broken by ``id``) among
+        every entry sharing the same ``incident_id``; False for every
+        other entry, including all entries of an incident with no
+        contacts.
+        """
         for record in self:
             contacts = record.incident_id.parent_contact_ids
             if not contacts:
@@ -118,6 +126,17 @@ class SchoolIncidentParentContact(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        """Override to default ``parent_partner_id`` and sync the
+        incident's ``date_first_contact``.
+
+        When ``parent_partner_id`` is not supplied, it is defaulted
+        from the linked incident's ``parent_partner_id``. Afterwards,
+        every touched incident's ``date_first_contact`` is refreshed
+        via ``_sync_date_first_contact_from_parent_contact``.
+
+        :param vals_list: list of value dicts, one per record to create
+        :return: the newly created recordset
+        """
         records = super().create(vals_list)
         for vals, record in zip(vals_list, records):
             if not vals.get("parent_partner_id") and record.incident_id:
@@ -126,6 +145,17 @@ class SchoolIncidentParentContact(models.Model):
         return records
 
     def write(self, vals):
+        """Override to keep the affected incidents' First Contact synced.
+
+        Refreshes ``date_first_contact`` (via
+        ``_sync_date_first_contact_from_parent_contact``) on both the
+        incidents these records belonged to before the write and the
+        incidents they belong to after, so re-linking an entry to a
+        different incident updates both sides.
+
+        :param vals: dict of field values to write
+        :return: the result of the overridden ``write()``
+        """
         incidents_before = self.mapped("incident_id")
         result = super().write(vals)
         incidents_after = self.mapped("incident_id")
@@ -135,6 +165,14 @@ class SchoolIncidentParentContact(models.Model):
         return result
 
     def unlink(self):
+        """Override to keep the affected incidents' First Contact synced.
+
+        Refreshes ``date_first_contact`` (via
+        ``_sync_date_first_contact_from_parent_contact``) on every
+        incident these records belonged to, after they are removed.
+
+        :return: the result of the overridden ``unlink()``
+        """
         incidents = self.mapped("incident_id")
         result = super().unlink()
         incidents._sync_date_first_contact_from_parent_contact()

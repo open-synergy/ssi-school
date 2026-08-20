@@ -3,7 +3,7 @@
 > **Module:** ssi*school_incident\
 > **Model:** `school_academic_alert`\
 > **Menu:** School > Incident > Academic Alerts\
-> **Actor:** user in group \_User (Homeroom Teacher)* or higher\
+> **Actor:** user in group \_Academic Alert User* or higher\
 > **Requires:** `04-confirm`
 
 ## Pre-Condition
@@ -16,7 +16,7 @@
 - **Config:** An active `approval.template` for this model matches this record, with an
   approver group configured for its approval level, so the process can be rebuilt once
   restarted.
-- **Access:** User is in group _User (Homeroom Teacher)_ or higher.
+- **Access:** User is in group _Academic Alert User_ or higher.
 
 ## Flow
 

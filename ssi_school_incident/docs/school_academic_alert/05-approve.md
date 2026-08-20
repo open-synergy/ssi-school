@@ -3,7 +3,7 @@
 > **Module:** ssi*school_incident\
 > **Model:** `school_academic_alert`\
 > **Menu:** School > Incident > Academic Alerts\
-> **Actor:** approver in group \_Officer (Counselor/Vice Principal)* or higher\
+> **Actor:** approver in group \_Academic Alert Validator* or higher\
 > **State:** `confirm` → `open`\
 > **Requires:** `04-confirm`
 
@@ -11,7 +11,7 @@
 
 - **Record:** Status is **Waiting for Approval**.
 - **Access:** User is registered as an approver on the active approval template (belongs
-  to the Officer (Counselor/Vice Principal) group or higher).
+  to the Academic Alert Validator group or higher).
 - **Access:** User has _Can Approve_ access right.
 
 ## Flow
@@ -36,8 +36,8 @@
 
 ## Post-Condition
 
-- The approval template for this alert has a single approval level (Officer group), so
-  approving it fulfills the whole approval workflow immediately.
+- The approval template for this alert has a single approval level (Academic Alert
+  Validator group), so approving it fulfills the whole approval workflow immediately.
 - Status automatically moves to **Open** right after this approval (the system moves the
   document from Waiting for Approval directly to Open; there is no separate manual
   "Start" step).

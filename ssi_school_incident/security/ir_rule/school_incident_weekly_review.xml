@@ -6,7 +6,10 @@
 <record id="school_incident_weekly_review_company_rule" model="ir.rule">
     <field name="name">School Incident Weekly Review - Company</field>
     <field name="model_id" ref="model_school_incident_weekly_review" />
-    <field name="groups" eval="[(4, ref('base.group_user'))]" />
+    <field
+            name="groups"
+            eval="[(4, ref('school_incident_weekly_review_viewer_group'))]"
+        />
     <field name="domain_force">[('company_id','=',user.company_id.id)]</field>
     <field name="perm_unlink" eval="1" />
     <field name="perm_write" eval="1" />

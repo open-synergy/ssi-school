@@ -1,0 +1,18 @@
+# Format: <validator> <kunci-temuan> -- <alasan>
+# Lihat kontrak validator (skill odoo-development, references/validator-contract.md §13).
+
+# Keputusan Desain issue #336 (open-synergy/ssi-school): group workflow baru untuk
+# school_academic_alert dan school_incident_weekly_review sengaja memakai KEMBALI
+# category_id yang sudah dipakai school_incident sendiri
+# (school_incident_workflow_module_category), bukan membuat ir.module.category baru
+# per model -- instruksi eksplisit "tidak ada ir.module.category baru dibuat". Ini
+# tradeoff yang disadari (form user akan merender 9 group di kategori itu sebagai
+# checkbox "Other" alih-alih dropdown per model, lihat 06-security.md), diterima demi
+# tidak menambah hierarki ir.module.category baru untuk dua model yang secara domain
+# masih satu payung "Incident" dengan school_incident.
+module kategori-group-khusus-per-model-transaksional|school_academic_alert_viewer_group: category_id → school_incident_workflow_module_category -- Keputusan Desain issue #336: category_id sengaja memakai kembali school_incident_workflow_module_category, tidak ada ir.module.category baru dibuat.
+module kategori-group-khusus-per-model-transaksional|school_academic_alert_user_group: category_id → school_incident_workflow_module_category -- Keputusan Desain issue #336: category_id sengaja memakai kembali school_incident_workflow_module_category, tidak ada ir.module.category baru dibuat.
+module kategori-group-khusus-per-model-transaksional|school_academic_alert_validator_group: category_id → school_incident_workflow_module_category -- Keputusan Desain issue #336: category_id sengaja memakai kembali school_incident_workflow_module_category, tidak ada ir.module.category baru dibuat.
+module kategori-group-khusus-per-model-transaksional|school_incident_weekly_review_viewer_group: category_id → school_incident_workflow_module_category -- Keputusan Desain issue #336: category_id sengaja memakai kembali school_incident_workflow_module_category, tidak ada ir.module.category baru dibuat.
+module kategori-group-khusus-per-model-transaksional|school_incident_weekly_review_user_group: category_id → school_incident_workflow_module_category -- Keputusan Desain issue #336: category_id sengaja memakai kembali school_incident_workflow_module_category, tidak ada ir.module.category baru dibuat.
+module kategori-group-khusus-per-model-transaksional|school_incident_weekly_review_validator_group: category_id → school_incident_workflow_module_category -- Keputusan Desain issue #336: category_id sengaja memakai kembali school_incident_workflow_module_category, tidak ada ir.module.category baru dibuat.

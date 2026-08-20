@@ -83,7 +83,7 @@
             <xpath expr="//header/field[@name='state']" position="before">
                 <field name="escalate_ok" invisible="1" />
                 <button
-                        name="%(school_incident_wizard_escalate_action)d"
+                        name="%(escalate_incident_action)d"
                         type="action"
                         string="Escalate"
                         attrs="{'invisible': [('escalate_ok', '=', False)]}"
@@ -133,6 +133,16 @@
                             <field name="summary" />
                             <field name="is_first_contact" readonly="1" />
                         </tree>
+                        <form>
+                            <group name="parent_contact_main" colspan="4" col="2">
+                                <field name="contact_datetime" />
+                                <field name="contact_method" />
+                                <field name="contacted_by_id" />
+                                <field name="parent_partner_id" />
+                                <field name="is_first_contact" readonly="1" />
+                                <field name="summary" nolabel="1" colspan="2" />
+                            </group>
+                        </form>
                     </field>
                 </page>
             </xpath>

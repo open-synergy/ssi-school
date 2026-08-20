@@ -3,7 +3,7 @@
 > **Module:** ssi*school_incident\
 > **Model:** `school_academic_alert`\
 > **Menu:** School > Incident > Academic Alerts\
-> **Actor:** user in group \_Officer (Counselor/Vice Principal)* or higher\
+> **Actor:** user in group \_Academic Alert Validator* or higher\
 > **Requires:** `14-evaluate`
 
 ## Pre-Condition
@@ -11,8 +11,8 @@
 - **Record:** Status is **Open**.
 - **Record:** **Alert Level** is set to an Orange or Red level (from a previous
   **Evaluate** run).
-- **Access:** User has _Can Create Incident_ access right (belongs to the Officer
-  (Counselor/Vice Principal) group or higher).
+- **Access:** User has _Can Create Incident_ access right (belongs to the Academic Alert
+  Validator group or higher).
 
 ## Flow
 

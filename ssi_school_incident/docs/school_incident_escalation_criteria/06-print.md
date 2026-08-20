@@ -2,7 +2,7 @@
 
 > **Module:** ssi_school_incident\
 > **Model:** `school_incident_escalation_criteria`\
-> **Menu:** School > Configuration > Configuration > Escalation Criteria\
+> **Menu:** School > Configuration > Incident > Escalation Criteria\
 > **Actor:** any authenticated user\
 > **Requires:** `01-create`
 
@@ -16,7 +16,7 @@
 
 ## Flow
 
-1. Open the **School > Configuration > Configuration > Escalation Criteria** menu.
+1. Open the **School > Configuration > Incident > Escalation Criteria** menu.
 2. Open the record to print.
 3. Click **Print** in the header.
 4. In the **Select Report To Print** wizard, select a **Type** (optional filter) and the

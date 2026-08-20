@@ -3,15 +3,15 @@
 > **Module:** ssi*school_incident\
 > **Model:** `school_academic_alert`\
 > **Menu:** School > Incident > Academic Alerts\
-> **Actor:** user in group \_Officer (Counselor/Vice Principal)* or higher\
+> **Actor:** user in group \_Academic Alert Validator* or higher\
 > **State:** `cancel` | `reject` → `draft`\
 > **Requires:** `10-cancel`
 
 ## Pre-Condition
 
 - **Record:** Status is **Cancelled** or **Rejected**.
-- **Access:** User has _Can Restart_ access right (belongs to the Officer
-  (Counselor/Vice Principal) group or higher).
+- **Access:** User has _Can Restart_ access right (belongs to the Academic Alert
+  Validator group or higher).
 
 ## Flow
 

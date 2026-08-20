@@ -3,7 +3,7 @@
 > **Module:** ssi*school_incident\
 > **Model:** `school_academic_alert`\
 > **Menu:** School > Incident > Academic Alerts\
-> **Actor:** approver in group \_Officer (Counselor/Vice Principal)* or higher\
+> **Actor:** approver in group \_Academic Alert Validator* or higher\
 > **State:** `confirm` → `reject`\
 > **Requires:** `04-confirm`
 
@@ -11,7 +11,7 @@
 
 - **Record:** Status is **Waiting for Approval**.
 - **Access:** User is registered as an approver on the active approval template (belongs
-  to the Officer (Counselor/Vice Principal) group or higher).
+  to the Academic Alert Validator group or higher).
 - **Access:** User has _Can Reject_ access right.
 
 ## Flow

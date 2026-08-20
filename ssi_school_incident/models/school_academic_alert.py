@@ -252,10 +252,31 @@ class SchoolAcademicAlert(models.Model):
         return res
 
     def action_evaluate(self):
+        """Evaluate every record in self against the configured levels.
+
+        Runs as ``sudo()`` so a user who only passed the
+        ``evaluate_ok`` policy check does not also need write access
+        to ``school_academic_alert_level``.
+        """
         for record in self.sudo():
             record._evaluate_alert_level()
 
     def _evaluate_alert_level(self):
+        """Run each ``school_academic_alert_level``'s Python Code
+        against this alert's local dict, highest sequence first, and
+        set ``alert_level_id`` to the first level whose code sets a
+        truthy local variable named ``result``.
+
+        The local dict starts from ``mixin.localdict``'s
+        ``_get_default_localdict()`` (record fields, ``env``, ...),
+        then this alert's own ``evaluation_context`` (if any) is
+        executed first to seed extra variables (e.g.
+        ``trigger_count``) that the level rules can read. Leaves
+        ``alert_level_id`` empty when no level triggers.
+
+        :raises UserError: when ``evaluation_context`` or a level's
+            ``python_code`` fails to evaluate
+        """
         self.ensure_one()
         localdict = self._get_default_localdict()
 
@@ -315,12 +336,32 @@ boolean local variable named 'result'
         self.alert_level_id = triggered_level.id if triggered_level else False
 
     def action_create_incident(self):
+        """Create a ``school_incident`` from every record in self.
+
+        Runs as ``sudo()`` so a user who only passed the
+        ``create_incident_ok`` policy check does not also need create
+        access to ``school_incident``.
+
+        :return: the ``ir.actions.act_window`` opening the last
+            created incident (for the common single-record case)
+        """
         result = None
         for record in self.sudo():
             result = record._create_incident()
         return result
 
     def _create_incident(self):
+        """Create a ``school_incident`` from this alert.
+
+        Only allowed when this alert's triggered ``alert_level_id``
+        has an Orange or Red color (Bab 8.3 of the YPII Guideline);
+        the created incident is linked back via ``incident_id``.
+
+        :return: an ``ir.actions.act_window`` dict opening the newly
+            created incident in form view
+        :raises UserError: when no Alert Level is set, or its color is
+            not Orange/Red
+        """
         self.ensure_one()
         color = self.alert_level_id.color
         if not self.alert_level_id or color not in INCIDENT_ALLOWED_COLORS:
@@ -354,10 +395,26 @@ Context that triggers an Orange/Red Academic Alert Level, then try again
         return waction
 
     def _get_academic_incident_type(self):
+        """Return the fixed Incident Type used for alert-created incidents.
+
+        Extension point: override in a downstream module to select a
+        different ``school_incident_type`` record.
+
+        :return: the ``school_incident_type`` record
+        """
         self.ensure_one()
         return self.env.ref("ssi_school_incident.school_incident_type_academic")
 
     def _prepare_incident_data(self, incident_type):
+        """Build the ``school_incident`` values for ``_create_incident``.
+
+        Extension point: override to add/adjust fields on the
+        generated incident without touching ``_create_incident``.
+
+        :param incident_type: the ``school_incident_type`` record to
+            use, as returned by ``_get_academic_incident_type``
+        :return: dict of ``school_incident`` values
+        """
         self.ensure_one()
         description = _("Academic Alert (%s): %s") % (
             (self.alert_level_id.color or "").capitalize(),

@@ -3,14 +3,14 @@
 > **Module:** ssi*school_incident\
 > **Model:** `school_academic_alert`\
 > **Menu:** School > Incident > Academic Alerts\
-> **Actor:** user in group \_Officer (Counselor/Vice Principal)* or higher\
+> **Actor:** user in group \_Academic Alert Validator* or higher\
 > **Requires:** `01-create`
 
 ## Pre-Condition
 
 - **Record:** Status is **Draft**.
 - **Access:** User has _Can Input Manual Document Number_ access right (belongs to the
-  Officer (Counselor/Vice Principal) group or higher).
+  Academic Alert Validator group or higher).
 
 ## Flow
 

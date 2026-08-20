@@ -3,7 +3,7 @@
 > **Module:** ssi*school_incident\
 > **Model:** `school_incident_weekly_review`\
 > **Menu:** School > Incident > Weekly Case Reviews\
-> **Actor:** user in group \_Officer (Counselor/Vice Principal)* or higher\
+> **Actor:** user in group \_Weekly Review User* or higher\
 > **Requires:** `04-confirm`
 
 ## Pre-Condition
@@ -16,7 +16,7 @@
 - **Config:** An active `approval.template` for this model matches this record, with an
   approver group configured for its approval level, so the process can be rebuilt once
   restarted.
-- **Access:** User is in group _Officer (Counselor/Vice Principal)_ or higher.
+- **Access:** User is in group _Weekly Review User_ or higher.
 
 ## Flow
 
