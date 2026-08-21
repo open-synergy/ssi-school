@@ -327,25 +327,34 @@ class SchoolAdmissionForm(models.Model):
         }
 
     @api.onchange("academic_year_id")
-    def _onchange_academic_term_id(self):
+    def onchange_academic_term_id(self):
         """Clear the academic term when the academic year changes."""
         self.academic_term_id = False
 
     @api.onchange("fee_template_id")
-    def _onchange_fee_template_id(self):
-        """Copy journal and account from the selected fee template.
+    def onchange_journal_id(self):
+        """Copy the journal from the selected fee template.
 
-        Both fields are cleared when no fee template is selected.
+        Cleared when no fee template is selected.
         """
         if self.fee_template_id:
             self.journal_id = (
                 self.fee_template_id.journal_id
             )  # pylint: disable=attribute-defined-outside-init
+        else:
+            self.journal_id = False  # pylint: disable=attribute-defined-outside-init
+
+    @api.onchange("fee_template_id")
+    def onchange_account_id(self):
+        """Copy the account from the selected fee template.
+
+        Cleared when no fee template is selected.
+        """
+        if self.fee_template_id:
             self.account_id = (
                 self.fee_template_id.account_id
             )  # pylint: disable=attribute-defined-outside-init
         else:
-            self.journal_id = False  # pylint: disable=attribute-defined-outside-init
             self.account_id = False  # pylint: disable=attribute-defined-outside-init
 
     def action_compute_fee(self):

@@ -105,7 +105,8 @@ class SchoolAdmissionTestCreateAdmission(models.TransientModel):
             record.allowed_pricelist_ids = result
 
     @api.onchange("currency_id")
-    def _onchange_pricelist_id(self):
+    def onchange_pricelist_id(self):
+        """Clear the pricelist when the currency changes."""
         self.pricelist_id = False
 
     @api.onchange(

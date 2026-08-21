@@ -31,3 +31,12 @@ module name-wizard-tanpa-kata-wizard|wizards/school_admission_create_enrollment.
 module name-wizard-tanpa-kata-wizard|wizards/school_admission_form_create_admission.py: _name 'school_admission_form.wizard_create_admission' memuat kata 'wizard' -- _name warisan; mengubahnya mengubah nama tabel/model dan XML ID model_* yang sudah dirujuk ir.model.access, view, dan action
 module name-wizard-tanpa-kata-wizard|wizards/school_admission_payment_term_duplicate.py: _name 'school_admission_payment_term.wizard_duplicate' memuat kata 'wizard' -- _name warisan; mengubahnya mengubah nama tabel/model dan XML ID model_* yang sudah dirujuk ir.model.access, view, dan action
 module name-wizard-tanpa-kata-wizard|wizards/school_admission_test_create_admission.py: _name 'school_admission_test.wizard_create_admission' memuat kata 'wizard' -- _name warisan; mengubahnya mengubah nama tabel/model dan XML ID model_* yang sudah dirujuk ir.model.access, view, dan action
+
+# issue #329: penyelarasan penamaan onchange `_onchange_<field>` ->
+# `onchange_<field>`. Keputusan Desain issue itu menuntut grep lintas
+# repo dulu -- `_onchange_grade_id` juga muncul di
+# ssi_school_admission_lead/wizard/crm_lead_create_admission_form.py
+# (method onchange lain, model berbeda, kebetulan nama sama). Karena
+# ada perujuk bernama sama di modul LAIN, rename method ini dibatalkan
+# sesuai Keputusan Desain -- item ini hanya boleh menyentuh satu modul.
+module method-api-onchange-bernama-onchange-field|models/school_admission_test.py _onchange_grade_id -- dibatalkan: nama `_onchange_grade_id` juga dipakai method onchange tak terkait di modul lain (ssi_school_admission_lead); Keputusan Desain issue #329 melarang rename bila ada perujuk nama sama di modul lain
