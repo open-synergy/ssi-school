@@ -29,8 +29,8 @@ addon | version | maintainers | summary
 [ssi_school_customer_invoice_export](ssi_school_customer_invoice_export/) | 14.0.1.1.3 |  | School - Customer Invoice Export
 [ssi_school_customer_invoice_export_operating_unit](ssi_school_customer_invoice_export_operating_unit/) | 14.0.1.1.0 |  | School - Customer Invoice Export - Operating Unit
 [ssi_school_health](ssi_school_health/) | 14.0.1.1.0 |  | School Health
-[ssi_school_incident](ssi_school_incident/) | 14.0.1.1.1 |  | School Incident
-[ssi_school_incident_operating_unit](ssi_school_incident_operating_unit/) | 14.0.1.1.0 |  | School Incident - Operating Unit
+[ssi_school_incident](ssi_school_incident/) | 14.0.1.2.0 |  | School Incident
+[ssi_school_incident_operating_unit](ssi_school_incident_operating_unit/) | 14.0.1.2.0 |  | School Incident - Operating Unit
 [ssi_school_lead](ssi_school_lead/) | 14.0.1.13.0 |  | School Lead
 [ssi_school_operating_unit](ssi_school_operating_unit/) | 14.0.1.6.1 |  | School - Operating Unit
 [ssi_school_promotion](ssi_school_promotion/) | 14.0.1.0.1 |  | School + Promotion
