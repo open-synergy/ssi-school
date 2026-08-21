@@ -389,13 +389,90 @@ scenarios:
             type: "value"
             expected: "open"
 
-      - step: "Mark invoice Done as fully paid"
+      - step: "Setup - create contra account for the manual payment entry"
+        action: "create"
+        model: "account.account"
+        save_as: "payment_contra_account"
+        values:
+          name: "Payment Contra Account IE1"
+          code: "PCAIE1"
+          user_type_id: "REC: account_type.id"
+
+      - step: "Setup - create general journal for the manual payment entry"
+        action: "create"
+        model: "account.journal"
+        save_as: "payment_journal"
+        values:
+          name: "Payment General Journal IE1"
+          code: "PGJIE1"
+          type: "general"
+
+      - step: "Get invoice Done's receivable journal item"
+        action: "search"
+        model: "account.move.line"
+        domain: [["id", "=", "REC: invoice_done.receivable_move_line_id.id"]]
+        save_as: "invoice_done_receivable_ml"
+        expect_count: 1
+
+      - step: "Create a manual payment entry crediting the receivable account"
+        action: "create"
+        model: "account.move"
+        save_as: "payment_move"
+        values:
+          journal_id: "REC: payment_journal.id"
+          date: "2024-07-01"
+          line_ids:
+            - - 0
+              - 0
+              - name: "Payment"
+                account_id: "REC: ci_account.id"
+                partner_id: "REC: invoice_done.partner_id.id"
+                credit: 500000.0
+            - - 0
+              - 0
+              - name: "Payment contra"
+                account_id: "REC: payment_contra_account.id"
+                debit: 500000.0
+
+      - step: "Post the payment entry"
         action: "call"
+        target: "payment_move"
+        method: "action_post"
+
+      - step: "Get the payment's receivable-side journal item"
+        action: "search"
+        model: "account.move.line"
+        domain:
+          - ["move_id", "=", "REC: payment_move.id"]
+          - ["account_id", "=", "REC: ci_account.id"]
+        save_as: "payment_receivable_ml"
+        expect_count: 1
+
+      - step: "Combine both journal items to reconcile"
+        action: "search"
+        model: "account.move.line"
+        domain:
+          - [
+              "id",
+              "in",
+              ["REC: invoice_done_receivable_ml.id", "REC: payment_receivable_ml.id"],
+            ]
+        save_as: "to_reconcile"
+        expect_count: 2
+
+      - step: "Reconcile the receivable line against the payment"
+        action: "call"
+        target: "to_reconcile"
+        method: "reconcile"
+
+      - step: "Invoice Done becomes done once fully reconciled"
+        action: "assert"
         target: "invoice_done"
-        method: "action_done"
-        as_user: "base.user_admin"
         refresh: true
         asserts:
+          realized:
+            type: "value"
+            expected: true
           state:
             type: "value"
             expected: "done"
