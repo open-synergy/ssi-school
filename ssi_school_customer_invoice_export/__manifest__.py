@@ -4,7 +4,7 @@
 
 {
     "name": "School - Customer Invoice Export",
-    "version": "14.0.1.1.3",
+    "version": "14.0.1.1.4",
     "website": "https://simetri-sinergi.id",
     "author": "OpenSynergy Indonesia, PT. Simetri Sinergi Indonesia",
     "contributors": [

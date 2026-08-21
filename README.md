@@ -26,7 +26,7 @@ addon | version | maintainers | summary
 [ssi_school_admission_lead_operating_unit](ssi_school_admission_lead_operating_unit/) | 14.0.1.1.2 |  | School Admission Lead - Operating Unit
 [ssi_school_admission_operating_unit](ssi_school_admission_operating_unit/) | 14.0.1.4.3 |  | School Admission - Operating Unit
 [ssi_school_admission_promotion](ssi_school_admission_promotion/) | 14.0.1.0.1 |  | School Admission + Promotion
-[ssi_school_customer_invoice_export](ssi_school_customer_invoice_export/) | 14.0.1.1.3 |  | School - Customer Invoice Export
+[ssi_school_customer_invoice_export](ssi_school_customer_invoice_export/) | 14.0.1.1.4 |  | School - Customer Invoice Export
 [ssi_school_customer_invoice_export_operating_unit](ssi_school_customer_invoice_export_operating_unit/) | 14.0.1.1.0 |  | School - Customer Invoice Export - Operating Unit
 [ssi_school_health](ssi_school_health/) | 14.0.1.1.0 |  | School Health
 [ssi_school_incident](ssi_school_incident/) | 14.0.1.2.0 |  | School Incident
