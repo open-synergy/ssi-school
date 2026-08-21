@@ -123,15 +123,20 @@ class CrmLeadCreateAdmissionForm(models.TransientModel):
         return res
 
     @api.onchange("academic_year_id")
-    def _onchange_academic_year_id(self):
+    def onchange_academic_year_id(self):
         if self.academic_term_id.year_id != self.academic_year_id:
             self.academic_term_id = False
 
     @api.onchange("school_id")
-    def _onchange_school_id(self):
+    def onchange_school_id(self):
         self.grade_id = False
         self.fee_template_id = False
 
+    # NOTE: kept as `_onchange_grade_id` (not `onchange_grade_id`). The
+    # target name collides with an unrelated onchange method of the same
+    # name in ssi_school_admission/models/school_admission_test.py; the
+    # Design Decision of issue #330 forbids renaming when another module
+    # carries a same-named referent. See .validator-exceptions.
     @api.onchange("grade_id")
     def _onchange_grade_id(self):
         self.fee_template_id = False

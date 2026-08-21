@@ -18,5 +18,14 @@ module name-wizard-tanpa-notasi-titik|models/res_config_settings.py: _name 'res.
 module berkas-wizard-berada-di-wizards|models/res_config_settings.py: TransientModel di luar wizards/ -- res.config.settings bukan wizard SSI, melainkan extension res.config.settings core Odoo; ditempatkan di models/ mengikuti konvensi extension model, bukan wizard
 module acl-wizard-satu-user-access-tanpa-all-access|res.config.settings: tidak ada ACL sama sekali -- ACL res.config.settings sudah disediakan modul base; menambah ACL baru untuk model core akan duplikat/bertentangan dengan ACL base
 module name-wizard-tanpa-notasi-titik|wizard/crm_lead_create_admission_form.py: _name 'crm.lead.create_admission_form' memakai notasi titik -- _name warisan yang dikurung 10-wizard.md §1; menggantinya mengubah nama tabel/model beserta XML ID model_crm_lead_create_admission_form yang sudah dirujuk ir.model.access, view, dan action
-module berkas-wizard-berada-di-wizards|wizard/crm_lead_create_admission_form.py: TransientModel di luar wizards/ -- direktori wizard/ (tunggal) adalah ejaan warisan; 10-wizard.md §3 melarang menyeragamkan modul lama dengan memindahkan direktorinya karena itu mengubah path berkas di manifest dan __init__.py tanpa manfaat fungsional
 module direktori-wizards-jamak-bukan-wizard|wizard/ -- direktori wizard/ (tunggal) adalah ejaan warisan yang DIPERTAHANKAN; 10-wizard.md §3 melarang menyeragamkan modul lama dengan memindahkan direktorinya karena itu mengubah path berkas di manifest dan __init__.py tanpa manfaat fungsional. Modul BARU tetap wajib memakai wizards/
+
+# issue #330: penyelarasan penamaan onchange `_onchange_<field>` ->
+# `onchange_<field>`. Keputusan Desain issue itu menuntut grep lintas
+# repo dulu -- `_onchange_grade_id` juga muncul di
+# ssi_school_admission/models/school_admission_test.py (method onchange
+# lain, model berbeda, kebetulan nama sama; dibatalkan di sana juga oleh
+# issue #329 dengan alasan yang sama). Karena ada perujuk bernama sama di
+# modul LAIN, rename method ini dibatalkan sesuai Keputusan Desain --
+# item ini hanya boleh menyentuh satu modul.
+module method-api-onchange-bernama-onchange-field|wizard/crm_lead_create_admission_form.py _onchange_grade_id -- dibatalkan: nama `_onchange_grade_id` juga dipakai method onchange tak terkait di modul lain (ssi_school_admission/models/school_admission_test.py); Keputusan Desain issue #330 melarang rename bila ada perujuk nama sama di modul lain
