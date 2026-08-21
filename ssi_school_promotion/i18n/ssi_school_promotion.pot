@@ -61,6 +61,6 @@ msgstr ""
 #. module: ssi_school_promotion
 #: model:ir.model.fields,help:ssi_school_promotion.field_school_enrollment_payment_term__promotion_usage_ids
 msgid ""
-"promotion_code_usage records whose own 'Reference Document' points back to "
-"this record."
+"promotion_code_usage records whose own 'Reference Document' or 'Referrer "
+"Reference Document' points back to this record."
 msgstr ""
