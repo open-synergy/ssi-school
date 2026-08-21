@@ -203,15 +203,26 @@ class SchoolAdmissionTest(models.Model):  # pylint: disable=too-few-public-metho
                     )
 
     @api.onchange("academic_year_id")
-    def _onchange_academic_term_id(self):
+    def onchange_academic_term_id(self):
+        """Clear the academic term when the academic year changes."""
         self.academic_term_id = False
 
     @api.onchange("school_id")
     def _onchange_grade_id(self):
+        # NOTE: kept as `_onchange_grade_id` (not `onchange_grade_id`)
+        # deliberately -- see `.validator-exceptions`. The literal name
+        # also occurs in `ssi_school_admission_lead` (an unrelated
+        # onchange on a different transient model), and per this
+        # module's backlog Keputusan Desain, any cross-module textual
+        # match blocks the rename for that specific method.
         self.grade_id = False
 
     @api.onchange("admission_form_id")
-    def _onchange_student_id(self):
+    def onchange_student_id(self):
+        """Copy the student from the linked admission form.
+
+        Cleared when no admission form is selected.
+        """
         if self.admission_form_id:
             self.student_id = self.admission_form_id.student_id
         else:

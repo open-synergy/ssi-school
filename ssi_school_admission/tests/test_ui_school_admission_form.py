@@ -102,10 +102,10 @@ class TestUiSchoolAdmissionForm(HttpSavepointCase):
         )
         # journal_id/account_id are required=True on school_admission_form
         # (inherited from mixin.account_move -- ssi_accounting_entry_mixin).
-        # The UI fills them via _onchange_fee_template_id when Fee
-        # Template is selected on the form, but that onchange never
-        # fires on a plain Python .create() call, so every fixture built
-        # by _create_form() below sets them explicitly.
+        # The UI fills them via onchange_journal_id/onchange_account_id
+        # when Fee Template is selected on the form, but those onchanges
+        # never fire on a plain Python .create() call, so every fixture
+        # built by _create_form() below sets them explicitly.
         cls.journal = cls.env["account.journal"].search(
             [("type", "=", "sale")], limit=1
         )
@@ -205,8 +205,8 @@ class TestUiSchoolAdmissionForm(HttpSavepointCase):
             ``journal_id``/``account_id``/``currency_id`` are
             required=True on base mixins (``mixin.account_move``,
             ``mixin.transaction_total``/``_tax``/``_untaxed``) and are
-            normally filled by onchange (``_onchange_fee_template_id``
-            for journal/account; the ``currency_id`` field is itself
+            normally filled by onchange (``onchange_journal_id`` /
+            ``onchange_account_id``; the ``currency_id`` field is itself
             ``related="pricelist_id.currency_id", store=True`` but a
             required related-stored field can still be inserted before
             its compute runs on a plain ``.create()`` call) -- so all
