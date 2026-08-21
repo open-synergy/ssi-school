@@ -206,14 +206,10 @@ scenarios:
         method: "action_confirm"
         as_user: "base.user_admin"
 
-      - step: "Invalidate lead cache"
-        action: "call"
-        target: "lead"
-        method: "invalidate_cache"
-
       - step: "Assert admission created and linked to lead"
         action: "assert"
         target: "lead"
+        refresh: true
         asserts:
           admission_id:
             type: "value"
@@ -403,14 +399,10 @@ scenarios:
         method: "action_confirm"
         as_user: "base.user_admin"
 
-      - step: "Invalidate lead cache"
-        action: "call"
-        target: "lead"
-        method: "invalidate_cache"
-
       - step: "Assert admission was created and linked to lead"
         action: "assert"
         target: "lead"
+        refresh: true
         asserts:
           admission_id:
             type: "value"

@@ -216,22 +216,53 @@ Solution: Select the Student first, then fill in the Student NISN
 
     @api.depends("admission_id")
     def _compute_create_admission_ok(self):
+        """Allow creating an admission only while none exists yet.
+
+        :return: nothing; assigns ``create_admission_ok``
+        """
         for record in self:
             record.create_admission_ok = not record.admission_id
 
     @api.model_create_multi
     def create(self, vals_list):
+        """Create leads, then sync the parent/student family link.
+
+        Overridden so the same linkage performed on ``write()`` also
+        runs for leads that are created with ``partner_id``,
+        ``student_id``, and ``parent_relationship`` already set.
+
+        :param vals_list: list of value dicts for the new leads
+        :return: the created ``crm.lead`` recordset
+        """
         records = super().create(vals_list)
         records._sync_student_family_link()
         return records
 
     def write(self, vals):
+        """Write leads, then sync the parent/student family link.
+
+        Overridden so changing ``partner_id``, ``student_id``, or
+        ``parent_relationship`` keeps the student linked as a child/ward
+        of the parent contact.
+
+        :param vals: value dict being written
+        :return: the same value ``write()`` normally returns
+        """
         res = super().write(vals)
         if any(field in vals for field in _SYNC_STUDENT_FAMILY_LINK_TRIGGER_FIELDS):
             self._sync_student_family_link()
         return res
 
     def _sync_student_family_link(self):
+        """Link the prospective student as a child/ward of the parent.
+
+        Skips leads that have no parent contact or no student yet.
+        The write goes through ``partner_id.sudo()`` so the admission
+        officer does not need write access to ``res.partner`` family
+        links.
+
+        :return: nothing; writes ``res.partner`` family links
+        """
         for record in self:
             if not record.partner_id or not record.student_id:
                 continue
@@ -240,11 +271,24 @@ Solution: Select the Student first, then fill in the Student NISN
             )
 
     def action_create_admission(self):
+        """Open (or create) the admission for this lead.
+
+        :return: an ``ir.actions.act_window`` dict, either opening the
+            existing admission or the Create Admission wizard
+        """
         for record in self.sudo():
             result = record._create_admission()
         return result
 
     def _create_admission(self):
+        """Build the action that opens or creates this lead's admission.
+
+        When ``admission_id`` is already set, the action opens that
+        admission directly. Otherwise it opens the Create Admission
+        wizard, prefilled with this lead's school and student.
+
+        :return: an ``ir.actions.act_window`` dict
+        """
         self.ensure_one()
         if self.admission_id:
             return {

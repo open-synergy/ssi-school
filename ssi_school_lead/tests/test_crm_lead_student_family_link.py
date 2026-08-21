@@ -9,5 +9,8 @@ from odoo.tests import tagged
 
 @tagged("post_install", "-at_install")
 class TestCrmLeadStudentFamilyLink(YamlTransactionCase):
+    """Cover linking the prospective student to the parent contact."""
+
     def test_crm_lead_student_family_link(self):
+        """Run the student/parent family link sync scenario."""
         self.run_yaml_scenario("test_data_crm_lead_student_family_link.yaml")
