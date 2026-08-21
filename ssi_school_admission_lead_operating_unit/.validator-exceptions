@@ -1,0 +1,25 @@
+# Penyimpangan yang diterima untuk validator `module` (lihat validator-contract.md §13).
+#
+# wizards/crm_lead_create_admission.py dan wizards/crm_lead_create_admission_form.py
+# memakai pola _name + _inherit bernilai sama: keduanya MENGEKSTENSI wizard milik
+# modul dasar, bukan mendefinisikannya --
+# crm.lead.create_admission didefinisikan di ssi_school_lead,
+# crm.lead.create_admission_form didefinisikan di ssi_school_admission_lead.
+# Konsekuensinya:
+#
+# * _name-nya warisan dan TIDAK boleh diganti -- mengubahnya berarti mengubah nama
+#   tabel/model beserta XML ID model_<nama> yang sudah dirujuk ir.model.access, view,
+#   dan action modul dasar (02-core-principles.md; 10-wizard.md §1 menyebut bentuk
+#   ini warisan yang dipertahankan).
+# * ACL-nya hidup di modul dasar yang mendefinisikan model itu; mendefinisikan ulang
+#   di modul glue ini akan menggandakan aturan akses.
+#
+# Wizard BARU di modul ini tetap wajib memakai bentuk benar: frasa kerja snake_case
+# datar, tanpa prefix model induk, tanpa kata 'wizard', tanpa notasi titik.
+# Preseden: ssi_school_admission_customer_invoice_export_operating_unit
+# (.validator-exceptions), issue open-synergy/ssi-school#331.
+
+module name-wizard-tanpa-notasi-titik|wizards/crm_lead_create_admission.py: _name 'crm.lead.create_admission' memakai notasi titik -- _name warisan milik modul dasar ssi_school_lead; mengubahnya melanggar 02-core-principles.md (XML ID model_<nama> & nama tabel sudah dirujuk ACL, view, dan action)
+module name-wizard-tanpa-notasi-titik|wizards/crm_lead_create_admission_form.py: _name 'crm.lead.create_admission_form' memakai notasi titik -- _name warisan milik modul dasar ssi_school_admission_lead; mengubahnya melanggar 02-core-principles.md (XML ID model_<nama> & nama tabel sudah dirujuk ACL, view, dan action)
+module acl-wizard-satu-user-access-tanpa-all-access|crm.lead.create_admission: tidak ada ACL sama sekali -- model didefinisikan modul dasar ssi_school_lead dan ACL-nya disediakan di sana; mendefinisikan ulang di modul glue ini akan menggandakan aturan akses
+module acl-wizard-satu-user-access-tanpa-all-access|crm.lead.create_admission_form: tidak ada ACL sama sekali -- model didefinisikan modul dasar ssi_school_admission_lead dan ACL-nya disediakan di sana; mendefinisikan ulang di modul glue ini akan menggandakan aturan akses
