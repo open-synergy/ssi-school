@@ -10,7 +10,10 @@ from odoo.tests import Form, tagged
 
 @tagged("post_install", "-at_install")
 class TestSchoolLead(YamlTransactionCase):
+    """Cover the school/admission fields and flow on ``crm.lead``."""
+
     def test_school_lead(self):
+        """Run the school lead CRUD, compute, and admission scenario."""
         self.run_yaml_scenario("test_data_school_lead.yaml")
 
     def _create_customer_invoice_type(self, suffix):
@@ -38,7 +41,18 @@ class TestSchoolLead(YamlTransactionCase):
         )
 
     def test_onchange_payment_template_id_auto_populates(self):
-        """payment_template_id should auto-populate when school, grade, and term match."""
+        """payment_template_id auto-populates once school/grade/term match.
+
+        Pure Python -- trigger P12 (L-20: ``odoo-yaml-test``'s
+        ``action: form`` opens ``Form()`` without a ``view:`` key, so it
+        cannot exercise the domain-restricted ``academic_term_id`` and
+        ``payment_template_id`` fields the way this wizard's own form
+        view declares them). ``payment_template_id`` is a plain stored
+        field with no server-side default: it is only ever populated by
+        the chained ``onchange_payment_template_id`` while the wizard
+        form is live, so the assertion needs a real ``Form()`` walking
+        the view-declared fields in sequence.
+        """
         year = self.env["school_academic_year"].create(
             {
                 "name": "Year OC",
@@ -102,7 +116,14 @@ class TestSchoolLead(YamlTransactionCase):
         self.assertEqual(form.payment_template_id.id, template.id)
 
     def test_onchange_payment_template_id_clears_on_school_change(self):
-        """payment_template_id should clear when school changes."""
+        """payment_template_id clears once the school changes.
+
+        Pure Python -- trigger P12 (L-20: ``odoo-yaml-test``'s
+        ``action: form`` cannot bind to this wizard's own view, which
+        is what declares the ``payment_template_id`` domain that the
+        chained onchange relies on). Same wizard/``Form()`` reasoning
+        as ``test_onchange_payment_template_id_auto_populates``.
+        """
         year = self.env["school_academic_year"].create(
             {
                 "name": "Year OC2",
@@ -173,7 +194,15 @@ class TestSchoolLead(YamlTransactionCase):
         self.assertFalse(form.payment_template_id.id)
 
     def test_create_admission_propagates_receivable(self):
-        """Admission created from lead inherits receivable journal/account from template."""
+        """Admission inherits the receivable journal/account from template.
+
+        Pure Python -- trigger P12 (L-20: reaching ``payment_template_id``
+        requires the same wizard-form onchange chain as the two tests
+        above, which ``action: form`` cannot drive without a ``view:``
+        key). ``action_confirm()`` is called directly on the ``Form()``-
+        saved wizard afterwards to assert the propagation onto the
+        created ``school_admission``.
+        """
         year = self.env["school_academic_year"].create(
             {
                 "name": "Year OC3",

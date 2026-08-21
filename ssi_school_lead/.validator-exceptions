@@ -1,0 +1,7 @@
+# Pengecualian ini mengurung wizard warisan `crm.lead.create_admission` yang
+# SUDAH ADA saja. Mengubah `_name`-nya berarti mengubah XML ID `model_crm_lead_
+# create_admission` yang sudah dirujuk ACL, view, dan action -- dilarang
+# 02-core-principles.md §1. Wizard BARU di modul ini tetap wajib memakai frasa
+# kerja snake_case datar, tanpa prefix model induk, tanpa kata "wizard", tanpa
+# notasi titik (10-wizard.md §1). Lihat open-synergy/ssi-school#337.
+module name-wizard-tanpa-notasi-titik|wizards/crm_lead_create_admission.py: _name 'crm.lead.create_admission' memakai notasi titik -- _name warisan dikunci: mengganti nama memutus XML ID model_crm_lead_create_admission yang sudah dirujuk ACL/view/action (02-core-principles.md §1, 10-wizard.md §1). Lihat open-synergy/ssi-school#337.

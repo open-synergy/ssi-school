@@ -20,7 +20,7 @@
         "web_tour",
     ],
     "data": [
-        "security/ir.model.access.csv",
+        "security/ir_model_access/crm_lead_create_admission.xml",
         "views/assets.xml",
         "views/crm_lead_create_admission_view.xml",
         "views/crm_lead_views.xml",

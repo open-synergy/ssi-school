@@ -81,6 +81,11 @@ class CrmLeadCreateAdmission(models.TransientModel):
 
     @api.model
     def default_get(self, fields_list):
+        """Default the academic term/year to the earliest open term.
+
+        :param fields_list: field names requested by the client
+        :return: dict of default values
+        """
         res = super().default_get(fields_list)
         AcademicTerm = self.env["school_academic_term"]  # pylint: disable=invalid-name
         term = AcademicTerm.search(
@@ -96,16 +101,24 @@ class CrmLeadCreateAdmission(models.TransientModel):
         return res
 
     @api.onchange("academic_year_id")
-    def _onchange_academic_year_id(self):
+    def onchange_academic_term_id(self):
         if self.academic_term_id.year_id != self.academic_year_id:
             self.academic_term_id = False
 
     @api.onchange("school_id")
-    def _onchange_school_id(self):
+    def onchange_grade_id(self):
         self.grade_id = False
 
     @api.onchange("school_id", "grade_id", "academic_term_id")
-    def _onchange_payment_template_id(self):
+    def onchange_payment_template_id(self):
+        """Auto-populate the payment template matching the selections.
+
+        Clears ``payment_template_id`` first, then searches for the
+        ``school_admission_payment_template`` whose school, grade, and
+        academic term all match the current wizard values.
+
+        :return: nothing; assigns ``payment_template_id``
+        """
         self.payment_template_id = False
         if self.school_id and self.grade_id and self.academic_term_id:
             PaymentTemplate = self.env[  # pylint: disable=invalid-name
@@ -121,6 +134,13 @@ class CrmLeadCreateAdmission(models.TransientModel):
                 self.payment_template_id = template
 
     def action_confirm(self):
+        """Create the admission and link it back to the source lead.
+
+        When a payment template was resolved, the admission's payment
+        is computed right away.
+
+        :return: an ``ir.actions.act_window`` dict opening the admission
+        """
         self.ensure_one()
         admission = self.env["school_admission"].create(self._prepare_admission_data())
         self.lead_id.sudo().write(

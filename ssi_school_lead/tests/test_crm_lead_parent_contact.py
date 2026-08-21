@@ -9,7 +9,10 @@ from odoo.tests import tagged
 
 @tagged("post_install", "-at_install")
 class TestCrmLeadParentContact(YamlTransactionCase):
+    """Cover the parent/guardian contact fields on ``crm.lead``."""
+
     def test_crm_lead_parent_contact(self):
+        """Run the parent contact CRUD and sync scenario."""
         self.run_yaml_scenario("test_data_crm_lead_parent_contact.yaml")
 
     def test_parent_fields_are_not_readonly(self):
