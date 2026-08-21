@@ -27,7 +27,7 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_incident
-#: code:addons/ssi_school_incident/wizards/school_incident_escalate.py:0
+#: code:addons/ssi_school_incident/wizards/escalate_incident.py:0
 #, python-format
 msgid ""
 "\n"
@@ -139,6 +139,21 @@ msgstr ""
 #: model:ir.actions.act_window,name:ssi_school_incident.school_academic_alert_level_action
 #: model:ir.ui.menu,name:ssi_school_incident.school_academic_alert_level_menu
 msgid "Academic Alert Levels"
+msgstr ""
+
+#. module: ssi_school_incident
+#: model:res.groups,name:ssi_school_incident.school_academic_alert_user_group
+msgid "Academic Alert User"
+msgstr ""
+
+#. module: ssi_school_incident
+#: model:res.groups,name:ssi_school_incident.school_academic_alert_validator_group
+msgid "Academic Alert Validator"
+msgstr ""
+
+#. module: ssi_school_incident
+#: model:res.groups,name:ssi_school_incident.school_academic_alert_viewer_group
+msgid "Academic Alert Viewer"
 msgstr ""
 
 #. module: ssi_school_incident
@@ -330,7 +345,7 @@ msgid "Approved"
 msgstr ""
 
 #. module: ssi_school_incident
-#: model:ir.model.fields,help:ssi_school_incident.field_school_incident_wizard_escalate__escalation_criteria_ids
+#: model:ir.model.fields,help:ssi_school_incident.field_escalate_incident__escalation_criteria_ids
 msgid ""
 "At least one criterion whose Target Level matches the selected Target Level "
 "above, justifying this escalation."
@@ -434,7 +449,7 @@ msgid "Can Start"
 msgstr ""
 
 #. module: ssi_school_incident
-#: model_terms:ir.ui.view,arch_db:ssi_school_incident.school_incident_wizard_escalate_view_form
+#: model_terms:ir.ui.view,arch_db:ssi_school_incident.escalate_incident_view_form
 msgid "Cancel"
 msgstr ""
 
@@ -512,11 +527,6 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_incident
-#: model:ir.ui.menu,name:ssi_school_incident.menu_incident_configuration
-msgid "Configuration"
-msgstr ""
-
-#. module: ssi_school_incident
 #: model:ir.model.fields,help:ssi_school_incident.field_school_academic_alert__confirm_ok
 #: model:ir.model.fields,help:ssi_school_incident.field_school_incident__confirm_ok
 #: model:ir.model.fields,help:ssi_school_incident.field_school_incident_weekly_review__confirm_ok
@@ -572,6 +582,7 @@ msgid "Create Incident"
 msgstr ""
 
 #. module: ssi_school_incident
+#: model:ir.model.fields,field_description:ssi_school_incident.field_escalate_incident__create_uid
 #: model:ir.model.fields,field_description:ssi_school_incident.field_school_academic_alert__create_uid
 #: model:ir.model.fields,field_description:ssi_school_incident.field_school_academic_alert_level__create_uid
 #: model:ir.model.fields,field_description:ssi_school_incident.field_school_incident__create_uid
@@ -579,11 +590,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_incident.field_school_incident_parent_contact__create_uid
 #: model:ir.model.fields,field_description:ssi_school_incident.field_school_incident_type__create_uid
 #: model:ir.model.fields,field_description:ssi_school_incident.field_school_incident_weekly_review__create_uid
-#: model:ir.model.fields,field_description:ssi_school_incident.field_school_incident_wizard_escalate__create_uid
 msgid "Created by"
 msgstr ""
 
 #. module: ssi_school_incident
+#: model:ir.model.fields,field_description:ssi_school_incident.field_escalate_incident__create_date
 #: model:ir.model.fields,field_description:ssi_school_incident.field_school_academic_alert__create_date
 #: model:ir.model.fields,field_description:ssi_school_incident.field_school_academic_alert_level__create_date
 #: model:ir.model.fields,field_description:ssi_school_incident.field_school_incident__create_date
@@ -591,7 +602,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_incident.field_school_incident_parent_contact__create_date
 #: model:ir.model.fields,field_description:ssi_school_incident.field_school_incident_type__create_date
 #: model:ir.model.fields,field_description:ssi_school_incident.field_school_incident_weekly_review__create_date
-#: model:ir.model.fields,field_description:ssi_school_incident.field_school_incident_wizard_escalate__create_date
 msgid "Created on"
 msgstr ""
 
@@ -668,6 +678,7 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_incident
+#: model:ir.model.fields,field_description:ssi_school_incident.field_escalate_incident__display_name
 #: model:ir.model.fields,field_description:ssi_school_incident.field_school_academic_alert__display_name
 #: model:ir.model.fields,field_description:ssi_school_incident.field_school_academic_alert_level__display_name
 #: model:ir.model.fields,field_description:ssi_school_incident.field_school_incident__display_name
@@ -675,7 +686,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_incident.field_school_incident_parent_contact__display_name
 #: model:ir.model.fields,field_description:ssi_school_incident.field_school_incident_type__display_name
 #: model:ir.model.fields,field_description:ssi_school_incident.field_school_incident_weekly_review__display_name
-#: model:ir.model.fields,field_description:ssi_school_incident.field_school_incident_wizard_escalate__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -713,19 +723,19 @@ msgid "Enrollment"
 msgstr ""
 
 #. module: ssi_school_incident
+#: model_terms:ir.ui.view,arch_db:ssi_school_incident.escalate_incident_view_form
 #: model_terms:ir.ui.view,arch_db:ssi_school_incident.school_incident_view_form
-#: model_terms:ir.ui.view,arch_db:ssi_school_incident.school_incident_wizard_escalate_view_form
 msgid "Escalate"
 msgstr ""
 
 #. module: ssi_school_incident
-#: model:ir.actions.act_window,name:ssi_school_incident.school_incident_wizard_escalate_action
-#: model_terms:ir.ui.view,arch_db:ssi_school_incident.school_incident_wizard_escalate_view_form
+#: model:ir.actions.act_window,name:ssi_school_incident.escalate_incident_action
+#: model_terms:ir.ui.view,arch_db:ssi_school_incident.escalate_incident_view_form
 msgid "Escalate Incident"
 msgstr ""
 
 #. module: ssi_school_incident
-#: model:ir.model,name:ssi_school_incident.model_school_incident_wizard_escalate
+#: model:ir.model,name:ssi_school_incident.model_escalate_incident
 msgid "Escalate Incident to a Higher Handling Tier"
 msgstr ""
 
@@ -757,8 +767,8 @@ msgid "Escalation"
 msgstr ""
 
 #. module: ssi_school_incident
+#: model:ir.model.fields,field_description:ssi_school_incident.field_escalate_incident__escalation_criteria_ids
 #: model:ir.model.fields,field_description:ssi_school_incident.field_school_incident__escalation_criteria_ids
-#: model:ir.model.fields,field_description:ssi_school_incident.field_school_incident_wizard_escalate__escalation_criteria_ids
 #: model:ir.ui.menu,name:ssi_school_incident.school_incident_escalation_criteria_menu
 #: model_terms:ir.ui.view,arch_db:ssi_school_incident.school_incident_view_form
 msgid "Escalation Criteria"
@@ -780,8 +790,8 @@ msgid "Escalation Date"
 msgstr ""
 
 #. module: ssi_school_incident
+#: model:ir.model.fields,field_description:ssi_school_incident.field_escalate_incident__escalation_reason
 #: model:ir.model.fields,field_description:ssi_school_incident.field_school_incident__escalation_reason
-#: model:ir.model.fields,field_description:ssi_school_incident.field_school_incident_wizard_escalate__escalation_reason
 #: model_terms:ir.ui.view,arch_db:ssi_school_incident.school_incident_view_form
 msgid "Escalation Reason"
 msgstr ""
@@ -973,6 +983,7 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_incident
+#: model:ir.model.fields,field_description:ssi_school_incident.field_escalate_incident__id
 #: model:ir.model.fields,field_description:ssi_school_incident.field_school_academic_alert__id
 #: model:ir.model.fields,field_description:ssi_school_incident.field_school_academic_alert_level__id
 #: model:ir.model.fields,field_description:ssi_school_incident.field_school_incident__id
@@ -980,7 +991,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_incident.field_school_incident_parent_contact__id
 #: model:ir.model.fields,field_description:ssi_school_incident.field_school_incident_type__id
 #: model:ir.model.fields,field_description:ssi_school_incident.field_school_incident_weekly_review__id
-#: model:ir.model.fields,field_description:ssi_school_incident.field_school_incident_wizard_escalate__id
 msgid "ID"
 msgstr ""
 
@@ -1036,8 +1046,9 @@ msgid "In Progress"
 msgstr ""
 
 #. module: ssi_school_incident
+#: model:ir.model.fields,field_description:ssi_school_incident.field_escalate_incident__incident_id
 #: model:ir.model.fields,field_description:ssi_school_incident.field_school_academic_alert__incident_id
-#: model:ir.model.fields,field_description:ssi_school_incident.field_school_incident_wizard_escalate__incident_id
+#: model:ir.ui.menu,name:ssi_school_incident.menu_incident_configuration
 #: model:ir.ui.menu,name:ssi_school_incident.menu_incident_root
 msgid "Incident"
 msgstr ""
@@ -1116,6 +1127,7 @@ msgid "Last Escalation"
 msgstr ""
 
 #. module: ssi_school_incident
+#: model:ir.model.fields,field_description:ssi_school_incident.field_escalate_incident____last_update
 #: model:ir.model.fields,field_description:ssi_school_incident.field_school_academic_alert____last_update
 #: model:ir.model.fields,field_description:ssi_school_incident.field_school_academic_alert_level____last_update
 #: model:ir.model.fields,field_description:ssi_school_incident.field_school_incident____last_update
@@ -1123,11 +1135,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_incident.field_school_incident_parent_contact____last_update
 #: model:ir.model.fields,field_description:ssi_school_incident.field_school_incident_type____last_update
 #: model:ir.model.fields,field_description:ssi_school_incident.field_school_incident_weekly_review____last_update
-#: model:ir.model.fields,field_description:ssi_school_incident.field_school_incident_wizard_escalate____last_update
 msgid "Last Modified on"
 msgstr ""
 
 #. module: ssi_school_incident
+#: model:ir.model.fields,field_description:ssi_school_incident.field_escalate_incident__write_uid
 #: model:ir.model.fields,field_description:ssi_school_incident.field_school_academic_alert__write_uid
 #: model:ir.model.fields,field_description:ssi_school_incident.field_school_academic_alert_level__write_uid
 #: model:ir.model.fields,field_description:ssi_school_incident.field_school_incident__write_uid
@@ -1135,11 +1147,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_incident.field_school_incident_parent_contact__write_uid
 #: model:ir.model.fields,field_description:ssi_school_incident.field_school_incident_type__write_uid
 #: model:ir.model.fields,field_description:ssi_school_incident.field_school_incident_weekly_review__write_uid
-#: model:ir.model.fields,field_description:ssi_school_incident.field_school_incident_wizard_escalate__write_uid
 msgid "Last Updated by"
 msgstr ""
 
 #. module: ssi_school_incident
+#: model:ir.model.fields,field_description:ssi_school_incident.field_escalate_incident__write_date
 #: model:ir.model.fields,field_description:ssi_school_incident.field_school_academic_alert__write_date
 #: model:ir.model.fields,field_description:ssi_school_incident.field_school_academic_alert_level__write_date
 #: model:ir.model.fields,field_description:ssi_school_incident.field_school_incident__write_date
@@ -1147,7 +1159,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_incident.field_school_incident_parent_contact__write_date
 #: model:ir.model.fields,field_description:ssi_school_incident.field_school_incident_type__write_date
 #: model:ir.model.fields,field_description:ssi_school_incident.field_school_incident_weekly_review__write_date
-#: model:ir.model.fields,field_description:ssi_school_incident.field_school_incident_wizard_escalate__write_date
 msgid "Last Updated on"
 msgstr ""
 
@@ -1175,16 +1186,16 @@ msgid "Letter"
 msgstr ""
 
 #. module: ssi_school_incident
+#: model:ir.model.fields.selection,name:ssi_school_incident.selection__escalate_incident__target_level__2
 #: model:ir.model.fields.selection,name:ssi_school_incident.selection__school_incident__escalated_to_level__2
 #: model:ir.model.fields.selection,name:ssi_school_incident.selection__school_incident_escalation_criteria__target_level__level_2
-#: model:ir.model.fields.selection,name:ssi_school_incident.selection__school_incident_wizard_escalate__target_level__2
 msgid "Level 2 - Counselor/Vice Principal"
 msgstr ""
 
 #. module: ssi_school_incident
+#: model:ir.model.fields.selection,name:ssi_school_incident.selection__escalate_incident__target_level__3
 #: model:ir.model.fields.selection,name:ssi_school_incident.selection__school_incident__escalated_to_level__3
 #: model:ir.model.fields.selection,name:ssi_school_incident.selection__school_incident_escalation_criteria__target_level__level_3
-#: model:ir.model.fields.selection,name:ssi_school_incident.selection__school_incident_wizard_escalate__target_level__3
 msgid "Level 3 - Principal"
 msgstr ""
 
@@ -1307,7 +1318,7 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_incident
-#: model:ir.model.fields,help:ssi_school_incident.field_school_incident_wizard_escalate__escalation_reason
+#: model:ir.model.fields,help:ssi_school_incident.field_escalate_incident__escalation_reason
 msgid "Narrative/chronology explaining why this case is being escalated."
 msgstr ""
 
@@ -1871,8 +1882,8 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_incident
+#: model:ir.model.fields,field_description:ssi_school_incident.field_escalate_incident__target_level
 #: model:ir.model.fields,field_description:ssi_school_incident.field_school_incident_escalation_criteria__target_level
-#: model:ir.model.fields,field_description:ssi_school_incident.field_school_incident_wizard_escalate__target_level
 #: model_terms:ir.ui.view,arch_db:ssi_school_incident.school_incident_escalation_criteria_view_search
 msgid "Target Level"
 msgstr ""
@@ -1919,12 +1930,12 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_incident
-#: model:ir.model.fields,help:ssi_school_incident.field_school_incident_wizard_escalate__target_level
+#: model:ir.model.fields,help:ssi_school_incident.field_escalate_incident__target_level
 msgid "The handling tier this case will be escalated to."
 msgstr ""
 
 #. module: ssi_school_incident
-#: model:ir.model.fields,help:ssi_school_incident.field_school_incident_wizard_escalate__incident_id
+#: model:ir.model.fields,help:ssi_school_incident.field_escalate_incident__incident_id
 msgid "The incident case being escalated."
 msgstr ""
 
@@ -2202,6 +2213,21 @@ msgstr ""
 #. module: ssi_school_incident
 #: model_terms:ir.ui.view,arch_db:ssi_school_incident.school_incident_weekly_review_view_form
 msgid "Weekly Review Checklist"
+msgstr ""
+
+#. module: ssi_school_incident
+#: model:res.groups,name:ssi_school_incident.school_incident_weekly_review_user_group
+msgid "Weekly Review User"
+msgstr ""
+
+#. module: ssi_school_incident
+#: model:res.groups,name:ssi_school_incident.school_incident_weekly_review_validator_group
+msgid "Weekly Review Validator"
+msgstr ""
+
+#. module: ssi_school_incident
+#: model:res.groups,name:ssi_school_incident.school_incident_weekly_review_viewer_group
+msgid "Weekly Review Viewer"
 msgstr ""
 
 #. module: ssi_school_incident
