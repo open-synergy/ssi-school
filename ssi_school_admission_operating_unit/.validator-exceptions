@@ -1,0 +1,44 @@
+# Penyimpangan yang diterima untuk validator `module` (lihat validator-contract.md §13).
+#
+# wizards/school_admission_create_enrollment.py,
+# wizards/school_admission_form_create_admission.py, dan
+# wizards/school_admission_test_create_admission.py memakai pola _name +
+# _inherit bernilai sama: ketiganya MENGEKSTENSI wizard milik modul dasar
+# ssi_school_admission, bukan mendefinisikannya --
+# school_admission.wizard_create_enrollment,
+# school_admission_form.wizard_create_admission, dan
+# school_admission_test.wizard_create_admission seluruhnya didefinisikan di
+# ssi_school_admission/wizards/. Konsekuensinya:
+#
+# * _name-nya warisan dan TIDAK boleh diganti -- mengubahnya berarti mengubah
+#   nama tabel/model beserta XML ID model_<nama> yang sudah dirujuk
+#   ir.model.access, view, dan action modul dasar (02-core-principles.md;
+#   10-wizard.md §1 menyebut bentuk ini warisan yang dipertahankan). Karena
+#   _name tidak berubah, nama berkas & nama class turunannya (aturan
+#   nama-berkas-py-name-model, nama-class-pascalcase-dari-name) juga tetap
+#   mengikuti bentuk lama.
+# * ACL-nya hidup di modul dasar ssi_school_admission yang mendefinisikan
+#   model itu; mendefinisikan ulang di modul glue ini akan menggandakan
+#   aturan akses.
+#
+# Wizard BARU di modul ini tetap wajib memakai bentuk benar: frasa kerja
+# snake_case datar, tanpa prefix model induk, tanpa kata 'wizard', tanpa
+# notasi titik.
+# Preseden: ssi_school_admission_lead_operating_unit (.validator-exceptions),
+# issue open-synergy/ssi-school#331; ssi_school_admission_customer_invoice_export_operating_unit,
+# issue open-synergy/ssi-school#331.
+
+module nama-berkas-py-name-model|wizards/school_admission_create_enrollment.py: _name='school_admission.wizard_create_enrollment' menuntut berkas school_admission_wizard_create_enrollment.py -- _name warisan milik modul dasar ssi_school_admission; mengubah nama berkas tanpa mengubah _name tidak diminta, dan _name sendiri tidak boleh diganti (lihat header)
+module nama-berkas-py-name-model|wizards/school_admission_form_create_admission.py: _name='school_admission_form.wizard_create_admission' menuntut berkas school_admission_form_wizard_create_admission.py -- _name warisan milik modul dasar ssi_school_admission; mengubah nama berkas tanpa mengubah _name tidak diminta, dan _name sendiri tidak boleh diganti (lihat header)
+module nama-berkas-py-name-model|wizards/school_admission_test_create_admission.py: _name='school_admission_test.wizard_create_admission' menuntut berkas school_admission_test_wizard_create_admission.py -- _name warisan milik modul dasar ssi_school_admission; mengubah nama berkas tanpa mengubah _name tidak diminta, dan _name sendiri tidak boleh diganti (lihat header)
+module nama-class-pascalcase-dari-name|wizards/school_admission_form_create_admission.py: class SchoolAdmissionFormCreateAdmission, seharusnya SchoolAdmissionFormWizardCreateAdmission -- _name warisan milik modul dasar ssi_school_admission (lihat header); nama class mengikuti _name lama, bukan bentuk yang seharusnya dari _name yang tidak boleh diubah
+module nama-class-pascalcase-dari-name|wizards/school_admission_test_create_admission.py: class SchoolAdmissionTestCreateAdmission, seharusnya SchoolAdmissionTestWizardCreateAdmission -- _name warisan milik modul dasar ssi_school_admission (lihat header); nama class mengikuti _name lama, bukan bentuk yang seharusnya dari _name yang tidak boleh diubah
+module name-wizard-tanpa-notasi-titik|wizards/school_admission_create_enrollment.py: _name 'school_admission.wizard_create_enrollment' memakai notasi titik -- _name warisan milik modul dasar ssi_school_admission; mengubahnya melanggar 02-core-principles.md (XML ID model_<nama> & nama tabel sudah dirujuk ACL, view, dan action)
+module name-wizard-tanpa-notasi-titik|wizards/school_admission_form_create_admission.py: _name 'school_admission_form.wizard_create_admission' memakai notasi titik -- _name warisan milik modul dasar ssi_school_admission; mengubahnya melanggar 02-core-principles.md (XML ID model_<nama> & nama tabel sudah dirujuk ACL, view, dan action)
+module name-wizard-tanpa-notasi-titik|wizards/school_admission_test_create_admission.py: _name 'school_admission_test.wizard_create_admission' memakai notasi titik -- _name warisan milik modul dasar ssi_school_admission; mengubahnya melanggar 02-core-principles.md (XML ID model_<nama> & nama tabel sudah dirujuk ACL, view, dan action)
+module name-wizard-tanpa-kata-wizard|wizards/school_admission_create_enrollment.py: _name 'school_admission.wizard_create_enrollment' memuat kata 'wizard' -- _name warisan milik modul dasar ssi_school_admission; mengubahnya melanggar 02-core-principles.md (XML ID model_<nama> & nama tabel sudah dirujuk ACL, view, dan action)
+module name-wizard-tanpa-kata-wizard|wizards/school_admission_form_create_admission.py: _name 'school_admission_form.wizard_create_admission' memuat kata 'wizard' -- _name warisan milik modul dasar ssi_school_admission; mengubahnya melanggar 02-core-principles.md (XML ID model_<nama> & nama tabel sudah dirujuk ACL, view, dan action)
+module name-wizard-tanpa-kata-wizard|wizards/school_admission_test_create_admission.py: _name 'school_admission_test.wizard_create_admission' memuat kata 'wizard' -- _name warisan milik modul dasar ssi_school_admission; mengubahnya melanggar 02-core-principles.md (XML ID model_<nama> & nama tabel sudah dirujuk ACL, view, dan action)
+module acl-wizard-satu-user-access-tanpa-all-access|school_admission.wizard_create_enrollment: tidak ada ACL sama sekali -- model didefinisikan modul dasar ssi_school_admission dan ACL-nya disediakan di sana; mendefinisikan ulang di modul glue ini akan menggandakan aturan akses
+module acl-wizard-satu-user-access-tanpa-all-access|school_admission_form.wizard_create_admission: tidak ada ACL sama sekali -- model didefinisikan modul dasar ssi_school_admission dan ACL-nya disediakan di sana; mendefinisikan ulang di modul glue ini akan menggandakan aturan akses
+module acl-wizard-satu-user-access-tanpa-all-access|school_admission_test.wizard_create_admission: tidak ada ACL sama sekali -- model didefinisikan modul dasar ssi_school_admission dan ACL-nya disediakan di sana; mendefinisikan ulang di modul glue ini akan menggandakan aturan akses
