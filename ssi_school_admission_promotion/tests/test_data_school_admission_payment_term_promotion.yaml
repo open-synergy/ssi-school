@@ -705,7 +705,7 @@ scenarios:
         asserts:
           state:
             type: "value"
-            expected: "open"
+            expected: "done"
       - step: "The term's own receivable residual is reduced by the discount"
         action: "assert"
         target: "move_line_a"
