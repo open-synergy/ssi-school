@@ -566,3 +566,84 @@ scenarios:
           count_unresolved_over_7d:
             type: "value"
             expected: 1
+
+  - name: "Weekly Review Own Workflow Group Is Enforced"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type for Weekly Review Group Test"
+          code: "GTWRGRP"
+          sequence: 10
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School for Weekly Review Group Test"
+          code: "SCHWRGRP"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create a user in school_incident_weekly_review_user_group"
+        action: "create"
+        model: "res.users"
+        save_as: "review_user"
+        values:
+          name: "Weekly Review User Group Member"
+          login: "weekly_review_user_336@example.com"
+          groups_id:
+            [
+              [
+                6,
+                0,
+                [
+                  "REF: base.group_user",
+                  "REF: ssi_school_incident.school_incident_weekly_review_user_group",
+                ],
+              ],
+            ]
+
+      - step: "Setup - create a user in none of the review groups"
+        action: "create"
+        model: "res.users"
+        save_as: "review_outsider"
+        values:
+          name: "Weekly Review Outsider"
+          login: "weekly_review_outsider_336@example.com"
+          groups_id: [[6, 0, ["REF: base.group_user"]]]
+
+      - step: "school_incident_weekly_review_user_group member can create"
+        action: "create"
+        model: "school_incident_weekly_review"
+        save_as: "review_group_test"
+        as_user: "review_user"
+        values:
+          school_id: "REC: school.id"
+          date_start: 2026-07-06
+          date_end: 2026-07-10
+        asserts:
+          state:
+            type: "value"
+            expected: "draft"
+
+      - step: "school_incident_weekly_review_user_group member can confirm"
+        action: "call"
+        target: "review_group_test"
+        method: "action_confirm"
+        as_user: "review_user"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Outsider (no review group) cannot write the review"
+        action: "write"
+        target: "review_group_test"
+        as_user: "review_outsider"
+        values:
+          note: "Should not be allowed"
+        expect_error:
+          type: "AccessError"

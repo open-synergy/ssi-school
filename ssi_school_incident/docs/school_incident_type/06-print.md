@@ -2,7 +2,7 @@
 
 > **Module:** ssi_school_incident\
 > **Model:** `school_incident_type`\
-> **Menu:** School > Configuration > Configuration > Incident Types\
+> **Menu:** School > Configuration > Incident > Incident Types\
 > **Actor:** any authenticated user\
 > **Requires:** `01-create`
 
@@ -15,7 +15,7 @@
 
 ## Flow
 
-1. Open the **School > Configuration > Configuration > Incident Types** menu.
+1. Open the **School > Configuration > Incident > Incident Types** menu.
 2. Open the record to print.
 3. Click **Print** in the header.
 4. In the **Select Report To Print** wizard, select a **Type** (optional filter) and the

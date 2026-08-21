@@ -2,7 +2,7 @@
 
 > **Module:** ssi*school_incident\
 > **Model:** `school_incident_type`\
-> **Menu:** School > Configuration > Configuration > Incident Types\
+> **Menu:** School > Configuration > Incident > Incident Types\
 > **Actor:** user in group \_Manager (Principal)*\
 > **Requires:** `01-create`
 
@@ -12,7 +12,7 @@
 
 ## Flow
 
-1. Open the **School > Configuration > Configuration > Incident Types** menu.
+1. Open the **School > Configuration > Incident > Incident Types** menu.
 2. Select one or more records to delete (check the checkbox).
 3. Click **Action** > **Delete**.
 4. Click **OK** to confirm.

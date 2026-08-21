@@ -498,6 +498,14 @@ class SchoolIncident(models.Model):
         "incident_type_id.first_contact_sla_hour",
     )
     def _compute_first_contact_deadline(self):
+        """Compute the First Contact Deadline for every record in self.
+
+        Deadline = Incident Date at midnight plus the applicable First
+        Contact SLA (hours), taken from ``incident_type_id.
+        first_contact_sla_hour`` when set, otherwise from the per-tier
+        fallback ``_get_first_contact_sla_hour``. Empty when Incident
+        Date is not set.
+        """
         for record in self:
             deadline = False
             if record.date_incident:
@@ -513,6 +521,13 @@ class SchoolIncident(models.Model):
         "handling_level",
     )
     def _compute_resolution_deadline(self):
+        """Compute the Resolution Deadline for every record in self.
+
+        Deadline = Incident Date at midnight plus the applicable
+        Resolution SLA (hours) for the assigned handling tier, taken
+        from ``_get_resolution_sla_hour``. Empty when Incident Date is
+        not set.
+        """
         for record in self:
             deadline = False
             if record.date_incident:
@@ -526,6 +541,12 @@ class SchoolIncident(models.Model):
         "first_contact_deadline",
     )
     def _compute_is_first_contact_overdue(self):
+        """Set True when First Contact is still missing past its deadline.
+
+        ``is_first_contact_overdue`` is True only when
+        ``date_first_contact`` is empty, ``first_contact_deadline`` is
+        set, and the current date/time is already past that deadline.
+        """
         now = fields.Datetime.now()
         for record in self:
             record.is_first_contact_overdue = bool(
@@ -539,6 +560,13 @@ class SchoolIncident(models.Model):
         "resolution_deadline",
     )
     def _compute_is_resolution_overdue(self):
+        """Set True when the case is still unresolved past its deadline.
+
+        ``is_resolution_overdue`` is True only when
+        ``resolution_status`` is not one of
+        ``RESOLVED_RESOLUTION_STATUSES``, ``resolution_deadline`` is
+        set, and the current date/time is already past that deadline.
+        """
         now = fields.Datetime.now()
         for record in self:
             record.is_resolution_overdue = bool(
@@ -552,6 +580,13 @@ class SchoolIncident(models.Model):
         "is_resolution_overdue",
     )
     def _compute_is_overdue(self):
+        """Set True when either the First Contact or Resolution SLA is
+        breached.
+
+        ``is_overdue`` is the OR of ``is_first_contact_overdue`` and
+        ``is_resolution_overdue``, stored for use in list view
+        decorations and search filters/group-by.
+        """
         for record in self:
             record.is_overdue = bool(
                 record.is_first_contact_overdue or record.is_resolution_overdue
@@ -561,6 +596,7 @@ class SchoolIncident(models.Model):
         "parent_contact_ids",
     )
     def _compute_parent_contact_count(self):
+        """Count the Parent Contacts log entries of every record in self."""
         for record in self:
             record.parent_contact_count = len(record.parent_contact_ids)
 
@@ -585,6 +621,12 @@ class SchoolIncident(models.Model):
         "date_resolved",
     )
     def _check_date_resolved(self):
+        """Require Resolution Date once Resolution Status is Resolved.
+
+        :raises UserError: when ``resolution_status`` is one of
+            ``RESOLVED_RESOLUTION_STATUSES`` while ``date_resolved`` is
+            still empty
+        """
         for record in self:
             if (
                 record.resolution_status in RESOLVED_RESOLUTION_STATUSES
@@ -655,10 +697,31 @@ Solution: Fill in the Resolution Date field before saving
         return res
 
     def action_escalate(self, target_level, escalation_criteria_ids, escalation_reason):
+        """Escalate every record in self to a higher handling tier.
+
+        Called by the ``escalate_incident`` wizard. Runs as ``sudo()``
+        so a user who only passed the ``escalate_ok`` policy check
+        (evaluated by the caller) does not also need write access.
+
+        :param target_level: target ``handling_level`` selection value
+        :param escalation_criteria_ids: ``school_incident_escalation_
+            criteria`` recordset justifying the escalation
+        :param escalation_reason: narrative/chronology text
+        """
         for record in self.sudo():
             record._escalate(target_level, escalation_criteria_ids, escalation_reason)
 
     def _escalate(self, target_level, escalation_criteria_ids, escalation_reason):
+        """Validate and apply an escalation to a higher handling tier.
+
+        :param target_level: target ``handling_level`` selection value
+        :param escalation_criteria_ids: ``school_incident_escalation_
+            criteria`` recordset justifying the escalation; must not be
+            empty and every entry's ``target_level`` must match
+        :param escalation_reason: narrative/chronology text
+        :raises UserError: when no criteria is selected, or a selected
+            criterion's Target Level does not match ``target_level``
+        """
         self.ensure_one()
         if not escalation_criteria_ids:
             error_message = _(

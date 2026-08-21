@@ -3,14 +3,14 @@
 > **Module:** ssi*school_incident\
 > **Model:** `school_academic_alert`\
 > **Menu:** School > Incident > Academic Alerts\
-> **Actor:** user in group \_User (Homeroom Teacher)* or higher\
+> **Actor:** user in group \_Academic Alert User* or higher\
 > **State:** `open` → `done`\
 > **Requires:** `05-approve`
 
 ## Pre-Condition
 
 - **Record:** Status is **Open**.
-- **Access:** User has _Can Finish_ access right (belongs to the User (Homeroom Teacher)
+- **Access:** User has _Can Finish_ access right (belongs to the Academic Alert User
   group or higher).
 
 ## Flow

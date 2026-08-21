@@ -2,7 +2,7 @@
 
 > **Module:** ssi_school_incident\
 > **Model:** `school_academic_alert_level`\
-> **Menu:** School > Configuration > Configuration > Academic Alert Levels\
+> **Menu:** School > Configuration > Incident > Academic Alert Levels\
 > **Actor:** any authenticated user\
 > **Requires:** `01-create`
 
@@ -16,7 +16,7 @@
 
 ## Flow
 
-1. Open the **School > Configuration > Configuration > Academic Alert Levels** menu.
+1. Open the **School > Configuration > Incident > Academic Alert Levels** menu.
 2. Open the record to print.
 3. Click **Print** in the header.
 4. In the **Select Report To Print** wizard, select a **Type** (optional filter) and the

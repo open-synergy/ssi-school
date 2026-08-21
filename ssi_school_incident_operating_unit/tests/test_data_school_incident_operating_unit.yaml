@@ -380,6 +380,7 @@ scenarios:
               - 0
               - - "REF: base.group_user"
                 - "REF: ssi_school_incident.school_incident_officer_group"
+                - "REF: ssi_school_incident.school_incident_weekly_review_user_group"
                 - "REF:
                   ssi_school_incident_operating_unit.school_incident_operating_unit_group"
           assigned_operating_unit_ids:

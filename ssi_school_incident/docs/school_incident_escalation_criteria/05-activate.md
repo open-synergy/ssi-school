@@ -2,7 +2,7 @@
 
 > **Module:** ssi*school_incident\
 > **Model:** `school_incident_escalation_criteria`\
-> **Menu:** School > Configuration > Configuration > Escalation Criteria\
+> **Menu:** School > Configuration > Incident > Escalation Criteria\
 > **Actor:** user in group \_Manager (Principal)*\
 > **Active:** `false` → `true`\
 > **Requires:** `01-create`
@@ -13,7 +13,7 @@
 
 ## Flow
 
-1. Open the **School > Configuration > Configuration > Escalation Criteria** menu.
+1. Open the **School > Configuration > Incident > Escalation Criteria** menu.
 2. Enable the **Archived** filter in the search bar.
 3. Select one or more records to reactivate (check the checkbox).
 4. Click **Action** > **Unarchive**.

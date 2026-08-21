@@ -3,14 +3,14 @@
 > **Module:** ssi*school_incident\
 > **Model:** `school_academic_alert`\
 > **Menu:** School > Incident > Academic Alerts\
-> **Actor:** user in group \_User (Homeroom Teacher)* or higher\
+> **Actor:** user in group \_Academic Alert User* or higher\
 > **Requires:** `01-create`
 
 ## Pre-Condition
 
 - **Record:** Status is **Draft** (the status where the _Can Evaluate_ access right
   applies).
-- **Access:** User belongs to the User (Homeroom Teacher) group or higher.
+- **Access:** User belongs to the Academic Alert User group or higher.
 
 ## Flow
 

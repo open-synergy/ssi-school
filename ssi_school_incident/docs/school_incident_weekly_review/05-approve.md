@@ -3,7 +3,7 @@
 > **Module:** ssi*school_incident\
 > **Model:** `school_incident_weekly_review`\
 > **Menu:** School > Incident > Weekly Case Reviews\
-> **Actor:** approver in group \_Manager (Principal)*\
+> **Actor:** approver in group \_Weekly Review Validator*\
 > **State:** `confirm` → `done`\
 > **Requires:** `04-confirm`
 
@@ -11,7 +11,7 @@
 
 - **Record:** Status is **Waiting for Approval**.
 - **Access:** User is registered as an approver on the active approval template (belongs
-  to the Manager (Principal) group).
+  to the Weekly Review Validator group).
 - **Access:** User has _Can Approve_ access right.
 
 ## Flow
@@ -36,8 +36,8 @@
 
 ## Post-Condition
 
-- The approval template for this review has a single approval level (Manager group), so
-  approving it fulfills the whole approval workflow immediately.
+- The approval template for this review has a single approval level (Weekly Review
+  Validator group), so approving it fulfills the whole approval workflow immediately.
 - Status automatically moves to **Done** right after this approval (this model has no
   separate Open state and no manual "Done"/"Finish" button: the system moves the
   document from Waiting for Approval directly to Done).

@@ -2,4 +2,4 @@
 # Copyright 2026 PT. Simetri Sinergi Indonesia
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from . import school_incident_escalate  # noqa: F401
+from . import escalate_incident  # noqa: F401

@@ -6,7 +6,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 
-class SchoolIncidentWizardEscalate(models.TransientModel):
+class EscalateIncident(models.TransientModel):
     """
     Wizard that escalates a single school_incident case to a higher
     handling tier. Escalation is never automatic (v2.0 of the YPII
@@ -18,7 +18,7 @@ class SchoolIncidentWizardEscalate(models.TransientModel):
     Policy Template) before any change is applied.
     """
 
-    _name = "school_incident.wizard_escalate"
+    _name = "escalate_incident"
     _description = "Escalate Incident to a Higher Handling Tier"
 
     incident_id = fields.Many2one(
@@ -40,7 +40,7 @@ class SchoolIncidentWizardEscalate(models.TransientModel):
     escalation_criteria_ids = fields.Many2many(
         string="Escalation Criteria",
         comodel_name="school_incident_escalation_criteria",
-        relation="rel_school_incident_wizard_escalate_2_criteria",
+        relation="rel_escalate_incident_2_criteria",
         column1="wizard_id",
         column2="criteria_id",
         help=(
@@ -56,6 +56,15 @@ class SchoolIncidentWizardEscalate(models.TransientModel):
 
     @api.model
     def default_get(self, fields_list):
+        """Prefill the wizard with the incident it was opened from.
+
+        Reads ``active_model``/``active_id`` from the context so the
+        button on the ``school_incident`` form can open this wizard
+        without the user having to pick the incident manually.
+
+        :param fields_list: field names requested by the client
+        :return: dict of default values
+        """
         res = super().default_get(fields_list)
         if self.env.context.get("active_model") == "school_incident":
             active_id = self.env.context.get("active_id")
@@ -64,11 +73,21 @@ class SchoolIncidentWizardEscalate(models.TransientModel):
         return res
 
     def action_escalate_wizard(self):
+        """Escalate the linked incident, then close this wizard dialog.
+
+        :return: an ``ir.actions.act_window_close`` dict
+        """
         for record in self.sudo():
             record._escalate_wizard()  # pylint: disable=protected-access
         return {"type": "ir.actions.act_window_close"}
 
     def _escalate_wizard(self):
+        """Validate the ``escalate_ok`` policy, then delegate to
+        ``school_incident.action_escalate`` with this wizard's input.
+
+        :raises UserError: when the linked incident's ``escalate_ok``
+            policy field is False (wrong state and/or user group)
+        """
         self.ensure_one()
         if not self.incident_id.escalate_ok:
             error_message = (

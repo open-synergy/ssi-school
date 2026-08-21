@@ -3,7 +3,7 @@
 > **Module:** ssi*school_incident\
 > **Model:** `school_incident_weekly_review`\
 > **Menu:** School > Incident > Weekly Case Reviews\
-> **Actor:** user in group \_Officer (Counselor/Vice Principal)* or higher\
+> **Actor:** user in group \_Weekly Review User* or higher\
 > **Requires:** `01-create`
 
 ## Pre-Condition

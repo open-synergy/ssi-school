@@ -31,7 +31,10 @@
         />
     <field name="restrict_user" eval="1" />
     <field name="computation_method">use_group</field>
-    <field name="group_ids" eval="[(6,0,[ref('school_incident_officer_group')])]" />
+    <field
+            name="group_ids"
+            eval="[(6,0,[ref('school_incident_weekly_review_user_group')])]"
+        />
     <field name="restrict_additional" eval="0" />
 </record>
 
@@ -52,7 +55,10 @@
         />
     <field name="restrict_user" eval="1" />
     <field name="computation_method">use_group</field>
-    <field name="group_ids" eval="[(6,0,[ref('school_incident_officer_group')])]" />
+    <field
+            name="group_ids"
+            eval="[(6,0,[ref('school_incident_weekly_review_user_group')])]"
+        />
     <field name="restrict_additional" eval="0" />
 </record>
 
@@ -73,7 +79,10 @@
         />
     <field name="restrict_user" eval="1" />
     <field name="computation_method">use_group</field>
-    <field name="group_ids" eval="[(6,0,[ref('school_incident_manager_group')])]" />
+    <field
+            name="group_ids"
+            eval="[(6,0,[ref('school_incident_weekly_review_validator_group')])]"
+        />
     <field name="restrict_additional" eval="0" />
 </record>
 
@@ -94,7 +103,10 @@
         />
     <field name="restrict_user" eval="1" />
     <field name="computation_method">use_group</field>
-    <field name="group_ids" eval="[(6,0,[ref('school_incident_officer_group')])]" />
+    <field
+            name="group_ids"
+            eval="[(6,0,[ref('school_incident_weekly_review_user_group')])]"
+        />
     <field name="restrict_additional" eval="0" />
 </record>
 
@@ -159,7 +171,10 @@ if env.user.id in document.active_approver_user_ids.ids:
         />
     <field name="restrict_user" eval="1" />
     <field name="computation_method">use_group</field>
-    <field name="group_ids" eval="[(6,0,[ref('school_incident_officer_group')])]" />
+    <field
+            name="group_ids"
+            eval="[(6,0,[ref('school_incident_weekly_review_user_group')])]"
+        />
     <field name="restrict_additional" eval="0" />
 </record>
 
@@ -180,7 +195,10 @@ if env.user.id in document.active_approver_user_ids.ids:
         />
     <field name="restrict_user" eval="1" />
     <field name="computation_method">use_group</field>
-    <field name="group_ids" eval="[(6,0,[ref('school_incident_officer_group')])]" />
+    <field
+            name="group_ids"
+            eval="[(6,0,[ref('school_incident_weekly_review_user_group')])]"
+        />
     <field name="restrict_additional" eval="0" />
 </record>
 </odoo>

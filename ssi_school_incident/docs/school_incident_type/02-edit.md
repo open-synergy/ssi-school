@@ -2,7 +2,7 @@
 
 > **Module:** ssi*school_incident\
 > **Model:** `school_incident_type`\
-> **Menu:** School > Configuration > Configuration > Incident Types\
+> **Menu:** School > Configuration > Incident > Incident Types\
 > **Actor:** user in group \_Manager (Principal)*\
 > **Requires:** `01-create`
 
@@ -12,7 +12,7 @@
 
 ## Flow
 
-1. Open the **School > Configuration > Configuration > Incident Types** menu.
+1. Open the **School > Configuration > Incident > Incident Types** menu.
 2. Find and open the Incident Type record to edit.
 3. Change the required fields (Code, Name, Default Handling Level, First Contact SLA
    (Hour), Is Health-Related).

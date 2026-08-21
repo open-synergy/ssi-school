@@ -2,7 +2,7 @@
 
 > **Module:** ssi*school_incident\
 > **Model:** `school_academic_alert_level`\
-> **Menu:** School > Configuration > Configuration > Academic Alert Levels\
+> **Menu:** School > Configuration > Incident > Academic Alert Levels\
 > **Actor:** user in group \_Manager (Principal)*\
 > **Requires:** `01-create`
 
@@ -12,7 +12,7 @@
 
 ## Flow
 
-1. Open the **School > Configuration > Configuration > Academic Alert Levels** menu.
+1. Open the **School > Configuration > Incident > Academic Alert Levels** menu.
 2. Find and open the Academic Alert Level record to edit.
 3. Change the required fields (Code, Name, Color, Sequence, Python Code, Action
    Guideline, SLA).
