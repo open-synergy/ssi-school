@@ -492,13 +492,10 @@ scenarios:
           code: "STUSHSW"
           contact_id: "REC: contact_a.id"
           school_id: "REC: school.id"
-      - step: "Invalidate student cache before reading initial height"
-        action: "call"
-        target: "student"
-        method: "invalidate_cache"
       - step: "Assert student height follows first contact"
         action: "assert"
         target: "student"
+        refresh: true
         asserts:
           height:
             type: "value"
@@ -508,13 +505,10 @@ scenarios:
         target: "student"
         values:
           contact_id: "REC: contact_b.id"
-      - step: "Invalidate student cache before reading new height"
-        action: "call"
-        target: "student"
-        method: "invalidate_cache"
       - step: "Assert student height follows second contact"
         action: "assert"
         target: "student"
+        refresh: true
         asserts:
           height:
             type: "value"

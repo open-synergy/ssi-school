@@ -28,6 +28,12 @@
                             <field name="date" />
                             <field name="value" />
                         </tree>
+                        <form>
+                            <group name="height_group_1">
+                                <field name="date" />
+                                <field name="value" />
+                            </group>
+                        </form>
                     </field>
                     <separator name="health_weight" string="Weight" />
                     <field name="weight_ids" nolabel="1" colspan="4">
@@ -35,6 +41,12 @@
                             <field name="date" />
                             <field name="value" />
                         </tree>
+                        <form>
+                            <group name="weight_group_1">
+                                <field name="date" />
+                                <field name="value" />
+                            </group>
+                        </form>
                     </field>
                     <separator
                             name="health_head_circumference"
@@ -45,6 +57,12 @@
                             <field name="date" />
                             <field name="value" />
                         </tree>
+                        <form>
+                            <group name="head_circumference_group_1">
+                                <field name="date" />
+                                <field name="value" />
+                            </group>
+                        </form>
                     </field>
                     <separator name="health_allergy" string="Allergies" />
                     <field name="allergy_ids" nolabel="1" colspan="4">
@@ -53,6 +71,13 @@
                             <field name="severity" />
                             <field name="note" />
                         </tree>
+                        <form>
+                            <group name="allergy_group_1">
+                                <field name="allergen_id" />
+                                <field name="severity" />
+                                <field name="note" />
+                            </group>
+                        </form>
                     </field>
                     <separator name="health_disease_history" string="Disease History" />
                     <field name="disease_history_ids" nolabel="1" colspan="4">
@@ -62,6 +87,14 @@
                             <field name="date_recovered" />
                             <field name="note" />
                         </tree>
+                        <form>
+                            <group name="disease_history_group_1">
+                                <field name="disease_id" />
+                                <field name="date_diagnosed" />
+                                <field name="date_recovered" />
+                                <field name="note" />
+                            </group>
+                        </form>
                     </field>
                 </page>
             </xpath>
