@@ -121,13 +121,10 @@ scenarios:
               - 0
               - date: 2026-06-01
                 value: 150.0
-      - step: "Invalidate student cache before reading latest height"
-        action: "call"
-        target: "student"
-        method: "invalidate_cache"
       - step: "Assert latest height on student and contact"
         action: "assert"
         target: "student"
+        refresh: true
         asserts:
           height_ids:
             type: "o2m"
@@ -186,13 +183,10 @@ scenarios:
               - 0
               - date: 2026-06-01
                 value: 35.25
-      - step: "Invalidate student cache before reading latest weight"
-        action: "call"
-        target: "student"
-        method: "invalidate_cache"
       - step: "Assert latest weight on student and contact"
         action: "assert"
         target: "student"
+        refresh: true
         asserts:
           weight_ids:
             type: "o2m"
@@ -251,13 +245,10 @@ scenarios:
               - 0
               - date: 2026-06-01
                 value: 50.0
-      - step: "Invalidate student cache before reading latest head circumference"
-        action: "call"
-        target: "student"
-        method: "invalidate_cache"
       - step: "Assert latest head circumference on student and contact"
         action: "assert"
         target: "student"
+        refresh: true
         asserts:
           head_circumference_ids:
             type: "o2m"
@@ -492,13 +483,10 @@ scenarios:
           code: "STUSHSW"
           contact_id: "REC: contact_a.id"
           school_id: "REC: school.id"
-      - step: "Invalidate student cache before reading initial height"
-        action: "call"
-        target: "student"
-        method: "invalidate_cache"
       - step: "Assert student height follows first contact"
         action: "assert"
         target: "student"
+        refresh: true
         asserts:
           height:
             type: "value"
@@ -508,13 +496,10 @@ scenarios:
         target: "student"
         values:
           contact_id: "REC: contact_b.id"
-      - step: "Invalidate student cache before reading new height"
-        action: "call"
-        target: "student"
-        method: "invalidate_cache"
       - step: "Assert student height follows second contact"
         action: "assert"
         target: "student"
+        refresh: true
         asserts:
           height:
             type: "value"
