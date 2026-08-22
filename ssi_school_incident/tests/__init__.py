@@ -10,4 +10,5 @@ from . import (  # noqa: F401
     test_school_incident_parent_contact,
     test_school_academic_alert,
     test_school_incident_weekly_review,
+    test_escalate_incident_migration,
 )
