@@ -171,9 +171,14 @@ def migrate(env, version):
     _logger.info("Deleted %s ir.model.data row(s).", cr.rowcount)
 
     # Drop the transient model's own table and its many2many relation
-    # table (school_incident_escalation_criteria selection).
-    openupgrade.logged_query(cr, "DROP TABLE IF EXISTS school_incident_wizard_escalate")
+    # table (school_incident_escalation_criteria selection). Order is
+    # binding: the relation table's wizard_id column carries a foreign
+    # key onto school_incident_wizard_escalate, so the relation table
+    # MUST be dropped first -- dropping the referenced table first
+    # raises psycopg2.errors.DependentObjectsStillExist and rolls back
+    # the whole migration.
     openupgrade.logged_query(
         cr,
         "DROP TABLE IF EXISTS " "rel_school_incident_wizard_escalate_2_criteria",
     )
+    openupgrade.logged_query(cr, "DROP TABLE IF EXISTS school_incident_wizard_escalate")
