@@ -3350,6 +3350,13 @@ msgid "Policy that determines whether the Pass action button is visible."
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_term__amount_unrealized
+msgid ""
+"Portion of this term still outstanding on the linked customer invoice. Zero "
+"when the term has no customer invoice yet."
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_student__zip
 msgid "Postal code of the student's address, synchronized from the contact."
 msgstr ""
@@ -4983,6 +4990,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__message_unread_counter
 #: model:ir.model.fields,field_description:ssi_school.field_school_teacher__message_unread_counter
 msgid "Unread Messages Counter"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term__amount_unrealized
+msgid "Unrealized"
 msgstr ""
 
 #. module: ssi_school
