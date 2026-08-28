@@ -14,10 +14,13 @@ class TestSchoolEnrollmentPaymentTermManagement(
     """Cover the maintenance actions of an enrollment payment term.
 
     The scenarios exercise deleting the customer invoice generated from
-    the term, disconnecting that invoice without deleting it, and
-    unmarking a term that had been flagged as manual.
+    the term, disconnecting that invoice without deleting it, unmarking
+    a term that had been flagged as manual, and tracking the term's
+    unrealized amount against the linked customer invoice.
     """
 
     def test_enrollment_payment_term_management(self):
-        """Run the delete, disconnect and unmark manual scenarios."""
+        """Run the delete, disconnect, unmark manual, and unrealized
+        amount scenarios.
+        """
         self.run_yaml_scenario("test_data_enrollment_payment_term_management.yaml")
