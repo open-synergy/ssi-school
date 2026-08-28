@@ -175,6 +175,18 @@ class SchoolEnrollmentPaymentTerm(models.Model):
         ondelete="restrict",
         help="The customer invoice linked to this payment period.",
     )
+    amount_unrealized = fields.Monetary(
+        string="Unrealized",
+        related="customer_invoice_id.amount_residual",
+        store=True,
+        currency_field="currency_id",
+        readonly=True,
+        help=(
+            "Portion of this term still outstanding on the linked "
+            "customer invoice. Zero when the term has no customer "
+            "invoice yet."
+        ),
+    )
     date_invoice = fields.Date(
         string="Estimated Invoice Date",
         help="Estimated date for issuing the invoice for this billing period.",
