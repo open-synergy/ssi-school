@@ -20,7 +20,6 @@ setuptools.setup(
         'odoo14-addon-ssi_school_customer_invoice_export_operating_unit',
         'odoo14-addon-ssi_school_health',
         'odoo14-addon-ssi_school_incident',
-        'odoo14-addon-ssi_school_incident_operating_unit',
         'odoo14-addon-ssi_school_lead',
         'odoo14-addon-ssi_school_operating_unit',
         'odoo14-addon-ssi_school_promotion',
