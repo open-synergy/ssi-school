@@ -111,6 +111,17 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school
+#: code:addons/ssi_school/models/school_enrollment_payment_term.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Create customer invoice from payment term\n"
+"Database ID: %s\n"
+"Problem: Payment term '%s' has no invoiceable detail line -- every line was voided\n"
+"Solution: Nothing to invoice; the amount was already billed on the term it moved to\n"
+msgstr ""
+
+#. module: ssi_school
 #: code:addons/ssi_school/models/school_enrollment.py:0
 #, python-format
 msgid ""
@@ -928,7 +939,8 @@ msgstr ""
 msgid ""
 "Billing status: Draft = enrollment still in draft/confirm, Uninvoiced = "
 "enrollment open/done but no customer invoice yet, Invoiced = customer "
-"invoice created, Manually Controlled = managed manually, Cancelled = "
+"invoice created, Voided = every detail line has had its amount moved to "
+"another payment term, Manually Controlled = managed manually, Cancelled = "
 "enrollment cancelled."
 msgstr ""
 
@@ -3897,6 +3909,18 @@ msgid "Set result to Pass?"
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_term_detail__voided
+msgid ""
+"Set when this line's full amount has been moved to another payment term. A "
+"voided line no longer counts toward the term total, is never billed on a "
+"customer invoice, and is excluded from product summary and fee analysis; it "
+"stays visible on its original term only as a trace of where the amount went."
+" This is not a way to reduce the billed amount -- price_unit keeps its "
+"original value. Can only be set through the ORM; this module provides no "
+"button/action that enables it."
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_student_mutation__source_grade_class_id
 msgid ""
 "Snapshot of the enrollment's grade class before mutation, filled "
@@ -5127,6 +5151,12 @@ msgstr ""
 #: model:res.groups,name:ssi_school.school_homeroom_viewer_group
 #: model:res.groups,name:ssi_school.school_student_mutation_viewer_group
 msgid "Viewer"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__voided
+#: model:ir.model.fields.selection,name:ssi_school.selection__school_enrollment_payment_term__state__voided
+msgid "Voided"
 msgstr ""
 
 #. module: ssi_school
