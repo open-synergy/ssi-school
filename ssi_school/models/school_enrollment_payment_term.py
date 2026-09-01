@@ -33,16 +33,18 @@ class SchoolEnrollmentPaymentTerm(models.Model):
         "customer_invoice_id",
         "enrollment_id.state",
         "manually_control",
+        "detail_ids.voided",
     )
     def _compute_state(self):
         """Derive the billing state from the enrollment and invoice.
 
         ``draft`` while the enrollment is in ``draft`` or ``confirm``.
         Once the enrollment is ``open`` or ``done`` the value becomes
-        ``invoiced`` when ``customer_invoice_id`` is set, ``manual``
-        when ``manually_control`` is enabled, and ``uninvoiced``
-        otherwise. Any other enrollment state (cancelled, rejected)
-        yields ``cancelled``.
+        ``invoiced`` when ``customer_invoice_id`` is set, ``voided``
+        when ``_is_fully_voided`` is true, ``manual`` when
+        ``manually_control`` is enabled, and ``uninvoiced`` otherwise.
+        Any other enrollment state (cancelled, rejected) yields
+        ``cancelled``.
 
         :return: None
         """
@@ -52,6 +54,8 @@ class SchoolEnrollmentPaymentTerm(models.Model):
             elif record.enrollment_id.state in ["open", "done"]:
                 if record.customer_invoice_id:
                     state = "invoiced"
+                elif record._is_fully_voided():  # pylint: disable=protected-access
+                    state = "voided"
                 elif record.manually_control:
                     state = "manual"
                 else:
@@ -62,6 +66,7 @@ class SchoolEnrollmentPaymentTerm(models.Model):
 
     @api.depends(
         "detail_ids",
+        "detail_ids.voided",
         "detail_ids.price_subtotal",
         "detail_ids.price_tax",
         "detail_ids.price_total",
@@ -71,20 +76,53 @@ class SchoolEnrollmentPaymentTerm(models.Model):
 
         ``amount_untaxed``, ``amount_tax``, and ``amount_total`` are
         the sums of ``price_subtotal``, ``price_tax``, and
-        ``price_total`` over ``detail_ids``; a term without detail
-        lines totals zero.
+        ``price_total`` over the detail lines that are not
+        ``voided``; a term without invoiceable detail lines totals
+        zero.
 
         :return: None
         """
         for record in self:
             amount_untaxed = amount_tax = amount_total = 0.0
             for detail in record.detail_ids:
+                if detail.voided:
+                    continue
                 amount_untaxed += detail.price_subtotal
                 amount_tax += detail.price_tax
                 amount_total += detail.price_total
             record.amount_untaxed = amount_untaxed
             record.amount_tax = amount_tax
             record.amount_total = amount_total
+
+    def _is_fully_voided(self):
+        """Check whether this term has nothing left to invoice.
+
+        Extension point: ``True`` when ``detail_ids`` is not empty
+        and ``_get_invoiceable_detail`` returns nothing -- i.e. every
+        detail line is ``voided``. A term without any detail line is
+        never fully voided; it is simply empty. Modules that add
+        another family of billing lines to this term (e.g. an
+        extracurricular fee line) should override this single method
+        instead of duplicating ``_compute_state`` or
+        ``_create_invoice``.
+
+        :return: bool
+        """
+        self.ensure_one()
+        return bool(self.detail_ids) and not self._get_invoiceable_detail()
+
+    def _get_invoiceable_detail(self):
+        """Return the detail lines that still need to be invoiced.
+
+        Extension point: filters out ``voided`` lines. Used by
+        ``_create_invoice`` in place of ``self.detail_ids`` so a line
+        whose amount has already moved to another term is never
+        billed twice.
+
+        :return: ``school_enrollment_payment_term_detail`` recordset
+        """
+        self.ensure_one()
+        return self.detail_ids.filtered(lambda detail: not detail.voided)
 
     enrollment_id = fields.Many2one(
         string="Enrollment",
@@ -201,6 +239,7 @@ class SchoolEnrollmentPaymentTerm(models.Model):
             ("draft", "Draft"),
             ("uninvoiced", "Uninvoiced"),
             ("invoiced", "Invoiced"),
+            ("voided", "Voided"),
             ("manual", "Manually Controlled"),
             ("cancelled", "Cancelled"),
         ],
@@ -211,6 +250,8 @@ class SchoolEnrollmentPaymentTerm(models.Model):
             "Draft = enrollment still in draft/confirm, "
             "Uninvoiced = enrollment open/done but no customer invoice yet, "
             "Invoiced = customer invoice created, "
+            "Voided = every detail line has had its amount moved to "
+            "another payment term, "
             "Manually Controlled = managed manually, "
             "Cancelled = enrollment cancelled."
         ),
@@ -444,20 +485,40 @@ Solution: Locked payment terms are permanent; create a new one via addendum inst
     def _create_invoice(self):
         """Create the ``customer_invoice`` document for this term.
 
-        Creates the header first, then one ``customer_invoice.line`` per
-        detail line, writing the resulting line back onto the detail it
-        originates from, and finally links the document to this term.
-        Taxes are not computed here: ``customer_invoice`` recomputes them
-        itself on pre-confirm. When the enrollment has
-        ``auto_confirm_customer_invoice`` enabled, the new document is
-        confirmed right away.
+        Rejects a term that is fully voided -- the same predicate
+        that drives ``state == "voided"``, so the two can never
+        disagree. Otherwise creates the header first, then one
+        ``customer_invoice.line`` per invoiceable detail line (see
+        ``_get_invoiceable_detail``), writing the resulting line back
+        onto the detail it originates from, and finally links the
+        document to this term. Taxes are not computed here:
+        ``customer_invoice`` recomputes them itself on pre-confirm.
+        When the enrollment has ``auto_confirm_customer_invoice``
+        enabled, the new document is confirmed right away.
 
+        :raises UserError: when every detail line of this term is
+            ``voided``
         :return: None
         """
         self.ensure_one()
+        if self._is_fully_voided():  # pylint: disable=protected-access
+            error_message = (
+                _(
+                    """
+Context: Create customer invoice from payment term
+Database ID: %s
+Problem: Payment term '%s' has no invoiceable detail line -- every line was voided
+Solution: Nothing to invoice; the amount was already billed on the term it moved to
+"""
+                )
+                % (self.id, self.name)
+            )
+            raise UserError(error_message)
         line_model = self.env["customer_invoice.line"]
         invoice = self.env["customer_invoice"].create(self._prepare_invoice_data())
-        for detail in self.detail_ids:
+        for (
+            detail
+        ) in self._get_invoiceable_detail():  # pylint: disable=protected-access
             # pylint: disable=protected-access
             line_data = detail._prepare_invoice_line()
             line_data["customer_invoice_id"] = invoice.id

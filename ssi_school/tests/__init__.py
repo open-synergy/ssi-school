@@ -33,6 +33,7 @@ from . import (  # noqa: F401
     test_school_enrollment_customer_invoice,
     test_school_enrollment_product_summary,
     test_school_enrollment_fee_analysis,
+    test_school_enrollment_payment_term_voided,
     test_school_enrollment_payment_date_pattern,
     test_school_enrollment_addendum,
     test_school_enrollment_restart_unlock,

@@ -229,9 +229,12 @@ class SchoolEnrollmentFeeAnalysis(models.Model):
         Joins ``school_enrollment_payment_term_detail`` to its payment
         term, its enrollment, and the school of that enrollment, and
         exposes the detail line id as the row ``id`` so one analysis
-        row equals one fee line. Extension point: override to add
-        columns or joins; every added column must be matched by a
-        field declared on this model.
+        row equals one fee line. Excludes ``voided`` detail lines --
+        their amount is already billed again as a line on the term it
+        moved to, and keeping both would double-count the fee in the
+        pivot. Extension point: override to add columns or joins;
+        every added column must be matched by a field declared on
+        this model.
 
         :return: str containing the SELECT statement
         """
@@ -270,4 +273,5 @@ class SchoolEnrollmentFeeAnalysis(models.Model):
             JOIN school_enrollment_payment_term term ON term.id = detail.term_id
             JOIN school_enrollment enr ON enr.id = term.enrollment_id
             LEFT JOIN school sch ON sch.id = enr.school_id
+            WHERE detail.voided IS NOT TRUE
         """
