@@ -96,6 +96,7 @@ scenarios:
           grade_id: "REC: grade.id"
           student_id: "REC: contact.id"
           currency_id: "REC: company.currency_id.id"
+          user_id: "REF: base.user_admin"
 
       - step: "Create payment term"
         action: "create"
@@ -246,6 +247,7 @@ scenarios:
           grade_id: "REC: grade.id"
           student_id: "REC: contact.id"
           currency_id: "REC: company.currency_id.id"
+          user_id: "REF: base.user_admin"
 
       - step: "Create payment term"
         action: "create"
@@ -445,6 +447,7 @@ scenarios:
           grade_id: "REC: grade.id"
           student_id: "REC: contact.id"
           currency_id: "REC: company.currency_id.id"
+          user_id: "REF: base.user_admin"
           receivable_journal_id: "REC: journal.id"
           receivable_account_id: "REC: receivable_account.id"
           customer_invoice_type_id: "REC: ci_type.id"
@@ -622,6 +625,7 @@ scenarios:
           grade_id: "REC: grade.id"
           student_id: "REC: contact.id"
           currency_id: "REC: company.currency_id.id"
+          user_id: "REF: base.user_admin"
 
       - step: "Create payment term"
         action: "create"
@@ -803,6 +807,7 @@ scenarios:
           grade_id: "REC: grade.id"
           student_id: "REC: contact.id"
           currency_id: "REC: company.currency_id.id"
+          user_id: "REF: base.user_admin"
           receivable_journal_id: "REC: journal.id"
           receivable_account_id: "REC: receivable_account.id"
           customer_invoice_type_id: "REC: ci_type.id"
@@ -992,6 +997,7 @@ scenarios:
           grade_id: "REC: grade.id"
           student_id: "REC: contact.id"
           currency_id: "REC: company.currency_id.id"
+          user_id: "REF: base.user_admin"
 
       - step: "Create payment term"
         action: "create"
@@ -1150,6 +1156,7 @@ scenarios:
           grade_id: "REC: grade.id"
           student_id: "REC: contact.id"
           currency_id: "REC: company.currency_id.id"
+          user_id: "REF: base.user_admin"
           receivable_journal_id: "REC: journal.id"
           receivable_account_id: "REC: receivable_account.id"
           customer_invoice_type_id: "REC: ci_type.id"
@@ -1303,6 +1310,7 @@ scenarios:
           grade_id: "REC: grade.id"
           student_id: "REC: contact.id"
           currency_id: "REC: company.currency_id.id"
+          user_id: "REF: base.user_admin"
 
       - step: "Create payment term"
         action: "create"
@@ -1494,6 +1502,7 @@ scenarios:
           grade_id: "REC: grade.id"
           student_id: "REC: contact.id"
           currency_id: "REC: company.currency_id.id"
+          user_id: "REF: base.user_admin"
           receivable_journal_id: "REC: journal.id"
           receivable_account_id: "REC: receivable_account.id"
           customer_invoice_type_id: "REC: ci_type.id"
