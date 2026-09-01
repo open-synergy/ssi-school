@@ -1,0 +1,1582 @@
+options:
+  auto_refresh: true
+
+scenarios:
+  - name: "Voided detail is excluded from the term total"
+    steps:
+      - step: "Setup - get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "Admission Fee Income ADVD1"
+          code: "ADVD14200"
+          user_type_id: "REC: account_type.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "Admission Fee ADVD1"
+          type: "service"
+          list_price: 1000000.0
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type ADVD1"
+          code: "GTADVD1"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 ADVD1"
+          code: "AYADVD1"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester ADVD1"
+          code: "SMADVD1"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School ADVD1"
+          code: "SCHADVD1"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade ADVD1"
+          code: "GADVD1"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact ADVD1"
+
+      - step: "Create admission"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: contact.id"
+          currency_id: "REC: company.currency_id.id"
+          user_id: "REF: base.user_admin"
+
+      - step: "Create payment term"
+        action: "create"
+        model: "school_admission_payment_term"
+        save_as: "term"
+        values:
+          admission_id: "REC: admission.id"
+          name: "Term ADVD1"
+          sequence: 10
+
+      - step: "Create first detail (not voided)"
+        action: "create"
+        model: "school_admission_payment_term_detail"
+        save_as: "detail_1"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Fee ADVD1 A"
+          account_id: "REC: account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+
+      - step: "Create second detail (voided)"
+        action: "create"
+        model: "school_admission_payment_term_detail"
+        save_as: "detail_2"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Fee ADVD1 B"
+          account_id: "REC: account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+          voided: true
+
+      - step: "Assert the term total excludes the voided detail"
+        action: "assert"
+        target: "term"
+        asserts:
+          amount_untaxed:
+            type: "value"
+            expected: 1000000.0
+          amount_total:
+            type: "value"
+            expected: 1000000.0
+
+      - step: "Assert the voided detail keeps its original price_unit"
+        action: "assert"
+        target: "detail_2"
+        asserts:
+          price_unit:
+            type: "value"
+            expected: 1000000.0
+
+  - name: "Term with every detail voided becomes voided"
+    steps:
+      - step: "Setup - get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "Admission Fee Income ADVD2"
+          code: "ADVD24200"
+          user_type_id: "REC: account_type.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "Admission Fee ADVD2"
+          type: "service"
+          list_price: 1000000.0
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type ADVD2"
+          code: "GTADVD2"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 ADVD2"
+          code: "AYADVD2"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester ADVD2"
+          code: "SMADVD2"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School ADVD2"
+          code: "SCHADVD2"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade ADVD2"
+          code: "GADVD2"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact ADVD2"
+
+      - step: "Create admission"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: contact.id"
+          currency_id: "REC: company.currency_id.id"
+          user_id: "REF: base.user_admin"
+
+      - step: "Create payment term"
+        action: "create"
+        model: "school_admission_payment_term"
+        save_as: "term"
+        values:
+          admission_id: "REC: admission.id"
+          name: "Term ADVD2"
+          sequence: 10
+
+      - step: "Create first detail (voided)"
+        action: "create"
+        model: "school_admission_payment_term_detail"
+        save_as: "detail_1"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Fee ADVD2 A"
+          account_id: "REC: account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+          voided: true
+
+      - step: "Create second detail (voided)"
+        action: "create"
+        model: "school_admission_payment_term_detail"
+        save_as: "detail_2"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Fee ADVD2 B"
+          account_id: "REC: account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+          voided: true
+
+      - step: "Confirm admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert admission is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "admission"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve admission"
+        action: "call"
+        target: "admission"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Assert the term is voided with a zero total"
+        action: "assert"
+        target: "term"
+        asserts:
+          state:
+            type: "value"
+            expected: "voided"
+          amount_total:
+            type: "value"
+            expected: 0.0
+
+  - name: "Invoiced state wins over voided when a customer invoice exists"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal"
+        limit: 1
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type"
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account"
+        values:
+          name: "Admission Fee Income ADVD3"
+          code: "ADVD34200"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          name: "Admission Receivable ADVD3"
+          code: "ADVD31100"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type ADVD3"
+          code: "CITADVD3"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "Admission Fee ADVD3"
+          type: "service"
+          list_price: 1000000.0
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type ADVD3"
+          code: "GTADVD3"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 ADVD3"
+          code: "AYADVD3"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester ADVD3"
+          code: "SMADVD3"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School ADVD3"
+          code: "SCHADVD3"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade ADVD3"
+          code: "GADVD3"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact ADVD3"
+
+      - step: "Create admission"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: contact.id"
+          currency_id: "REC: company.currency_id.id"
+          user_id: "REF: base.user_admin"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+
+      - step: "Create payment term"
+        action: "create"
+        model: "school_admission_payment_term"
+        save_as: "term"
+        values:
+          admission_id: "REC: admission.id"
+          name: "Term ADVD3"
+          sequence: 10
+          date_invoice: "2024-07-05"
+          date_due: "2024-07-20"
+
+      - step: "Create first detail (not voided)"
+        action: "create"
+        model: "school_admission_payment_term_detail"
+        save_as: "detail_1"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Fee ADVD3 A"
+          account_id: "REC: income_account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+
+      - step: "Create second detail (voided)"
+        action: "create"
+        model: "school_admission_payment_term_detail"
+        save_as: "detail_2"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Fee ADVD3 B"
+          account_id: "REC: income_account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+          voided: true
+
+      - step: "Confirm admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert admission is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "admission"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve admission"
+        action: "call"
+        target: "admission"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create customer invoice from the payment term"
+        action: "call"
+        target: "term"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Assert the term is invoiced, not voided"
+        action: "assert"
+        target: "term"
+        asserts:
+          state:
+            type: "value"
+            expected: "invoiced"
+          customer_invoice_id:
+            type: "value"
+            operator: "is_truthy"
+
+  - name: "Term with an unvoided detail stays uninvoiced"
+    steps:
+      - step: "Setup - get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "Admission Fee Income ADVD4"
+          code: "ADVD44200"
+          user_type_id: "REC: account_type.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "Admission Fee ADVD4"
+          type: "service"
+          list_price: 1000000.0
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type ADVD4"
+          code: "GTADVD4"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 ADVD4"
+          code: "AYADVD4"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester ADVD4"
+          code: "SMADVD4"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School ADVD4"
+          code: "SCHADVD4"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade ADVD4"
+          code: "GADVD4"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact ADVD4"
+
+      - step: "Create admission"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: contact.id"
+          currency_id: "REC: company.currency_id.id"
+          user_id: "REF: base.user_admin"
+
+      - step: "Create payment term"
+        action: "create"
+        model: "school_admission_payment_term"
+        save_as: "term"
+        values:
+          admission_id: "REC: admission.id"
+          name: "Term ADVD4"
+          sequence: 10
+
+      - step: "Create the only detail (not voided)"
+        action: "create"
+        model: "school_admission_payment_term_detail"
+        save_as: "detail_1"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Fee ADVD4"
+          account_id: "REC: account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+
+      - step: "Confirm admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert admission is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "admission"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve admission"
+        action: "call"
+        target: "admission"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Assert the term is uninvoiced, not voided by itself"
+        action: "assert"
+        target: "term"
+        asserts:
+          state:
+            type: "value"
+            expected: "uninvoiced"
+
+  - name: "Create invoice skips the voided detail and leaves its line empty"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal"
+        limit: 1
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type"
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account"
+        values:
+          name: "Admission Fee Income ADVD5"
+          code: "ADVD54200"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          name: "Admission Receivable ADVD5"
+          code: "ADVD51100"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type ADVD5"
+          code: "CITADVD5"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "Admission Fee ADVD5"
+          type: "service"
+          list_price: 1000000.0
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type ADVD5"
+          code: "GTADVD5"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 ADVD5"
+          code: "AYADVD5"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester ADVD5"
+          code: "SMADVD5"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School ADVD5"
+          code: "SCHADVD5"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade ADVD5"
+          code: "GADVD5"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact ADVD5"
+
+      - step: "Create admission"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: contact.id"
+          currency_id: "REC: company.currency_id.id"
+          user_id: "REF: base.user_admin"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+
+      - step: "Create payment term"
+        action: "create"
+        model: "school_admission_payment_term"
+        save_as: "term"
+        values:
+          admission_id: "REC: admission.id"
+          name: "Term ADVD5"
+          sequence: 10
+          date_invoice: "2024-07-05"
+          date_due: "2024-07-20"
+
+      - step: "Create first detail (not voided)"
+        action: "create"
+        model: "school_admission_payment_term_detail"
+        save_as: "detail_1"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Fee ADVD5 A"
+          account_id: "REC: income_account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+
+      - step: "Create second detail (voided)"
+        action: "create"
+        model: "school_admission_payment_term_detail"
+        save_as: "detail_2"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Fee ADVD5 B"
+          account_id: "REC: income_account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+          voided: true
+
+      - step: "Confirm admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert admission is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "admission"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve admission"
+        action: "call"
+        target: "admission"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create customer invoice from the payment term"
+        action: "call"
+        target: "term"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Assert exactly one invoice line was created"
+        action: "search"
+        model: "customer_invoice.line"
+        domain: [["customer_invoice_id", "=", "REC: term.customer_invoice_id.id"]]
+        save_as: "lines"
+        expect_count: 1
+
+      - step: "Assert the unvoided detail is linked to that line"
+        action: "assert"
+        target: "detail_1"
+        asserts:
+          customer_invoice_line_id:
+            type: "value"
+            operator: "is_truthy"
+
+      - step: "Assert the voided detail has no invoice line"
+        action: "assert"
+        target: "detail_2"
+        asserts:
+          customer_invoice_line_id:
+            type: "value"
+            operator: "is_falsy"
+
+  - name: "Voided detail is excluded from the product summary"
+    steps:
+      - step: "Setup - get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "Admission Fee Income ADVD6"
+          code: "ADVD64200"
+          user_type_id: "REC: account_type.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "Admission Fee ADVD6"
+          type: "service"
+          list_price: 1000000.0
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type ADVD6"
+          code: "GTADVD6"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 ADVD6"
+          code: "AYADVD6"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester ADVD6"
+          code: "SMADVD6"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School ADVD6"
+          code: "SCHADVD6"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade ADVD6"
+          code: "GADVD6"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact ADVD6"
+
+      - step: "Create admission"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: contact.id"
+          currency_id: "REC: company.currency_id.id"
+          user_id: "REF: base.user_admin"
+
+      - step: "Create payment term"
+        action: "create"
+        model: "school_admission_payment_term"
+        save_as: "term"
+        values:
+          admission_id: "REC: admission.id"
+          name: "Term ADVD6"
+          sequence: 10
+
+      - step: "Create first detail on the product (not voided)"
+        action: "create"
+        model: "school_admission_payment_term_detail"
+        save_as: "detail_1"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Fee ADVD6 A"
+          account_id: "REC: account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+
+      - step: "Create second detail on the same product (voided)"
+        action: "create"
+        model: "school_admission_payment_term_detail"
+        save_as: "detail_2"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Fee ADVD6 B"
+          account_id: "REC: account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+          voided: true
+
+      - step: "Find the product summary of this admission"
+        action: "search"
+        model: "school_admission_product_summary"
+        domain: [["admission_id", "=", "REC: admission.id"]]
+        save_as: "summary"
+        expect_count: 1
+
+      - step: "Assert the summary only counts the unvoided detail"
+        action: "assert"
+        target: "summary"
+        asserts:
+          amount_untaxed:
+            type: "value"
+            expected: 1000000.0
+          amount_total:
+            type: "value"
+            expected: 1000000.0
+
+  - name: "Create invoice on a term without any detail still succeeds"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          name: "Admission Receivable ADVD7"
+          code: "ADVD71100"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type ADVD7"
+          code: "CITADVD7"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type ADVD7"
+          code: "GTADVD7"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 ADVD7"
+          code: "AYADVD7"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester ADVD7"
+          code: "SMADVD7"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School ADVD7"
+          code: "SCHADVD7"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade ADVD7"
+          code: "GADVD7"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact ADVD7"
+
+      - step: "Create admission"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: contact.id"
+          currency_id: "REC: company.currency_id.id"
+          user_id: "REF: base.user_admin"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+
+      - step: "Create payment term without any detail"
+        action: "create"
+        model: "school_admission_payment_term"
+        save_as: "term"
+        values:
+          admission_id: "REC: admission.id"
+          name: "Term ADVD7"
+          sequence: 10
+          date_invoice: "2024-07-05"
+          date_due: "2024-07-20"
+
+      - step: "Confirm admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert admission is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "admission"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve admission"
+        action: "call"
+        target: "admission"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create customer invoice on the detail-less term"
+        action: "call"
+        target: "term"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Assert the term ended up invoiced with a zero total"
+        action: "assert"
+        target: "term"
+        asserts:
+          customer_invoice_id:
+            type: "value"
+            operator: "is_truthy"
+          state:
+            type: "value"
+            expected: "invoiced"
+          amount_total:
+            type: "value"
+            expected: 0.0
+
+  - name: "Voiding a locked detail without the bypass context is rejected"
+    steps:
+      - step: "Setup - get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "Admission Fee Income ADVD8"
+          code: "ADVD84200"
+          user_type_id: "REC: account_type.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "Admission Fee ADVD8"
+          type: "service"
+          list_price: 1000000.0
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type ADVD8"
+          code: "GTADVD8"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 ADVD8"
+          code: "AYADVD8"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester ADVD8"
+          code: "SMADVD8"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School ADVD8"
+          code: "SCHADVD8"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade ADVD8"
+          code: "GADVD8"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact ADVD8"
+
+      - step: "Create admission"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: contact.id"
+          currency_id: "REC: company.currency_id.id"
+          user_id: "REF: base.user_admin"
+
+      - step: "Create payment term"
+        action: "create"
+        model: "school_admission_payment_term"
+        save_as: "term"
+        as_user: "base.user_admin"
+        values:
+          admission_id: "REC: admission.id"
+          name: "Term ADVD8"
+          sequence: 10
+
+      - step: "Create the detail (not voided)"
+        action: "create"
+        model: "school_admission_payment_term_detail"
+        save_as: "detail"
+        as_user: "base.user_admin"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Fee ADVD8"
+          account_id: "REC: account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+
+      - step: "Confirm admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert admission is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "admission"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve admission"
+        action: "call"
+        target: "admission"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Assert the detail is locked after opening"
+        action: "assert"
+        target: "detail"
+        asserts:
+          locked:
+            type: "value"
+            expected: true
+
+      - step: "Voiding the locked detail without bypass is rejected"
+        action: "write"
+        target: "detail"
+        expect_error:
+          type: "UserError"
+        values:
+          voided: true
+
+  - name: "Create invoice on a fully voided term is rejected"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal"
+        limit: 1
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type"
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account"
+        values:
+          name: "Admission Fee Income ADVD9"
+          code: "ADVD94200"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          name: "Admission Receivable ADVD9"
+          code: "ADVD91100"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type ADVD9"
+          code: "CITADVD9"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "Admission Fee ADVD9"
+          type: "service"
+          list_price: 1000000.0
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type ADVD9"
+          code: "GTADVD9"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 ADVD9"
+          code: "AYADVD9"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester ADVD9"
+          code: "SMADVD9"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School ADVD9"
+          code: "SCHADVD9"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade ADVD9"
+          code: "GADVD9"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact ADVD9"
+
+      - step: "Create admission"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: contact.id"
+          currency_id: "REC: company.currency_id.id"
+          user_id: "REF: base.user_admin"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+
+      - step: "Create payment term"
+        action: "create"
+        model: "school_admission_payment_term"
+        save_as: "term"
+        values:
+          admission_id: "REC: admission.id"
+          name: "Term ADVD9"
+          sequence: 10
+          date_invoice: "2024-07-05"
+          date_due: "2024-07-20"
+
+      - step: "Create the only detail (voided)"
+        action: "create"
+        model: "school_admission_payment_term_detail"
+        save_as: "detail"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Fee ADVD9"
+          account_id: "REC: income_account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+          voided: true
+
+      - step: "Confirm admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert admission is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "admission"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve admission"
+        action: "call"
+        target: "admission"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Assert the term is already voided"
+        action: "assert"
+        target: "term"
+        asserts:
+          state:
+            type: "value"
+            expected: "voided"
+
+      - step: "Creating an invoice on the fully voided term is rejected"
+        action: "call"
+        target: "term"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+        expect_error:
+          type: "UserError"
+          message_contains: "voided"
+
+      - step: "Assert the term is still uninvoiced (no customer invoice)"
+        action: "assert"
+        target: "term"
+        asserts:
+          customer_invoice_id:
+            type: "value"
+            operator: "is_falsy"
