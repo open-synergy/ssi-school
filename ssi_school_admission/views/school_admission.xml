@@ -177,6 +177,7 @@
                             <field name="amount_untaxed" />
                             <field name="amount_tax" />
                             <field name="amount_total" />
+                            <field name="amount_unrealized" />
                             <field name="customer_invoice_id" />
                             <field name="state" />
                             <button
