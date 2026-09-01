@@ -179,6 +179,18 @@ class SchoolAdmissionPaymentTerm(models.Model):
         currency_field="currency_id",
         help="The total amount including taxes for this term.",
     )
+    amount_unrealized = fields.Monetary(
+        string="Unrealized",
+        related="customer_invoice_id.amount_residual",
+        store=True,
+        readonly=True,
+        currency_field="currency_id",
+        help=(
+            "Portion of this term still outstanding on the linked "
+            "customer invoice. Zero when the term has no customer "
+            "invoice yet."
+        ),
+    )
     customer_invoice_id = fields.Many2one(
         string="# Customer Invoice",
         comodel_name="customer_invoice",
