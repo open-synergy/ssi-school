@@ -90,6 +90,23 @@ class SchoolEnrollmentPaymentTermDetail(
             "start unlocked."
         ),
     )
+    voided = fields.Boolean(
+        string="Voided",
+        default=False,
+        readonly=True,
+        copy=False,
+        help=(
+            "Set when this line's full amount has been moved to another "
+            "payment term. A voided line no longer counts toward the "
+            "term total, is never billed on a customer invoice, and is "
+            "excluded from product summary and fee analysis; it stays "
+            "visible on its original term only as a trace of where the "
+            "amount went. This is not a way to reduce the billed amount "
+            "-- price_unit keeps its original value. Can only be set "
+            "through the ORM; this module provides no button/action "
+            "that enables it."
+        ),
+    )
 
     def _check_addendum_lock(self, vals):
         """Reject writes on a locked payment term detail.

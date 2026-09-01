@@ -432,9 +432,11 @@ class SchoolEnrollment(models.Model):
         product, deletes the existing summary records of the
         enrollment, and creates one
         ``school_enrollment.product_summary`` record per product.
-        Detail lines without a product are skipped. Runs in ``sudo``
-        and is called from ``create``, ``write``, and ``unlink`` of the
-        payment term and payment term detail models.
+        Detail lines without a product are skipped, and so are lines
+        that are ``voided`` -- their amount is already counted again
+        on the term it moved to. Runs in ``sudo`` and is called from
+        ``create``, ``write``, and ``unlink`` of the payment term and
+        payment term detail models.
 
         :return: None
         """
@@ -442,6 +444,8 @@ class SchoolEnrollment(models.Model):
             summary_data = {}
             for term in record.payment_term_ids:
                 for detail in term.detail_ids:
+                    if detail.voided:
+                        continue
                     pid = detail.product_id.id
                     if not pid:
                         continue
