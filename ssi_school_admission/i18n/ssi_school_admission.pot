@@ -1870,6 +1870,13 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_term__amount_unrealized
+msgid ""
+"Portion of this term still outstanding on the linked customer invoice. Zero "
+"when the term has no customer invoice yet."
+msgstr ""
+
+#. module: ssi_school_admission
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template_line__price_subtotal
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__price_subtotal
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term_detail__price_subtotal
@@ -2979,6 +2986,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__message_unread_counter
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__message_unread_counter
 msgid "Unread Messages Counter"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term__amount_unrealized
+msgid "Unrealized"
 msgstr ""
 
 #. module: ssi_school_admission
