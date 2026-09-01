@@ -84,6 +84,23 @@ class SchoolAdmissionPaymentTermDetail(models.Model):
             "start unlocked."
         ),
     )
+    voided = fields.Boolean(
+        string="Voided",
+        default=False,
+        readonly=True,
+        copy=False,
+        help=(
+            "Set when this line's full amount has been moved to another "
+            "payment term. A voided line no longer counts toward the "
+            "term total, is never billed on a customer invoice, and is "
+            "excluded from product summary; it stays visible on its "
+            "original term only as a trace of where the amount went. "
+            "This is not a way to reduce the billed amount -- "
+            "price_unit keeps its original value. Can only be set "
+            "through the ORM; this module provides no button/action "
+            "that enables it."
+        ),
+    )
 
     @api.depends("term_id.admission_id.payment_template_id")
     def _compute_allowed_product_ids(self):

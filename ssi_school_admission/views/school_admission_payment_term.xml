@@ -137,7 +137,7 @@
                                 nolabel="1"
                                 attrs="{'readonly': [('admission_state','!=','draft'),('addendum_ok','=',False)]}"
                             >
-                            <tree>
+                            <tree decoration-muted="voided">
                                 <field name="sequence" widget="handle" />
                                 <field
                                         name="allowed_product_ids"
@@ -181,6 +181,7 @@
                                     />
                                 <field name="price_tax" />
                                 <field name="price_total" />
+                                <field name="voided" readonly="1" />
                             </tree>
                             <form>
                                 <header />

@@ -487,7 +487,9 @@ class SchoolAdmission(models.Model):
 
         Drops the existing summary lines, then aggregates the subtotal,
         tax and total of every payment term detail per product and
-        creates one summary line per product.
+        creates one summary line per product. Detail lines that are
+        ``voided`` are skipped -- their amount is already counted
+        again on the term it moved to.
 
         :return: ``None``
         """
@@ -496,6 +498,8 @@ class SchoolAdmission(models.Model):
             product_data = {}
             for term in record.payment_term_ids:
                 for detail in term.detail_ids:
+                    if detail.voided:
+                        continue
                     pid = detail.product_id.id
                     if not pid:
                         continue
