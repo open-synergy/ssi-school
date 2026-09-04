@@ -27,6 +27,7 @@ from . import (  # noqa: F401
     test_school_enrollment_access,
     test_school_enrollment_results,
     test_school_enrollment_payment_term_management,
+    test_school_enrollment_payment_term_paid,
     test_school_enrollment_payment_term_duplicate,
     test_school_enrollment_copy_payment_term,
     test_school_enrollment_create_due_invoice,
