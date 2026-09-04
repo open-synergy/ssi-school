@@ -10,6 +10,19 @@
 #          update, so a term whose invoice is already ``done`` would
 #          stay stuck at ``invoiced`` until an unrelated write happens
 #          to touch it.
+#
+# Note: the first version of this script called ``_compute_state()``
+#       directly. Outside of ``env.protecting``, ``Field.__set__``
+#       drops a real id into its ``other_ids`` branch and calls
+#       ``records.write(...)``, going through the model's ``write()``
+#       override -- which runs ``_check_addendum_lock`` and raised
+#       ``UserError`` on every already-locked term. It reproducibly
+#       failed the 2026-09-04 production deploy of the twin module
+#       (``ssi_school``, issue #387). The fix replays the compute
+#       through the same ``env.add_to_compute`` + ``flush`` idiom the
+#       ORM itself uses for a normal recompute, which writes at the
+#       field level under ``env.protecting`` and never calls
+#       ``write()``.
 
 import logging
 
@@ -22,11 +35,17 @@ _logger = logging.getLogger(__name__)
 def migrate(env, version):
     """Recompute ``state`` on every existing payment term.
 
-    Replays ``_compute_state`` over the whole
-    ``school_admission_payment_term`` table so a term whose linked
-    customer invoice is already ``done`` moves to the new ``paid``
-    value right away, instead of waiting for an unrelated write to
-    trigger the recompute.
+    Marks ``state`` to be recomputed on the whole
+    ``school_admission_payment_term`` table via
+    ``env.add_to_compute`` and forces it with ``flush``, so a term
+    whose linked customer invoice is already ``done`` moves to the
+    new ``paid`` value right away, instead of waiting for an
+    unrelated write to trigger the recompute. This idiom writes at
+    the field level under ``env.protecting`` (see
+    ``Field.compute_value``), so it never calls the model's
+    ``write()`` and therefore never trips ``_check_addendum_lock`` on
+    a term that is already ``locked`` -- unlike calling
+    ``_compute_state()`` directly, which does.
 
     :param env: the migration environment
     :param version: the version being migrated to (unused)
@@ -35,7 +54,8 @@ def migrate(env, version):
     """
     term_model = env["school_admission_payment_term"]
     terms = term_model.search([])
-    terms._compute_state()  # pylint: disable=protected-access
+    env.add_to_compute(terms._fields["state"], terms)
+    terms.flush(["state"])
     _logger.info(
         "Recomputed state on %s school_admission_payment_term " "record(s).",
         len(terms),
