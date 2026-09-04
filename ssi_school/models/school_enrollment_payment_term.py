@@ -21,7 +21,8 @@ class SchoolEnrollmentPaymentTerm(models.Model):
     (customer_invoice_id) via action_create_invoice. The state is automatically
     computed: draft (enrollment in draft/confirm), uninvoiced (enrollment
     open/done, no customer invoice yet), invoiced (customer invoice created),
-    manual (manually controlled), cancelled (enrollment cancelled).
+    paid (the linked customer invoice is fully paid), manual (manually
+    controlled), cancelled (enrollment cancelled).
     Totals (amount_untaxed, amount_tax, amount_total) are computed from detail_ids.
     """
 
@@ -31,6 +32,7 @@ class SchoolEnrollmentPaymentTerm(models.Model):
 
     @api.depends(
         "customer_invoice_id",
+        "customer_invoice_id.state",
         "enrollment_id.state",
         "manually_control",
         "detail_ids.voided",
@@ -40,11 +42,12 @@ class SchoolEnrollmentPaymentTerm(models.Model):
 
         ``draft`` while the enrollment is in ``draft`` or ``confirm``.
         Once the enrollment is ``open`` or ``done`` the value becomes
-        ``invoiced`` when ``customer_invoice_id`` is set, ``voided``
-        when ``_is_fully_voided`` is true, ``manual`` when
-        ``manually_control`` is enabled, and ``uninvoiced`` otherwise.
-        Any other enrollment state (cancelled, rejected) yields
-        ``cancelled``.
+        ``paid`` when ``customer_invoice_id`` is set and that invoice's
+        own ``state`` is ``done``, ``invoiced`` when it is set but not
+        yet ``done``, ``voided`` when ``_is_fully_voided`` is true,
+        ``manual`` when ``manually_control`` is enabled, and
+        ``uninvoiced`` otherwise. Any other enrollment state
+        (cancelled, rejected) yields ``cancelled``.
 
         :return: None
         """
@@ -53,7 +56,10 @@ class SchoolEnrollmentPaymentTerm(models.Model):
                 state = "draft"
             elif record.enrollment_id.state in ["open", "done"]:
                 if record.customer_invoice_id:
-                    state = "invoiced"
+                    if record.customer_invoice_id.state == "done":
+                        state = "paid"
+                    else:
+                        state = "invoiced"
                 elif record._is_fully_voided():  # pylint: disable=protected-access
                     state = "voided"
                 elif record.manually_control:
@@ -239,6 +245,7 @@ class SchoolEnrollmentPaymentTerm(models.Model):
             ("draft", "Draft"),
             ("uninvoiced", "Uninvoiced"),
             ("invoiced", "Invoiced"),
+            ("paid", "Paid"),
             ("voided", "Voided"),
             ("manual", "Manually Controlled"),
             ("cancelled", "Cancelled"),
@@ -250,6 +257,7 @@ class SchoolEnrollmentPaymentTerm(models.Model):
             "Draft = enrollment still in draft/confirm, "
             "Uninvoiced = enrollment open/done but no customer invoice yet, "
             "Invoiced = customer invoice created, "
+            "Paid = the linked customer invoice is fully paid, "
             "Voided = every detail line has had its amount moved to "
             "another payment term, "
             "Manually Controlled = managed manually, "
