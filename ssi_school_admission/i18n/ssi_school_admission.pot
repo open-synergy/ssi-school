@@ -1095,6 +1095,16 @@ msgid "Draft"
 msgstr ""
 
 #. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_term__state
+msgid ""
+"Draft = admission still in draft/confirm, Uninvoiced = admission open/done "
+"but no customer invoice yet, Invoiced = customer invoice created, Paid = the"
+" linked customer invoice is fully paid, Voided = every detail line has had "
+"its amount moved to another payment term, Manually Controlled = managed "
+"manually, Cancelled = the admission itself was cancelled."
+msgstr ""
+
+#. module: ssi_school_admission
 #: model:ir.model.fields,help:ssi_school_admission.field_school_admission_wizard_copy_payment_term__target_admission_ids
 msgid ""
 "Draft admissions selected from the list view that will receive the copied "
@@ -1788,6 +1798,12 @@ msgstr ""
 msgid ""
 "Order of the new payment term within the admission. Lower values appear "
 "first."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields.selection,name:ssi_school_admission.selection__school_admission_payment_term__state__paid
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_payment_term_view_search
+msgid "Paid"
 msgstr ""
 
 #. module: ssi_school_admission
@@ -2529,13 +2545,6 @@ msgstr ""
 #. module: ssi_school_admission
 #: model:ir.model.fields,help:ssi_school_admission.field_school_admission_wizard_create_enrollment__currency_id
 msgid "The currency used for the enrollment payment billing."
-msgstr ""
-
-#. module: ssi_school_admission
-#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_term__state
-msgid ""
-"The current state of this payment term. Voided means every detail line has "
-"had its amount moved to another payment term."
 msgstr ""
 
 #. module: ssi_school_admission
