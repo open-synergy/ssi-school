@@ -23,6 +23,7 @@
                     string="Invoiced"
                     domain="[('state','=','invoiced')]"
                 />
+            <filter name="paid" string="Paid" domain="[('state','=','paid')]" />
         </search>
     </field>
 </record>

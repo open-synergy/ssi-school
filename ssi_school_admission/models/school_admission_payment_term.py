@@ -27,6 +27,7 @@ class SchoolAdmissionPaymentTerm(models.Model):
 
     @api.depends(
         "customer_invoice_id",
+        "customer_invoice_id.state",
         "admission_id.state",
         "manually_control",
         "detail_ids.voided",
@@ -35,17 +36,22 @@ class SchoolAdmissionPaymentTerm(models.Model):
         """Derive the term state from the admission and the invoice.
 
         ``draft`` while the admission is draft or confirm; once open or
-        done the term is ``invoiced`` when a customer invoice exists,
-        ``voided`` when ``_is_fully_voided`` is true, ``manual`` when
-        it is manually controlled, otherwise ``uninvoiced``. Any other
-        admission state yields ``cancelled``.
+        done the term is ``paid`` when a customer invoice exists and
+        that invoice's own ``state`` is ``done``, ``invoiced`` when it
+        is set but not yet ``done``, ``voided`` when
+        ``_is_fully_voided`` is true, ``manual`` when it is manually
+        controlled, otherwise ``uninvoiced``. Any other admission
+        state yields ``cancelled``.
         """
         for record in self:
             if record.admission_id.state in ["draft", "confirm"]:
                 state = "draft"
             elif record.admission_id.state in ["open", "done"]:
                 if record.customer_invoice_id:
-                    state = "invoiced"
+                    if record.customer_invoice_id.state == "done":
+                        state = "paid"
+                    else:
+                        state = "invoiced"
                 elif record._is_fully_voided():  # pylint: disable=protected-access
                     state = "voided"
                 elif record.manually_control:
@@ -212,6 +218,7 @@ class SchoolAdmissionPaymentTerm(models.Model):
             ("draft", "Draft"),
             ("uninvoiced", "Uninvoiced"),
             ("invoiced", "Invoiced"),
+            ("paid", "Paid"),
             ("voided", "Voided"),
             ("manual", "Manually Controlled"),
             ("cancelled", "Cancelled"),
@@ -219,9 +226,15 @@ class SchoolAdmissionPaymentTerm(models.Model):
         compute="_compute_state",
         store=True,
         help=(
-            "The current state of this payment term. Voided means "
-            "every detail line has had its amount moved to another "
-            "payment term."
+            "Draft = admission still in draft/confirm, "
+            "Uninvoiced = admission open/done but no customer invoice "
+            "yet, "
+            "Invoiced = customer invoice created, "
+            "Paid = the linked customer invoice is fully paid, "
+            "Voided = every detail line has had its amount moved to "
+            "another payment term, "
+            "Manually Controlled = managed manually, "
+            "Cancelled = the admission itself was cancelled."
         ),
     )
     manually_control = fields.Boolean(
