@@ -939,9 +939,9 @@ msgstr ""
 msgid ""
 "Billing status: Draft = enrollment still in draft/confirm, Uninvoiced = "
 "enrollment open/done but no customer invoice yet, Invoiced = customer "
-"invoice created, Voided = every detail line has had its amount moved to "
-"another payment term, Manually Controlled = managed manually, Cancelled = "
-"enrollment cancelled."
+"invoice created, Paid = the linked customer invoice is fully paid, Voided = "
+"every detail line has had its amount moved to another payment term, Manually"
+" Controlled = managed manually, Cancelled = enrollment cancelled."
 msgstr ""
 
 #. module: ssi_school
@@ -3223,6 +3223,12 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_student__origin_school
 msgid "Origin School"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields.selection,name:ssi_school.selection__school_enrollment_payment_term__state__paid
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_payment_term_view_search
+msgid "Paid"
 msgstr ""
 
 #. module: ssi_school
