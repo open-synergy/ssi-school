@@ -10,6 +10,14 @@ ADDENDUM_LOCK_ALLOWED_FIELDS = {
     "manually_control",
     "locked",
     "sequence",
+    # "state" is a system-driven stored compute, never a user input on the
+    # form, so allowing it here does not open a way for users to edit a
+    # locked term. It has to be on the whitelist so that recomputing it --
+    # e.g. from a migration script rebuilding stale rows via
+    # ``env.add_to_compute`` -- does not trip on the addendum lock. The
+    # gate below still rejects a mixed write such as
+    # ``{"state": ..., "name": ...}``.
+    "state",
 }
 
 
