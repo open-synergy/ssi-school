@@ -1,0 +1,1156 @@
+options:
+  auto_refresh: true
+scenarios:
+  - name: "Two uninvoiced terms yield unpaid status"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type PAT1"
+          code: "GTPAT1"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 PAT1"
+          code: "AYPAT1"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester PAT1"
+          code: "SMPAT1"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School PAT1"
+          code: "SCHPAT1"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade PAT1"
+          code: "GPAT1"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact PAT1"
+
+      - step: "Create admission"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        values:
+          user_id: "REF: base.user_admin"
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: contact.id"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Setup - create income account"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "Admission Fee Income PAT1"
+          code: "PAT14200"
+          user_type_id: "REC: account_type.id"
+
+      - step: "Create first payment term"
+        action: "create"
+        model: "school_admission_payment_term"
+        save_as: "term_1"
+        values:
+          admission_id: "REC: admission.id"
+          name: "Term 1 PAT1"
+          sequence: 10
+
+      - step: "Setup - create product for first term"
+        action: "create"
+        model: "product.product"
+        save_as: "product_1"
+        values:
+          name: "Admission Fee PAT1 A"
+          type: "service"
+          list_price: 600000.0
+
+      - step: "Create detail on the first term"
+        action: "create"
+        model: "school_admission_payment_term_detail"
+        values:
+          term_id: "REC: term_1.id"
+          product_id: "REC: product_1.id"
+          name: "Fee PAT1 A"
+          account_id: "REC: account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 600000.0
+
+      - step: "Create second payment term"
+        action: "create"
+        model: "school_admission_payment_term"
+        save_as: "term_2"
+        values:
+          admission_id: "REC: admission.id"
+          name: "Term 2 PAT1"
+          sequence: 20
+
+      - step: "Setup - create product for second term"
+        action: "create"
+        model: "product.product"
+        save_as: "product_2"
+        values:
+          name: "Admission Fee PAT1 B"
+          type: "service"
+          list_price: 400000.0
+
+      - step: "Create detail on the second term"
+        action: "create"
+        model: "school_admission_payment_term_detail"
+        values:
+          term_id: "REC: term_2.id"
+          product_id: "REC: product_2.id"
+          name: "Fee PAT1 B"
+          account_id: "REC: account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 400000.0
+
+      - step: "Confirm admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert admission is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "admission"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve admission"
+        action: "call"
+        target: "admission"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Assert the aggregate is unpaid with the full total residual"
+        action: "assert"
+        target: "admission"
+        asserts:
+          amount_total:
+            type: "value"
+            expected: 1000000.0
+          amount_paid:
+            type: "value"
+            expected: 0.0
+          amount_residual:
+            type: "value"
+            expected: 1000000.0
+          payment_status:
+            type: "value"
+            expected: "unpaid"
+
+  - name: "One paid term and one uninvoiced term yield partial status"
+    steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable PAT2"
+          code: "PAT2"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type PAT2"
+          code: "PAT2"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
+      - step: "Setup - get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "Admission Fee Income PAT2"
+          code: "PAT24200"
+          user_type_id: "REC: account_type.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type PAT2"
+          code: "GTPAT2"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 PAT2"
+          code: "AYPAT2"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester PAT2"
+          code: "SMPAT2"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School PAT2"
+          code: "SCHPAT2"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade PAT2"
+          code: "GPAT2"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact PAT2"
+
+      - step: "Create admission"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        values:
+          user_id: "REF: base.user_admin"
+          customer_invoice_type_id: "REC: ci_type.id"
+          receivable_account_id: "REC: ci_account.id"
+          receivable_journal_id: "REC: ci_journal.id"
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: contact.id"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Create first payment term"
+        action: "create"
+        model: "school_admission_payment_term"
+        save_as: "term_1"
+        values:
+          admission_id: "REC: admission.id"
+          name: "Term 1 PAT2"
+          sequence: 10
+
+      - step: "Setup - create product for first term"
+        action: "create"
+        model: "product.product"
+        save_as: "product_1"
+        values:
+          name: "Admission Fee PAT2 A"
+          type: "service"
+          list_price: 600000.0
+
+      - step: "Create detail on the first term"
+        action: "create"
+        model: "school_admission_payment_term_detail"
+        values:
+          term_id: "REC: term_1.id"
+          product_id: "REC: product_1.id"
+          name: "Fee PAT2 A"
+          account_id: "REC: account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 600000.0
+
+      - step: "Create second payment term"
+        action: "create"
+        model: "school_admission_payment_term"
+        save_as: "term_2"
+        values:
+          admission_id: "REC: admission.id"
+          name: "Term 2 PAT2"
+          sequence: 20
+
+      - step: "Setup - create product for second term"
+        action: "create"
+        model: "product.product"
+        save_as: "product_2"
+        values:
+          name: "Admission Fee PAT2 B"
+          type: "service"
+          list_price: 400000.0
+
+      - step: "Create detail on the second term"
+        action: "create"
+        model: "school_admission_payment_term_detail"
+        values:
+          term_id: "REC: term_2.id"
+          product_id: "REC: product_2.id"
+          name: "Fee PAT2 B"
+          account_id: "REC: account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 400000.0
+
+      - step: "Confirm admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert admission is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "admission"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve admission"
+        action: "call"
+        target: "admission"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create invoice on the first term"
+        action: "call"
+        target: "term_1"
+        method: "action_create_invoice"
+
+      - step: "Get the created customer invoice"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["id", "=", "EVAL: registry['term_1'].customer_invoice_id.id"]]
+        save_as: "invoice_1"
+        expect_count: 1
+
+      - step: "Mark the first invoice as paid"
+        action: "write"
+        target: "invoice_1"
+        values:
+          state: "done"
+
+      - step: "Assert the first term is paid"
+        action: "assert"
+        target: "term_1"
+        asserts:
+          state:
+            type: "value"
+            expected: "paid"
+
+      - step: "Assert the aggregate is partial"
+        action: "assert"
+        target: "admission"
+        asserts:
+          amount_total:
+            type: "value"
+            expected: 1000000.0
+          amount_paid:
+            type: "value"
+            expected: 600000.0
+          amount_residual:
+            type: "value"
+            expected: 400000.0
+          payment_status:
+            type: "value"
+            expected: "partial"
+
+  - name: "Two fully paid terms yield paid status"
+    steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable PAT3"
+          code: "PAT3"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type PAT3"
+          code: "PAT3"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
+      - step: "Setup - get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "Admission Fee Income PAT3"
+          code: "PAT34200"
+          user_type_id: "REC: account_type.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type PAT3"
+          code: "GTPAT3"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 PAT3"
+          code: "AYPAT3"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester PAT3"
+          code: "SMPAT3"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School PAT3"
+          code: "SCHPAT3"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade PAT3"
+          code: "GPAT3"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact PAT3"
+
+      - step: "Create admission"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        values:
+          user_id: "REF: base.user_admin"
+          customer_invoice_type_id: "REC: ci_type.id"
+          receivable_account_id: "REC: ci_account.id"
+          receivable_journal_id: "REC: ci_journal.id"
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: contact.id"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Create first payment term"
+        action: "create"
+        model: "school_admission_payment_term"
+        save_as: "term_1"
+        values:
+          admission_id: "REC: admission.id"
+          name: "Term 1 PAT3"
+          sequence: 10
+
+      - step: "Setup - create product for first term"
+        action: "create"
+        model: "product.product"
+        save_as: "product_1"
+        values:
+          name: "Admission Fee PAT3 A"
+          type: "service"
+          list_price: 600000.0
+
+      - step: "Create detail on the first term"
+        action: "create"
+        model: "school_admission_payment_term_detail"
+        values:
+          term_id: "REC: term_1.id"
+          product_id: "REC: product_1.id"
+          name: "Fee PAT3 A"
+          account_id: "REC: account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 600000.0
+
+      - step: "Create second payment term"
+        action: "create"
+        model: "school_admission_payment_term"
+        save_as: "term_2"
+        values:
+          admission_id: "REC: admission.id"
+          name: "Term 2 PAT3"
+          sequence: 20
+
+      - step: "Setup - create product for second term"
+        action: "create"
+        model: "product.product"
+        save_as: "product_2"
+        values:
+          name: "Admission Fee PAT3 B"
+          type: "service"
+          list_price: 400000.0
+
+      - step: "Create detail on the second term"
+        action: "create"
+        model: "school_admission_payment_term_detail"
+        values:
+          term_id: "REC: term_2.id"
+          product_id: "REC: product_2.id"
+          name: "Fee PAT3 B"
+          account_id: "REC: account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 400000.0
+
+      - step: "Confirm admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert admission is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "admission"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve admission"
+        action: "call"
+        target: "admission"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create invoice on the first term"
+        action: "call"
+        target: "term_1"
+        method: "action_create_invoice"
+
+      - step: "Get the first created customer invoice"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["id", "=", "EVAL: registry['term_1'].customer_invoice_id.id"]]
+        save_as: "invoice_1"
+        expect_count: 1
+
+      - step: "Mark the first invoice as paid"
+        action: "write"
+        target: "invoice_1"
+        values:
+          state: "done"
+
+      - step: "Create invoice on the second term"
+        action: "call"
+        target: "term_2"
+        method: "action_create_invoice"
+
+      - step: "Get the second created customer invoice"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["id", "=", "EVAL: registry['term_2'].customer_invoice_id.id"]]
+        save_as: "invoice_2"
+        expect_count: 1
+
+      - step: "Mark the second invoice as paid"
+        action: "write"
+        target: "invoice_2"
+        values:
+          state: "done"
+
+      - step: "Assert the aggregate is fully paid"
+        action: "assert"
+        target: "admission"
+        asserts:
+          amount_total:
+            type: "value"
+            expected: 1000000.0
+          amount_paid:
+            type: "value"
+            expected: 1000000.0
+          amount_residual:
+            type: "value"
+            expected: 0.0
+          payment_status:
+            type: "value"
+            expected: "paid"
+
+  - name: "Admission without any payment term stays at no_payment"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type PAT4"
+          code: "GTPAT4"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 PAT4"
+          code: "AYPAT4"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester PAT4"
+          code: "SMPAT4"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School PAT4"
+          code: "SCHPAT4"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade PAT4"
+          code: "GPAT4"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact PAT4"
+
+      - step: "Create admission without any payment term"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        values:
+          user_id: "REF: base.user_admin"
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: contact.id"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Confirm admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert admission is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "admission"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve admission"
+        action: "call"
+        target: "admission"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Assert the aggregate stays at no_payment"
+        action: "assert"
+        target: "admission"
+        asserts:
+          amount_total:
+            type: "value"
+            expected: 0.0
+          amount_paid:
+            type: "value"
+            expected: 0.0
+          amount_residual:
+            type: "value"
+            expected: 0.0
+          payment_status:
+            type: "value"
+            expected: "no_payment"
+
+  - name: "A fully voided term contributes nothing to the aggregate"
+    steps:
+      - step: "Setup - get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "Admission Fee Income PAT5"
+          code: "PAT54200"
+          user_type_id: "REC: account_type.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "Admission Fee PAT5"
+          type: "service"
+          list_price: 1000000.0
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type PAT5"
+          code: "GTPAT5"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 PAT5"
+          code: "AYPAT5"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester PAT5"
+          code: "SMPAT5"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School PAT5"
+          code: "SCHPAT5"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade PAT5"
+          code: "GPAT5"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact PAT5"
+
+      - step: "Create admission"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        values:
+          user_id: "REF: base.user_admin"
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: contact.id"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Create payment term"
+        action: "create"
+        model: "school_admission_payment_term"
+        save_as: "term"
+        values:
+          admission_id: "REC: admission.id"
+          name: "Term 1 PAT5"
+          sequence: 10
+
+      - step: "Create the only detail, voided"
+        action: "create"
+        model: "school_admission_payment_term_detail"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Fee PAT5"
+          account_id: "REC: account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+          voided: true
+
+      - step: "Confirm admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert admission is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "admission"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve admission"
+        action: "call"
+        target: "admission"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Assert the term itself is voided"
+        action: "assert"
+        target: "term"
+        asserts:
+          state:
+            type: "value"
+            expected: "voided"
+
+      - step: "Assert the aggregate excludes the voided term"
+        action: "assert"
+        target: "admission"
+        asserts:
+          amount_total:
+            type: "value"
+            expected: 0.0
+          payment_status:
+            type: "value"
+            expected: "no_payment"
+
+  - name: "Cancelled admission resets the aggregate to no_payment"
+    steps:
+      - step: "Setup - get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "Admission Fee Income PAT6"
+          code: "PAT64200"
+          user_type_id: "REC: account_type.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "Admission Fee PAT6"
+          type: "service"
+          list_price: 600000.0
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type PAT6"
+          code: "GTPAT6"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 PAT6"
+          code: "AYPAT6"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester PAT6"
+          code: "SMPAT6"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School PAT6"
+          code: "SCHPAT6"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade PAT6"
+          code: "GPAT6"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact PAT6"
+
+      - step: "Create admission"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        values:
+          user_id: "REF: base.user_admin"
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: contact.id"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Create payment term"
+        action: "create"
+        model: "school_admission_payment_term"
+        save_as: "term"
+        values:
+          admission_id: "REC: admission.id"
+          name: "Term 1 PAT6"
+          sequence: 10
+
+      - step: "Create the detail (not voided)"
+        action: "create"
+        model: "school_admission_payment_term_detail"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Fee PAT6"
+          account_id: "REC: account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 600000.0
+
+      - step: "Confirm admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert admission is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "admission"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve admission"
+        action: "call"
+        target: "admission"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Assert the aggregate has the term's total before cancellation"
+        action: "assert"
+        target: "admission"
+        asserts:
+          amount_total:
+            type: "value"
+            expected: 600000.0
+          payment_status:
+            type: "value"
+            expected: "unpaid"
+
+      - step:
+          "Force the admission into cancel (action_cancel itself refuses while a term is
+          invoiced -- see _10_check_payment_term_invoice; this direct write isolates the
+          compute-only guarantee under test)"
+        action: "write"
+        target: "admission"
+        values:
+          state: "cancel"
+
+      - step: "Assert the term follows the admission to cancelled"
+        action: "assert"
+        target: "term"
+        asserts:
+          state:
+            type: "value"
+            expected: "cancelled"
+
+      - step: "Assert the aggregate resets to no_payment"
+        action: "assert"
+        target: "admission"
+        asserts:
+          amount_total:
+            type: "value"
+            expected: 0.0
+          amount_paid:
+            type: "value"
+            expected: 0.0
+          payment_status:
+            type: "value"
+            expected: "no_payment"
