@@ -784,6 +784,13 @@ msgid "Allowed Usages"
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__amount_paid
+msgid ""
+"Amount already realized on the invoiced payment terms that are neither "
+"cancelled nor voided."
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__analytic_account_id
 msgid "Analytic Account"
 msgstr ""
@@ -3028,6 +3035,12 @@ msgid "Nila Asih (demo)"
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields.selection,name:ssi_school.selection__school_enrollment__payment_status__no_payment
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_search
+msgid "No Payment"
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school__note
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__note
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__note
@@ -3226,9 +3239,25 @@ msgid "Origin School"
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__amount_residual
+msgid ""
+"Outstanding amount still to be paid, i.e. the total amount minus the amount "
+"already paid."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__amount_paid
+#: model:ir.model.fields.selection,name:ssi_school.selection__school_enrollment__payment_status__paid
 #: model:ir.model.fields.selection,name:ssi_school.selection__school_enrollment_payment_term__state__paid
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_payment_term_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_search
 msgid "Paid"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields.selection,name:ssi_school.selection__school_enrollment__payment_status__partial
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_search
+msgid "Partially Paid"
 msgstr ""
 
 #. module: ssi_school
@@ -3248,6 +3277,12 @@ msgstr ""
 #: model:ir.model.fields.selection,name:ssi_school.selection__school_enrollment__academic_year_result__passed
 #: model:ir.model.fields.selection,name:ssi_school.selection__school_enrollment_fee_analysis__academic_year_result__passed
 msgid "Passed"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__payment_status
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_search
+msgid "Payment Status"
 msgstr ""
 
 #. module: ssi_school
@@ -3277,6 +3312,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__term_ids
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_payment_template_view_form
 msgid "Payment Terms"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__payment_status
+msgid ""
+"Payment status derived from the realized amounts of the payment terms that "
+"are neither cancelled nor voided."
 msgstr ""
 
 #. module: ssi_school
@@ -3606,6 +3648,11 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.ui.menu,name:ssi_school.menu_school_report
 msgid "Reporting"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__amount_residual
+msgid "Residual"
 msgstr ""
 
 #. module: ssi_school
@@ -4852,6 +4899,7 @@ msgid "This will replace existing payment terms. Continue?"
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__amount_total
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_fee_analysis__price_total
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term__amount_total
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__price_total
@@ -4882,6 +4930,13 @@ msgstr ""
 msgid ""
 "Total billing amount including tax, automatically computed from the detail "
 "lines."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__amount_total
+msgid ""
+"Total billing amount of the payment terms that are neither cancelled nor "
+"voided."
 msgstr ""
 
 #. module: ssi_school
@@ -4986,6 +5041,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_payment_term_view_tree
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_form
 msgid "Unmark as Manual"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields.selection,name:ssi_school.selection__school_enrollment__payment_status__unpaid
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_search
+msgid "Unpaid"
 msgstr ""
 
 #. module: ssi_school
