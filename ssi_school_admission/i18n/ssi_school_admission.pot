@@ -484,6 +484,13 @@ msgid "Allowed Usages"
 msgstr ""
 
 #. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__amount_paid
+msgid ""
+"Amount already realized on the invoiced payment terms that are neither "
+"cancelled nor voided."
+msgstr ""
+
+#. module: ssi_school_admission
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template_line__analytic_account_id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__analytic_account_id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__analytic_account_id
@@ -1726,6 +1733,12 @@ msgid "Next Approvals"
 msgstr ""
 
 #. module: ssi_school_admission
+#: model:ir.model.fields.selection,name:ssi_school_admission.selection__school_admission__payment_status__no_payment
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_view_search
+msgid "No Payment"
+msgstr ""
+
+#. module: ssi_school_admission
 #: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_test_view_search
 msgid "Not Passed"
 msgstr ""
@@ -1801,14 +1814,30 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__amount_residual
+msgid ""
+"Outstanding amount still to be paid, i.e. the total amount minus the amount "
+"already paid."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__amount_paid
+#: model:ir.model.fields.selection,name:ssi_school_admission.selection__school_admission__payment_status__paid
 #: model:ir.model.fields.selection,name:ssi_school_admission.selection__school_admission_payment_term__state__paid
 #: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_payment_term_view_search
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_view_search
 msgid "Paid"
 msgstr ""
 
 #. module: ssi_school_admission
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__parent_id
 msgid "Parent Name"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields.selection,name:ssi_school_admission.selection__school_admission__payment_status__partial
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_view_search
+msgid "Partially Paid"
 msgstr ""
 
 #. module: ssi_school_admission
@@ -1822,6 +1851,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__passed
 #: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_test_view_search
 msgid "Passed"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__payment_status
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_view_search
+msgid "Payment Status"
 msgstr ""
 
 #. module: ssi_school_admission
@@ -1847,6 +1882,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template__term_ids
 #: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_payment_template_view_form
 msgid "Payment Terms"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__payment_status
+msgid ""
+"Payment status derived from the realized amounts of the payment terms that "
+"are neither cancelled nor voided."
 msgstr ""
 
 #. module: ssi_school_admission
@@ -2058,6 +2100,11 @@ msgstr ""
 msgid ""
 "Replace: delete existing payment terms on each target before copying. Add: "
 "append source terms to each target's existing terms."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__amount_residual
+msgid "Residual"
 msgstr ""
 
 #. module: ssi_school_admission
@@ -2902,6 +2949,7 @@ msgid "This will replace existing payment terms. Continue?"
 msgstr ""
 
 #. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__amount_total
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template_line__price_total
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_line__price_total
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term__amount_total
@@ -2923,6 +2971,13 @@ msgstr ""
 #. module: ssi_school_admission
 #: model:ir.model.fields,help:ssi_school_admission.field_school_admission_product_summary__amount_total
 msgid "Total amount including taxes for this product across all terms."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__amount_total
+msgid ""
+"Total billing amount of the payment terms that are neither cancelled nor "
+"voided."
 msgstr ""
 
 #. module: ssi_school_admission
@@ -2977,6 +3032,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_payment_term_view_tree
 #: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_view_form
 msgid "Unmark as Manual"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields.selection,name:ssi_school_admission.selection__school_admission__payment_status__unpaid
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_view_search
+msgid "Unpaid"
 msgstr ""
 
 #. module: ssi_school_admission
