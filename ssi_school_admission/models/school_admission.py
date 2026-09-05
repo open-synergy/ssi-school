@@ -329,6 +329,55 @@ class SchoolAdmission(models.Model):
             "from this admission."
         ),
     )
+    amount_total = fields.Monetary(
+        string="Total",
+        compute="_compute_amount",
+        store=True,
+        compute_sudo=True,
+        currency_field="currency_id",
+        help=(
+            "Total billing amount of the payment terms that are "
+            "neither cancelled nor voided."
+        ),
+    )
+    amount_paid = fields.Monetary(
+        string="Paid",
+        compute="_compute_amount",
+        store=True,
+        compute_sudo=True,
+        currency_field="currency_id",
+        help=(
+            "Amount already realized on the invoiced payment terms "
+            "that are neither cancelled nor voided."
+        ),
+    )
+    amount_residual = fields.Monetary(
+        string="Residual",
+        compute="_compute_amount",
+        store=True,
+        compute_sudo=True,
+        currency_field="currency_id",
+        help=(
+            "Outstanding amount still to be paid, i.e. the total "
+            "amount minus the amount already paid."
+        ),
+    )
+    payment_status = fields.Selection(
+        string="Payment Status",
+        selection=[
+            ("no_payment", "No Payment"),
+            ("unpaid", "Unpaid"),
+            ("partial", "Partially Paid"),
+            ("paid", "Paid"),
+        ],
+        compute="_compute_payment_status",
+        store=True,
+        compute_sudo=True,
+        help=(
+            "Payment status derived from the realized amounts of the "
+            "payment terms that are neither cancelled nor voided."
+        ),
+    )
 
     def _compute_policy(self):  # pylint: disable=missing-return
         """Recompute every ``*_ok`` policy field of this admission.
@@ -341,6 +390,70 @@ class SchoolAdmission(models.Model):
         """
         _super = super()
         _super._compute_policy()  # pylint: disable=protected-access
+
+    @api.depends(
+        "payment_term_ids",
+        "payment_term_ids.state",
+        "payment_term_ids.amount_total",
+        "payment_term_ids.amount_unrealized",
+        "payment_term_ids.customer_invoice_id",
+    )
+    def _compute_amount(self):
+        """Aggregate billing totals from the counted payment terms.
+
+        A term counts toward the totals when its ``state`` is
+        neither ``cancelled`` nor ``voided``. ``amount_total`` sums
+        the ``amount_total`` of the counted terms; ``amount_paid``
+        sums, for the counted terms that carry a
+        ``customer_invoice_id``, ``amount_total`` minus
+        ``amount_unrealized`` -- terms without an invoice contribute
+        nothing; ``amount_residual`` is the difference between the
+        two.
+
+        :return: None
+        """
+        for record in self:
+            amount_total = amount_paid = 0.0
+            counted_terms = record.payment_term_ids.filtered(
+                lambda term: term.state not in ("cancelled", "voided")
+            )
+            for term in counted_terms:
+                amount_total += term.amount_total
+                if term.customer_invoice_id:
+                    amount_paid += term.amount_total - term.amount_unrealized
+            record.amount_total = amount_total
+            record.amount_paid = amount_paid
+            record.amount_residual = amount_total - amount_paid
+
+    @api.depends(
+        "currency_id",
+        "amount_total",
+        "amount_paid",
+    )
+    def _compute_payment_status(self):
+        """Derive the payment status from the aggregated amounts.
+
+        Evaluated in order, stopping at the first match:
+        ``no_payment`` when ``amount_total`` is zero or negative,
+        ``paid`` when ``amount_paid`` covers ``amount_total``,
+        ``unpaid`` when nothing has been paid yet, and ``partial``
+        for everything else. Amounts are compared with
+        ``currency_id.compare_amounts`` instead of raw float
+        operators.
+
+        :return: None
+        """
+        for record in self:
+            compare = record.currency_id.compare_amounts
+            if compare(record.amount_total, 0.0) <= 0:
+                payment_status = "no_payment"
+            elif compare(record.amount_paid, record.amount_total) >= 0:
+                payment_status = "paid"
+            elif compare(record.amount_paid, 0.0) <= 0:
+                payment_status = "unpaid"
+            else:
+                payment_status = "partial"
+            record.payment_status = payment_status
 
     @api.depends(
         "currency_id",

@@ -7,6 +7,7 @@ from . import (  # noqa: F401
     test_school_admission,
     test_school_admission_form,
     test_school_admission_payment_date_pattern,
+    test_school_admission_payment_status,
     test_school_admission_payment_term,
     test_school_admission_payment_term_paid,
     test_school_admission_payment_term_locked_recompute,
