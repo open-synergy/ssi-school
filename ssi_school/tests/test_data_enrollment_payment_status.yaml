@@ -1,0 +1,1276 @@
+options:
+  auto_refresh: true
+scenarios:
+  - name: "Two uninvoiced terms yield unpaid status"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type PST1"
+          code: "GTPST1"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 PST1"
+          code: "AYPST1"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester PST1"
+          code: "SMPST1"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School PST1"
+          code: "SCHPST1"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade PST1"
+          code: "GPST1"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class PST1"
+          code: "CLAPST1"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact PST1"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student PST1"
+          code: "STUPST1"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Setup - create income account"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "School Fee Income PST1"
+          code: "PST14200"
+          user_type_id: "REC: account_type.id"
+
+      - step: "Create first payment term"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_1"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term 1 PST1"
+          sequence: 10
+
+      - step: "Setup - create product for first term"
+        action: "create"
+        model: "product.product"
+        save_as: "product_1"
+        values:
+          name: "School Fee PST1 A"
+          type: "service"
+          list_price: 600000.0
+
+      - step: "Create detail on the first term"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        values:
+          term_id: "REC: term_1.id"
+          product_id: "REC: product_1.id"
+          name: "Fee PST1 A"
+          account_id: "REC: account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 600000.0
+
+      - step: "Create second payment term"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_2"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term 2 PST1"
+          sequence: 20
+
+      - step: "Setup - create product for second term"
+        action: "create"
+        model: "product.product"
+        save_as: "product_2"
+        values:
+          name: "School Fee PST1 B"
+          type: "service"
+          list_price: 400000.0
+
+      - step: "Create detail on the second term"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        values:
+          term_id: "REC: term_2.id"
+          product_id: "REC: product_2.id"
+          name: "Fee PST1 B"
+          account_id: "REC: account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 400000.0
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Assert the aggregate is unpaid with the full total residual"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          amount_total:
+            type: "value"
+            expected: 1000000.0
+          amount_paid:
+            type: "value"
+            expected: 0.0
+          amount_residual:
+            type: "value"
+            expected: 1000000.0
+          payment_status:
+            type: "value"
+            expected: "unpaid"
+
+  - name: "One paid term and one uninvoiced term yield partial status"
+    steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable PST2"
+          code: "PST2"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type PST2"
+          code: "PST2"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
+      - step: "Setup - get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "School Fee Income PST2"
+          code: "PST24200"
+          user_type_id: "REC: account_type.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type PST2"
+          code: "GTPST2"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 PST2"
+          code: "AYPST2"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester PST2"
+          code: "SMPST2"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School PST2"
+          code: "SCHPST2"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade PST2"
+          code: "GPST2"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class PST2"
+          code: "CLAPST2"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact PST2"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student PST2"
+          code: "STUPST2"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          customer_invoice_type_id: "REC: ci_type.id"
+          receivable_account_id: "REC: ci_account.id"
+          receivable_journal_id: "REC: ci_journal.id"
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Create first payment term"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_1"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term 1 PST2"
+          sequence: 10
+
+      - step: "Setup - create product for first term"
+        action: "create"
+        model: "product.product"
+        save_as: "product_1"
+        values:
+          name: "School Fee PST2 A"
+          type: "service"
+          list_price: 600000.0
+
+      - step: "Create detail on the first term"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        values:
+          term_id: "REC: term_1.id"
+          product_id: "REC: product_1.id"
+          name: "Fee PST2 A"
+          account_id: "REC: account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 600000.0
+
+      - step: "Create second payment term"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_2"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term 2 PST2"
+          sequence: 20
+
+      - step: "Setup - create product for second term"
+        action: "create"
+        model: "product.product"
+        save_as: "product_2"
+        values:
+          name: "School Fee PST2 B"
+          type: "service"
+          list_price: 400000.0
+
+      - step: "Create detail on the second term"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        values:
+          term_id: "REC: term_2.id"
+          product_id: "REC: product_2.id"
+          name: "Fee PST2 B"
+          account_id: "REC: account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 400000.0
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create invoice on the first term"
+        action: "call"
+        target: "term_1"
+        method: "action_create_invoice"
+
+      - step: "Get the created customer invoice"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["id", "=", "EVAL: registry['term_1'].customer_invoice_id.id"]]
+        save_as: "invoice_1"
+        expect_count: 1
+
+      - step: "Mark the first invoice as paid"
+        action: "write"
+        target: "invoice_1"
+        values:
+          state: "done"
+
+      - step: "Assert the first term is paid"
+        action: "assert"
+        target: "term_1"
+        asserts:
+          state:
+            type: "value"
+            expected: "paid"
+
+      - step: "Assert the aggregate is partial"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          amount_total:
+            type: "value"
+            expected: 1000000.0
+          amount_paid:
+            type: "value"
+            expected: 600000.0
+          amount_residual:
+            type: "value"
+            expected: 400000.0
+          payment_status:
+            type: "value"
+            expected: "partial"
+
+  - name: "Two fully paid terms yield paid status"
+    steps:
+      - step: "Setup - get customer invoice journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "ci_account_type"
+
+      - step: "Setup - create customer invoice receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "Customer Invoice Receivable PST3"
+          code: "PST3"
+          user_type_id: "REC: ci_account_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type PST3"
+          code: "PST3"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
+      - step: "Setup - get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "School Fee Income PST3"
+          code: "PST34200"
+          user_type_id: "REC: account_type.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type PST3"
+          code: "GTPST3"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 PST3"
+          code: "AYPST3"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester PST3"
+          code: "SMPST3"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School PST3"
+          code: "SCHPST3"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade PST3"
+          code: "GPST3"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class PST3"
+          code: "CLAPST3"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact PST3"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student PST3"
+          code: "STUPST3"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          customer_invoice_type_id: "REC: ci_type.id"
+          receivable_account_id: "REC: ci_account.id"
+          receivable_journal_id: "REC: ci_journal.id"
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Create first payment term"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_1"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term 1 PST3"
+          sequence: 10
+
+      - step: "Setup - create product for first term"
+        action: "create"
+        model: "product.product"
+        save_as: "product_1"
+        values:
+          name: "School Fee PST3 A"
+          type: "service"
+          list_price: 600000.0
+
+      - step: "Create detail on the first term"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        values:
+          term_id: "REC: term_1.id"
+          product_id: "REC: product_1.id"
+          name: "Fee PST3 A"
+          account_id: "REC: account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 600000.0
+
+      - step: "Create second payment term"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_2"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term 2 PST3"
+          sequence: 20
+
+      - step: "Setup - create product for second term"
+        action: "create"
+        model: "product.product"
+        save_as: "product_2"
+        values:
+          name: "School Fee PST3 B"
+          type: "service"
+          list_price: 400000.0
+
+      - step: "Create detail on the second term"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        values:
+          term_id: "REC: term_2.id"
+          product_id: "REC: product_2.id"
+          name: "Fee PST3 B"
+          account_id: "REC: account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 400000.0
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create invoice on the first term"
+        action: "call"
+        target: "term_1"
+        method: "action_create_invoice"
+
+      - step: "Get the first created customer invoice"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["id", "=", "EVAL: registry['term_1'].customer_invoice_id.id"]]
+        save_as: "invoice_1"
+        expect_count: 1
+
+      - step: "Mark the first invoice as paid"
+        action: "write"
+        target: "invoice_1"
+        values:
+          state: "done"
+
+      - step: "Create invoice on the second term"
+        action: "call"
+        target: "term_2"
+        method: "action_create_invoice"
+
+      - step: "Get the second created customer invoice"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["id", "=", "EVAL: registry['term_2'].customer_invoice_id.id"]]
+        save_as: "invoice_2"
+        expect_count: 1
+
+      - step: "Mark the second invoice as paid"
+        action: "write"
+        target: "invoice_2"
+        values:
+          state: "done"
+
+      - step: "Assert the aggregate is fully paid"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          amount_total:
+            type: "value"
+            expected: 1000000.0
+          amount_paid:
+            type: "value"
+            expected: 1000000.0
+          amount_residual:
+            type: "value"
+            expected: 0.0
+          payment_status:
+            type: "value"
+            expected: "paid"
+
+  - name: "Enrollment without any payment term stays at no_payment"
+    steps:
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type PST4"
+          code: "GTPST4"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 PST4"
+          code: "AYPST4"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester PST4"
+          code: "SMPST4"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School PST4"
+          code: "SCHPST4"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade PST4"
+          code: "GPST4"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class PST4"
+          code: "CLAPST4"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact PST4"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student PST4"
+          code: "STUPST4"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Create enrollment without any payment term"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Assert the aggregate stays at no_payment"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          amount_total:
+            type: "value"
+            expected: 0.0
+          amount_paid:
+            type: "value"
+            expected: 0.0
+          amount_residual:
+            type: "value"
+            expected: 0.0
+          payment_status:
+            type: "value"
+            expected: "no_payment"
+
+  - name: "A fully voided term contributes nothing to the aggregate"
+    steps:
+      - step: "Setup - get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "School Fee Income PST5"
+          code: "PST54200"
+          user_type_id: "REC: account_type.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Fee PST5"
+          type: "service"
+          list_price: 1000000.0
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type PST5"
+          code: "GTPST5"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 PST5"
+          code: "AYPST5"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester PST5"
+          code: "SMPST5"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School PST5"
+          code: "SCHPST5"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade PST5"
+          code: "GPST5"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class PST5"
+          code: "CLAPST5"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact PST5"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student PST5"
+          code: "STUPST5"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Create payment term"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term 1 PST5"
+          sequence: 10
+
+      - step: "Create the only detail, voided"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Fee PST5"
+          account_id: "REC: account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+          voided: true
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Assert the term itself is voided"
+        action: "assert"
+        target: "term"
+        asserts:
+          state:
+            type: "value"
+            expected: "voided"
+
+      - step: "Assert the aggregate excludes the voided term"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          amount_total:
+            type: "value"
+            expected: 0.0
+          payment_status:
+            type: "value"
+            expected: "no_payment"
+
+  - name: "Cancelled enrollment resets the aggregate to no_payment"
+    steps:
+      - step: "Setup - get account type ref"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "account_type"
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "School Fee Income PST6"
+          code: "PST64200"
+          user_type_id: "REC: account_type.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Fee PST6"
+          type: "service"
+          list_price: 600000.0
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type PST6"
+          code: "GTPST6"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 PST6"
+          code: "AYPST6"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester PST6"
+          code: "SMPST6"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School PST6"
+          code: "SCHPST6"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade PST6"
+          code: "GPST6"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class PST6"
+          code: "CLAPST6"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact PST6"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student PST6"
+          code: "STUPST6"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Create payment term"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term 1 PST6"
+          sequence: 10
+
+      - step: "Create the detail (not voided)"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Fee PST6"
+          account_id: "REC: account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 600000.0
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Assert the aggregate has the term's total before cancellation"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          amount_total:
+            type: "value"
+            expected: 600000.0
+          payment_status:
+            type: "value"
+            expected: "unpaid"
+
+      - step:
+          "Force the enrollment into cancel (action_cancel itself refuses while a term
+          is invoiced -- see _10_check_payment_term_invoice; this direct write isolates
+          the compute-only guarantee under test)"
+        action: "write"
+        target: "enrollment"
+        values:
+          state: "cancel"
+
+      - step: "Assert the term follows the enrollment to cancelled"
+        action: "assert"
+        target: "term"
+        asserts:
+          state:
+            type: "value"
+            expected: "cancelled"
+
+      - step: "Assert the aggregate resets to no_payment"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          amount_total:
+            type: "value"
+            expected: 0.0
+          amount_paid:
+            type: "value"
+            expected: 0.0
+          payment_status:
+            type: "value"
+            expected: "no_payment"
