@@ -141,8 +141,7 @@ odoo.define("ssi_school_health.school_student_tour", function (require) {
             },
             {
                 content: "Health Provider Summary group is displayed",
-                trigger: ".o_field_widget[name='family_doctor_id']",
-                extra_trigger: ".o_field_widget[name='health_facility_id']",
+                trigger: ".o_horizontal_separator:contains(Health Provider Summary)",
                 run: function () {
                     // Assertion only.
                 },
