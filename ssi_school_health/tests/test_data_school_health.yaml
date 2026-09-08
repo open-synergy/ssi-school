@@ -678,3 +678,606 @@ scenarios:
               - disease_id: "REC: disease.id"
                 date_diagnosed: 2026-02-01
                 date_recovered: 2026-01-01
+
+  - name: "Medication Created Via Student Reflects On Contact"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type School Health Medication"
+          code: "GTSHMD"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Health Medication"
+          code: "SCHSHMD"
+          grade_type_id: "REC: grade_type.id"
+      - step: "Create medication master data"
+        action: "create"
+        model: "health.medication"
+        save_as: "medication"
+        values:
+          name: "School Health Medication Master"
+          code: "HMDSHMD"
+      - step: "Create contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "School Health Medication Contact"
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "School Health Medication Student"
+          code: "STUSHMD"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+      - step: "Add medication via student"
+        action: "write"
+        target: "student"
+        values:
+          medication_ids:
+            - - 0
+              - 0
+              - medication_id: "REC: medication.id"
+                dose: "500mg"
+                frequency: "bd"
+                route: "oral"
+                date_start: 2026-01-01
+      - step: "Find medication owned by contact"
+        action: "search"
+        model: "partner.medication"
+        domain:
+          - ["partner_id", "=", "REC: contact.id"]
+        save_as: "medication_line"
+        expect_count: 1
+      - step: "Assert medication listed on student"
+        action: "assert"
+        target: "student"
+        asserts:
+          medication_ids:
+            type: "o2m"
+            check: "contains"
+            expected_records:
+              - "REC: medication_line"
+      - step: "Assert the same medication listed on contact"
+        action: "assert"
+        target: "contact"
+        asserts:
+          medication_ids:
+            type: "o2m"
+            check: "contains"
+            expected_records:
+              - "REC: medication_line"
+
+  - name: "Individual Provider Via Student Sets Family Doctor"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type School Health Provider Individual"
+          code: "GTSHPI"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Health Provider Individual"
+          code: "SCHSHPI"
+          grade_type_id: "REC: grade_type.id"
+      - step: "Create individual provider contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "doctor"
+        values:
+          name: "School Health Provider Individual Doctor"
+          is_company: False
+      - step: "Create contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "School Health Provider Individual Contact"
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "School Health Provider Individual Student"
+          code: "STUSHPI"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+      - step: "Add individual provider via student"
+        action: "write"
+        target: "student"
+        values:
+          health_provider_ids:
+            - - 0
+              - 0
+              - provider_id: "REC: doctor.id"
+                sequence: 10
+      - step: "Assert student family doctor is the provider"
+        action: "assert"
+        target: "student"
+        refresh: true
+        asserts:
+          family_doctor_id:
+            type: "m2o"
+            expected: "REC: doctor"
+      - step: "Assert contact family doctor is the provider"
+        action: "assert"
+        target: "contact"
+        refresh: true
+        asserts:
+          family_doctor_id:
+            type: "m2o"
+            expected: "REC: doctor"
+
+  - name: "Organization Provider Via Student Sets Health Facility"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type School Health Provider Organization"
+          code: "GTSHPO"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Health Provider Organization"
+          code: "SCHSHPO"
+          grade_type_id: "REC: grade_type.id"
+      - step: "Create organization provider contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "facility"
+        values:
+          name: "School Health Provider Organization Facility"
+          is_company: True
+      - step: "Create contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "School Health Provider Organization Contact"
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "School Health Provider Organization Student"
+          code: "STUSHPO"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+      - step: "Add organization provider via student"
+        action: "write"
+        target: "student"
+        values:
+          health_provider_ids:
+            - - 0
+              - 0
+              - provider_id: "REC: facility.id"
+                sequence: 10
+      - step: "Assert student health facility is the provider"
+        action: "assert"
+        target: "student"
+        refresh: true
+        asserts:
+          health_facility_id:
+            type: "m2o"
+            expected: "REC: facility"
+      - step: "Assert contact health facility is the provider"
+        action: "assert"
+        target: "contact"
+        refresh: true
+        asserts:
+          health_facility_id:
+            type: "m2o"
+            expected: "REC: facility"
+
+  - name: "Reordering Provider Sequence Changes Family Doctor Via Student"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type School Health Provider Reorder"
+          code: "GTSHPR"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Health Provider Reorder"
+          code: "SCHSHPR"
+          grade_type_id: "REC: grade_type.id"
+      - step: "Create first individual provider contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "doctor_a"
+        values:
+          name: "School Health Provider Reorder Doctor A"
+          is_company: False
+      - step: "Create second individual provider contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "doctor_b"
+        values:
+          name: "School Health Provider Reorder Doctor B"
+          is_company: False
+      - step: "Create contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "School Health Provider Reorder Contact"
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "School Health Provider Reorder Student"
+          code: "STUSHPR"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+      - step: "Add both providers via student"
+        action: "write"
+        target: "student"
+        values:
+          health_provider_ids:
+            - - 0
+              - 0
+              - provider_id: "REC: doctor_a.id"
+                sequence: 10
+            - - 0
+              - 0
+              - provider_id: "REC: doctor_b.id"
+                sequence: 20
+      - step: "Assert family doctor is the lowest sequence provider"
+        action: "assert"
+        target: "student"
+        refresh: true
+        asserts:
+          family_doctor_id:
+            type: "m2o"
+            expected: "REC: doctor_a"
+      - step: "Find provider line for first doctor"
+        action: "search"
+        model: "partner.health_provider"
+        domain:
+          - ["provider_id", "=", "REC: doctor_a.id"]
+        save_as: "line_a"
+        expect_count: 1
+      - step: "Find provider line for second doctor"
+        action: "search"
+        model: "partner.health_provider"
+        domain:
+          - ["provider_id", "=", "REC: doctor_b.id"]
+        save_as: "line_b"
+        expect_count: 1
+      - step: "Reorder provider sequence via student"
+        action: "write"
+        target: "student"
+        values:
+          health_provider_ids:
+            - - 1
+              - "REC: line_a.id"
+              - sequence: 30
+            - - 1
+              - "REC: line_b.id"
+              - sequence: 5
+      - step: "Assert family doctor moved to second provider"
+        action: "assert"
+        target: "student"
+        refresh: true
+        asserts:
+          family_doctor_id:
+            type: "m2o"
+            expected: "REC: doctor_b"
+
+  - name: "Two Reactions Added To Allergy Via Student"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type School Health Reaction"
+          code: "GTSHRX"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Health Reaction"
+          code: "SCHSHRX"
+          grade_type_id: "REC: grade_type.id"
+      - step: "Create allergen"
+        action: "create"
+        model: "health.allergen"
+        save_as: "allergen"
+        values:
+          name: "School Health Reaction Allergen"
+          code: "HALSHRX"
+      - step: "Create first reaction"
+        action: "create"
+        model: "health.allergen_reaction"
+        save_as: "reaction_a"
+        values:
+          name: "School Health Reaction Hives"
+          code: "HARSHRXA"
+      - step: "Create second reaction"
+        action: "create"
+        model: "health.allergen_reaction"
+        save_as: "reaction_b"
+        values:
+          name: "School Health Reaction Swelling"
+          code: "HARSHRXB"
+      - step: "Create contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "School Health Reaction Contact"
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "School Health Reaction Student"
+          code: "STUSHRX"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+      - step: "Add allergy with two reactions via student"
+        action: "write"
+        target: "student"
+        values:
+          allergy_ids:
+            - - 0
+              - 0
+              - allergen_id: "REC: allergen.id"
+                severity: "moderate"
+                reaction_ids:
+                  - "REC: reaction_a.id"
+                  - "REC: reaction_b.id"
+      - step: "Find allergy owned by contact"
+        action: "search"
+        model: "partner.allergy"
+        domain:
+          - ["partner_id", "=", "REC: contact.id"]
+        save_as: "allergy"
+        expect_count: 1
+      - step: "Assert both reactions present on the allergy line"
+        action: "assert"
+        target: "allergy"
+        asserts:
+          reaction_ids:
+            type: "m2m"
+            check: "exact"
+            expected_records:
+              - "REC: reaction_a"
+              - "REC: reaction_b"
+
+  - name: "Changing Contact Changes Student Family Doctor"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type School Health Switch Doctor"
+          code: "GTSHFD"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Health Switch Doctor"
+          code: "SCHSHFD"
+          grade_type_id: "REC: grade_type.id"
+      - step: "Create first contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_a"
+        values:
+          name: "School Health Switch Doctor Contact A"
+      - step: "Create second contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_b"
+        values:
+          name: "School Health Switch Doctor Contact B"
+      - step: "Create individual provider for first contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "doctor_a"
+        values:
+          name: "School Health Switch Doctor A"
+          is_company: False
+      - step: "Create individual provider for second contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "doctor_b"
+        values:
+          name: "School Health Switch Doctor B"
+          is_company: False
+      - step: "Create provider line for first contact"
+        action: "create"
+        model: "partner.health_provider"
+        values:
+          partner_id: "REC: contact_a.id"
+          provider_id: "REC: doctor_a.id"
+          sequence: 10
+      - step: "Create provider line for second contact"
+        action: "create"
+        model: "partner.health_provider"
+        values:
+          partner_id: "REC: contact_b.id"
+          provider_id: "REC: doctor_b.id"
+          sequence: 10
+      - step: "Create student on first contact"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "School Health Switch Doctor Student"
+          code: "STUSHFD"
+          contact_id: "REC: contact_a.id"
+          school_id: "REC: school.id"
+      - step: "Assert student family doctor follows first contact"
+        action: "assert"
+        target: "student"
+        refresh: true
+        asserts:
+          family_doctor_id:
+            type: "m2o"
+            expected: "REC: doctor_a"
+      - step: "Move student to second contact"
+        action: "write"
+        target: "student"
+        values:
+          contact_id: "REC: contact_b.id"
+      - step: "Assert student family doctor follows second contact"
+        action: "assert"
+        target: "student"
+        refresh: true
+        asserts:
+          family_doctor_id:
+            type: "m2o"
+            expected: "REC: doctor_b"
+          contact_id.family_doctor_id:
+            type: "m2o"
+            expected: "REC: doctor_b"
+
+  - name: "Reject Duplicate Provider Created Via Student"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type School Health Duplicate Provider"
+          code: "GTSHDP"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Health Duplicate Provider"
+          code: "SCHSHDP"
+          grade_type_id: "REC: grade_type.id"
+      - step: "Create provider contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "provider"
+        values:
+          name: "School Health Duplicate Provider Contact"
+      - step: "Create contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "School Health Duplicate Provider Student Contact"
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "School Health Duplicate Provider Student"
+          code: "STUSHDP"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+      - step: "Add first provider line via student"
+        action: "write"
+        target: "student"
+        values:
+          health_provider_ids:
+            - - 0
+              - 0
+              - provider_id: "REC: provider.id"
+                sequence: 10
+      - step: "Adding the same provider again must be rejected"
+        action: "write"
+        target: "student"
+        expect_error:
+          type: "UserError"
+          message_contains: "No duplicate provider"
+        values:
+          health_provider_ids:
+            - - 0
+              - 0
+              - provider_id: "REC: provider.id"
+                sequence: 20
+
+  - name: "Reject Medication End Date Earlier Than Start Date Via Student"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type School Health Bad Medication Date"
+          code: "GTSHME"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Health Bad Medication Date"
+          code: "SCHSHME"
+          grade_type_id: "REC: grade_type.id"
+      - step: "Create medication master data"
+        action: "create"
+        model: "health.medication"
+        save_as: "medication"
+        values:
+          name: "School Health Bad Date Medication"
+          code: "HMDSHME"
+      - step: "Create contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "School Health Bad Medication Date Contact"
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "School Health Bad Medication Date Student"
+          code: "STUSHME"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+      - step: "End date earlier than start date must be rejected"
+        action: "write"
+        target: "student"
+        expect_error:
+          type: "UserError"
+          message_contains: "End date cannot be earlier than start date"
+        values:
+          medication_ids:
+            - - 0
+              - 0
+              - medication_id: "REC: medication.id"
+                date_start: 2026-02-01
+                date_end: 2026-01-01

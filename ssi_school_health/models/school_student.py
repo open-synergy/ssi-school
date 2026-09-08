@@ -52,6 +52,20 @@ class SchoolStudent(models.Model):
         help="Disease history recorded for the student, "
         "managed through the linked contact.",
     )
+    medication_ids = fields.One2many(
+        string="Medications",
+        related="contact_id.medication_ids",
+        readonly=False,
+        help="Medications recorded for the student, "
+        "managed through the linked contact.",
+    )
+    health_provider_ids = fields.One2many(
+        string="Health Providers",
+        related="contact_id.health_provider_ids",
+        readonly=False,
+        help="Health care providers recorded for the student, "
+        "managed through the linked contact.",
+    )
     height = fields.Float(
         string="Height (cm)",
         related="contact_id.height",
@@ -76,4 +90,24 @@ class SchoolStudent(models.Model):
         help="Latest recorded head circumference (cm) of the student, taken "
         "from the contact. Read-only: change it by adding a head "
         "circumference measurement.",
+    )
+    family_doctor_id = fields.Many2one(
+        string="Family Doctor",
+        comodel_name="res.partner",
+        related="contact_id.family_doctor_id",
+        store=True,
+        readonly=True,
+        help="Family doctor of the student, taken from the contact. "
+        "Read-only: change it by adding or reordering a health "
+        "provider.",
+    )
+    health_facility_id = fields.Many2one(
+        string="Health Facility",
+        comodel_name="res.partner",
+        related="contact_id.health_facility_id",
+        store=True,
+        readonly=True,
+        help="Health facility of the student, taken from the contact. "
+        "Read-only: change it by adding or reordering a health "
+        "provider.",
     )
