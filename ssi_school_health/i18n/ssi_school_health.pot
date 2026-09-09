@@ -44,6 +44,18 @@ msgid "Display Name"
 msgstr ""
 
 #. module: ssi_school_health
+#: model:ir.model.fields,field_description:ssi_school_health.field_school_student__family_doctor_id
+msgid "Family Doctor"
+msgstr ""
+
+#. module: ssi_school_health
+#: model:ir.model.fields,help:ssi_school_health.field_school_student__family_doctor_id
+msgid ""
+"Family doctor of the student, taken from the contact. Read-only: change it "
+"by adding or reordering a health provider."
+msgstr ""
+
+#. module: ssi_school_health
 #: model_terms:ir.ui.view,arch_db:ssi_school_health.school_student_view_form_health
 msgid "Head Circumference"
 msgstr ""
@@ -68,6 +80,36 @@ msgstr ""
 #. module: ssi_school_health
 #: model_terms:ir.ui.view,arch_db:ssi_school_health.school_student_view_form_health
 msgid "Health"
+msgstr ""
+
+#. module: ssi_school_health
+#: model:ir.model.fields,field_description:ssi_school_health.field_school_student__health_facility_id
+msgid "Health Facility"
+msgstr ""
+
+#. module: ssi_school_health
+#: model_terms:ir.ui.view,arch_db:ssi_school_health.school_student_view_form_health
+msgid "Health Provider Summary"
+msgstr ""
+
+#. module: ssi_school_health
+#: model:ir.model.fields,field_description:ssi_school_health.field_school_student__health_provider_ids
+#: model_terms:ir.ui.view,arch_db:ssi_school_health.school_student_view_form_health
+msgid "Health Providers"
+msgstr ""
+
+#. module: ssi_school_health
+#: model:ir.model.fields,help:ssi_school_health.field_school_student__health_provider_ids
+msgid ""
+"Health care providers recorded for the student, managed through the linked "
+"contact."
+msgstr ""
+
+#. module: ssi_school_health
+#: model:ir.model.fields,help:ssi_school_health.field_school_student__health_facility_id
+msgid ""
+"Health facility of the student, taken from the contact. Read-only: change it"
+" by adding or reordering a health provider."
 msgstr ""
 
 #. module: ssi_school_health
@@ -126,6 +168,18 @@ msgstr ""
 msgid ""
 "Latest recorded weight (kg) of the student, taken from the contact. Read-"
 "only: change it by adding a weight measurement."
+msgstr ""
+
+#. module: ssi_school_health
+#: model:ir.model.fields,field_description:ssi_school_health.field_school_student__medication_ids
+#: model_terms:ir.ui.view,arch_db:ssi_school_health.school_student_view_form_health
+msgid "Medications"
+msgstr ""
+
+#. module: ssi_school_health
+#: model:ir.model.fields,help:ssi_school_health.field_school_student__medication_ids
+msgid ""
+"Medications recorded for the student, managed through the linked contact."
 msgstr ""
 
 #. module: ssi_school_health
