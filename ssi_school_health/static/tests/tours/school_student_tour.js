@@ -124,6 +124,43 @@ odoo.define("ssi_school_health.school_student_tour", function (require) {
                     // Assertion only.
                 },
             },
+            {
+                content: "Medications is displayed",
+                trigger: ".o_horizontal_separator:contains(Medications)",
+                run: function () {
+                    // Assertion only.
+                },
+            },
+            {
+                content: "Medications 'Add a line' control is displayed",
+                trigger:
+                    ".o_field_widget[name='medication_ids'] .o_field_x2many_list_row_add a",
+                run: function () {
+                    // Assertion only.
+                },
+            },
+            {
+                content: "Health Provider Summary group is displayed",
+                trigger: ".o_horizontal_separator:contains(Health Provider Summary)",
+                run: function () {
+                    // Assertion only.
+                },
+            },
+            {
+                content: "Health Providers is displayed",
+                trigger: ".o_horizontal_separator:contains(Health Providers)",
+                run: function () {
+                    // Assertion only.
+                },
+            },
+            {
+                content: "Health Providers 'Add a line' control is displayed",
+                trigger:
+                    ".o_field_widget[name='health_provider_ids'] .o_field_x2many_list_row_add a",
+                run: function () {
+                    // Assertion only.
+                },
+            },
         ];
     }
 

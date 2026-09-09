@@ -69,12 +69,14 @@
                         <tree editable="bottom">
                             <field name="allergen_id" />
                             <field name="severity" />
+                            <field name="reaction_ids" widget="many2many_tags" />
                             <field name="note" />
                         </tree>
                         <form>
                             <group name="allergy_group_1">
                                 <field name="allergen_id" />
                                 <field name="severity" />
+                                <field name="reaction_ids" widget="many2many_tags" />
                                 <field name="note" />
                             </group>
                         </form>
@@ -92,6 +94,61 @@
                                 <field name="disease_id" />
                                 <field name="date_diagnosed" />
                                 <field name="date_recovered" />
+                                <field name="note" />
+                            </group>
+                        </form>
+                    </field>
+                    <separator name="health_medication" string="Medications" />
+                    <field name="medication_ids" nolabel="1" colspan="4">
+                        <tree editable="bottom">
+                            <field name="medication_id" />
+                            <field name="dose" />
+                            <field name="frequency" />
+                            <field name="route" />
+                            <field name="date_start" />
+                            <field name="date_end" />
+                            <field name="is_ongoing" />
+                            <field name="instruction" />
+                            <field name="disease_history_id" optional="hide" />
+                        </tree>
+                        <form>
+                            <group name="medication_group_1">
+                                <field name="medication_id" />
+                                <field name="dose" />
+                                <field name="frequency" />
+                                <field name="route" />
+                                <field name="date_start" />
+                                <field name="date_end" />
+                                <field name="is_ongoing" />
+                                <field name="instruction" />
+                                <field name="disease_history_id" />
+                            </group>
+                        </form>
+                    </field>
+                    <group
+                            name="health_provider_summary"
+                            string="Health Provider Summary"
+                            colspan="4"
+                            col="2"
+                        >
+                        <field name="family_doctor_id" />
+                        <field name="health_facility_id" />
+                    </group>
+                    <separator name="health_provider" string="Health Providers" />
+                    <field name="health_provider_ids" nolabel="1" colspan="4">
+                        <tree editable="bottom">
+                            <field name="sequence" widget="handle" />
+                            <field name="provider_id" />
+                            <field name="role_id" />
+                            <field name="date_start" />
+                            <field name="note" />
+                        </tree>
+                        <form>
+                            <group name="health_provider_group_1">
+                                <field name="sequence" />
+                                <field name="provider_id" />
+                                <field name="role_id" />
+                                <field name="date_start" />
                                 <field name="note" />
                             </group>
                         </form>
