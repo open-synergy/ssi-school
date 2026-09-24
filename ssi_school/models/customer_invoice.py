@@ -8,6 +8,9 @@ from odoo.exceptions import UserError
 from odoo.addons.ssi_decorator import ssi_decorator
 
 
+# Adds a pre-cancel guard rejecting the cancellation of an invoice whose
+# lines were already released by an enrollment's Revenue Recognition move
+# -- see ``_45_check_no_revenue_recognition`` below.
 class CustomerInvoice(models.Model):
     _name = "customer_invoice"
     _inherit = [
