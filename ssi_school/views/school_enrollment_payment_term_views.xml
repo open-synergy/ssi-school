@@ -195,6 +195,10 @@
                                                 />
                                             <field name="locked" invisible="1" />
                                             <field
+                                                    name="customer_invoice_line_id"
+                                                    invisible="1"
+                                                />
+                                            <field
                                                     name="product_id"
                                                     domain="[('id','in',allowed_product_ids)]"
                                                     attrs="{'readonly': [('locked','=',True)]}"
@@ -205,16 +209,18 @@
                                                 />
                                             <field
                                                     name="usage_id"
-                                                    attrs="{'readonly': [('locked','=',True)]}"
+                                                    attrs="{'readonly': [('locked','=',True),('customer_invoice_line_id','!=',False)]}"
                                                 />
                                             <field
                                                     name="account_id"
-                                                    attrs="{'readonly': [('locked','=',True)]}"
+                                                    attrs="{'readonly': [('locked','=',True),('customer_invoice_line_id','!=',False)]}"
                                                 />
                                             <field
                                                     name="analytic_account_id"
                                                     attrs="{'readonly': [('locked','=',True)]}"
                                                 />
+                                            <field name="final_usage_id" />
+                                            <field name="final_account_id" />
                                         </group>
                                         <group name="detail_right" colspan="1" col="2">
                                             <label
@@ -341,6 +347,8 @@
                                             <field name="usage_id" />
                                             <field name="account_id" />
                                             <field name="analytic_account_id" />
+                                            <field name="final_usage_id" />
+                                            <field name="final_account_id" />
                                         </group>
                                         <group name="detail_right" colspan="1" col="2">
                                             <label

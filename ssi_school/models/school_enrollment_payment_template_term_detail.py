@@ -92,6 +92,29 @@ class SchoolEnrollmentPaymentTemplateTermDetail(models.Model):
         compute_sudo=True,
         help="Products allowed on this line, per the template's Product Configuration.",
     )
+    final_usage_id = fields.Many2one(
+        string="Final Usage",
+        comodel_name="product.usage_type",
+        ondelete="restrict",
+        help=(
+            "Usage used to auto-fill Final Account from the product's "
+            "account configuration. Copied into the actual payment term "
+            "detail when the enrollment's payment is computed from this "
+            "template."
+        ),
+    )
+    final_account_id = fields.Many2one(
+        string="Final Account",
+        comodel_name="account.account",
+        ondelete="restrict",
+        help=(
+            "Revenue account this fee line is recognized to once the "
+            "enrollment finishes and Revenue Recognition posts, "
+            "auto-filled from the product's account configuration for "
+            "Final Usage. Left empty, the resulting detail line is "
+            "never recognized -- e.g. a deposit/holding fee."
+        ),
+    )
 
     @api.depends("term_id.template_id")
     def _compute_allowed_product_ids(self):
@@ -129,3 +152,21 @@ class SchoolEnrollmentPaymentTemplateTermDetail(models.Model):
     def onchange_account_id(self):
         if self.product_id and self.product_id.property_account_income_id:
             self.account_id = self.product_id.property_account_income_id
+
+    @api.onchange("product_id", "final_usage_id")
+    def onchange_final_account_id(self):
+        """Auto-fill ``final_account_id`` from the product's usage account.
+
+        Resolves ``product_id._get_product_account`` for
+        ``final_usage_id.code``; a product/usage combination without a
+        matching account configuration leaves ``final_account_id``
+        empty rather than raising, so the line stays valid and simply
+        never gets recognized.
+
+        :return: None
+        """
+        self.final_account_id = False
+        if self.product_id and self.final_usage_id:
+            self.final_account_id = self.product_id._get_product_account(
+                usage_code=self.final_usage_id.code
+            )

@@ -335,7 +335,47 @@
                         <field name="receivable_account_id" />
                         <field name="customer_invoice_type_id" />
                         <field name="auto_confirm_customer_invoice" />
+                        <field name="revenue_recognition" />
+                        <field
+                                name="recognition_journal_id"
+                                attrs="{'invisible': [('revenue_recognition','=',False)]}"
+                            />
+                        <field
+                                name="recognition_date"
+                                attrs="{'invisible': [('revenue_recognition','=',False)]}"
+                            />
+                        <field
+                                name="recognition_move_id"
+                                attrs="{'invisible': [('revenue_recognition','=',False)]}"
+                            />
                     </group>
+                    <field
+                            name="recognition_line_ids"
+                            colspan="4"
+                            nolabel="1"
+                            attrs="{'invisible': [('revenue_recognition','=',False)]}"
+                        >
+                        <tree create="false" edit="false" delete="false">
+                            <field name="payment_term_detail_id" />
+                            <field name="name" />
+                            <field name="debit_account_id" />
+                            <field name="credit_account_id" />
+                            <field name="analytic_account_id" />
+                            <field name="partner_id" />
+                            <field name="amount" />
+                        </tree>
+                        <form create="false" edit="false" delete="false">
+                            <group name="recognition_line_form" colspan="4" col="2">
+                                <field name="payment_term_detail_id" />
+                                <field name="name" />
+                                <field name="debit_account_id" />
+                                <field name="credit_account_id" />
+                                <field name="analytic_account_id" />
+                                <field name="partner_id" />
+                                <field name="amount" />
+                            </group>
+                        </form>
+                    </field>
                 </page>
             </xpath>
             <xpath expr="//group[@name='policy_2']" position="inside">

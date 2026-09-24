@@ -39,6 +39,7 @@ from . import (  # noqa: F401
     test_school_enrollment_payment_date_pattern,
     test_school_enrollment_payment_status,
     test_school_enrollment_addendum,
+    test_school_enrollment_revenue_recognition,
     test_school_enrollment_restart_unlock,
     test_school_enrollment_integrity,
     test_school_homeroom,

@@ -5,6 +5,7 @@
 from . import (  # noqa: F401
     res_partner,
     hr_employee,
+    customer_invoice,
     school_grade_type,
     school_grade,
     school_branch,
@@ -20,6 +21,7 @@ from . import (  # noqa: F401
     school_enrollment,
     school_enrollment_payment_term,
     school_enrollment_payment_term_detail,
+    school_enrollment_revenue_recognition_line,
     school_enrollment_product_summary,
     school_enrollment_fee_analysis,
     school_homeroom,

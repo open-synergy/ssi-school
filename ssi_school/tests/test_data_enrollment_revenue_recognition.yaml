@@ -1,0 +1,2924 @@
+options:
+  auto_refresh: true
+scenarios:
+  - name: "Onchange Final Account From Product Usage"
+    steps:
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type"
+
+      - step: "Setup - create final income account"
+        action: "create"
+        model: "account.account"
+        save_as: "final_account"
+        values:
+          name: "School Fee Final Income RRA"
+          code: "RRA4200"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create final usage type"
+        action: "create"
+        model: "product.usage_type"
+        save_as: "final_usage"
+        values:
+          name: "Final Revenue RRA"
+          code: "FINALRRA"
+          account_id: "REC: final_account.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Fee RRA"
+          type: "service"
+          list_price: 1000000.0
+
+      - step:
+          "Selecting Final Usage fills Final Account from the product's usage account"
+        action: form
+        model: "school_enrollment_payment_term_detail"
+        save: false
+        values:
+          product_id: "REC: product"
+          final_usage_id: "REC: final_usage"
+        asserts:
+          final_account_id.id:
+            type: "value"
+            expected: "REC: final_account.id"
+
+      - step: "Without Final Usage selected, Final Account stays empty"
+        action: form
+        model: "school_enrollment_payment_term_detail"
+        save: false
+        values:
+          product_id: "REC: product"
+        asserts:
+          final_account_id:
+            type: "value"
+            operator: "is_falsy"
+
+  - name: "Compute Payment Copies Final Usage And Account From Template"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal"
+        limit: 1
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type"
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type"
+
+      - step: "Setup - create deferred income account"
+        action: "create"
+        model: "account.account"
+        save_as: "deferred_account"
+        values:
+          name: "School Fee Deferred Income RRB"
+          code: "RRB4100"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create final income account"
+        action: "create"
+        model: "account.account"
+        save_as: "final_account"
+        values:
+          name: "School Fee Final Income RRB"
+          code: "RRB4200"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          name: "School Receivable RRB"
+          code: "RRB1100"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+
+      - step: "Setup - create final usage type"
+        action: "create"
+        model: "product.usage_type"
+        save_as: "final_usage"
+        values:
+          name: "Final Revenue RRB"
+          code: "FINALRRB"
+          account_id: "REC: final_account.id"
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type RRB"
+          code: "CITRRB"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Fee RRB"
+          type: "service"
+          list_price: 1000000.0
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type RRB"
+          code: "GTRRB"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 RRB"
+          code: "AYRRB"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester RRB"
+          code: "SMRRB"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School RRB"
+          code: "SCHRRB"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade RRB"
+          code: "GRRB"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class RRB"
+          code: "CLRRB"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact RRB"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student RRB"
+          code: "STURRB"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Setup - create payment template with a Final Usage/Account detail"
+        action: "create"
+        model: "school_enrollment_payment_template"
+        save_as: "payment_template"
+        values:
+          name: "Payment Template RRB"
+          code: "PMTRRB"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          academic_term_id: "REC: academic_term.id"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+          revenue_recognition: true
+          recognition_journal_id: "REC: journal.id"
+          term_ids:
+            - name: "Term 1 RRB"
+              sequence: 10
+              detail_ids:
+                - product_id: "REC: product.id"
+                  name: "Fee RRB"
+                  account_id: "REC: deferred_account.id"
+                  final_usage_id: "REC: final_usage.id"
+                  final_account_id: "REC: final_account.id"
+                  uom_quantity: 1.0
+                  uom_id: "REF: uom.product_uom_unit"
+                  price_unit: 1000000.0
+
+      - step: "Create enrollment from the template"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+          payment_template_id: "REC: payment_template.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+          revenue_recognition: true
+          recognition_journal_id: "REC: journal.id"
+
+      - step: "Compute payment from the template"
+        action: "call"
+        target: "enrollment"
+        method: "action_compute_payment"
+        as_user: "base.user_admin"
+
+      - step: "Get the generated detail"
+        action: "search"
+        model: "school_enrollment_payment_term_detail"
+        domain: [["term_id.enrollment_id", "=", "REC: enrollment.id"]]
+        save_as: "detail"
+        expect_count: 1
+
+      - step: "Assert the detail copied Final Usage and Final Account from the template"
+        action: "assert"
+        target: "detail"
+        asserts:
+          final_usage_id.id:
+            type: "value"
+            expected: "REC: final_usage.id"
+          final_account_id.id:
+            type: "value"
+            expected: "REC: final_account.id"
+
+  - name: "Revenue Recognition Skips Uninvoiced And Final-Account-Less Details"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal"
+        limit: 1
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type"
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type"
+
+      - step: "Setup - create deferred income account"
+        action: "create"
+        model: "account.account"
+        save_as: "deferred_account"
+        values:
+          name: "School Fee Deferred Income RRC"
+          code: "RRC4100"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create final income account"
+        action: "create"
+        model: "account.account"
+        save_as: "final_account"
+        values:
+          name: "School Fee Final Income RRC"
+          code: "RRC4200"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          name: "School Receivable RRC"
+          code: "RRC1100"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type RRC"
+          code: "CITRRC"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Fee RRC"
+          type: "service"
+          list_price: 1000000.0
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type RRC"
+          code: "GTRRC"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 RRC"
+          code: "AYRRC"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester RRC"
+          code: "SMRRC"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School RRC"
+          code: "SCHRRC"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade RRC"
+          code: "GRRC"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class RRC"
+          code: "CLRRC"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact RRC"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student RRC"
+          code: "STURRC"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Create enrollment with Revenue Recognition enabled"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+          revenue_recognition: true
+          recognition_journal_id: "REC: journal.id"
+
+      - step: "Create term 1 (will be invoiced)"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_1"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term 1 RRC"
+          sequence: 10
+          date_invoice: "2024-07-05"
+          date_due: "2024-07-20"
+
+      - step: "Create term 1 detail with a Final Account"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        save_as: "detail_1a"
+        values:
+          term_id: "REC: term_1.id"
+          product_id: "REC: product.id"
+          name: "Registration Fee RRC"
+          account_id: "REC: deferred_account.id"
+          final_account_id: "REC: final_account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+
+      - step: "Create term 1 second detail WITHOUT a Final Account -- e.g. a deposit"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        save_as: "detail_1b"
+        values:
+          term_id: "REC: term_1.id"
+          product_id: "REC: product.id"
+          name: "Deposit RRC"
+          account_id: "REC: deferred_account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 200000.0
+
+      - step: "Create term 2 (will be invoiced)"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_2"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term 2 RRC"
+          sequence: 20
+          date_invoice: "2024-08-05"
+          date_due: "2024-08-20"
+
+      - step: "Create term 2 detail with a Final Account"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        save_as: "detail_2a"
+        values:
+          term_id: "REC: term_2.id"
+          product_id: "REC: product.id"
+          name: "Monthly Tuition RRC"
+          account_id: "REC: deferred_account.id"
+          final_account_id: "REC: final_account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 500000.0
+
+      - step: "Create term 3 (left uninvoiced)"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_3"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term 3 RRC"
+          sequence: 30
+          date_invoice: "2024-09-05"
+          date_due: "2024-09-20"
+
+      - step: "Create term 3 detail with a Final Account"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        save_as: "detail_3a"
+        values:
+          term_id: "REC: term_3.id"
+          product_id: "REC: product.id"
+          name: "Later Tuition RRC"
+          account_id: "REC: deferred_account.id"
+          final_account_id: "REC: final_account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 700000.0
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Invoice term 1"
+        action: "call"
+        target: "term_1"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Get term 1's generated invoice"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["id", "=", "REC: term_1.customer_invoice_id.id"]]
+        save_as: "term_1_invoice"
+        expect_count: 1
+
+      - step: "Confirm term 1 invoice"
+        action: "call"
+        target: "term_1_invoice"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert term 1 invoice is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "term_1_invoice"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Open term 1 invoice"
+        action: "call"
+        target: "term_1_invoice"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Invoice term 2"
+        action: "call"
+        target: "term_2"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Get term 2's generated invoice"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["id", "=", "REC: term_2.customer_invoice_id.id"]]
+        save_as: "term_2_invoice"
+        expect_count: 1
+
+      - step: "Confirm term 2 invoice"
+        action: "call"
+        target: "term_2_invoice"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert term 2 invoice is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "term_2_invoice"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Open term 2 invoice"
+        action: "call"
+        target: "term_2_invoice"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Finish the enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_done"
+        as_user: "base.user_admin"
+
+      - step: "Assert one Revenue Recognition move was posted"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+          recognition_move_id:
+            type: "value"
+            operator: "is_truthy"
+          recognition_move_id.state:
+            type: "value"
+            expected: "posted"
+          recognition_move_id.journal_id.id:
+            type: "value"
+            expected: "REC: journal.id"
+
+      - step:
+          "Assert exactly the two invoiced, Final-Account-bearing details were
+          recognized"
+        action: "search"
+        model: "school_enrollment_revenue_recognition_line"
+        domain: [["enrollment_id", "=", "REC: enrollment.id"]]
+        save_as: "recognition_lines"
+        expect_count: 2
+
+      - step: "Assert the term 1 recognition line accounts and amount"
+        action: "search"
+        model: "school_enrollment_revenue_recognition_line"
+        domain: [["payment_term_detail_id", "=", "REC: detail_1a.id"]]
+        save_as: "line_1a"
+        expect_count: 1
+
+      - step: "Assert line 1a accounts and amount"
+        action: "assert"
+        target: "line_1a"
+        asserts:
+          debit_account_id.id:
+            type: "value"
+            expected: "REC: deferred_account.id"
+          credit_account_id.id:
+            type: "value"
+            expected: "REC: final_account.id"
+          amount:
+            type: "value"
+            expected: 1000000.0
+
+      - step: "Assert term 3 (uninvoiced) produced no recognition line"
+        action: "search"
+        model: "school_enrollment_revenue_recognition_line"
+        domain: [["payment_term_detail_id", "=", "REC: detail_3a.id"]]
+        save_as: "line_3a"
+        expect_count: 0
+
+      - step:
+          "Assert the deposit detail (no Final Account) produced no recognition line"
+        action: "search"
+        model: "school_enrollment_revenue_recognition_line"
+        domain: [["payment_term_detail_id", "=", "REC: detail_1b.id"]]
+        save_as: "line_1b"
+        expect_count: 0
+
+  - name: "Revenue Recognition Reverses Debit Credit For Negative Amount"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal"
+        limit: 1
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type"
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type"
+
+      - step: "Setup - create deferred income account"
+        action: "create"
+        model: "account.account"
+        save_as: "deferred_account"
+        values:
+          name: "School Fee Deferred Income RRD"
+          code: "RRD4100"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create final income account"
+        action: "create"
+        model: "account.account"
+        save_as: "final_account"
+        values:
+          name: "School Fee Final Income RRD"
+          code: "RRD4200"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          name: "School Receivable RRD"
+          code: "RRD1100"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type RRD"
+          code: "CITRRD"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Fee RRD"
+          type: "service"
+          list_price: -300000.0
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type RRD"
+          code: "GTRRD"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 RRD"
+          code: "AYRRD"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester RRD"
+          code: "SMRRD"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School RRD"
+          code: "SCHRRD"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade RRD"
+          code: "GRRD"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class RRD"
+          code: "CLRRD"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact RRD"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student RRD"
+          code: "STURRD"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Create enrollment with Revenue Recognition enabled"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+          revenue_recognition: true
+          recognition_journal_id: "REC: journal.id"
+
+      - step: "Create term"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term RRD"
+          sequence: 10
+          date_invoice: "2024-07-05"
+          date_due: "2024-07-20"
+
+      - step: "Create a detail billed with a negative price (e.g. a correction line)"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        save_as: "detail"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Correction RRD"
+          account_id: "REC: deferred_account.id"
+          final_account_id: "REC: final_account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: -300000.0
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Invoice the term"
+        action: "call"
+        target: "term"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Get the term's generated invoice"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["id", "=", "REC: term.customer_invoice_id.id"]]
+        save_as: "invoice"
+        expect_count: 1
+
+      - step: "Confirm the invoice"
+        action: "call"
+        target: "invoice"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert invoice is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "invoice"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Open the invoice"
+        action: "call"
+        target: "invoice"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Finish the enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_done"
+        as_user: "base.user_admin"
+
+      - step: "Assert the recognition line kept the negative signed amount"
+        action: "search"
+        model: "school_enrollment_revenue_recognition_line"
+        domain: [["payment_term_detail_id", "=", "REC: detail.id"]]
+        save_as: "line"
+        expect_count: 1
+
+      - step: "Assert line amount is negative"
+        action: "assert"
+        target: "line"
+        asserts:
+          amount:
+            type: "value"
+            expected: -300000.0
+
+      - step: "Assert the deferred account received the CREDIT side"
+        action: "search"
+        model: "account.move.line"
+        domain:
+          - ["move_id", "=", "REC: enrollment.recognition_move_id.id"]
+          - ["account_id", "=", "REC: deferred_account.id"]
+        save_as: "deferred_ml"
+        expect_count: 1
+
+      - step: "Assert deferred journal item is a credit, not a debit"
+        action: "assert"
+        target: "deferred_ml"
+        asserts:
+          debit:
+            type: "value"
+            expected: 0.0
+          credit:
+            type: "value"
+            expected: 300000.0
+
+      - step: "Assert the final account received the DEBIT side"
+        action: "search"
+        model: "account.move.line"
+        domain:
+          - ["move_id", "=", "REC: enrollment.recognition_move_id.id"]
+          - ["account_id", "=", "REC: final_account.id"]
+        save_as: "final_ml"
+        expect_count: 1
+
+      - step: "Assert final journal item is a debit, not a credit"
+        action: "assert"
+        target: "final_ml"
+        asserts:
+          debit:
+            type: "value"
+            expected: 300000.0
+          credit:
+            type: "value"
+            expected: 0.0
+
+  - name: "Flag Disabled Leaves Recognition Move Empty"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal"
+        limit: 1
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type"
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type"
+
+      - step: "Setup - create deferred income account"
+        action: "create"
+        model: "account.account"
+        save_as: "deferred_account"
+        values:
+          name: "School Fee Deferred Income RRE"
+          code: "RRE4100"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create final income account"
+        action: "create"
+        model: "account.account"
+        save_as: "final_account"
+        values:
+          name: "School Fee Final Income RRE"
+          code: "RRE4200"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          name: "School Receivable RRE"
+          code: "RRE1100"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type RRE"
+          code: "CITRRE"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Fee RRE"
+          type: "service"
+          list_price: 1000000.0
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type RRE"
+          code: "GTRRE"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 RRE"
+          code: "AYRRE"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester RRE"
+          code: "SMRRE"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School RRE"
+          code: "SCHRRE"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade RRE"
+          code: "GRRE"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class RRE"
+          code: "CLRRE"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact RRE"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student RRE"
+          code: "STURRE"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Create enrollment with Revenue Recognition left disabled"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+
+      - step: "Create term"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term RRE"
+          sequence: 10
+          date_invoice: "2024-07-05"
+          date_due: "2024-07-20"
+
+      - step: "Create detail with a Final Account that will never be used"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        save_as: "detail"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Fee RRE"
+          account_id: "REC: deferred_account.id"
+          final_account_id: "REC: final_account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Invoice the term"
+        action: "call"
+        target: "term"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Get the term's generated invoice"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["id", "=", "REC: term.customer_invoice_id.id"]]
+        save_as: "invoice"
+        expect_count: 1
+
+      - step: "Confirm the invoice"
+        action: "call"
+        target: "invoice"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert invoice is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "invoice"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Open the invoice"
+        action: "call"
+        target: "invoice"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Finish the enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_done"
+        as_user: "base.user_admin"
+
+      - step:
+          "Assert no Recognition move was created and the invoice line kept its own
+          account"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+          recognition_move_id:
+            type: "value"
+            operator: "is_falsy"
+
+      - step:
+          "Assert the invoiced detail's own invoice line still uses the deferred account"
+        action: "assert"
+        target: "detail"
+        asserts:
+          customer_invoice_line_id.account_id.id:
+            type: "value"
+            expected: "REC: deferred_account.id"
+
+  - name: "Enable Revenue Recognition On Already Open Enrollment"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal"
+        limit: 1
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type"
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type"
+
+      - step: "Setup - create deferred income account"
+        action: "create"
+        model: "account.account"
+        save_as: "deferred_account"
+        values:
+          name: "School Fee Deferred Income RRF"
+          code: "RRF4100"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create final income account"
+        action: "create"
+        model: "account.account"
+        save_as: "final_account"
+        values:
+          name: "School Fee Final Income RRF"
+          code: "RRF4200"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          name: "School Receivable RRF"
+          code: "RRF1100"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type RRF"
+          code: "CITRRF"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Fee RRF"
+          type: "service"
+          list_price: 1000000.0
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type RRF"
+          code: "GTRRF"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 RRF"
+          code: "AYRRF"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester RRF"
+          code: "SMRRF"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School RRF"
+          code: "SCHRRF"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade RRF"
+          code: "GRRF"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class RRF"
+          code: "CLRRF"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact RRF"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student RRF"
+          code: "STURRF"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Create enrollment with Revenue Recognition left disabled"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+
+      - step: "Create term"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term RRF"
+          sequence: 10
+          date_invoice: "2024-07-05"
+          date_due: "2024-07-20"
+
+      - step: "Create detail without a Final Account yet"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        save_as: "detail"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Fee RRF"
+          account_id: "REC: deferred_account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve enrollment -- the detail is now locked"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Assert the detail is locked and not yet invoiced"
+        action: "assert"
+        target: "detail"
+        asserts:
+          locked:
+            type: "value"
+            expected: true
+          customer_invoice_line_id:
+            type: "value"
+            operator: "is_falsy"
+
+      - step:
+          "Enable Revenue Recognition and set the Recognition Journal on the open
+          enrollment"
+        action: "write"
+        target: "enrollment"
+        values:
+          revenue_recognition: true
+          recognition_journal_id: "REC: journal.id"
+
+      - step: "Write the Final Account on the locked-but-not-yet-invoiced detail"
+        action: "write"
+        target: "detail"
+        values:
+          final_account_id: "REC: final_account.id"
+
+      - step: "Invoice the term"
+        action: "call"
+        target: "term"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Get the term's generated invoice"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["id", "=", "REC: term.customer_invoice_id.id"]]
+        save_as: "invoice"
+        expect_count: 1
+
+      - step: "Confirm the invoice"
+        action: "call"
+        target: "invoice"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert invoice is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "invoice"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Open the invoice"
+        action: "call"
+        target: "invoice"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Finish the enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_done"
+        as_user: "base.user_admin"
+
+      - step: "Assert the Revenue Recognition move was posted"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          recognition_move_id:
+            type: "value"
+            operator: "is_truthy"
+          recognition_move_id.state:
+            type: "value"
+            expected: "posted"
+
+  - name: "Due Invoice After Done Bills To Final Account"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal"
+        limit: 1
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type"
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type"
+
+      - step: "Setup - create deferred income account"
+        action: "create"
+        model: "account.account"
+        save_as: "deferred_account"
+        values:
+          name: "School Fee Deferred Income RRG"
+          code: "RRG4100"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create final income account"
+        action: "create"
+        model: "account.account"
+        save_as: "final_account"
+        values:
+          name: "School Fee Final Income RRG"
+          code: "RRG4200"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          name: "School Receivable RRG"
+          code: "RRG1100"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type RRG"
+          code: "CITRRG"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Fee RRG"
+          type: "service"
+          list_price: 1000000.0
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type RRG"
+          code: "GTRRG"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 RRG"
+          code: "AYRRG"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester RRG"
+          code: "SMRRG"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School RRG"
+          code: "SCHRRG"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade RRG"
+          code: "GRRG"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class RRG"
+          code: "CLRRG"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact RRG"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student RRG"
+          code: "STURRG"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Create enrollment with Revenue Recognition enabled"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+          revenue_recognition: true
+          recognition_journal_id: "REC: journal.id"
+
+      - step:
+          "Create a term left uninvoiced at Done time (e.g. next semester's tuition)"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term RRG"
+          sequence: 10
+          date_invoice: "2024-07-05"
+          date_due: "2024-07-20"
+
+      - step: "Create the detail with a Final Account"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        save_as: "detail"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Fee RRG"
+          account_id: "REC: deferred_account.id"
+          final_account_id: "REC: final_account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Finish the enrollment without ever invoicing the term"
+        action: "call"
+        target: "enrollment"
+        method: "action_done"
+        as_user: "base.user_admin"
+
+      - step: "Assert no Recognition move was created -- nothing was invoiced yet"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+          recognition_move_id:
+            type: "value"
+            operator: "is_falsy"
+
+      - step: "Invoice the term now that the enrollment is Done"
+        action: "call"
+        target: "term"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Assert the due invoice line bills straight to the Final Account"
+        action: "assert"
+        target: "detail"
+        asserts:
+          customer_invoice_line_id.account_id.id:
+            type: "value"
+            expected: "REC: final_account.id"
+
+  - name: "Disconnect Invoice Then Cancel Deletes Recognition Move"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal"
+        limit: 1
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type"
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type"
+
+      - step: "Setup - create deferred income account"
+        action: "create"
+        model: "account.account"
+        save_as: "deferred_account"
+        values:
+          name: "School Fee Deferred Income RRH"
+          code: "RRH4100"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create final income account"
+        action: "create"
+        model: "account.account"
+        save_as: "final_account"
+        values:
+          name: "School Fee Final Income RRH"
+          code: "RRH4200"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          name: "School Receivable RRH"
+          code: "RRH1100"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type RRH"
+          code: "CITRRH"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Fee RRH"
+          type: "service"
+          list_price: 1000000.0
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type RRH"
+          code: "GTRRH"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 RRH"
+          code: "AYRRH"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester RRH"
+          code: "SMRRH"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School RRH"
+          code: "SCHRRH"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade RRH"
+          code: "GRRH"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class RRH"
+          code: "CLRRH"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact RRH"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student RRH"
+          code: "STURRH"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Create enrollment with Revenue Recognition enabled"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+          revenue_recognition: true
+          recognition_journal_id: "REC: journal.id"
+
+      - step: "Create term"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term RRH"
+          sequence: 10
+          date_invoice: "2024-07-05"
+          date_due: "2024-07-20"
+
+      - step: "Create the detail with a Final Account"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        save_as: "detail"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Fee RRH"
+          account_id: "REC: deferred_account.id"
+          final_account_id: "REC: final_account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Invoice the term"
+        action: "call"
+        target: "term"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Get the term's generated invoice"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["id", "=", "REC: term.customer_invoice_id.id"]]
+        save_as: "invoice"
+        expect_count: 1
+
+      - step: "Confirm the invoice"
+        action: "call"
+        target: "invoice"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert invoice is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "invoice"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Open the invoice"
+        action: "call"
+        target: "invoice"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Finish the enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_done"
+        as_user: "base.user_admin"
+
+      - step: "Assert the Recognition move was posted"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          recognition_move_id:
+            type: "value"
+            operator: "is_truthy"
+
+      - step:
+          "Disconnect the invoice from the term so cancelling the enrollment is allowed"
+        action: "call"
+        target: "term"
+        method: "action_disconnect_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Cancel the enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_cancel"
+        as_user: "base.user_admin"
+
+      - step: "Assert the Recognition move and its lines are gone"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          state:
+            type: "value"
+            expected: "cancel"
+          recognition_move_id:
+            type: "value"
+            operator: "is_falsy"
+
+      - step: "Assert no recognition line survives"
+        action: "search"
+        model: "school_enrollment_revenue_recognition_line"
+        domain: [["enrollment_id", "=", "REC: enrollment.id"]]
+        save_as: "remaining_lines"
+        expect_count: 0
+
+  - name: "Locked Invoiced Detail Rejects Account Write"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal"
+        limit: 1
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type"
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type"
+
+      - step: "Setup - create deferred income account"
+        action: "create"
+        model: "account.account"
+        save_as: "deferred_account"
+        values:
+          name: "School Fee Deferred Income RRI"
+          code: "RRI4100"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create another income account"
+        action: "create"
+        model: "account.account"
+        save_as: "other_account"
+        values:
+          name: "Other Income RRI"
+          code: "RRI4300"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          name: "School Receivable RRI"
+          code: "RRI1100"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type RRI"
+          code: "CITRRI"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Fee RRI"
+          type: "service"
+          list_price: 1000000.0
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type RRI"
+          code: "GTRRI"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 RRI"
+          code: "AYRRI"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester RRI"
+          code: "SMRRI"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School RRI"
+          code: "SCHRRI"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade RRI"
+          code: "GRRI"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class RRI"
+          code: "CLRRI"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact RRI"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student RRI"
+          code: "STURRI"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+
+      - step: "Create term"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term RRI"
+          sequence: 10
+          date_invoice: "2024-07-05"
+          date_due: "2024-07-20"
+
+      - step: "Create the detail"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        save_as: "detail"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Fee RRI"
+          account_id: "REC: deferred_account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve enrollment -- the detail is now locked"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Write account_id BEFORE invoicing is still allowed"
+        action: "write"
+        target: "detail"
+        values:
+          account_id: "REC: other_account.id"
+
+      - step: "Invoice the term"
+        action: "call"
+        target: "term"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Write account_id on the now-invoiced, locked detail is rejected"
+        action: "write"
+        target: "detail"
+        expect_error:
+          type: "UserError"
+        values:
+          account_id: "REC: deferred_account.id"
+
+      - step: "Assert the detail still uses the account set before invoicing"
+        action: "assert"
+        target: "detail"
+        asserts:
+          account_id.id:
+            type: "value"
+            expected: "REC: other_account.id"
+
+  - name: "Done Readiness Rejects Draft Invoice And Missing Journal"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal"
+        limit: 1
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type"
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type"
+
+      - step: "Setup - create deferred income account"
+        action: "create"
+        model: "account.account"
+        save_as: "deferred_account"
+        values:
+          name: "School Fee Deferred Income RRJ"
+          code: "RRJ4100"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          name: "School Receivable RRJ"
+          code: "RRJ1100"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type RRJ"
+          code: "CITRRJ"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Fee RRJ"
+          type: "service"
+          list_price: 1000000.0
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type RRJ"
+          code: "GTRRJ"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 RRJ"
+          code: "AYRRJ"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester RRJ"
+          code: "SMRRJ"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School RRJ"
+          code: "SCHRRJ"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade RRJ"
+          code: "GRRJ"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class RRJ"
+          code: "CLRRJ"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Setup - create student contact 1"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_1"
+        values:
+          name: "Student Contact RRJ1"
+
+      - step: "Setup - create student 1"
+        action: "create"
+        model: "school_student"
+        save_as: "student_1"
+        values:
+          name: "Student RRJ1"
+          code: "STURRJ1"
+          contact_id: "REC: contact_1.id"
+          school_id: "REC: school.id"
+
+      - step:
+          "Create enrollment 1 -- will be finished with a draft invoice still pending"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_1"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student_1.id"
+          currency_id: "REC: company.currency_id.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+          revenue_recognition: true
+          recognition_journal_id: "REC: journal.id"
+
+      - step: "Create term 1"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_1"
+        values:
+          enrollment_id: "REC: enrollment_1.id"
+          name: "Term RRJ1"
+          sequence: 10
+          date_invoice: "2024-07-05"
+          date_due: "2024-07-20"
+
+      - step: "Create term 1 detail"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        save_as: "detail_1"
+        values:
+          term_id: "REC: term_1.id"
+          product_id: "REC: product.id"
+          name: "Fee RRJ1"
+          account_id: "REC: deferred_account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+
+      - step: "Confirm enrollment 1"
+        action: "call"
+        target: "enrollment_1"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert enrollment 1 is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "enrollment_1"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve enrollment 1"
+        action: "call"
+        target: "enrollment_1"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Invoice term 1 and leave the invoice in draft"
+        action: "call"
+        target: "term_1"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Finishing enrollment 1 with a draft invoice is rejected"
+        action: "call"
+        target: "enrollment_1"
+        method: "action_done"
+        as_user: "base.user_admin"
+        expect_error:
+          type: "UserError"
+
+      - step: "Assert enrollment 1 is still open"
+        action: "assert"
+        target: "enrollment_1"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Setup - create student contact 2"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact_2"
+        values:
+          name: "Student Contact RRJ2"
+
+      - step: "Setup - create student 2"
+        action: "create"
+        model: "school_student"
+        save_as: "student_2"
+        values:
+          name: "Student RRJ2"
+          code: "STURRJ2"
+          contact_id: "REC: contact_2.id"
+          school_id: "REC: school.id"
+
+      - step:
+          "Create enrollment 2 -- Revenue Recognition enabled but WITHOUT a Recognition
+          Journal"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment_2"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student_2.id"
+          currency_id: "REC: company.currency_id.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+          revenue_recognition: true
+
+      - step: "Confirm enrollment 2"
+        action: "call"
+        target: "enrollment_2"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert enrollment 2 is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "enrollment_2"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve enrollment 2"
+        action: "call"
+        target: "enrollment_2"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Finishing enrollment 2 without a Recognition Journal is rejected"
+        action: "call"
+        target: "enrollment_2"
+        method: "action_done"
+        as_user: "base.user_admin"
+        expect_error:
+          type: "UserError"
+          message_contains: "Recognition Journal"
+
+      - step: "Assert enrollment 2 is still open"
+        action: "assert"
+        target: "enrollment_2"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+  - name: "Cancel Recognized Invoice Is Rejected"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal"
+        limit: 1
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type"
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type"
+
+      - step: "Setup - create deferred income account"
+        action: "create"
+        model: "account.account"
+        save_as: "deferred_account"
+        values:
+          name: "School Fee Deferred Income RRK"
+          code: "RRK4100"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create final income account"
+        action: "create"
+        model: "account.account"
+        save_as: "final_account"
+        values:
+          name: "School Fee Final Income RRK"
+          code: "RRK4200"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          name: "School Receivable RRK"
+          code: "RRK1100"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type RRK"
+          code: "CITRRK"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Fee RRK"
+          type: "service"
+          list_price: 1000000.0
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type RRK"
+          code: "GTRRK"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 RRK"
+          code: "AYRRK"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester RRK"
+          code: "SMRRK"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School RRK"
+          code: "SCHRRK"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade RRK"
+          code: "GRRK"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class RRK"
+          code: "CLRRK"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact RRK"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student RRK"
+          code: "STURRK"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Create enrollment with Revenue Recognition enabled"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+          revenue_recognition: true
+          recognition_journal_id: "REC: journal.id"
+
+      - step: "Create term"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term RRK"
+          sequence: 10
+          date_invoice: "2024-07-05"
+          date_due: "2024-07-20"
+
+      - step: "Create the detail with a Final Account"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        save_as: "detail"
+        values:
+          term_id: "REC: term.id"
+          product_id: "REC: product.id"
+          name: "Fee RRK"
+          account_id: "REC: deferred_account.id"
+          final_account_id: "REC: final_account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Invoice the term"
+        action: "call"
+        target: "term"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Get the term's generated invoice"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["id", "=", "REC: term.customer_invoice_id.id"]]
+        save_as: "invoice"
+        expect_count: 1
+
+      - step: "Confirm the invoice"
+        action: "call"
+        target: "invoice"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert invoice is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "invoice"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Open the invoice"
+        action: "call"
+        target: "invoice"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Finish the enrollment -- the invoice line gets recognized"
+        action: "call"
+        target: "enrollment"
+        method: "action_done"
+        as_user: "base.user_admin"
+
+      - step: "Assert the Recognition move was posted"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          recognition_move_id:
+            type: "value"
+            operator: "is_truthy"
+
+      - step: "Cancelling the already-recognized invoice is rejected"
+        action: "call"
+        target: "invoice"
+        method: "action_cancel"
+        as_user: "base.user_admin"
+        expect_error:
+          type: "UserError"
+          message_contains: "Revenue Recognition"
+
+      - step: "Assert the invoice is still open"
+        action: "assert"
+        target: "term"
+        asserts:
+          customer_invoice_id.state:
+            type: "value"
+            expected: "open"

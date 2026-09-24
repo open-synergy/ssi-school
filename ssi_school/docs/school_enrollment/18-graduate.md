@@ -28,3 +28,8 @@
 - Status changes to **Done**.
 - **Academic Year Result** is set to **Graduate**. **Promote To Grade** is left empty.
 - The student's status is set to **Graduated**.
+- If **Revenue Recognition** is enabled, one Revenue Recognition journal entry is posted
+  (see **Recognition Move** on the Accounting page), moving the amount of every invoiced
+  payment term detail that carries a **Final Account** from its own account to that
+  Final Account. Terms not yet invoiced, and details without a Final Account, are
+  skipped.
