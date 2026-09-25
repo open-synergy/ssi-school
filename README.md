@@ -30,7 +30,7 @@ addon | version | maintainers | summary
 [ssi_school_customer_invoice_export_operating_unit](ssi_school_customer_invoice_export_operating_unit/) | 14.0.1.1.1 |  | School - Customer Invoice Export - Operating Unit
 [ssi_school_health](ssi_school_health/) | 14.0.1.2.0 |  | School Health
 [ssi_school_lead](ssi_school_lead/) | 14.0.1.13.1 |  | School Lead
-[ssi_school_operating_unit](ssi_school_operating_unit/) | 14.0.1.6.1 |  | School - Operating Unit
+[ssi_school_operating_unit](ssi_school_operating_unit/) | 14.0.1.6.2 |  | School - Operating Unit
 [ssi_school_promotion](ssi_school_promotion/) | 14.0.1.0.1 |  | School + Promotion
 [ssi_school_qr_code](ssi_school_qr_code/) | 14.0.1.0.1 |  | Student QR Code
 
