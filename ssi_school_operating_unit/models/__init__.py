@@ -9,6 +9,7 @@ from . import (  # noqa: F401
     school_enrollment,
     school_enrollment_operating_unit_mixin,
     school_enrollment_payment_term,
+    school_enrollment_revenue_recognition_line,
     school_grade,
     school_grade_class,
     school_grade_type,

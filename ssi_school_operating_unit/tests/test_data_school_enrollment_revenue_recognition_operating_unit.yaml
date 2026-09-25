@@ -1,0 +1,598 @@
+options:
+  auto_refresh: true
+scenarios:
+  - name: "Revenue Recognition Move Propagates Enrollment's Own Operating Unit"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal"
+        limit: 1
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type"
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type"
+
+      - step: "Setup - create deferred income account"
+        action: "create"
+        model: "account.account"
+        save_as: "deferred_account"
+        values:
+          name: "School Fee Deferred Income SEOU9"
+          code: "SEOU9100"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create final income account"
+        action: "create"
+        model: "account.account"
+        save_as: "final_account"
+        values:
+          name: "School Fee Final Income SEOU9"
+          code: "SEOU9200"
+          user_type_id: "REC: revenue_type.id"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          name: "School Receivable SEOU9"
+          code: "SEOU9110"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type SEOU9"
+          code: "CITSEOU9"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Fee SEOU9"
+          type: "service"
+          list_price: 1000000.0
+
+      - step: "Setup - create partner for the enrollment's own operating unit"
+        action: "create"
+        model: "res.partner"
+        save_as: "ou_a_partner"
+        values:
+          name: "Enrollment Recognition OU A Partner"
+
+      - step: "Setup - create the enrollment's own operating unit"
+        action: "create"
+        model: "operating.unit"
+        save_as: "ou_a"
+        values:
+          name: "Enrollment Recognition OU A"
+          code: "OUSEOU9A"
+          company_id: "REF: base.main_company"
+          partner_id: "REC: ou_a_partner.id"
+
+      - step: "Setup - create partner for a different operating unit"
+        action: "create"
+        model: "res.partner"
+        save_as: "ou_b_partner"
+        values:
+          name: "Enrollment Recognition OU B Partner"
+
+      - step: "Setup - create a second, different operating unit"
+        action: "create"
+        model: "operating.unit"
+        save_as: "ou_b"
+        values:
+          name: "Enrollment Recognition OU B"
+          code: "OUSEOU9B"
+          company_id: "REF: base.main_company"
+          partner_id: "REC: ou_b_partner.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type SEOU9"
+          code: "GTSEOU9"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2025/2026 SEOU9"
+          code: "AYSEOU9"
+          date_start: "2025-07-01"
+          date_end: "2026-06-30"
+
+      - step: "Setup - create academic term 1 (enrollment open, not last)"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester 1 SEOU9"
+          code: "SMSEOU9A"
+          date_start: "2025-07-01"
+          date_end: "2025-12-31"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create academic term 2 (last term, unused)"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_2"
+        values:
+          name: "Semester 2 SEOU9"
+          code: "SMSEOU9B"
+          date_start: "2026-01-01"
+          date_end: "2026-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "close"
+
+      - step: "Setup - create school with exactly one operating unit"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School SEOU9"
+          code: "SCHSEOU9"
+          grade_type_id: "REC: grade_type.id"
+          operating_unit_ids: [[6, 0, ["REC: ou_a.id"]]]
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade SEOU9"
+          code: "GSEOU9"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class SEOU9"
+          code: "CLSEOU9"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact SEOU9"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student SEOU9"
+          code: "STUSEOU9"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Create enrollment, deriving operating_unit_id from school_id"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        as_user: "base.user_admin"
+        values:
+          date: "2025-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+          revenue_recognition: true
+          recognition_journal_id: "REC: journal.id"
+
+      - step: "Assert the enrollment derived operating_unit_id from the school"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ou_a"
+
+      - step: "Create the payment term (will be invoiced)"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_1"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term 1 SEOU9"
+          sequence: 10
+          date_invoice: "2025-07-05"
+          date_due: "2025-07-20"
+
+      - step: "Create the payment term detail with a Final Account"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        save_as: "detail_1"
+        values:
+          term_id: "REC: term_1.id"
+          product_id: "REC: product.id"
+          name: "Registration Fee SEOU9"
+          account_id: "REC: deferred_account.id"
+          final_account_id: "REC: final_account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Invoice the term"
+        action: "call"
+        target: "term_1"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Get the generated invoice"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["id", "=", "REC: term_1.customer_invoice_id.id"]]
+        save_as: "invoice"
+        expect_count: 1
+
+      - step: "Confirm the invoice"
+        action: "call"
+        target: "invoice"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert invoice is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "invoice"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Open the invoice"
+        action: "call"
+        target: "invoice"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Assert the enrollment's term is not the last term (done is allowed)"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          academic_term_id.last_term:
+            type: "value"
+            expected: false
+
+      - step: "Get the acting user's own record"
+        action: "ref"
+        xml_id: "base.user_admin"
+        save_as: "admin_user"
+
+      - step:
+          "Give the acting user a different default operating unit than the enrollment's
+          own"
+        action: "write"
+        target: "admin_user"
+        values:
+          default_operating_unit_id: "REC: ou_b.id"
+
+      - step:
+          "Finish the enrollment as a user whose default operating unit is OU B, not OU
+          A"
+        action: "call"
+        target: "enrollment"
+        method: "action_done"
+        as_user: "base.user_admin"
+
+      - step: "Assert one Revenue Recognition move was posted for the enrollment's OU"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+          recognition_move_id:
+            type: "value"
+            operator: "is_truthy"
+          recognition_move_id.state:
+            type: "value"
+            expected: "posted"
+          recognition_move_id.operating_unit_id.id:
+            type: "value"
+            expected: "REC: ou_a.id"
+
+      - step: "Get the recognition move's debit journal item"
+        action: "search"
+        model: "account.move.line"
+        domain:
+          [
+            ["move_id", "=", "REC: enrollment.recognition_move_id.id"],
+            ["account_id", "=", "REC: deferred_account.id"],
+          ]
+        save_as: "debit_line"
+        expect_count: 1
+
+      - step: "Assert the debit journal item carries the enrollment's own OU"
+        action: "assert"
+        target: "debit_line"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ou_a"
+
+      - step: "Get the recognition move's credit journal item"
+        action: "search"
+        model: "account.move.line"
+        domain:
+          [
+            ["move_id", "=", "REC: enrollment.recognition_move_id.id"],
+            ["account_id", "=", "REC: final_account.id"],
+          ]
+        save_as: "credit_line"
+        expect_count: 1
+
+      - step: "Assert the credit journal item carries the enrollment's own OU"
+        action: "assert"
+        target: "credit_line"
+        asserts:
+          operating_unit_id:
+            type: "m2o"
+            expected: "REC: ou_a"
+
+  - name: "Revenue Recognition Disabled Creates No Move Regardless Of Operating Unit"
+    steps:
+      - step: "Setup - create partner for the operating unit"
+        action: "create"
+        model: "res.partner"
+        save_as: "ou_partner"
+        values:
+          name: "Enrollment Recognition Disabled OU Partner"
+
+      - step: "Setup - create the operating unit"
+        action: "create"
+        model: "operating.unit"
+        save_as: "ou"
+        values:
+          name: "Enrollment Recognition Disabled OU"
+          code: "OUSEOU10"
+          company_id: "REF: base.main_company"
+          partner_id: "REC: ou_partner.id"
+
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          name: "School Receivable SEOU10"
+          code: "SEOU10110"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "Customer Invoice Type SEOU10"
+          code: "CITSEOU10"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type SEOU10"
+          code: "GTSEOU10"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2025/2026 SEOU10"
+          code: "AYSEOU10"
+          date_start: "2025-07-01"
+          date_end: "2026-06-30"
+
+      - step: "Setup - create academic term 1 (enrollment open, not last)"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester 1 SEOU10"
+          code: "SMSEOU10A"
+          date_start: "2025-07-01"
+          date_end: "2025-12-31"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create academic term 2 (last term, unused)"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_2"
+        values:
+          name: "Semester 2 SEOU10"
+          code: "SMSEOU10B"
+          date_start: "2026-01-01"
+          date_end: "2026-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "close"
+
+      - step: "Setup - create school with exactly one operating unit"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School SEOU10"
+          code: "SCHSEOU10"
+          grade_type_id: "REC: grade_type.id"
+          operating_unit_ids: [[6, 0, ["REC: ou.id"]]]
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade SEOU10"
+          code: "GSEOU10"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class SEOU10"
+          code: "CLSEOU10"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact SEOU10"
+
+      - step: "Setup - create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student SEOU10"
+          code: "STUSEOU10"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+
+      - step: "Create enrollment with Revenue Recognition disabled"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        as_user: "base.user_admin"
+        values:
+          date: "2025-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+
+      - step: "Assert Revenue Recognition is disabled by default"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          revenue_recognition:
+            type: "value"
+            operator: "is_falsy"
+
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Finish the enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_done"
+        as_user: "base.user_admin"
+
+      - step: "Assert no Revenue Recognition move was created"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+          recognition_move_id:
+            type: "value"
+            operator: "is_falsy"
