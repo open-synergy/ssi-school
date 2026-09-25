@@ -227,17 +227,21 @@ scenarios:
           revenue_recognition: true
           recognition_journal_id: "REC: journal.id"
           term_ids:
-            - name: "Term 1 RRB"
-              sequence: 10
-              detail_ids:
-                - product_id: "REC: product.id"
-                  name: "Fee RRB"
-                  account_id: "REC: deferred_account.id"
-                  final_usage_id: "REC: final_usage.id"
-                  final_account_id: "REC: final_account.id"
-                  uom_quantity: 1.0
-                  uom_id: "REF: uom.product_uom_unit"
-                  price_unit: 1000000.0
+            - - 0
+              - 0
+              - name: "Term 1 RRB"
+                sequence: 10
+                detail_ids:
+                  - - 0
+                    - 0
+                    - product_id: "REC: product.id"
+                      name: "Fee RRB"
+                      account_id: "REC: deferred_account.id"
+                      final_usage_id: "REC: final_usage.id"
+                      final_account_id: "REC: final_account.id"
+                      uom_quantity: 1.0
+                      uom_id: "REF: uom.product_uom_unit"
+                      price_unit: 1000000.0
 
       - step: "Create enrollment from the template"
         action: "create"
@@ -368,17 +372,29 @@ scenarios:
           date_start: "2024-07-01"
           date_end: "2025-06-30"
 
-      - step: "Setup - create academic term"
+      - step: "Setup - create academic term 1 (enrollment open, not last)"
         action: "create"
         model: "school_academic_term"
         save_as: "academic_term"
         values:
-          name: "Semester RRC"
-          code: "SMRRC"
+          name: "Semester 1 RRC"
+          code: "SMRRC1"
           date_start: "2024-07-01"
-          date_end: "2025-06-30"
+          date_end: "2024-12-31"
           year_id: "REC: academic_year.id"
           enrollment_state: "open"
+
+      - step: "Setup - create academic term 2 (last term, unused)"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_2"
+        values:
+          name: "Semester 2 RRC"
+          code: "SMRRC2"
+          date_start: "2025-01-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "close"
 
       - step: "Setup - create school"
         action: "create"
@@ -631,6 +647,14 @@ scenarios:
             type: "value"
             expected: "open"
 
+      - step: "Assert the enrollment's term is not the last term (done is allowed)"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          academic_term_id.last_term:
+            type: "value"
+            expected: false
+
       - step: "Finish the enrollment"
         action: "call"
         target: "enrollment"
@@ -784,17 +808,29 @@ scenarios:
           date_start: "2024-07-01"
           date_end: "2025-06-30"
 
-      - step: "Setup - create academic term"
+      - step: "Setup - create academic term 1 (enrollment open, not last)"
         action: "create"
         model: "school_academic_term"
         save_as: "academic_term"
         values:
-          name: "Semester RRD"
-          code: "SMRRD"
+          name: "Semester 1 RRD"
+          code: "SMRRD1"
           date_start: "2024-07-01"
-          date_end: "2025-06-30"
+          date_end: "2024-12-31"
           year_id: "REC: academic_year.id"
           enrollment_state: "open"
+
+      - step: "Setup - create academic term 2 (last term, unused)"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_2"
+        values:
+          name: "Semester 2 RRD"
+          code: "SMRRD2"
+          date_start: "2025-01-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "close"
 
       - step: "Setup - create school"
         action: "create"
@@ -947,6 +983,14 @@ scenarios:
             type: "value"
             expected: "open"
 
+      - step: "Assert the enrollment's term is not the last term (done is allowed)"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          academic_term_id.last_term:
+            type: "value"
+            expected: false
+
       - step: "Finish the enrollment"
         action: "call"
         target: "enrollment"
@@ -1093,17 +1137,29 @@ scenarios:
           date_start: "2024-07-01"
           date_end: "2025-06-30"
 
-      - step: "Setup - create academic term"
+      - step: "Setup - create academic term 1 (enrollment open, not last)"
         action: "create"
         model: "school_academic_term"
         save_as: "academic_term"
         values:
-          name: "Semester RRE"
-          code: "SMRRE"
+          name: "Semester 1 RRE"
+          code: "SMRRE1"
           date_start: "2024-07-01"
-          date_end: "2025-06-30"
+          date_end: "2024-12-31"
           year_id: "REC: academic_year.id"
           enrollment_state: "open"
+
+      - step: "Setup - create academic term 2 (last term, unused)"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_2"
+        values:
+          name: "Semester 2 RRE"
+          code: "SMRRE2"
+          date_start: "2025-01-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "close"
 
       - step: "Setup - create school"
         action: "create"
@@ -1254,6 +1310,14 @@ scenarios:
             type: "value"
             expected: "open"
 
+      - step: "Assert the enrollment's term is not the last term (done is allowed)"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          academic_term_id.last_term:
+            type: "value"
+            expected: false
+
       - step: "Finish the enrollment"
         action: "call"
         target: "enrollment"
@@ -1367,17 +1431,29 @@ scenarios:
           date_start: "2024-07-01"
           date_end: "2025-06-30"
 
-      - step: "Setup - create academic term"
+      - step: "Setup - create academic term 1 (enrollment open, not last)"
         action: "create"
         model: "school_academic_term"
         save_as: "academic_term"
         values:
-          name: "Semester RRF"
-          code: "SMRRF"
+          name: "Semester 1 RRF"
+          code: "SMRRF1"
           date_start: "2024-07-01"
-          date_end: "2025-06-30"
+          date_end: "2024-12-31"
           year_id: "REC: academic_year.id"
           enrollment_state: "open"
+
+      - step: "Setup - create academic term 2 (last term, unused)"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_2"
+        values:
+          name: "Semester 2 RRF"
+          code: "SMRRF2"
+          date_start: "2025-01-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "close"
 
       - step: "Setup - create school"
         action: "create"
@@ -1553,6 +1629,14 @@ scenarios:
             type: "value"
             expected: "open"
 
+      - step: "Assert the enrollment's term is not the last term (done is allowed)"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          academic_term_id.last_term:
+            type: "value"
+            expected: false
+
       - step: "Finish the enrollment"
         action: "call"
         target: "enrollment"
@@ -1655,17 +1739,29 @@ scenarios:
           date_start: "2024-07-01"
           date_end: "2025-06-30"
 
-      - step: "Setup - create academic term"
+      - step: "Setup - create academic term 1 (enrollment open, not last)"
         action: "create"
         model: "school_academic_term"
         save_as: "academic_term"
         values:
-          name: "Semester RRG"
-          code: "SMRRG"
+          name: "Semester 1 RRG"
+          code: "SMRRG1"
           date_start: "2024-07-01"
-          date_end: "2025-06-30"
+          date_end: "2024-12-31"
           year_id: "REC: academic_year.id"
           enrollment_state: "open"
+
+      - step: "Setup - create academic term 2 (last term, unused)"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_2"
+        values:
+          name: "Semester 2 RRG"
+          code: "SMRRG2"
+          date_start: "2025-01-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "close"
 
       - step: "Setup - create school"
         action: "create"
@@ -1781,6 +1877,14 @@ scenarios:
           state:
             type: "value"
             expected: "open"
+
+      - step: "Assert the enrollment's term is not the last term (done is allowed)"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          academic_term_id.last_term:
+            type: "value"
+            expected: false
 
       - step: "Finish the enrollment without ever invoicing the term"
         action: "call"
@@ -1898,17 +2002,29 @@ scenarios:
           date_start: "2024-07-01"
           date_end: "2025-06-30"
 
-      - step: "Setup - create academic term"
+      - step: "Setup - create academic term 1 (enrollment open, not last)"
         action: "create"
         model: "school_academic_term"
         save_as: "academic_term"
         values:
-          name: "Semester RRH"
-          code: "SMRRH"
+          name: "Semester 1 RRH"
+          code: "SMRRH1"
           date_start: "2024-07-01"
-          date_end: "2025-06-30"
+          date_end: "2024-12-31"
           year_id: "REC: academic_year.id"
           enrollment_state: "open"
+
+      - step: "Setup - create academic term 2 (last term, unused)"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_2"
+        values:
+          name: "Semester 2 RRH"
+          code: "SMRRH2"
+          date_start: "2025-01-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "close"
 
       - step: "Setup - create school"
         action: "create"
@@ -2060,6 +2176,14 @@ scenarios:
           state:
             type: "value"
             expected: "open"
+
+      - step: "Assert the enrollment's term is not the last term (done is allowed)"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          academic_term_id.last_term:
+            type: "value"
+            expected: false
 
       - step: "Finish the enrollment"
         action: "call"
@@ -2418,17 +2542,29 @@ scenarios:
           date_start: "2024-07-01"
           date_end: "2025-06-30"
 
-      - step: "Setup - create academic term"
+      - step: "Setup - create academic term 1 (enrollment open, not last)"
         action: "create"
         model: "school_academic_term"
         save_as: "academic_term"
         values:
-          name: "Semester RRJ"
-          code: "SMRRJ"
+          name: "Semester 1 RRJ"
+          code: "SMRRJ1"
           date_start: "2024-07-01"
-          date_end: "2025-06-30"
+          date_end: "2024-12-31"
           year_id: "REC: academic_year.id"
           enrollment_state: "open"
+
+      - step: "Setup - create academic term 2 (last term, unused)"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_2"
+        values:
+          name: "Semester 2 RRJ"
+          code: "SMRRJ2"
+          date_start: "2025-01-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "close"
 
       - step: "Setup - create school"
         action: "create"
@@ -2550,6 +2686,16 @@ scenarios:
         method: "action_create_invoice"
         as_user: "base.user_admin"
 
+      - step:
+          "Assert enrollment 1's term is not the last term (policy is not what rejects
+          it)"
+        action: "assert"
+        target: "enrollment_1"
+        asserts:
+          academic_term_id.last_term:
+            type: "value"
+            expected: false
+
       - step: "Finishing enrollment 1 with a draft invoice is rejected"
         action: "call"
         target: "enrollment_1"
@@ -2626,6 +2772,16 @@ scenarios:
           state:
             type: "value"
             expected: "open"
+
+      - step:
+          "Assert enrollment 2's term is not the last term (policy is not what rejects
+          it)"
+        action: "assert"
+        target: "enrollment_2"
+        asserts:
+          academic_term_id.last_term:
+            type: "value"
+            expected: false
 
       - step: "Finishing enrollment 2 without a Recognition Journal is rejected"
         action: "call"
@@ -2729,17 +2885,29 @@ scenarios:
           date_start: "2024-07-01"
           date_end: "2025-06-30"
 
-      - step: "Setup - create academic term"
+      - step: "Setup - create academic term 1 (enrollment open, not last)"
         action: "create"
         model: "school_academic_term"
         save_as: "academic_term"
         values:
-          name: "Semester RRK"
-          code: "SMRRK"
+          name: "Semester 1 RRK"
+          code: "SMRRK1"
           date_start: "2024-07-01"
-          date_end: "2025-06-30"
+          date_end: "2024-12-31"
           year_id: "REC: academic_year.id"
           enrollment_state: "open"
+
+      - step: "Setup - create academic term 2 (last term, unused)"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term_2"
+        values:
+          name: "Semester 2 RRK"
+          code: "SMRRK2"
+          date_start: "2025-01-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "close"
 
       - step: "Setup - create school"
         action: "create"
@@ -2891,6 +3059,14 @@ scenarios:
           state:
             type: "value"
             expected: "open"
+
+      - step: "Assert the enrollment's term is not the last term (done is allowed)"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          academic_term_id.last_term:
+            type: "value"
+            expected: false
 
       - step: "Finish the enrollment -- the invoice line gets recognized"
         action: "call"
