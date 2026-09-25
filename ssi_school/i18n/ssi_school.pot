@@ -14,6 +14,17 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: ssi_school
+#: code:addons/ssi_school/models/customer_invoice.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Cancel customer invoice\n"
+"Database ID: %s\n"
+"Problem: Line '%s' was already released by the Revenue Recognition of enrollment '%s'\n"
+"Solution: Revenue Recognition entries cannot be undone by cancelling this invoice\n"
+msgstr ""
+
+#. module: ssi_school
 #: code:addons/ssi_school/models/school_enrollment.py:0
 #, python-format
 msgid ""
@@ -209,6 +220,28 @@ msgid ""
 "Database ID: %s\n"
 "Problem: Payment term detail '%s' is locked and cannot be deleted\n"
 "Solution: Locked detail lines are permanent; create a new one via the addendum mechanism\n"
+msgstr ""
+
+#. module: ssi_school
+#: code:addons/ssi_school/models/school_enrollment.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Finish enrollment\n"
+"Database ID: %s\n"
+"Problem: Payment term '%s' has a customer invoice that is not yet Unpaid/Paid\n"
+"Solution: Confirm and open the customer invoice before finishing this enrollment\n"
+msgstr ""
+
+#. module: ssi_school
+#: code:addons/ssi_school/models/school_enrollment.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Finish enrollment\n"
+"Database ID: %s\n"
+"Problem: Revenue Recognition is enabled but no Recognition Journal is set\n"
+"Solution: Select a Recognition Journal before finishing this enrollment\n"
 msgstr ""
 
 #. module: ssi_school
@@ -591,6 +624,18 @@ msgid "Accounting"
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_revenue_recognition_line__date
+msgid "Accounting date inherited from the parent enrollment."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__recognition_date
+msgid ""
+"Accounting date of the Revenue Recognition entry, taken from the end date of"
+" the enrollment's own Academic Term."
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school__message_needaction
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__message_needaction
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__message_needaction
@@ -784,6 +829,11 @@ msgid "Allowed Usages"
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_revenue_recognition_line__amount
+msgid "Amount"
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment__amount_paid
 msgid ""
 "Amount already realized on the invoiced payment terms that are neither "
@@ -792,7 +842,13 @@ msgstr ""
 
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__analytic_account_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_revenue_recognition_line__analytic_account_id
 msgid "Analytic Account"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_revenue_recognition_line__analytic_account_id
+msgid "Analytic Account copied from the originating customer invoice line."
 msgstr ""
 
 #. module: ssi_school
@@ -1264,12 +1320,19 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__company_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_fee_analysis__company_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_revenue_recognition_line__company_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__company_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__company_id
 #: model:res.groups,name:ssi_school.school_enrollment_company_group
 #: model:res.groups,name:ssi_school.school_homeroom_company_group
 #: model:res.groups,name:ssi_school.school_student_mutation_company_group
 msgid "Company"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__company_currency_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_revenue_recognition_line__company_currency_id
+msgid "Company Currency"
 msgstr ""
 
 #. module: ssi_school
@@ -1284,6 +1347,16 @@ msgstr ""
 #: model:res.groups,name:ssi_school.school_homeroom_company_child_group
 #: model:res.groups,name:ssi_school.school_student_mutation_company_child_group
 msgid "Company and All Child Companies"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_revenue_recognition_line__company_currency_id
+msgid "Company currency inherited from the parent enrollment."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_revenue_recognition_line__company_id
+msgid "Company inherited from the parent enrollment."
 msgstr ""
 
 #. module: ssi_school
@@ -1423,6 +1496,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__create_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_wizard_duplicate__create_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_product_summary__create_uid
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_revenue_recognition_line__create_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_wizard_copy_payment_term__create_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_wizard_create_due_invoice__create_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade__create_uid
@@ -1448,6 +1522,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__create_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_wizard_duplicate__create_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_product_summary__create_date
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_revenue_recognition_line__create_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_wizard_copy_payment_term__create_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_wizard_create_due_invoice__create_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade__create_date
@@ -1461,12 +1536,23 @@ msgid "Created on"
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_revenue_recognition_line__credit_account_id
+msgid "Credit Account"
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__currency_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_fee_analysis__currency_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term__currency_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__currency_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_product_summary__currency_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_revenue_recognition_line__currency_id
 msgid "Currency"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_revenue_recognition_line__currency_id
+msgid "Currency inherited from the parent enrollment."
 msgstr ""
 
 #. module: ssi_school
@@ -1501,6 +1587,7 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model,name:ssi_school.model_customer_invoice
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_fee_analysis__customer_invoice_id
 msgid "Customer Invoice"
 msgstr ""
@@ -1525,6 +1612,7 @@ msgstr ""
 
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__date
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_revenue_recognition_line__date
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__date
 #: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__date
 msgid "Date"
@@ -1566,6 +1654,11 @@ msgid "Date the enrollment was made."
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_revenue_recognition_line__debit_account_id
+msgid "Debit Account"
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields.selection,name:ssi_school.selection__school_student__state__deceased
 msgid "Deceased"
 msgstr ""
@@ -1574,6 +1667,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__is_default
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_payment_template_view_search
 msgid "Default"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template__recognition_journal_id
+msgid ""
+"Default journal for the Revenue Recognition entry, copied into the "
+"enrollment when this template is selected."
 msgstr ""
 
 #. module: ssi_school
@@ -1651,6 +1751,7 @@ msgid "Disconnect Invoice"
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_customer_invoice__display_name
 #: model:ir.model.fields,field_description:ssi_school.field_hr_employee__display_name
 #: model:ir.model.fields,field_description:ssi_school.field_res_partner__display_name
 #: model:ir.model.fields,field_description:ssi_school.field_school__display_name
@@ -1666,6 +1767,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__display_name
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_wizard_duplicate__display_name
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_product_summary__display_name
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_revenue_recognition_line__display_name
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_wizard_copy_payment_term__display_name
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_wizard_create_due_invoice__display_name
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade__display_name
@@ -1845,6 +1947,7 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_fee_analysis__enrollment_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term__enrollment_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_revenue_recognition_line__enrollment_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__enrollment_id
 #: model:ir.ui.menu,name:ssi_school.menu_enrollment_configuration
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_academic_term_view_form
@@ -2012,6 +2115,24 @@ msgstr ""
 #. module: ssi_school
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_homeroom_view_form
 msgid "Fill Random"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template_term_detail__final_account_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__final_account_id
+msgid "Final Account"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_revenue_recognition_line__credit_account_id
+msgid ""
+"Final Account of the originating detail, credited by this Recognition Line."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template_term_detail__final_usage_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__final_usage_id
+msgid "Final Usage"
 msgstr ""
 
 #. module: ssi_school
@@ -2271,6 +2392,7 @@ msgid "I-B (demo)"
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_customer_invoice__id
 #: model:ir.model.fields,field_description:ssi_school.field_hr_employee__id
 #: model:ir.model.fields,field_description:ssi_school.field_res_partner__id
 #: model:ir.model.fields,field_description:ssi_school.field_school__id
@@ -2286,6 +2408,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__id
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_wizard_duplicate__id
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_product_summary__id
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_revenue_recognition_line__id
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_wizard_copy_payment_term__id
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_wizard_create_due_invoice__id
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade__id
@@ -2430,6 +2553,14 @@ msgid "If checked, some messages have a delivery error."
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template__revenue_recognition
+msgid ""
+"If enabled, enrollments using this template post one journal entry when they"
+" reach Done, moving the amount of every invoiced payment term detail that "
+"carries a Final Account from its temporary account to that Final Account."
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template__auto_confirm_customer_invoice
 msgid ""
 "If enabled, the customer invoice created from a payment term is immediately "
@@ -2448,6 +2579,14 @@ msgstr ""
 msgid ""
 "If enabled, this billing term is managed manually and does not require a "
 "customer invoice."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__revenue_recognition
+msgid ""
+"If enabled, this enrollment posts one journal entry when it reaches Done, "
+"moving the amount of every invoiced payment term detail that carries a Final"
+" Account from its temporary account to that Final Account."
 msgstr ""
 
 #. module: ssi_school
@@ -2538,6 +2677,34 @@ msgid "Joko Wahyudi (demo)"
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_revenue_recognition_line__move_id
+msgid "Journal entry of the parent enrollment's Revenue Recognition."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__recognition_move_id
+msgid ""
+"Journal entry that moved the recognized amounts to their Final Accounts, "
+"created when this enrollment reaches Done with Revenue Recognition enabled."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_revenue_recognition_line__name
+msgid "Journal item label, copied from the originating detail line."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__recognition_journal_id
+msgid "Journal used to post the Revenue Recognition entry."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_revenue_recognition_line__name
+msgid "Label"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_customer_invoice____last_update
 #: model:ir.model.fields,field_description:ssi_school.field_hr_employee____last_update
 #: model:ir.model.fields,field_description:ssi_school.field_res_partner____last_update
 #: model:ir.model.fields,field_description:ssi_school.field_school____last_update
@@ -2553,6 +2720,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail____last_update
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_wizard_duplicate____last_update
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_product_summary____last_update
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_revenue_recognition_line____last_update
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_wizard_copy_payment_term____last_update
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_wizard_create_due_invoice____last_update
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade____last_update
@@ -2590,6 +2758,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__write_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_wizard_duplicate__write_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_product_summary__write_uid
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_revenue_recognition_line__write_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_wizard_copy_payment_term__write_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_wizard_create_due_invoice__write_uid
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade__write_uid
@@ -2615,6 +2784,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__write_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_wizard_duplicate__write_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_product_summary__write_date
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_revenue_recognition_line__write_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_wizard_copy_payment_term__write_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_wizard_create_due_invoice__write_date
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade__write_date
@@ -2860,6 +3030,11 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_student__mother_id
 msgid "Mother"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_revenue_recognition_line__move_id
+msgid "Move"
 msgstr ""
 
 #. module: ssi_school
@@ -3186,6 +3361,13 @@ msgid "On progress"
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__recognition_line_ids
+msgid ""
+"One debit/credit pair per invoiced payment term detail released by the "
+"Revenue Recognition entry."
+msgstr ""
+
+#. module: ssi_school
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_academic_term_view_form
 msgid "Open Enrollment"
 msgstr ""
@@ -3264,7 +3446,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__partner_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_fee_analysis__partner_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term__partner_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_revenue_recognition_line__partner_id
 msgid "Partner"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_revenue_recognition_line__partner_id
+msgid "Partner copied from the originating customer invoice line."
 msgstr ""
 
 #. module: ssi_school
@@ -3305,6 +3493,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_fee_analysis__term_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__term_id
 msgid "Payment Term"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_revenue_recognition_line__payment_term_detail_id
+msgid "Payment Term Detail"
 msgstr ""
 
 #. module: ssi_school
@@ -3582,6 +3775,27 @@ msgid "Receivable Journal"
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__recognition_date
+msgid "Recognition Date"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__recognition_journal_id
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__recognition_journal_id
+msgid "Recognition Journal"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__recognition_line_ids
+msgid "Recognition Lines"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__recognition_move_id
+msgid "Recognition Move"
+msgstr ""
+
+#. module: ssi_school
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_student_view_search
 msgid "Registered"
 msgstr ""
@@ -3710,6 +3924,30 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__revenue_recognition
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__revenue_recognition
+msgid "Revenue Recognition"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template_term_detail__final_account_id
+msgid ""
+"Revenue account this fee line is recognized to once the enrollment finishes "
+"and Revenue Recognition posts, auto-filled from the product's account "
+"configuration for Final Usage. Left empty, the resulting detail line is "
+"never recognized -- e.g. a deposit/holding fee."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_term_detail__final_account_id
+msgid ""
+"Revenue account this line is recognized to once the enrollment finishes and "
+"Revenue Recognition posts, auto-filled from the product's account "
+"configuration for Final Usage. Left empty, this line is never recognized -- "
+"e.g. a deposit/holding fee."
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__reviewer_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__reviewer_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_student_mutation__reviewer_id
@@ -3830,6 +4068,11 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model,name:ssi_school.model_school_enrollment_payment_term_detail
 msgid "School Enrollment Payment Term Detail"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model,name:ssi_school.model_school_enrollment_revenue_recognition_line
+msgid "School Enrollment Revenue Recognition - Line"
 msgstr ""
 
 #. module: ssi_school
@@ -3971,6 +4214,13 @@ msgid ""
 " This is not a way to reduce the billed amount -- price_unit keeps its "
 "original value. Can only be set through the ORM; this module provides no "
 "button/action that enables it."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_revenue_recognition_line__amount
+msgid ""
+"Signed amount moved from the temporary account to the Final Account, copied "
+"from the originating customer invoice line's own subtotal."
 msgstr ""
 
 #. module: ssi_school
@@ -4317,6 +4567,13 @@ msgid "Template"
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_revenue_recognition_line__debit_account_id
+msgid ""
+"Temporary account already used on the originating customer invoice line, "
+"debited by this Recognition Line."
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_fee_analysis__term_name
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template_term_detail__term_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term__name
@@ -4577,6 +4834,11 @@ msgid "The enrollment that owns this product summary line."
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_revenue_recognition_line__enrollment_id
+msgid "The enrollment this Recognition Line belongs to."
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment_wizard_copy_payment_term__source_enrollment_id
 msgid "The enrollment whose payment terms (and detail lines) will be copied."
 msgstr ""
@@ -4634,6 +4896,11 @@ msgstr ""
 msgid ""
 "The initial grade type from the school, automatically populated from school "
 "data."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_revenue_recognition_line__payment_term_detail_id
+msgid "The invoiced payment term detail this Recognition Line releases."
 msgstr ""
 
 #. module: ssi_school
@@ -5124,6 +5391,21 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__usage_id
 msgid "Usage"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_term_detail__final_usage_id
+msgid ""
+"Usage used to auto-fill Final Account from the product's account "
+"configuration."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template_term_detail__final_usage_id
+msgid ""
+"Usage used to auto-fill Final Account from the product's account "
+"configuration. Copied into the actual payment term detail when the "
+"enrollment's payment is computed from this template."
 msgstr ""
 
 #. module: ssi_school
