@@ -19,6 +19,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_academic_year__display_name
 #: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_enrollment__display_name
 #: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_enrollment_payment_term__display_name
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_enrollment_revenue_recognition_line__display_name
 #: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_grade__display_name
 #: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_grade_class__display_name
 #: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_grade_type__display_name
@@ -35,6 +36,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_academic_year__id
 #: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_enrollment__id
 #: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_enrollment_payment_term__id
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_enrollment_revenue_recognition_line__id
 #: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_grade__id
 #: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_grade_class__id
 #: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_grade_type__id
@@ -51,6 +53,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_academic_year____last_update
 #: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_enrollment____last_update
 #: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_enrollment_payment_term____last_update
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_enrollment_revenue_recognition_line____last_update
 #: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_grade____last_update
 #: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_grade_class____last_update
 #: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_grade_type____last_update
@@ -105,6 +108,11 @@ msgstr ""
 #. module: ssi_school_operating_unit
 #: model:ir.model,name:ssi_school_operating_unit.model_school_enrollment_payment_term
 msgid "School Enrollment Payment Term"
+msgstr ""
+
+#. module: ssi_school_operating_unit
+#: model:ir.model,name:ssi_school_operating_unit.model_school_enrollment_revenue_recognition_line
+msgid "School Enrollment Revenue Recognition - Line"
 msgstr ""
 
 #. module: ssi_school_operating_unit
