@@ -104,6 +104,25 @@ class SchoolEnrollmentPaymentTemplate(
             "draft."
         ),
     )
+    revenue_recognition = fields.Boolean(
+        string="Revenue Recognition",
+        default=False,
+        help=(
+            "If enabled, enrollments using this template post one "
+            "journal entry when they reach Done, moving the amount of "
+            "every invoiced payment term detail that carries a Final "
+            "Account from its temporary account to that Final Account."
+        ),
+    )
+    recognition_journal_id = fields.Many2one(
+        string="Recognition Journal",
+        comodel_name="account.journal",
+        required=False,
+        help=(
+            "Default journal for the Revenue Recognition entry, copied "
+            "into the enrollment when this template is selected."
+        ),
+    )
     term_ids = fields.One2many(
         string="Payment Terms",
         comodel_name="school_enrollment_payment_template.term",

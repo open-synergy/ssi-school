@@ -29,3 +29,8 @@
 - **Academic Year Result** is set to **Failed**. **Promote To Grade** is left empty.
 - The student's status returns to **Waiting for Enrollment**, so a new enrollment can be
   created for the same grade (repeating the year).
+- If **Revenue Recognition** is enabled, one Revenue Recognition journal entry is posted
+  (see **Recognition Move** on the Accounting page), moving the amount of every invoiced
+  payment term detail that carries a **Final Account** from its own account to that
+  Final Account. Terms not yet invoiced, and details without a Final Account, are
+  skipped.

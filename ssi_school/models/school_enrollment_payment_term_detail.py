@@ -5,7 +5,18 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
-ADDENDUM_LOCK_ALLOWED_FIELDS = {"customer_invoice_line_id", "locked", "sequence"}
+ADDENDUM_LOCK_ALLOWED_FIELDS = {
+    "customer_invoice_line_id",
+    "locked",
+    "sequence",
+    "final_usage_id",
+    "final_account_id",
+}
+# Writable on a locked detail only while it is not yet invoiced -- see
+# ``_check_addendum_lock``. Once ``customer_invoice_line_id`` is set the
+# amount is already billed on that account, so classification can no
+# longer change without desynchronizing the customer invoice line.
+CONDITIONAL_LOCK_ALLOWED_FIELDS = {"usage_id", "account_id"}
 
 
 class SchoolEnrollmentPaymentTermDetail(
@@ -62,6 +73,27 @@ class SchoolEnrollmentPaymentTermDetail(
             "automatically populated when the customer invoice is generated."
         ),
     )
+    final_usage_id = fields.Many2one(
+        string="Final Usage",
+        comodel_name="product.usage_type",
+        ondelete="restrict",
+        help=(
+            "Usage used to auto-fill Final Account from the product's "
+            "account configuration."
+        ),
+    )
+    final_account_id = fields.Many2one(
+        string="Final Account",
+        comodel_name="account.account",
+        ondelete="restrict",
+        help=(
+            "Revenue account this line is recognized to once the "
+            "enrollment finishes and Revenue Recognition posts, "
+            "auto-filled from the product's account configuration for "
+            "Final Usage. Left empty, this line is never recognized -- "
+            "e.g. a deposit/holding fee."
+        ),
+    )
     allowed_product_ids = fields.Many2many(
         comodel_name="product.product",
         string="Allowed Products",
@@ -114,23 +146,34 @@ class SchoolEnrollmentPaymentTermDetail(
         Guard called from ``write``. The write passes when the context
         carries ``bypass_addendum_lock``, or when every key of ``vals``
         belongs to ``ADDENDUM_LOCK_ALLOWED_FIELDS``
-        (``customer_invoice_line_id``, ``locked``, ``sequence``) -- the
-        bookkeeping fields that stay writable even after locking.
-        Otherwise a locked detail line may not be changed and a new
-        line has to be added through the addendum mechanism.
+        (``customer_invoice_line_id``, ``locked``, ``sequence``,
+        ``final_usage_id``, ``final_account_id``) -- the bookkeeping and
+        revenue-classification fields that stay writable even after
+        locking. ``CONDITIONAL_LOCK_ALLOWED_FIELDS`` (``usage_id``,
+        ``account_id``) is a second, narrower exception: writable on a
+        locked record only while its own ``customer_invoice_line_id``
+        is still empty, rejected once that record is invoiced. Every
+        other field stays permanently locked, and a new line has to be
+        added through the addendum mechanism instead.
 
         :param vals: write values whose keys are checked against the
-            allowed field set
+            allowed field sets
         :raises UserError: when a locked detail line is written with a
-            field outside the allowed set
+            field outside the allowed sets, or with a conditional
+            field while already invoiced
         :return: None
         """
         if self.env.context.get("bypass_addendum_lock"):
             return
-        if set(vals.keys()) <= ADDENDUM_LOCK_ALLOWED_FIELDS:
+        extra_keys = set(vals.keys()) - ADDENDUM_LOCK_ALLOWED_FIELDS
+        if not extra_keys:
             return
+        blocking_keys = extra_keys - CONDITIONAL_LOCK_ALLOWED_FIELDS
+        conditional_keys = extra_keys & CONDITIONAL_LOCK_ALLOWED_FIELDS
         for record in self:
-            if record.locked:
+            if not record.locked:
+                continue
+            if blocking_keys or (conditional_keys and record.customer_invoice_line_id):
                 error_message = (
                     _(
                         """
@@ -199,6 +242,24 @@ Solution: Locked detail lines are permanent; create a new one via the addendum m
                 )
             record.allowed_product_ids = result
 
+    @api.onchange("product_id", "final_usage_id")
+    def onchange_final_account_id(self):
+        """Auto-fill ``final_account_id`` from the product's usage account.
+
+        Resolves ``product_id._get_product_account`` for
+        ``final_usage_id.code``; a product/usage combination without a
+        matching account configuration leaves ``final_account_id``
+        empty rather than raising, so the line stays valid and simply
+        never gets recognized.
+
+        :return: None
+        """
+        self.final_account_id = False
+        if self.product_id and self.final_usage_id:
+            self.final_account_id = self.product_id._get_product_account(
+                usage_code=self.final_usage_id.code
+            )
+
     def _prepare_invoice_line(self):
         """Build the ``customer_invoice.line`` values for this fee line.
 
@@ -206,7 +267,12 @@ Solution: Locked detail lines are permanent; create a new one via the addendum m
         values. The link to the parent document
         (``customer_invoice_id``) is intentionally left out -- it is
         added by ``school_enrollment_payment_term._create_invoice``,
-        which owns the newly created header.
+        which owns the newly created header. When the owning
+        enrollment already finished (``done``) with Revenue
+        Recognition enabled and this line carries a Final Account, a
+        due invoice created after the fact bills straight to that
+        Final Account instead of the line's own temporary account --
+        there is no later Revenue Recognition move to reclass it.
 
         :return: dict of ``customer_invoice.line`` values
         """
@@ -214,10 +280,18 @@ Solution: Locked detail lines are permanent; create a new one via the addendum m
         aa = (  # pylint: disable=invalid-name,consider-using-ternary
             self.analytic_account_id and self.analytic_account_id.id or False
         )
+        enrollment = self.term_id.enrollment_id
+        account = self.account_id
+        if (
+            enrollment.state == "done"
+            and enrollment.revenue_recognition
+            and self.final_account_id
+        ):
+            account = self.final_account_id
         return {
             "product_id": self.product_id.id,
             "name": self.name,
-            "account_id": self.account_id.id,
+            "account_id": account.id,
             "uom_id": self.uom_id.id,
             "uom_quantity": self.uom_quantity,
             "price_unit": self.price_unit,

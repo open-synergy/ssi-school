@@ -30,8 +30,16 @@ class SchoolEnrollment(models.Model):
         "mixin.transaction_done",
         "mixin.transaction_open",
         "mixin.transaction_confirm",
+        "mixin.company_currency",
+        "mixin.account_move",
     ]
     _description = "School Enrollment"
+
+    # Accounting Entry Header Mixin (``mixin.account_move``) -- Revenue
+    # Recognition move posted on Done, see ``_90_create_revenue_recognition``
+    _journal_id_field_name = "recognition_journal_id"
+    _move_id_field_name = "recognition_move_id"
+    _accounting_date_field_name = "recognition_date"
 
     # Multiple Approval Attribute
     _approval_from_state = "draft"
@@ -363,6 +371,64 @@ class SchoolEnrollment(models.Model):
             "of being left in draft."
         ),
     )
+    revenue_recognition = fields.Boolean(
+        string="Revenue Recognition",
+        readonly=True,
+        states={
+            "draft": [("readonly", False)],
+            "confirm": [("readonly", False)],
+            "open": [("readonly", False)],
+        },
+        help=(
+            "If enabled, this enrollment posts one journal entry when "
+            "it reaches Done, moving the amount of every invoiced "
+            "payment term detail that carries a Final Account from its "
+            "temporary account to that Final Account."
+        ),
+    )
+    recognition_journal_id = fields.Many2one(
+        string="Recognition Journal",
+        comodel_name="account.journal",
+        readonly=True,
+        states={
+            "draft": [("readonly", False)],
+            "confirm": [("readonly", False)],
+            "open": [("readonly", False)],
+        },
+        help="Journal used to post the Revenue Recognition entry.",
+    )
+    recognition_date = fields.Date(
+        string="Recognition Date",
+        compute="_compute_recognition_date",
+        store=True,
+        compute_sudo=True,
+        readonly=True,
+        help=(
+            "Accounting date of the Revenue Recognition entry, taken "
+            "from the end date of the enrollment's own Academic Term."
+        ),
+    )
+    recognition_move_id = fields.Many2one(
+        string="Recognition Move",
+        comodel_name="account.move",
+        readonly=True,
+        copy=False,
+        help=(
+            "Journal entry that moved the recognized amounts to their "
+            "Final Accounts, created when this enrollment reaches Done "
+            "with Revenue Recognition enabled."
+        ),
+    )
+    recognition_line_ids = fields.One2many(
+        string="Recognition Lines",
+        comodel_name="school_enrollment_revenue_recognition_line",
+        inverse_name="enrollment_id",
+        readonly=True,
+        help=(
+            "One debit/credit pair per invoiced payment term detail "
+            "released by the Revenue Recognition entry."
+        ),
+    )
     pass_ok = fields.Boolean(
         string="Pass",
         compute="_compute_policy",
@@ -533,6 +599,20 @@ class SchoolEnrollment(models.Model):
         """
         _super = super()
         _super._compute_policy()  # pylint: disable=protected-access
+
+    @api.depends("academic_term_id.date_end")
+    def _compute_recognition_date(self):
+        """Derive the Revenue Recognition accounting date.
+
+        Copies ``academic_term_id.date_end`` verbatim -- the
+        recognition entry always books on the last day of the
+        enrollment's own academic term, regardless of the actual date
+        the Done action is triggered.
+
+        :return: None
+        """
+        for record in self:
+            record.recognition_date = record.academic_term_id.date_end
 
     @api.depends(
         "payment_term_ids",
@@ -728,6 +808,24 @@ class SchoolEnrollment(models.Model):
         if self.payment_template_id:
             self.auto_confirm_customer_invoice = (
                 self.payment_template_id.auto_confirm_customer_invoice
+            )
+
+    @api.onchange(
+        "payment_template_id",
+    )
+    def onchange_revenue_recognition(self):
+        self.revenue_recognition = False
+        if self.payment_template_id:
+            self.revenue_recognition = self.payment_template_id.revenue_recognition
+
+    @api.onchange(
+        "payment_template_id",
+    )
+    def onchange_recognition_journal_id(self):
+        self.recognition_journal_id = False
+        if self.payment_template_id:
+            self.recognition_journal_id = (
+                self.payment_template_id.recognition_journal_id
             )
 
     @api.constrains("academic_term_id", "academic_year_id")
@@ -984,17 +1082,34 @@ Solution: Choose a different Grade Class or increase its capacity
             )
             for tdetail in tterm.detail_ids.sorted("sequence"):
                 Detail.create(
-                    {
-                        "term_id": term.id,
-                        "product_id": tdetail.product_id.id,
-                        "name": tdetail.name,
-                        "account_id": tdetail.account_id.id,
-                        "uom_quantity": tdetail.uom_quantity,
-                        "uom_id": tdetail.uom_id.id if tdetail.uom_id else False,
-                        "price_unit": tdetail.price_unit,
-                        "tax_ids": [(6, 0, tdetail.tax_ids.ids)],
-                    }
+                    self._prepare_payment_term_detail_from_template(term, tdetail)
                 )
+
+    def _prepare_payment_term_detail_from_template(self, term, tdetail):
+        """Build one detail's create values from its template detail.
+
+        Extension point: override to add extra detail values without
+        touching ``_compute_payment_from_template``.
+
+        :param term: the just-created ``school_enrollment_payment_term``
+            this detail belongs to
+        :param tdetail: the ``school_enrollment_payment_template.term.detail``
+            copied from
+        :return: dict of ``school_enrollment_payment_term_detail`` values
+        """
+        self.ensure_one()
+        return {
+            "term_id": term.id,
+            "product_id": tdetail.product_id.id,
+            "name": tdetail.name,
+            "account_id": tdetail.account_id.id,
+            "uom_quantity": tdetail.uom_quantity,
+            "uom_id": tdetail.uom_id.id if tdetail.uom_id else False,
+            "price_unit": tdetail.price_unit,
+            "tax_ids": [(6, 0, tdetail.tax_ids.ids)],
+            "final_usage_id": tdetail.final_usage_id.id,
+            "final_account_id": tdetail.final_account_id.id,
+        }
 
     def action_set_result_to_failed(self):
         """Close the enrollment with a Failed academic year result.
@@ -1157,6 +1272,163 @@ Solution: Choose a different Grade Class or increase its capacity
         """
         self.ensure_one()
         self.student_id.action_set_to_draft()  # pylint: disable=no-member
+
+    @ssi_decorator.pre_done_check()
+    def _20_check_revenue_recognition_readiness(self):
+        """Reject finishing an enrollment not ready for Revenue Recognition.
+
+        Pre-done hook: runs before the enrollment leaves its current
+        state for ``done``. A no-op while ``revenue_recognition`` is
+        disabled; otherwise delegates to
+        ``_check_revenue_recognition_readiness``.
+
+        :raises UserError: when the enrollment is not ready, per
+            ``_check_revenue_recognition_readiness``
+        :return: None
+        """
+        self.ensure_one()
+        if not self.revenue_recognition:
+            return
+        self._check_revenue_recognition_readiness()
+
+    def _check_revenue_recognition_readiness(self):
+        """Validate this enrollment is ready to post Revenue Recognition.
+
+        Extension point: override to add extra readiness conditions.
+        Rejects an empty ``recognition_journal_id``, and rejects any
+        ``payment_term_ids`` still carrying a customer invoice in
+        ``draft``/``confirm`` -- an invoice that never reaches ``open``
+        never credits a temporary account, so it would have nothing
+        for the recognition move to reclass. Terms without an invoice
+        (``uninvoiced``/``manual``/``voided``) are skipped: they simply
+        contribute no Recognition Line.
+
+        :raises UserError: when the journal is empty, or when a
+            payment term's own customer invoice is still
+            draft/waiting for approval
+        :return: None
+        """
+        self.ensure_one()
+        if not self.recognition_journal_id:
+            error_message = (
+                _(
+                    """
+Context: Finish enrollment
+Database ID: %s
+Problem: Revenue Recognition is enabled but no Recognition Journal is set
+Solution: Select a Recognition Journal before finishing this enrollment
+"""
+                )
+                % (self.id,)
+            )
+            raise UserError(error_message)
+        draft_terms = self.payment_term_ids.filtered(
+            lambda term: term.customer_invoice_id
+            and term.customer_invoice_id.state in ("draft", "confirm")
+        )
+        if draft_terms:
+            error_message = (
+                _(
+                    """
+Context: Finish enrollment
+Database ID: %s
+Problem: Payment term '%s' has a customer invoice that is not yet Unpaid/Paid
+Solution: Confirm and open the customer invoice before finishing this enrollment
+"""
+                )
+                % (self.id, draft_terms[0].name)
+            )
+            raise UserError(error_message)
+
+    @ssi_decorator.post_done_action()
+    def _90_create_revenue_recognition(self):
+        """Post the Revenue Recognition entry once the enrollment is done.
+
+        Post-done hook: a no-op while ``revenue_recognition`` is
+        disabled, or while ``_prepare_revenue_recognition_line_data``
+        returns nothing (e.g. no line carries a Final Account
+        different from its own invoiced account) -- no move is
+        created either way. Otherwise creates the header move, one
+        ``school_enrollment_revenue_recognition_line`` per prepared
+        value, then posts the move.
+
+        :return: None
+        """
+        self.ensure_one()
+        if not self.revenue_recognition:
+            return
+        line_data = self._prepare_revenue_recognition_line_data()
+        if not line_data:
+            return
+        Line = self.env[  # pylint: disable=invalid-name
+            "school_enrollment_revenue_recognition_line"
+        ]
+        self._create_standard_move()  # Mixin
+        for vals in line_data:
+            Line.create(vals)
+        for recognition_line in self.recognition_line_ids:
+            recognition_line._create_standard_ml()  # pylint: disable=protected-access
+        self._post_standard_move()  # Mixin
+
+    def _prepare_revenue_recognition_line_data(self):
+        """Build the create values of every Revenue Recognition Line.
+
+        Extension point: override in a glue module (Operating Unit,
+        extracurricular, scholarship/fee waiver deduction, ...) to add
+        this enrollment's own share of Recognition Lines, by extending
+        the returned list -- one dict per line, matching
+        ``school_enrollment_revenue_recognition_line``'s own create
+        values. This base implementation covers ``ssi_school`` itself:
+        one line per ``payment_term_ids.detail_ids`` that is invoiced
+        (``customer_invoice_line_id`` set) on a customer invoice that
+        is ``open``/``done``, carries a Final Account, and that Final
+        Account differs from the account already used on the invoice
+        line -- a detail whose Final Account equals its own invoiced
+        account has nothing left to move.
+
+        :return: list of dict of
+            ``school_enrollment_revenue_recognition_line`` values
+        """
+        self.ensure_one()
+        result = []
+        details = self.payment_term_ids.mapped("detail_ids").filtered(
+            lambda detail: detail.customer_invoice_line_id
+            and detail.customer_invoice_line_id.customer_invoice_id.state
+            in ("open", "done")
+            and detail.final_account_id
+            and detail.final_account_id != detail.customer_invoice_line_id.account_id
+        )
+        for detail in details:
+            line = detail.customer_invoice_line_id
+            result.append(
+                {
+                    "enrollment_id": self.id,
+                    "name": detail.name,
+                    "payment_term_detail_id": detail.id,
+                    "debit_account_id": line.account_id.id,
+                    "credit_account_id": detail.final_account_id.id,
+                    "analytic_account_id": line.analytic_account_id.id,
+                    "partner_id": line.partner_id.id,
+                    "amount": line.price_subtotal,
+                }
+            )
+        return result
+
+    @ssi_decorator.post_cancel_action()
+    def _90_delete_revenue_recognition(self):
+        """Delete this enrollment's own Revenue Recognition entry.
+
+        Post-cancel hook: ``_delete_standard_move`` (Mixin) is a no-op
+        when ``recognition_move_id`` is already empty, so this runs
+        unconditionally. Regenerated from scratch by
+        ``_90_create_revenue_recognition`` the next time this
+        enrollment reaches Done.
+
+        :return: None
+        """
+        self.ensure_one()
+        self._delete_standard_move()  # Mixin
+        self.recognition_line_ids.unlink()
 
     def action_close_addendum(self):
         """Close the addendum and lock the payment terms again.

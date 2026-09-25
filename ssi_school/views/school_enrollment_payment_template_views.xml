@@ -119,6 +119,8 @@
                                                     />
                                                 <field name="name" />
                                                 <field name="account_id" />
+                                                <field name="final_usage_id" />
+                                                <field name="final_account_id" />
                                                 <field
                                                         name="uom_quantity"
                                                         string="Quantity"
@@ -154,6 +156,12 @@
                                                                 />
                                                             <field name="name" />
                                                             <field name="account_id" />
+                                                            <field
+                                                                    name="final_usage_id"
+                                                                />
+                                                            <field
+                                                                    name="final_account_id"
+                                                                />
                                                         </group>
                                                         <group
                                                                 name="detail_right"
@@ -217,6 +225,11 @@
                         <field name="receivable_account_id" />
                         <field name="customer_invoice_type_id" />
                         <field name="auto_confirm_customer_invoice" />
+                        <field name="revenue_recognition" />
+                        <field
+                                name="recognition_journal_id"
+                                attrs="{'invisible': [('revenue_recognition','=',False)]}"
+                            />
                     </group>
                 </page>
             </xpath>
