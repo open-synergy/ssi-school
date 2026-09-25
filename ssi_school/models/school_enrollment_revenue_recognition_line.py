@@ -30,6 +30,7 @@ class SchoolEnrollmentRevenueRecognitionLine(models.Model):
 
     # Accounting Move Double Line Mixin (``mixin.account_move_double_line``)
     _move_id_field_name = "move_id"
+    _currency_id_field_name = "currency_id"
     _debit_account_id_field_name = "debit_account_id"
     _credit_account_id_field_name = "credit_account_id"
     _debit_partner_id_field_name = "partner_id"
