@@ -94,6 +94,11 @@ Admission
 * `Reload Template Policy - Admission <docs/school_admission/19-reload-template-policy.html>`_
 * `Copy Payment Terms - Admission <docs/school_admission/21-copy-payment-term.html>`_
 
+Admission Fee Analysis
+------------------------
+
+* `Analyze Admission Fee <docs/school_admission_fee_analysis/01-analyze-admission-fee.html>`_
+
 Installation
 ============
 

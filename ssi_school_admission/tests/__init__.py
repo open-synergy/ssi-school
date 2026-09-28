@@ -12,6 +12,7 @@ from . import (  # noqa: F401
     test_school_admission_payment_term_paid,
     test_school_admission_payment_term_locked_recompute,
     test_school_admission_payment_term_voided,
+    test_school_admission_fee_analysis,
     test_school_admission_addendum,
     test_school_admission_restart_unlock,
     test_school_admission_payment_term_duplicate,
@@ -29,4 +30,5 @@ from . import (  # noqa: F401
     test_ui_school_admission_form,
     test_ui_school_admission_test,
     test_ui_school_admission,
+    test_ui_school_admission_fee_analysis,
 )

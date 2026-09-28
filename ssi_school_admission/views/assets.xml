@@ -33,6 +33,10 @@
                 type="text/javascript"
                 src="/ssi_school_admission/static/tests/tours/school_admission_tour.js"
             />
+        <script
+                type="text/javascript"
+                src="/ssi_school_admission/static/tests/tours/school_admission_fee_analysis_tour.js"
+            />
     </xpath>
 </template>
 </odoo>
