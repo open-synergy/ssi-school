@@ -17,4 +17,5 @@ from . import (  # noqa: F401
     school_admission,
     school_admission_payment_term,
     school_admission_payment_term_detail,
+    school_admission_fee_analysis,
 )
