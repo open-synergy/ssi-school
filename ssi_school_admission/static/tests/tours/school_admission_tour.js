@@ -811,7 +811,7 @@ odoo.define("ssi_school_admission.school_admission_tour", function (require) {
                 {
                     content: "The button is gone once the profile exists",
                     trigger:
-                        ".o_form_view:not(:has(button[name='action_create_school_student']))",
+                        ".o_statusbar_buttons:not(:has(button[name='action_create_school_student']:visible))",
                     run: function () {
                         // Assertion only.
                     },
