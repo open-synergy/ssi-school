@@ -113,6 +113,12 @@
                         attrs="{'invisible':[('create_invoice_ok','=',False)]}"
                     />
                 <button
+                        name="action_create_school_student"
+                        type="object"
+                        string="Create Student Profile"
+                        attrs="{'invisible':['|',('create_student_ok','=',False),('school_student_id','!=',False)]}"
+                    />
+                <button
                         name="action_create_enrollment"
                         type="object"
                         string="Create Enrollment"
@@ -320,6 +326,7 @@
                 <field name="addendum_ok" />
                 <field name="create_invoice_ok" />
                 <field name="create_enrollment_ok" />
+                <field name="create_student_ok" />
             </xpath>
         </data>
     </field>

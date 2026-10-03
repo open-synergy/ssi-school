@@ -26,8 +26,9 @@
 
 - If all approval levels are fulfilled, status changes automatically to **On Progress**
   (there is no separate Start step — see note below). A `school_student` record is
-  created for the applicant (shown in the **Result** tab), and all currently unlocked
-  **Payment Terms**/details are locked.
+  created for the applicant if one does not exist yet (shown in the **Result** tab) — a
+  profile already created earlier through `22-create-student-profile` is reused — and
+  all currently unlocked **Payment Terms**/details are locked.
 - If there are still pending approval levels, status remains **Waiting for Approval**
   and the next level becomes pending.
 
