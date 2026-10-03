@@ -118,6 +118,17 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_admission
+#: code:addons/ssi_school_admission/models/school_admission.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Create student profile\n"
+"Database ID: %s\n"
+"Problem: Admission '%s' already has a student profile\n"
+"Solution: Open the student profile from the Result tab instead of creating a new one\n"
+msgstr ""
+
+#. module: ssi_school_admission
 #: code:addons/ssi_school_admission/models/school_admission_payment_term.py:0
 #, python-format
 msgid ""
@@ -692,6 +703,11 @@ msgid "Can Create School Admission"
 msgstr ""
 
 #. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__create_student_ok
+msgid "Can Create Student Profile"
+msgstr ""
+
+#. module: ssi_school_admission
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__done_ok
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__done_ok
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_test__done_ok
@@ -920,6 +936,11 @@ msgstr ""
 #. module: ssi_school_admission
 #: model:ir.model,name:ssi_school_admission.model_school_admission_wizard_create_enrollment
 msgid "Create School Enrollment from School Admission"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_view_form
+msgid "Create Student Profile"
 msgstr ""
 
 #. module: ssi_school_admission
@@ -2050,6 +2071,14 @@ msgstr ""
 msgid ""
 "Policy that determines whether the Create Enrollment button is visible, "
 "allowing a school_enrollment to be generated from this admission."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__create_student_ok
+msgid ""
+"Policy that determines whether the Create Student Profile button is visible,"
+" allowing the school_student profile of the applicant to be created before "
+"the admission is opened."
 msgstr ""
 
 #. module: ssi_school_admission
