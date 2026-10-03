@@ -48,6 +48,7 @@ class SchoolAdmission(models.Model):
         "restart_ok",
         "manual_number_ok",
         "create_enrollment_ok",
+        "create_student_ok",
     ]
     _header_button_order = [
         "action_confirm",
@@ -327,6 +328,17 @@ class SchoolAdmission(models.Model):
             "Policy that determines whether the Create Enrollment button "
             "is visible, allowing a school_enrollment to be generated "
             "from this admission."
+        ),
+    )
+    create_student_ok = fields.Boolean(
+        string="Can Create Student Profile",
+        compute="_compute_policy",
+        store=False,
+        compute_sudo=True,
+        help=(
+            "Policy that determines whether the Create Student Profile "
+            "button is visible, allowing the school_student profile of "
+            "the applicant to be created before the admission is opened."
         ),
     )
     amount_total = fields.Monetary(
@@ -896,15 +908,49 @@ Solution: Delete or disconnect the invoice on the payment term before cancelling
         """Create the student profile when the admission is opened.
 
         ``ssi_decorator`` hook executed after the transition to the
-        ``open`` state. Creates one ``school_student`` from the admitted
-        contact and stores it in ``school_student_id``. Does nothing
-        when the profile already exists.
+        ``open`` state. Fallback of :meth:`action_create_school_student`:
+        creates the profile only when ``school_student_id`` is still
+        empty, so a profile created earlier is reused, never duplicated.
 
         :return: ``None``
         """
         self.ensure_one()
         if self.school_student_id:
             return
+        self._create_school_student()
+
+    def action_create_school_student(self):
+        """Create the student profile of this admission on demand.
+
+        Button action available while the admission is still in
+        ``draft`` or ``confirm`` (see ``create_student_ok``).
+
+        :return: ``None``
+        :raises UserError: when a student profile is already linked
+        """
+        for record in self.sudo():
+            record._create_school_student()
+
+    def _create_school_student(self):
+        """Create the ``school_student`` and link it to this admission.
+
+        :return: ``None``
+        :raises UserError: when ``school_student_id`` is already set
+        """
+        self.ensure_one()
+        if self.school_student_id:
+            error_message = (
+                _(
+                    """
+Context: Create student profile
+Database ID: %s
+Problem: Admission '%s' already has a student profile
+Solution: Open the student profile from the Result tab instead of creating a new one
+"""
+                )
+                % (self.id, self.name)
+            )
+            raise UserError(error_message)
         initial_grade = (
             self.grade_id.previous_grade_id or False
         )  # pylint: disable=no-member
@@ -937,6 +983,7 @@ Solution: Delete or disconnect the invoice on the payment term before cancelling
             "addendum_ok",
             "create_invoice_ok",
             "create_enrollment_ok",
+            "create_student_ok",
         ]
         res += policy_field
         return res

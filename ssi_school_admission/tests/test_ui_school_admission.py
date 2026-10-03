@@ -385,6 +385,11 @@ class TestUiSchoolAdmission(HttpSavepointCase):
         _bypass(cls.admission_enrollment).action_confirm()
         _bypass(cls.admission_enrollment).action_approve_approval()
 
+        # 22-create-student-profile.md -- Draft record, no student yet.
+        cls.admission_student_profile = _create_admission(
+            "TOUR ADM Student Profile Student"
+        )
+
         # 17-close-addendum.md -- On Progress, one currently UNLOCKED
         # term. Post-open locking only affects terms that existed BEFORE
         # the admission opened, so this term is added afterwards.
@@ -523,5 +528,13 @@ class TestUiSchoolAdmission(HttpSavepointCase):
         self.start_tour(
             "/web",
             "ssi_school_admission_school_admission_reload_template_policy",
+            login="admin",
+        )
+
+    def test_create_student_profile(self):
+        """IK: docs/school_admission/22-create-student-profile.md"""
+        self.start_tour(
+            "/web",
+            "ssi_school_admission_school_admission_create_student_profile",
             login="admin",
         )

@@ -790,4 +790,45 @@ odoo.define("ssi_school_admission.school_admission_tour", function (require) {
             ]
         )
     );
+
+    // IK: docs/school_admission/22-create-student-profile.md
+    tour.register(
+        "ssi_school_admission_school_admission_create_student_profile",
+        {
+            test: true,
+            url: "/web",
+        },
+        [].concat(
+            openAdmissionList(),
+            openRecordByStudent("TOUR ADM Student Profile Student"),
+            [
+                {
+                    content: "Click the Create Student Profile button",
+                    trigger:
+                        ".o_statusbar_buttons button[name='action_create_school_student']",
+                    extra_trigger: ".o_form_view",
+                },
+                {
+                    content: "The button is gone once the profile exists",
+                    trigger:
+                        ".o_statusbar_buttons:not(:has(button[name='action_create_school_student']:visible))",
+                    run: function () {
+                        // Assertion only.
+                    },
+                },
+                {
+                    content: "Open the Result tab",
+                    trigger: ".o_notebook .nav-link:contains(Result)",
+                },
+                {
+                    content: "School Student is filled",
+                    trigger:
+                        ".o_field_widget[name='school_student_id']:contains(TOUR ADM Student Profile Student)",
+                    run: function () {
+                        // Assertion only.
+                    },
+                },
+            ]
+        )
+    );
 });

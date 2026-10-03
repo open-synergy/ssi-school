@@ -10,7 +10,7 @@
 
 - **Record:** Status is **On Progress**. This admission's **School Student** (**Result**
   tab) already exists — it is created automatically when the admission opens, see
-  `05-approve`.
+  `05-approve`, or earlier through `22-create-student-profile`.
 - **Config:** An active `policy.template` for this model grants `create_enrollment_ok`
   for state `open` to the actor's group.
 - **Access:** User is in group _Admission — User_.
