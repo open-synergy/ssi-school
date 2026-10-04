@@ -538,7 +538,21 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school_admission.field_school_admission__amount_paid
 msgid ""
 "Amount already realized on the invoiced payment terms that are neither "
-"cancelled nor voided."
+"cancelled nor voided. It includes every credit reconciled to the invoices: "
+"payments received, deductions, and other credits."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__amount_payment
+msgid ""
+"Amount reconciled to the invoices of the counted payment terms from bank or "
+"cash journals. Credit notes, write-offs, and other journals are not counted "
+"as payments."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__amount_outstanding
+msgid "Amount the student still has to pay: Residual minus Deduction Pending."
 msgstr ""
 
 #. module: ssi_school_admission
@@ -1068,6 +1082,16 @@ msgstr ""
 #. module: ssi_school_admission
 #: model:ir.model.fields,help:ssi_school_admission.field_school_admission_fee_analysis__admission_date
 msgid "Date the admission was made."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__amount_deducted
+msgid "Deducted"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__amount_deduction_pending
+msgid "Deduction Pending"
 msgstr ""
 
 #. module: ssi_school_admission
@@ -1828,6 +1852,11 @@ msgid "Need Validation"
 msgstr ""
 
 #. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__amount_net
+msgid "Net Total"
+msgstr ""
+
+#. module: ssi_school_admission
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__activity_date_deadline
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template__activity_date_deadline
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__activity_date_deadline
@@ -1949,14 +1978,24 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school_admission
-#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__amount_residual
-msgid ""
-"Outstanding amount still to be paid, i.e. the total amount minus the amount "
-"already paid."
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__amount_other_credit
+msgid "Other Credits"
 msgstr ""
 
 #. module: ssi_school_admission
-#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__amount_paid
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__amount_outstanding
+msgid "Outstanding"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__amount_residual
+msgid ""
+"Outstanding amount still to be paid, i.e. the total amount minus the settled"
+" amount. It still includes the Deduction Pending that has not been deducted "
+"from the invoices yet."
+msgstr ""
+
+#. module: ssi_school_admission
 #: model:ir.model.fields.selection,name:ssi_school_admission.selection__school_admission__payment_status__paid
 #: model:ir.model.fields.selection,name:ssi_school_admission.selection__school_admission_fee_analysis__admission_payment_status__paid
 #: model:ir.model.fields.selection,name:ssi_school_admission.selection__school_admission_fee_analysis__term_state__paid
@@ -1974,6 +2013,14 @@ msgstr ""
 #. module: ssi_school_admission
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form__parent_id
 msgid "Parent Name"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__amount_deducted
+msgid ""
+"Part of the deduction that is already reconciled to the invoices of this "
+"admission. Filled by the extension modules through the "
+"``_get_amount_deducted`` hook."
 msgstr ""
 
 #. module: ssi_school_admission
@@ -2035,6 +2082,11 @@ msgstr ""
 msgid ""
 "Payment status derived from the realized amounts of the payment terms that "
 "are neither cancelled nor voided."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__amount_payment
+msgid "Payments Received"
 msgstr ""
 
 #. module: ssi_school_admission
@@ -2469,6 +2521,18 @@ msgid ""
 "way to reduce the billed amount -- price_unit keeps its original value. Can "
 "only be set through the ORM; this module provides no button/action that "
 "enables it."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__amount_paid
+msgid "Settled"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__amount_other_credit
+msgid ""
+"Settled minus Deducted minus Payments Received: credits reconciled to the "
+"invoices that are neither deductions nor payments. Normally zero."
 msgstr ""
 
 #. module: ssi_school_admission
@@ -3228,6 +3292,18 @@ msgid "Total Amount"
 msgstr ""
 
 #. module: ssi_school_admission
+#: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__amount_deduction
+msgid "Total Deduction"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__amount_deduction_pending
+msgid ""
+"Total Deduction minus Deducted: the deduction that has not been deducted "
+"from the invoices yet."
+msgstr ""
+
+#. module: ssi_school_admission
 #: model:ir.model.fields,help:ssi_school_admission.field_school_admission_fee_analysis__price_total
 msgid "Total amount (including tax) of the fee line."
 msgstr ""
@@ -3247,6 +3323,20 @@ msgstr ""
 msgid ""
 "Total billing amount of the payment terms that are neither cancelled nor "
 "voided."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__amount_deduction
+msgid ""
+"Total effective deduction of this admission, both already and not yet "
+"deducted from the invoices. Filled by the extension modules through the "
+"``_get_amount_deduction`` hook."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__amount_net
+msgid ""
+"Total minus Total Deduction: the amount the student is expected to bear."
 msgstr ""
 
 #. module: ssi_school_admission
