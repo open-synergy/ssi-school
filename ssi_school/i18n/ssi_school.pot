@@ -837,7 +837,21 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment__amount_paid
 msgid ""
 "Amount already realized on the invoiced payment terms that are neither "
-"cancelled nor voided."
+"cancelled nor voided. It includes every credit reconciled to the invoices: "
+"payments received, deductions, and other credits."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__amount_payment
+msgid ""
+"Amount reconciled to the invoices of the counted payment terms from bank or "
+"cash journals. Credit notes, write-offs, and other journals are not counted "
+"as payments."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__amount_outstanding
+msgid "Amount the student still has to pay: Residual minus Deduction Pending."
 msgstr ""
 
 #. module: ssi_school
@@ -1661,6 +1675,16 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields.selection,name:ssi_school.selection__school_student__state__deceased
 msgid "Deceased"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__amount_deducted
+msgid "Deducted"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__amount_deduction_pending
+msgid "Deduction Pending"
 msgstr ""
 
 #. module: ssi_school
@@ -3141,6 +3165,11 @@ msgid "Need Validation"
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__amount_net
+msgid "Net Total"
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school__activity_date_deadline
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_term__activity_date_deadline
 #: model:ir.model.fields,field_description:ssi_school.field_school_academic_year__activity_date_deadline
@@ -3421,19 +3450,37 @@ msgid "Origin School"
 msgstr ""
 
 #. module: ssi_school
-#: model:ir.model.fields,help:ssi_school.field_school_enrollment__amount_residual
-msgid ""
-"Outstanding amount still to be paid, i.e. the total amount minus the amount "
-"already paid."
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__amount_other_credit
+msgid "Other Credits"
 msgstr ""
 
 #. module: ssi_school
-#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__amount_paid
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__amount_outstanding
+msgid "Outstanding"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__amount_residual
+msgid ""
+"Outstanding amount still to be paid, i.e. the total amount minus the settled"
+" amount. It still includes the Deduction Pending that has not been deducted "
+"from the invoices yet."
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields.selection,name:ssi_school.selection__school_enrollment__payment_status__paid
 #: model:ir.model.fields.selection,name:ssi_school.selection__school_enrollment_payment_term__state__paid
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_payment_term_view_search
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_search
 msgid "Paid"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__amount_deducted
+msgid ""
+"Part of the deduction that is already reconciled to the invoices of this "
+"enrollment. Filled by the extension modules through the "
+"``_get_amount_deducted`` hook."
 msgstr ""
 
 #. module: ssi_school
@@ -3512,6 +3559,11 @@ msgstr ""
 msgid ""
 "Payment status derived from the realized amounts of the payment terms that "
 "are neither cancelled nor voided."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__amount_payment
+msgid "Payments Received"
 msgstr ""
 
 #. module: ssi_school
@@ -4214,6 +4266,18 @@ msgid ""
 " This is not a way to reduce the billed amount -- price_unit keeps its "
 "original value. Can only be set through the ORM; this module provides no "
 "button/action that enables it."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__amount_paid
+msgid "Settled"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__amount_other_credit
+msgid ""
+"Settled minus Deducted minus Payments Received: credits reconciled to the "
+"invoices that are neither deductions nor payments. Normally zero."
 msgstr ""
 
 #. module: ssi_school
@@ -5176,6 +5240,18 @@ msgid "Total"
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__amount_deduction
+msgid "Total Deduction"
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__amount_deduction_pending
+msgid ""
+"Total Deduction minus Deducted: the deduction that has not been deducted "
+"from the invoices yet."
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_product_summary__uom_quantity
 msgid "Total Qty"
 msgstr ""
@@ -5204,6 +5280,20 @@ msgstr ""
 msgid ""
 "Total billing amount of the payment terms that are neither cancelled nor "
 "voided."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__amount_deduction
+msgid ""
+"Total effective deduction of this enrollment, both already and not yet "
+"deducted from the invoices. Filled by the extension modules through the "
+"``_get_amount_deduction`` hook."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__amount_net
+msgid ""
+"Total minus Total Deduction: the amount the student is expected to bear."
 msgstr ""
 
 #. module: ssi_school
