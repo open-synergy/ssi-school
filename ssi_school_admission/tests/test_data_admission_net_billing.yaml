@@ -1,0 +1,1395 @@
+options:
+  auto_refresh: true
+
+scenarios:
+  - name: "Partial bank payment is a payment and keeps the identities"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "rec_type"
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "rev_type"
+
+      - step: "Setup - get liquidity account type"
+        action: "ref"
+        xml_id: "account.data_account_type_liquidity"
+        save_as: "liq_type"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "ADNB1 Receivable"
+          code: "ADNB1R"
+          user_type_id: "REC: rec_type.id"
+          reconcile: true
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "ADNB1 Income"
+          code: "ADNB1I"
+          user_type_id: "REC: rev_type.id"
+
+      - step: "Setup - create liquidity account"
+        action: "create"
+        model: "account.account"
+        save_as: "liq_account"
+        values:
+          name: "ADNB1 Liquidity"
+          code: "ADNB1L"
+          user_type_id: "REC: liq_type.id"
+
+      - step: "Setup - create bank journal"
+        action: "create"
+        model: "account.journal"
+        save_as: "bank_journal"
+        values:
+          name: "ADNB1 Bank"
+          code: "ADNB1B"
+          type: "bank"
+          default_account_id: "REC: liq_account.id"
+
+      - step: "Setup - create general journal"
+        action: "create"
+        model: "account.journal"
+        save_as: "general_journal"
+        values:
+          name: "ADNB1 General"
+          code: "ADNB1G"
+          type: "general"
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "ADNB1 Invoice Type"
+          code: "ADNB1"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "ADNB1 Admission Fee"
+          type: "service"
+          list_price: 1000000.0
+
+      - step: "Setup - create pricelist"
+        action: "create"
+        model: "product.pricelist"
+        save_as: "pricelist"
+        values:
+          name: "ADNB1 Pricelist"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type ADNB1"
+          code: "GTADNB1"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 ADNB1"
+          code: "AYADNB1"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester ADNB1"
+          code: "SMADNB1"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School ADNB1"
+          code: "SCHADNB1"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade ADNB1"
+          code: "GADNB1"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "student_contact"
+        values:
+          name: "Student Contact ADNB1"
+
+      - step: "Setup - create payment template"
+        action: "create"
+        model: "school_admission_payment_template"
+        save_as: "payment_template"
+        values:
+          customer_invoice_type_id: "REC: ci_type.id"
+          name: "Payment Template ADNB1"
+          code: "ADNB1001"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          academic_term_id: "REC: academic_term.id"
+          term_ids:
+            - - 0
+              - 0
+              - name: "Admission Term 1 ADNB1"
+                sequence: 10
+                detail_ids:
+                  - - 0
+                    - 0
+                    - product_id: "REC: product.id"
+                      name: "Admission Fee ADNB1"
+                      account_id: "REC: account.id"
+                      uom_quantity: 1.0
+                      uom_id: "REF: uom.product_uom_unit"
+                      price_unit: 1000000.0
+
+      - step: "Create admission"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        values:
+          user_id: "REF: base.user_admin"
+          customer_invoice_type_id: "REC: ci_type.id"
+          receivable_account_id: "REC: ci_account.id"
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: student_contact.id"
+          payment_template_id: "REC: payment_template.id"
+          pricelist_id: "REC: pricelist.id"
+          currency_id: "REC: company.currency_id.id"
+          receivable_journal_id: "REC: ci_journal.id"
+
+      - step: "Confirm admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Compute payment"
+        action: "call"
+        target: "admission"
+        method: "action_compute_payment"
+        as_user: "base.user_admin"
+
+      - step: "Assert admission is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "admission"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve admission"
+        action: "call"
+        target: "admission"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Get admission payment term"
+        action: "search"
+        model: "school_admission_payment_term"
+        domain: [["admission_id", "=", "REC: admission.id"]]
+        save_as: "term"
+        expect_count: 1
+
+      - step: "Create customer invoice from the term"
+        action: "call"
+        target: "term"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Get the generated customer invoice"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["id", "=", "EVAL: registry['term'].customer_invoice_id.id"]]
+        save_as: "invoice"
+        expect_count: 1
+
+      - step: "Confirm the customer invoice"
+        action: "call"
+        target: "invoice"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the customer invoice"
+        action: "call"
+        target: "invoice"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "S1: create the credit as a plain journal entry"
+        action: "create"
+        model: "account.move"
+        save_as: "credit_move"
+        values:
+          journal_id: "REC: bank_journal.id"
+          date: 2026-08-28
+          ref: "ADNB1 credit"
+          line_ids:
+            - - 0
+              - 0
+              - name: "ADNB1 credit - Liquidity"
+                account_id: "REC: liq_account.id"
+                partner_id: "EVAL: registry['invoice'].partner_id.id"
+                debit: 400000.0
+                credit: 0.0
+            - - 0
+              - 0
+              - name: "ADNB1 credit - Receivable"
+                account_id: "REC: ci_account.id"
+                partner_id: "EVAL: registry['invoice'].partner_id.id"
+                debit: 0.0
+                credit: 400000.0
+
+      - step: "S1: post the credit"
+        action: "call"
+        target: "credit_move"
+        method: "action_post"
+        asserts:
+          state:
+            type: "value"
+            expected: "posted"
+
+      - step: "S1: find the credit's receivable journal item"
+        action: "search"
+        model: "account.move.line"
+        domain:
+          [
+            ["move_id", "=", "REC: credit_move.id"],
+            ["account_id", "=", "REC: ci_account.id"],
+          ]
+        save_as: "credit_line"
+        expect_count: 1
+
+      - step: "S1: find both receivable journal items"
+        action: "search"
+        model: "account.move.line"
+        domain:
+          [
+            [
+              "id",
+              "in",
+              ["REC: credit_line.id", "REC: invoice.receivable_move_line_id.id"],
+            ],
+          ]
+        save_as: "reconcile_lines"
+        expect_count: 2
+
+      - step: "S1: reconcile the credit against the invoice"
+        action: "call"
+        target: "reconcile_lines"
+        method: "reconcile"
+
+      - step: "Assert the billing breakdown"
+        action: "assert"
+        target: "admission"
+        asserts:
+          amount_total:
+            type: "value"
+            expected: 1000000.0
+          amount_deduction:
+            type: "value"
+            expected: 0.0
+          amount_net:
+            type: "value"
+            expected: 1000000.0
+          amount_deducted:
+            type: "value"
+            expected: 0.0
+          amount_deduction_pending:
+            type: "value"
+            expected: 0.0
+          amount_paid:
+            type: "value"
+            expected: 400000.0
+          amount_payment:
+            type: "value"
+            expected: 400000.0
+          amount_other_credit:
+            type: "value"
+            expected: 0.0
+          amount_residual:
+            type: "value"
+            expected: 600000.0
+          amount_outstanding:
+            type: "value"
+            expected: 600000.0
+
+  - name: "Credit from a general journal is an other credit, not a payment"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "rec_type"
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "rev_type"
+
+      - step: "Setup - get liquidity account type"
+        action: "ref"
+        xml_id: "account.data_account_type_liquidity"
+        save_as: "liq_type"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "ADNB2 Receivable"
+          code: "ADNB2R"
+          user_type_id: "REC: rec_type.id"
+          reconcile: true
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "ADNB2 Income"
+          code: "ADNB2I"
+          user_type_id: "REC: rev_type.id"
+
+      - step: "Setup - create liquidity account"
+        action: "create"
+        model: "account.account"
+        save_as: "liq_account"
+        values:
+          name: "ADNB2 Liquidity"
+          code: "ADNB2L"
+          user_type_id: "REC: liq_type.id"
+
+      - step: "Setup - create bank journal"
+        action: "create"
+        model: "account.journal"
+        save_as: "bank_journal"
+        values:
+          name: "ADNB2 Bank"
+          code: "ADNB2B"
+          type: "bank"
+          default_account_id: "REC: liq_account.id"
+
+      - step: "Setup - create general journal"
+        action: "create"
+        model: "account.journal"
+        save_as: "general_journal"
+        values:
+          name: "ADNB2 General"
+          code: "ADNB2G"
+          type: "general"
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "ADNB2 Invoice Type"
+          code: "ADNB2"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "ADNB2 Admission Fee"
+          type: "service"
+          list_price: 1000000.0
+
+      - step: "Setup - create pricelist"
+        action: "create"
+        model: "product.pricelist"
+        save_as: "pricelist"
+        values:
+          name: "ADNB2 Pricelist"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type ADNB2"
+          code: "GTADNB2"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 ADNB2"
+          code: "AYADNB2"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester ADNB2"
+          code: "SMADNB2"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School ADNB2"
+          code: "SCHADNB2"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade ADNB2"
+          code: "GADNB2"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "student_contact"
+        values:
+          name: "Student Contact ADNB2"
+
+      - step: "Setup - create payment template"
+        action: "create"
+        model: "school_admission_payment_template"
+        save_as: "payment_template"
+        values:
+          customer_invoice_type_id: "REC: ci_type.id"
+          name: "Payment Template ADNB2"
+          code: "ADNB2001"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          academic_term_id: "REC: academic_term.id"
+          term_ids:
+            - - 0
+              - 0
+              - name: "Admission Term 1 ADNB2"
+                sequence: 10
+                detail_ids:
+                  - - 0
+                    - 0
+                    - product_id: "REC: product.id"
+                      name: "Admission Fee ADNB2"
+                      account_id: "REC: account.id"
+                      uom_quantity: 1.0
+                      uom_id: "REF: uom.product_uom_unit"
+                      price_unit: 1000000.0
+
+      - step: "Create admission"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        values:
+          user_id: "REF: base.user_admin"
+          customer_invoice_type_id: "REC: ci_type.id"
+          receivable_account_id: "REC: ci_account.id"
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: student_contact.id"
+          payment_template_id: "REC: payment_template.id"
+          pricelist_id: "REC: pricelist.id"
+          currency_id: "REC: company.currency_id.id"
+          receivable_journal_id: "REC: ci_journal.id"
+
+      - step: "Confirm admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Compute payment"
+        action: "call"
+        target: "admission"
+        method: "action_compute_payment"
+        as_user: "base.user_admin"
+
+      - step: "Assert admission is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "admission"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve admission"
+        action: "call"
+        target: "admission"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Get admission payment term"
+        action: "search"
+        model: "school_admission_payment_term"
+        domain: [["admission_id", "=", "REC: admission.id"]]
+        save_as: "term"
+        expect_count: 1
+
+      - step: "Create customer invoice from the term"
+        action: "call"
+        target: "term"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Get the generated customer invoice"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["id", "=", "EVAL: registry['term'].customer_invoice_id.id"]]
+        save_as: "invoice"
+        expect_count: 1
+
+      - step: "Confirm the customer invoice"
+        action: "call"
+        target: "invoice"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the customer invoice"
+        action: "call"
+        target: "invoice"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "S2: create the credit as a plain journal entry"
+        action: "create"
+        model: "account.move"
+        save_as: "credit_move"
+        values:
+          journal_id: "REC: general_journal.id"
+          date: 2026-08-28
+          ref: "ADNB2 credit"
+          line_ids:
+            - - 0
+              - 0
+              - name: "ADNB2 credit - Liquidity"
+                account_id: "REC: liq_account.id"
+                partner_id: "EVAL: registry['invoice'].partner_id.id"
+                debit: 300000.0
+                credit: 0.0
+            - - 0
+              - 0
+              - name: "ADNB2 credit - Receivable"
+                account_id: "REC: ci_account.id"
+                partner_id: "EVAL: registry['invoice'].partner_id.id"
+                debit: 0.0
+                credit: 300000.0
+
+      - step: "S2: post the credit"
+        action: "call"
+        target: "credit_move"
+        method: "action_post"
+        asserts:
+          state:
+            type: "value"
+            expected: "posted"
+
+      - step: "S2: find the credit's receivable journal item"
+        action: "search"
+        model: "account.move.line"
+        domain:
+          [
+            ["move_id", "=", "REC: credit_move.id"],
+            ["account_id", "=", "REC: ci_account.id"],
+          ]
+        save_as: "credit_line"
+        expect_count: 1
+
+      - step: "S2: find both receivable journal items"
+        action: "search"
+        model: "account.move.line"
+        domain:
+          [
+            [
+              "id",
+              "in",
+              ["REC: credit_line.id", "REC: invoice.receivable_move_line_id.id"],
+            ],
+          ]
+        save_as: "reconcile_lines"
+        expect_count: 2
+
+      - step: "S2: reconcile the credit against the invoice"
+        action: "call"
+        target: "reconcile_lines"
+        method: "reconcile"
+
+      - step: "Assert the billing breakdown"
+        action: "assert"
+        target: "admission"
+        asserts:
+          amount_total:
+            type: "value"
+            expected: 1000000.0
+          amount_deduction:
+            type: "value"
+            expected: 0.0
+          amount_net:
+            type: "value"
+            expected: 1000000.0
+          amount_deducted:
+            type: "value"
+            expected: 0.0
+          amount_deduction_pending:
+            type: "value"
+            expected: 0.0
+          amount_paid:
+            type: "value"
+            expected: 300000.0
+          amount_payment:
+            type: "value"
+            expected: 0.0
+          amount_other_credit:
+            type: "value"
+            expected: 300000.0
+          amount_residual:
+            type: "value"
+            expected: 700000.0
+          amount_outstanding:
+            type: "value"
+            expected: 700000.0
+
+  - name: "Term without invoice contributes no payment"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "rec_type"
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "rev_type"
+
+      - step: "Setup - get liquidity account type"
+        action: "ref"
+        xml_id: "account.data_account_type_liquidity"
+        save_as: "liq_type"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "ADNB3 Receivable"
+          code: "ADNB3R"
+          user_type_id: "REC: rec_type.id"
+          reconcile: true
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "ADNB3 Income"
+          code: "ADNB3I"
+          user_type_id: "REC: rev_type.id"
+
+      - step: "Setup - create liquidity account"
+        action: "create"
+        model: "account.account"
+        save_as: "liq_account"
+        values:
+          name: "ADNB3 Liquidity"
+          code: "ADNB3L"
+          user_type_id: "REC: liq_type.id"
+
+      - step: "Setup - create bank journal"
+        action: "create"
+        model: "account.journal"
+        save_as: "bank_journal"
+        values:
+          name: "ADNB3 Bank"
+          code: "ADNB3B"
+          type: "bank"
+          default_account_id: "REC: liq_account.id"
+
+      - step: "Setup - create general journal"
+        action: "create"
+        model: "account.journal"
+        save_as: "general_journal"
+        values:
+          name: "ADNB3 General"
+          code: "ADNB3G"
+          type: "general"
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "ADNB3 Invoice Type"
+          code: "ADNB3"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "ADNB3 Admission Fee"
+          type: "service"
+          list_price: 1000000.0
+
+      - step: "Setup - create pricelist"
+        action: "create"
+        model: "product.pricelist"
+        save_as: "pricelist"
+        values:
+          name: "ADNB3 Pricelist"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type ADNB3"
+          code: "GTADNB3"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 ADNB3"
+          code: "AYADNB3"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester ADNB3"
+          code: "SMADNB3"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School ADNB3"
+          code: "SCHADNB3"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade ADNB3"
+          code: "GADNB3"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "student_contact"
+        values:
+          name: "Student Contact ADNB3"
+
+      - step: "Setup - create payment template"
+        action: "create"
+        model: "school_admission_payment_template"
+        save_as: "payment_template"
+        values:
+          customer_invoice_type_id: "REC: ci_type.id"
+          name: "Payment Template ADNB3"
+          code: "ADNB3001"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          academic_term_id: "REC: academic_term.id"
+          term_ids:
+            - - 0
+              - 0
+              - name: "Admission Term 1 ADNB3"
+                sequence: 10
+                detail_ids:
+                  - - 0
+                    - 0
+                    - product_id: "REC: product.id"
+                      name: "Admission Fee ADNB3"
+                      account_id: "REC: account.id"
+                      uom_quantity: 1.0
+                      uom_id: "REF: uom.product_uom_unit"
+                      price_unit: 1000000.0
+
+      - step: "Create admission"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        values:
+          user_id: "REF: base.user_admin"
+          customer_invoice_type_id: "REC: ci_type.id"
+          receivable_account_id: "REC: ci_account.id"
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: student_contact.id"
+          payment_template_id: "REC: payment_template.id"
+          pricelist_id: "REC: pricelist.id"
+          currency_id: "REC: company.currency_id.id"
+          receivable_journal_id: "REC: ci_journal.id"
+
+      - step: "Confirm admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Compute payment"
+        action: "call"
+        target: "admission"
+        method: "action_compute_payment"
+        as_user: "base.user_admin"
+
+      - step: "Assert admission is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "admission"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve admission"
+        action: "call"
+        target: "admission"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Get admission payment term"
+        action: "search"
+        model: "school_admission_payment_term"
+        domain: [["admission_id", "=", "REC: admission.id"]]
+        save_as: "term"
+        expect_count: 1
+
+      - step: "Assert the billing breakdown"
+        action: "assert"
+        target: "admission"
+        asserts:
+          amount_total:
+            type: "value"
+            expected: 1000000.0
+          amount_deduction:
+            type: "value"
+            expected: 0.0
+          amount_net:
+            type: "value"
+            expected: 1000000.0
+          amount_deducted:
+            type: "value"
+            expected: 0.0
+          amount_deduction_pending:
+            type: "value"
+            expected: 0.0
+          amount_paid:
+            type: "value"
+            expected: 0.0
+          amount_payment:
+            type: "value"
+            expected: 0.0
+          amount_other_credit:
+            type: "value"
+            expected: 0.0
+          amount_residual:
+            type: "value"
+            expected: 1000000.0
+          amount_outstanding:
+            type: "value"
+            expected: 1000000.0
+
+  - name: "Cancelled term with a paid invoice is not counted as payment"
+    steps:
+      - step: "Setup - get sale journal"
+        action: "search"
+        model: "account.journal"
+        domain: [["type", "=", "sale"]]
+        save_as: "ci_journal"
+        limit: 1
+
+      - step: "Setup - get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "rec_type"
+
+      - step: "Setup - get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "rev_type"
+
+      - step: "Setup - get liquidity account type"
+        action: "ref"
+        xml_id: "account.data_account_type_liquidity"
+        save_as: "liq_type"
+
+      - step: "Setup - create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "ci_account"
+        values:
+          name: "ADNB4 Receivable"
+          code: "ADNB4R"
+          user_type_id: "REC: rec_type.id"
+          reconcile: true
+
+      - step: "Setup - create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "ADNB4 Income"
+          code: "ADNB4I"
+          user_type_id: "REC: rev_type.id"
+
+      - step: "Setup - create liquidity account"
+        action: "create"
+        model: "account.account"
+        save_as: "liq_account"
+        values:
+          name: "ADNB4 Liquidity"
+          code: "ADNB4L"
+          user_type_id: "REC: liq_type.id"
+
+      - step: "Setup - create bank journal"
+        action: "create"
+        model: "account.journal"
+        save_as: "bank_journal"
+        values:
+          name: "ADNB4 Bank"
+          code: "ADNB4B"
+          type: "bank"
+          default_account_id: "REC: liq_account.id"
+
+      - step: "Setup - create general journal"
+        action: "create"
+        model: "account.journal"
+        save_as: "general_journal"
+        values:
+          name: "ADNB4 General"
+          code: "ADNB4G"
+          type: "general"
+
+      - step: "Setup - create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "ADNB4 Invoice Type"
+          code: "ADNB4"
+          journal_id: "REC: ci_journal.id"
+          receivable_account_id: "REC: ci_account.id"
+
+      - step: "Setup - create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "ADNB4 Admission Fee"
+          type: "service"
+          list_price: 1000000.0
+
+      - step: "Setup - create pricelist"
+        action: "create"
+        model: "product.pricelist"
+        save_as: "pricelist"
+        values:
+          name: "ADNB4 Pricelist"
+          currency_id: "REC: company.currency_id.id"
+
+      - step: "Setup - create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type ADNB4"
+          code: "GTADNB4"
+          sequence: 10
+
+      - step: "Setup - create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 ADNB4"
+          code: "AYADNB4"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+
+      - step: "Setup - create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester ADNB4"
+          code: "SMADNB4"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+
+      - step: "Setup - create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School ADNB4"
+          code: "SCHADNB4"
+          grade_type_id: "REC: grade_type.id"
+
+      - step: "Setup - create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade ADNB4"
+          code: "GADNB4"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Setup - create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "student_contact"
+        values:
+          name: "Student Contact ADNB4"
+
+      - step: "Setup - create payment template"
+        action: "create"
+        model: "school_admission_payment_template"
+        save_as: "payment_template"
+        values:
+          customer_invoice_type_id: "REC: ci_type.id"
+          name: "Payment Template ADNB4"
+          code: "ADNB4001"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          academic_term_id: "REC: academic_term.id"
+          term_ids:
+            - - 0
+              - 0
+              - name: "Admission Term 1 ADNB4"
+                sequence: 10
+                detail_ids:
+                  - - 0
+                    - 0
+                    - product_id: "REC: product.id"
+                      name: "Admission Fee ADNB4"
+                      account_id: "REC: account.id"
+                      uom_quantity: 1.0
+                      uom_id: "REF: uom.product_uom_unit"
+                      price_unit: 1000000.0
+
+      - step: "Create admission"
+        action: "create"
+        model: "school_admission"
+        save_as: "admission"
+        values:
+          user_id: "REF: base.user_admin"
+          customer_invoice_type_id: "REC: ci_type.id"
+          receivable_account_id: "REC: ci_account.id"
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          student_id: "REC: student_contact.id"
+          payment_template_id: "REC: payment_template.id"
+          pricelist_id: "REC: pricelist.id"
+          currency_id: "REC: company.currency_id.id"
+          receivable_journal_id: "REC: ci_journal.id"
+
+      - step: "Confirm admission"
+        action: "call"
+        target: "admission"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Compute payment"
+        action: "call"
+        target: "admission"
+        method: "action_compute_payment"
+        as_user: "base.user_admin"
+
+      - step: "Assert admission is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "admission"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve admission"
+        action: "call"
+        target: "admission"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Get admission payment term"
+        action: "search"
+        model: "school_admission_payment_term"
+        domain: [["admission_id", "=", "REC: admission.id"]]
+        save_as: "term"
+        expect_count: 1
+
+      - step: "Create customer invoice from the term"
+        action: "call"
+        target: "term"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Get the generated customer invoice"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["id", "=", "EVAL: registry['term'].customer_invoice_id.id"]]
+        save_as: "invoice"
+        expect_count: 1
+
+      - step: "Confirm the customer invoice"
+        action: "call"
+        target: "invoice"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Approve the customer invoice"
+        action: "call"
+        target: "invoice"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "S4: create the credit as a plain journal entry"
+        action: "create"
+        model: "account.move"
+        save_as: "credit_move"
+        values:
+          journal_id: "REC: bank_journal.id"
+          date: 2026-08-28
+          ref: "ADNB4 credit"
+          line_ids:
+            - - 0
+              - 0
+              - name: "ADNB4 credit - Liquidity"
+                account_id: "REC: liq_account.id"
+                partner_id: "EVAL: registry['invoice'].partner_id.id"
+                debit: 400000.0
+                credit: 0.0
+            - - 0
+              - 0
+              - name: "ADNB4 credit - Receivable"
+                account_id: "REC: ci_account.id"
+                partner_id: "EVAL: registry['invoice'].partner_id.id"
+                debit: 0.0
+                credit: 400000.0
+
+      - step: "S4: post the credit"
+        action: "call"
+        target: "credit_move"
+        method: "action_post"
+        asserts:
+          state:
+            type: "value"
+            expected: "posted"
+
+      - step: "S4: find the credit's receivable journal item"
+        action: "search"
+        model: "account.move.line"
+        domain:
+          [
+            ["move_id", "=", "REC: credit_move.id"],
+            ["account_id", "=", "REC: ci_account.id"],
+          ]
+        save_as: "credit_line"
+        expect_count: 1
+
+      - step: "S4: find both receivable journal items"
+        action: "search"
+        model: "account.move.line"
+        domain:
+          [
+            [
+              "id",
+              "in",
+              ["REC: credit_line.id", "REC: invoice.receivable_move_line_id.id"],
+            ],
+          ]
+        save_as: "reconcile_lines"
+        expect_count: 2
+
+      - step: "S4: reconcile the credit against the invoice"
+        action: "call"
+        target: "reconcile_lines"
+        method: "reconcile"
+
+      - step:
+          "Force the admission into cancel (action_cancel itself refuses while a term is
+          invoiced; this direct write isolates the compute-only guarantee)"
+        action: "write"
+        target: "admission"
+        values:
+          state: "cancel"
+
+      - step: "Assert the term follows the admission to cancelled"
+        action: "assert"
+        target: "term"
+        asserts:
+          state:
+            type: "value"
+            expected: "cancelled"
+
+      - step: "Assert the billing breakdown"
+        action: "assert"
+        target: "admission"
+        asserts:
+          amount_total:
+            type: "value"
+            expected: 0.0
+          amount_deduction:
+            type: "value"
+            expected: 0.0
+          amount_net:
+            type: "value"
+            expected: 0.0
+          amount_deducted:
+            type: "value"
+            expected: 0.0
+          amount_deduction_pending:
+            type: "value"
+            expected: 0.0
+          amount_paid:
+            type: "value"
+            expected: 0.0
+          amount_payment:
+            type: "value"
+            expected: 0.0
+          amount_other_credit:
+            type: "value"
+            expected: 0.0
+          amount_residual:
+            type: "value"
+            expected: 0.0
+          amount_outstanding:
+            type: "value"
+            expected: 0.0
