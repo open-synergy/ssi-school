@@ -227,11 +227,26 @@
                                 />
                         </group>
                     </group>
-                    <group name="billing_amount" colspan="4" col="4">
-                        <field name="amount_total" readonly="1" />
-                        <field name="amount_paid" readonly="1" />
-                        <field name="amount_residual" readonly="1" />
-                        <field name="payment_status" readonly="1" />
+                    <group name="billing_amount" colspan="4" col="2">
+                        <group name="billing_amount_left" colspan="1">
+                            <field name="amount_total" readonly="1" />
+                            <field name="amount_deduction" readonly="1" />
+                            <field name="amount_net" readonly="1" />
+                            <field name="amount_deducted" readonly="1" />
+                            <field name="amount_deduction_pending" readonly="1" />
+                            <field name="amount_payment" readonly="1" />
+                            <field
+                                    name="amount_other_credit"
+                                    readonly="1"
+                                    attrs="{'invisible': [('amount_other_credit','=',0.0)]}"
+                                />
+                            <field name="amount_outstanding" readonly="1" />
+                        </group>
+                        <group name="billing_amount_right" colspan="1">
+                            <field name="amount_paid" readonly="1" />
+                            <field name="amount_residual" readonly="1" />
+                            <field name="payment_status" readonly="1" />
+                        </group>
                     </group>
                     <field
                             name="payment_term_ids"

@@ -501,14 +501,16 @@ class SchoolEnrollment(models.Model):
         ),
     )
     amount_paid = fields.Monetary(
-        string="Paid",
+        string="Settled",
         compute="_compute_amount",
         store=True,
         compute_sudo=True,
         currency_field="currency_id",
         help=(
             "Amount already realized on the invoiced payment terms "
-            "that are neither cancelled nor voided."
+            "that are neither cancelled nor voided. It includes every "
+            "credit reconciled to the invoices: payments received, "
+            "deductions, and other credits."
         ),
     )
     amount_residual = fields.Monetary(
@@ -519,7 +521,92 @@ class SchoolEnrollment(models.Model):
         currency_field="currency_id",
         help=(
             "Outstanding amount still to be paid, i.e. the total "
-            "amount minus the amount already paid."
+            "amount minus the settled amount. It still includes the "
+            "Deduction Pending that has not been deducted from the "
+            "invoices yet."
+        ),
+    )
+    amount_deduction = fields.Monetary(
+        string="Total Deduction",
+        compute="_compute_amount_deduction",
+        store=True,
+        compute_sudo=True,
+        currency_field="currency_id",
+        help=(
+            "Total effective deduction of this enrollment, "
+            "both already and not yet deducted from the invoices. "
+            "Filled by the extension modules through the "
+            "``_get_amount_deduction`` hook."
+        ),
+    )
+    amount_net = fields.Monetary(
+        string="Net Total",
+        compute="_compute_amount_deduction",
+        store=True,
+        compute_sudo=True,
+        currency_field="currency_id",
+        help=(
+            "Total minus Total Deduction: the amount the "
+            "student is expected to bear."
+        ),
+    )
+    amount_deducted = fields.Monetary(
+        string="Deducted",
+        compute="_compute_amount_deduction",
+        store=True,
+        compute_sudo=True,
+        currency_field="currency_id",
+        help=(
+            "Part of the deduction that is already reconciled "
+            "to the invoices of this enrollment. Filled by the "
+            "extension modules through the "
+            "``_get_amount_deducted`` hook."
+        ),
+    )
+    amount_deduction_pending = fields.Monetary(
+        string="Deduction Pending",
+        compute="_compute_amount_deduction",
+        store=True,
+        compute_sudo=True,
+        currency_field="currency_id",
+        help=(
+            "Total Deduction minus Deducted: the deduction that "
+            "has not been deducted from the invoices yet."
+        ),
+    )
+    amount_payment = fields.Monetary(
+        string="Payments Received",
+        compute="_compute_amount_deduction",
+        store=True,
+        compute_sudo=True,
+        currency_field="currency_id",
+        help=(
+            "Amount reconciled to the invoices of the counted "
+            "payment terms from bank or cash journals. Credit "
+            "notes, write-offs, and other journals are not "
+            "counted as payments."
+        ),
+    )
+    amount_other_credit = fields.Monetary(
+        string="Other Credits",
+        compute="_compute_amount_deduction",
+        store=True,
+        compute_sudo=True,
+        currency_field="currency_id",
+        help=(
+            "Settled minus Deducted minus Payments Received: "
+            "credits reconciled to the invoices that are neither "
+            "deductions nor payments. Normally zero."
+        ),
+    )
+    amount_outstanding = fields.Monetary(
+        string="Outstanding",
+        compute="_compute_amount_deduction",
+        store=True,
+        compute_sudo=True,
+        currency_field="currency_id",
+        help=(
+            "Amount the student still has to pay: Residual " "minus Deduction Pending."
         ),
     )
     payment_status = fields.Selection(
@@ -647,6 +734,107 @@ class SchoolEnrollment(models.Model):
             record.amount_total = amount_total
             record.amount_paid = amount_paid
             record.amount_residual = amount_total - amount_paid
+
+    def _get_amount_deduction(self):
+        """Return the total effective deduction of the enrollment.
+
+        Extension hook. The base implementation returns ``0.0``;
+        extension modules call ``super()`` and add their own
+        deduction, both the part already deducted from the invoices
+        and the part not yet deducted.
+
+        :return: Total effective deduction.
+        :rtype: float
+        """
+        self.ensure_one()
+        return 0.0
+
+    def _get_amount_deducted(self):
+        """Return the deduction already reconciled to the invoices.
+
+        Extension hook. The base implementation returns ``0.0``;
+        extension modules call ``super()`` and add the deduction
+        that is already reconciled to the invoices of this
+        enrollment.
+
+        :return: Deduction already deducted from the invoices.
+        :rtype: float
+        """
+        self.ensure_one()
+        return 0.0
+
+    def _get_payment_journal_types(self):
+        """Return the journal types that count as real payments.
+
+        :return: Journal types whose reconciled credits are payments.
+        :rtype: list
+        """
+        self.ensure_one()
+        return ["bank", "cash"]
+
+    @api.depends(
+        "currency_id",
+        "amount_total",
+        "amount_paid",
+        "amount_residual",
+        "payment_term_ids.state",
+        "payment_term_ids.customer_invoice_id",
+        (
+            "payment_term_ids.customer_invoice_id."
+            "receivable_move_line_id.matched_credit_ids.amount"
+        ),
+        (
+            "payment_term_ids.customer_invoice_id."
+            "receivable_move_line_id.matched_credit_ids."
+            "credit_move_id.journal_id.type"
+        ),
+    )
+    def _compute_amount_deduction(self):
+        """Compute the net billing breakdown of the enrollment.
+
+        ``amount_deduction`` and ``amount_deducted`` come from the
+        ``_get_amount_deduction`` and ``_get_amount_deducted`` hooks.
+        ``amount_payment`` sums the partial reconciliations of the
+        receivable journal item of every counted payment term
+        invoice whose paying journal type is one of
+        ``_get_payment_journal_types``. The remaining fields are
+        derived so that ``amount_paid`` always equals
+        ``amount_deducted + amount_payment + amount_other_credit``
+        and ``amount_outstanding`` equals
+        ``amount_net - amount_payment - amount_other_credit``.
+        Extension modules add dependencies by overriding this method
+        with their own ``@api.depends`` and calling ``super()``.
+
+        :return: None
+        """
+        for record in self:
+            round_ = record.currency_id.round
+            journal_types = record._get_payment_journal_types()
+            amount_deduction = round_(record._get_amount_deduction())
+            amount_deducted = round_(record._get_amount_deducted())
+            amount_payment = 0.0
+            counted_terms = record.payment_term_ids.filtered(
+                lambda term: term.state not in ("cancelled", "voided")
+            )
+            for term in counted_terms:
+                invoice = term.customer_invoice_id
+                partials = invoice.receivable_move_line_id.matched_credit_ids
+                for partial in partials:
+                    if partial.credit_move_id.journal_id.type in (journal_types):
+                        amount_payment += partial.amount
+            amount_payment = round_(amount_payment)
+            record.amount_deduction = amount_deduction
+            record.amount_net = round_(record.amount_total - amount_deduction)
+            record.amount_deducted = amount_deducted
+            record.amount_deduction_pending = round_(amount_deduction - amount_deducted)
+            record.amount_payment = amount_payment
+            amount_other_credit = round_(
+                record.amount_paid - amount_deducted - amount_payment
+            )
+            record.amount_other_credit = amount_other_credit
+            record.amount_outstanding = round_(
+                record.amount_residual - record.amount_deduction_pending
+            )
 
     @api.depends(
         "currency_id",
