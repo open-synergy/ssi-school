@@ -188,6 +188,11 @@ msgid "Student"
 msgstr ""
 
 #. module: ssi_school_health
+#: model:res.groups,name:ssi_school_health.school_student_health_group
+msgid "Student Health"
+msgstr ""
+
+#. module: ssi_school_health
 #: model_terms:ir.ui.view,arch_db:ssi_school_health.school_student_view_form_health
 msgid "Weight"
 msgstr ""
