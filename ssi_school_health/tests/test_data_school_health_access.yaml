@@ -1,0 +1,230 @@
+scenarios:
+  - name: "Student Health Group Grants Health Data Access"
+    steps:
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type School Health Access"
+          code: "GTSHAC"
+          sequence: 10
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Health Access"
+          code: "SCHSHAC"
+          grade_type_id: "REC: grade_type.id"
+      - step: "Create contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "School Health Access Contact"
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "School Health Access Student"
+          code: "STUSHAC"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+      - step: "Create allergen category"
+        action: "create"
+        model: "health.allergen_category"
+        save_as: "allergen_category"
+        values:
+          name: "School Health Access Allergen Category"
+          code: "HACSHAC"
+      - step: "Create allergen"
+        action: "create"
+        model: "health.allergen"
+        save_as: "allergen"
+        values:
+          name: "School Health Access Allergen"
+          code: "HALSHAC"
+          category_id: "REC: allergen_category.id"
+      - step: "Create user with only the Student group"
+        action: "create"
+        model: "res.users"
+        save_as: "user_student"
+        values:
+          name: "School Health Access Student User"
+          login: "school_health_access_student"
+          password: "Sch00l-Health-Access-2026!"
+          groups_id:
+            - - 6
+              - 0
+              - - "REF: base.group_user"
+                - "REF: ssi_school.school_student_group"
+      - step: "Create user with only the Student Health group"
+        action: "create"
+        model: "res.users"
+        save_as: "user_health"
+        values:
+          name: "School Health Access Health User"
+          login: "school_health_access_health"
+          password: "Sch00l-Health-Access-2026!"
+          groups_id:
+            - - 6
+              - 0
+              - - "REF: base.group_user"
+                - "REF: ssi_school_health.school_student_health_group"
+      - step: "Student-only user cannot create an allergy line"
+        action: "create"
+        model: "partner.allergy"
+        as_user: "user_student"
+        expect_error:
+          type: "AccessError"
+        values:
+          partner_id: "REC: contact.id"
+          allergen_id: "REC: allergen.id"
+          severity: "moderate"
+      - step: "Student-only user cannot add an allergy line via student"
+        action: "write"
+        target: "student"
+        as_user: "user_student"
+        expect_error:
+          type: "AccessError"
+        values:
+          allergy_ids:
+            - - 0
+              - 0
+              - allergen_id: "REC: allergen.id"
+                severity: "moderate"
+      - step: "Health user adds an allergy line via student"
+        action: "write"
+        target: "student"
+        as_user: "user_health"
+        values:
+          allergy_ids:
+            - - 0
+              - 0
+              - allergen_id: "REC: allergen.id"
+                severity: "moderate"
+      - step: "Find allergy line owned by contact"
+        action: "search"
+        model: "partner.allergy"
+        domain:
+          - ["partner_id", "=", "REC: contact.id"]
+        save_as: "allergy"
+        expect_count: 1
+      - step: "Assert allergy line reflected on student"
+        action: "assert"
+        target: "student"
+        asserts:
+          allergy_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 1
+      - step: "Health user edits the allergy line via student"
+        action: "write"
+        target: "student"
+        as_user: "user_health"
+        values:
+          allergy_ids:
+            - - 1
+              - "REC: allergy.id"
+              - severity: "severe"
+      - step: "Assert allergy severity updated"
+        action: "assert"
+        target: "allergy"
+        asserts:
+          severity:
+            type: "value"
+            expected: "severe"
+      - step: "Health user removes the allergy line via student"
+        action: "write"
+        target: "student"
+        as_user: "user_health"
+        values:
+          allergy_ids:
+            - - 2
+              - "REC: allergy.id"
+              - 0
+      - step: "Assert allergy line removed from student"
+        action: "assert"
+        target: "student"
+        asserts:
+          allergy_ids:
+            type: "o2m"
+            check: "count"
+            expected_count: 0
+      - step: "Health user adds a height line via student"
+        action: "write"
+        target: "student"
+        as_user: "user_health"
+        values:
+          height_ids:
+            - - 0
+              - 0
+              - date: 2026-01-01
+                value: 150.0
+      - step: "Assert latest height on student"
+        action: "assert"
+        target: "student"
+        asserts:
+          height:
+            type: "value"
+            expected: 150.0
+
+  - name: "Student Health Group Definition"
+    steps:
+      - step: "Get Student Health group"
+        action: "ref"
+        xml_id: "ssi_school_health.school_student_health_group"
+        save_as: "health_group"
+      - step: "Get res.partner model"
+        action: "ref"
+        xml_id: "base.model_res_partner"
+        save_as: "partner_model"
+      - step: "Get admin user"
+        action: "ref"
+        xml_id: "base.user_admin"
+        save_as: "admin_user"
+      - step: "Assert implied groups are exactly Student and Partner Health"
+        action: "assert"
+        target: "health_group"
+        asserts:
+          implied_ids:
+            type: "m2m"
+            check: "exact_xml_ids"
+            expected_xml_ids:
+              - "ssi_school.school_student_group"
+              - "ssi_partner_health.partner_health_group"
+      - step: "Assert admin user is member of the group"
+        action: "assert"
+        target: "admin_user"
+        asserts:
+          groups_id:
+            type: "m2m"
+            check: "contains_xml_ids"
+            expected_xml_ids:
+              - "ssi_school_health.school_student_health_group"
+      - step: "Find the res.partner access of the group"
+        action: "search"
+        model: "ir.model.access"
+        domain:
+          - ["model_id", "=", "REC: partner_model.id"]
+          - ["group_id", "=", "REC: health_group.id"]
+        save_as: "partner_access"
+        expect_count: 1
+      - step: "Assert access permissions"
+        action: "assert"
+        target: "partner_access"
+        asserts:
+          perm_read:
+            type: "value"
+            expected: true
+          perm_write:
+            type: "value"
+            expected: true
+          perm_create:
+            type: "value"
+            expected: false
+          perm_unlink:
+            type: "value"
+            expected: false

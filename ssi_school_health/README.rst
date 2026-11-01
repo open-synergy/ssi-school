@@ -16,6 +16,17 @@ history (height, weight, head circumference), allergies, and disease history
 without leaving the student form. No health data is duplicated: every field is
 related to the student's contact, which remains the single source of truth.
 
+The *Health* page is visible only to members of the *Student Health* group
+(``school_student_health_group``). That group implies the *Student* group and
+the *Partner Health* group, so granting it alone opens the student menu and
+the health data. Users who only belong to the *Student* group can still open
+the student form, without the *Health* page.
+
+Because the health fields are related to the student's contact, the
+*Student Health* group is also granted read and write access (no create, no
+delete) on ``res.partner``. It does not imply the contacts configurator
+group, so the *Contacts* menu stays hidden for its members.
+
 
 Work Instruction
 =================

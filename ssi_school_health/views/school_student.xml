@@ -11,7 +11,11 @@
     <field name="arch" type="xml">
         <data>
             <xpath expr="//notebook" position="inside">
-                <page name="health" string="Health">
+                <page
+                        name="health"
+                        string="Health"
+                        groups="ssi_school_health.school_student_health_group"
+                    >
                     <group
                             name="health_latest_measurement"
                             string="Latest Measurements"
