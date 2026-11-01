@@ -1,7 +1,12 @@
 # Create Student
 
-> **Module:** ssi_school_health\
+> **Module:** `ssi_school_health`\
 > **Extends:** ssi_school — model `school_student`, aksi `01-create`
+
+## Additional Pre-Condition
+
+- **Access:** User is in group `Student Health`. Users who are only in group `Student`
+  can still create a student but do not see the **Health** tab.
 
 ## Additional Fields
 

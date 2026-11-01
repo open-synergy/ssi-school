@@ -14,10 +14,10 @@ class TestUiSchoolStudent(HttpSavepointCase):
         """Prepare the school, contact, and record used by the tours.
 
         Pre-Condition IK is prepared here -- NOT by clicking through the
-        UI. ``school_student_group`` already includes ``base.user_admin``
-        (``ssi_school``, ``security/res_group_data.xml``), so no extra
-        group grant is required for the menu or the Health tab to be
-        visible -- the tab is not gated by any group.
+        UI. ``school_student_health_group`` already includes
+        ``base.user_admin`` (``security/res_groups``), so no extra group
+        grant is required for the menu or the Health tab to be visible
+        -- the tab is gated by that group.
         """
         super().setUpClass()
         cls.grade_type = cls.env["school_grade_type"].create(

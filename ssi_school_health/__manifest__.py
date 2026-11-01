@@ -16,6 +16,8 @@
         "web_tour",
     ],
     "data": [
+        "security/res_groups/school_student_health.xml",
+        "security/ir_model_access/res_partner_student_health.xml",
         "views/school_student.xml",
         "views/assets.xml",
     ],
