@@ -69,7 +69,7 @@ msgstr ""
 "Masalah: Penerimaan tujuan berikut tidak dapat menerima termin pembayaran:\n"
 "%s\n"
 "Solusi: Batalkan pilihan penerimaan yang tercantum, atau pastikan penerimaan tersebut berstatus draf, diizinkan oleh\n"
-"kebijakan salin termin pembayaran, dan memiliki semester akademik/sekolah/tingkat yang sama dengan\n"
+"kebijakan salin termin pembayaran, dan memiliki periode akademik/sekolah/tingkat yang sama dengan\n"
 "sumber\n"
 
 #. module: ssi_school_admission
@@ -87,8 +87,8 @@ msgstr ""
 "\n"
 "Konteks: Buat faktur pelanggan dari termin pembayaran\n"
 "ID Database: %s\n"
-"Masalah: Syarat pembayaran '%s' tidak memiliki baris detail yang dapat difakturkan -- semua baris telah dialihkan\n"
-"Solusi: Tidak ada yang dapat difakturkan; jumlahnya sudah ditagihkan pada syarat yang menjadi tujuannya\n"
+"Masalah: Termin pembayaran '%s' tidak memiliki baris detail yang dapat difaktur -- semua baris telah dialihkan\n"
+"Solusi: Tidak ada yang dapat difaktur; jumlahnya sudah ditagihkan pada termin yang menjadi tujuannya\n"
 
 #. module: ssi_school_admission
 #: code:addons/ssi_school_admission/models/school_admission.py:0
@@ -223,8 +223,8 @@ msgstr ""
 "\n"
 "Konteks: Hapus termin pembayaran\n"
 "ID Database: %s\n"
-"Masalah: Syarat pembayaran '%s' terkunci dan tidak dapat dihapus\n"
-"Solusi: Syarat pembayaran yang terkunci bersifat permanen; buat yang baru melalui addendum\n"
+"Masalah: Termin pembayaran '%s' terkunci dan tidak dapat dihapus\n"
+"Solusi: Termin pembayaran yang terkunci bersifat permanen; buat yang baru melalui addendum\n"
 
 #. module: ssi_school_admission
 #: code:addons/ssi_school_admission/models/school_admission_payment_term_detail.py:0
@@ -257,7 +257,7 @@ msgstr ""
 "\n"
 "Konteks: Perbarui termin pembayaran\n"
 "ID Database: %s\n"
-"Masalah: Syarat pembayaran '%s' terkunci dan tidak dapat diubah\n"
+"Masalah: Termin pembayaran '%s' terkunci dan tidak dapat diubah\n"
 "Solusi: Tambahkan termin pembayaran baru melalui mekanisme addendum, bukan mengubah yang ini\n"
 
 #. module: ssi_school_admission
@@ -572,7 +572,7 @@ msgstr "Penerimaan"
 #. module: ssi_school_admission
 #: model:ir.model.fields,help:ssi_school_admission.field_school_admission_wizard_create_due_invoice__admission_ids
 msgid "Admissions whose due payment terms will be invoiced."
-msgstr "Penerimaan yang termin pembayaran jatuh temponya akan difakturkan."
+msgstr "Penerimaan yang termin pembayaran jatuh temponya akan difaktur."
 
 #. module: ssi_school_admission
 #: model:ir.model.fields,help:ssi_school_admission.field_school_admission_fee_analysis__admission_payment_status
@@ -634,7 +634,7 @@ msgid ""
 "Amount already realized on the invoiced payment terms that are neither "
 "cancelled nor voided. It includes every credit reconciled to the invoices: "
 "payments received, deductions, and other credits."
-msgstr "Jumlah yang sudah direalisasikan pada termin pembayaran yang sudah difakturkan dan tidak dibatalkan maupun dialihkan. Termasuk setiap kredit yang direkonsiliasi ke faktur: pembayaran yang diterima, potongan, dan kredit lainnya."
+msgstr "Jumlah yang sudah direalisasikan pada termin pembayaran yang difaktur dan tidak dibatalkan maupun dialihkan. Termasuk setiap kredit yang direkonsiliasi ke faktur: pembayaran yang diterima, potongan, dan kredit lainnya."
 
 #. module: ssi_school_admission
 #: model:ir.model.fields,help:ssi_school_admission.field_school_admission__amount_payment
@@ -747,7 +747,7 @@ msgid ""
 "fully paid, Voided = every detail line has had its amount moved to another "
 "payment term, Manually Controlled = managed manually, Cancelled = the "
 "admission itself was cancelled."
-msgstr "Status penagihan termin pembayaran: Draf = penerimaan masih dalam draf/konfirmasi, Belum Difakturkan = penerimaan terbuka/selesai tetapi belum ada faktur pelanggan, Sudah Difakturkan = faktur pelanggan sudah dibuat, Lunas = faktur pelanggan terkait sudah lunas sepenuhnya, Dinihilkan = seluruh baris detail telah dipindahkan jumlahnya ke termin pembayaran lain, Dikendalikan Manual = dikelola secara manual, Dibatalkan = penerimaan itu sendiri dibatalkan."
+msgstr "Status penagihan termin pembayaran: Draf = penerimaan masih dalam draf/konfirmasi, Belum Difaktur = penerimaan terbuka/selesai tetapi belum ada faktur pelanggan, Difaktur = faktur pelanggan sudah dibuat, Lunas = faktur pelanggan terkait sudah lunas sepenuhnya, Dialihkan = seluruh baris detail telah dipindahkan jumlahnya ke termin pembayaran lain, Dikendalikan Manual = dikelola secara manual, Dibatalkan = penerimaan itu sendiri dibatalkan."
 
 #. module: ssi_school_admission
 #: model:product.product,name:ssi_school_admission.demo_product_admission_2
@@ -1338,7 +1338,7 @@ msgid ""
 "linked customer invoice is fully paid, Voided = every detail line has had "
 "its amount moved to another payment term, Manually Controlled = managed "
 "manually, Cancelled = the admission itself was cancelled."
-msgstr "Draf = penerimaan masih dalam draf/konfirmasi, Belum Difakturkan = penerimaan terbuka/selesai tetapi belum ada faktur pelanggan, Sudah Difakturkan = faktur pelanggan sudah dibuat, Lunas = faktur pelanggan terkait sudah lunas sepenuhnya, Dinihilkan = seluruh baris detail telah dipindahkan jumlahnya ke termin pembayaran lain, Dikendalikan Manual = dikelola secara manual, Dibatalkan = penerimaan itu sendiri dibatalkan."
+msgstr "Draf = penerimaan masih dalam draf/konfirmasi, Belum Difaktur = penerimaan terbuka/selesai tetapi belum ada faktur pelanggan, Difaktur = faktur pelanggan sudah dibuat, Lunas = faktur pelanggan terkait sudah lunas sepenuhnya, Dialihkan = seluruh baris detail telah dipindahkan jumlahnya ke termin pembayaran lain, Dikendalikan Manual = dikelola secara manual, Dibatalkan = penerimaan itu sendiri dibatalkan."
 
 #. module: ssi_school_admission
 #: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_fee_analysis_view_search
@@ -1696,7 +1696,7 @@ msgstr "Menunjukkan apakah siswa lulus tes penerimaan siswa ini."
 msgid ""
 "Indicates whether this academic term is open for school admission. When "
 "enabled, this term will appear in the admission wizard."
-msgstr "Menunjukkan apakah semester akademik ini dibuka untuk penerimaan siswa. Jika diaktifkan, semester ini akan muncul di wizard penerimaan."
+msgstr "Menunjukkan apakah periode akademik ini dibuka untuk penerimaan siswa. Jika diaktifkan, periode ini akan muncul di wizard penerimaan."
 
 #. module: ssi_school_admission
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_template_term__date_invoice_duration_id
@@ -1708,12 +1708,12 @@ msgstr "Durasi Tanggal Faktur"
 #: model:ir.model.fields.selection,name:ssi_school_admission.selection__school_admission_payment_term__state__invoiced
 #: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_payment_term_view_search
 msgid "Invoiced"
-msgstr "Sudah Difaktur"
+msgstr "Difaktur"
 
 #. module: ssi_school_admission
 #: model_terms:ir.ui.view,arch_db:ssi_school_admission.school_admission_fee_analysis_view_search
 msgid "Invoiced Term"
-msgstr "Termin Sudah Difaktur"
+msgstr "Termin Difaktur"
 
 #. module: ssi_school_admission
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__message_is_follower
@@ -2446,7 +2446,7 @@ msgstr "Ganti"
 msgid ""
 "Replace: delete existing payment terms on each target before copying. Add: "
 "append source terms to each target's existing terms."
-msgstr "Ganti: hapus termin pembayaran yang ada pada setiap tujuan sebelum menyalin. Tambah: tambahkan syarat sumber ke syarat yang sudah ada pada setiap tujuan."
+msgstr "Ganti: hapus termin pembayaran yang ada pada setiap tujuan sebelum menyalin. Tambah: tambahkan termin sumber ke termin yang sudah ada pada setiap tujuan."
 
 #. module: ssi_school_admission
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__amount_residual
@@ -2874,47 +2874,47 @@ msgstr "Tes"
 #. module: ssi_school_admission
 #: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form__academic_term_id
 msgid "The academic term associated with this admission form."
-msgstr "Semester akademik yang terkait dengan formulir penerimaan ini."
+msgstr "Periode akademik yang terkait dengan formulir penerimaan ini."
 
 #. module: ssi_school_admission
 #: model:ir.model.fields,help:ssi_school_admission.field_school_admission_test__academic_term_id
 msgid "The academic term associated with this admission test."
-msgstr "Semester akademik yang terkait dengan tes penerimaan ini."
+msgstr "Periode akademik yang terkait dengan tes penerimaan ini."
 
 #. module: ssi_school_admission
 #: model:ir.model.fields,help:ssi_school_admission.field_school_admission__academic_term_id
 msgid "The academic term associated with this admission."
-msgstr "Semester akademik yang terkait dengan penerimaan ini."
+msgstr "Periode akademik yang terkait dengan penerimaan ini."
 
 #. module: ssi_school_admission
 #: model:ir.model.fields,help:ssi_school_admission.field_school_admission_fee_analysis__academic_term_id
 msgid "The academic term the student is admitted into."
-msgstr "Semester akademik tempat siswa diterima."
+msgstr "Periode akademik tempat siswa diterima."
 
 #. module: ssi_school_admission
 #: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_template__academic_term_id
 msgid "The academic term this payment template applies to."
-msgstr "Semester akademik tempat templat pembayaran ini berlaku."
+msgstr "Periode akademik tempat templat pembayaran ini berlaku."
 
 #. module: ssi_school_admission
 #: model:ir.model.fields,help:ssi_school_admission.field_school_admission__academic_year_id
 msgid "The academic year for which the student is being admitted."
-msgstr "Tahun akademik tempat siswa diterima."
+msgstr "Tahun ajaran tempat siswa diterima."
 
 #. module: ssi_school_admission
 #: model:ir.model.fields,help:ssi_school_admission.field_school_admission_test__academic_year_id
 msgid "The academic year for which this admission test is conducted."
-msgstr "Tahun akademik tempat tes penerimaan ini dilaksanakan."
+msgstr "Tahun ajaran tempat tes penerimaan ini dilaksanakan."
 
 #. module: ssi_school_admission
 #: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form__academic_year_id
 msgid "The academic year in which the student applies for admission."
-msgstr "Tahun akademik tempat siswa mengajukan penerimaan."
+msgstr "Tahun ajaran tempat siswa mengajukan penerimaan."
 
 #. module: ssi_school_admission
 #: model:ir.model.fields,help:ssi_school_admission.field_school_admission_fee_analysis__academic_year_id
 msgid "The academic year the admission is based on."
-msgstr "Tahun akademik yang menjadi dasar penerimaan ini."
+msgstr "Tahun ajaran yang menjadi dasar penerimaan ini."
 
 #. module: ssi_school_admission
 #: model:ir.model.fields,help:ssi_school_admission.field_school_admission__receivable_account_id
@@ -3030,7 +3030,7 @@ msgstr "Faktur pelanggan yang dibuat untuk termin pembayaran ini, jika ada."
 #: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_term_detail__customer_invoice_line_id
 msgid ""
 "The customer invoice line linked to this detail after the term is invoiced."
-msgstr "Baris faktur pelanggan yang terkait dengan detail ini setelah termin difakturkan."
+msgstr "Baris faktur pelanggan yang terkait dengan detail ini setelah termin difaktur."
 
 #. module: ssi_school_admission
 #: model:ir.model.fields,help:ssi_school_admission.field_school_admission_fee_analysis__customer_invoice_id
@@ -3246,12 +3246,12 @@ msgstr "Item termin pembayaran yang menentukan jadwal pada templat ini."
 #. module: ssi_school_admission
 #: model:ir.model.fields,help:ssi_school_admission.field_school_admission_fee_analysis__term_id
 msgid "The payment term that owns the fee line."
-msgstr "Syarat pembayaran yang memiliki baris biaya ini."
+msgstr "Termin pembayaran yang memiliki baris biaya ini."
 
 #. module: ssi_school_admission
 #: model:ir.model.fields,help:ssi_school_admission.field_school_admission_payment_term_wizard_duplicate__term_id
 msgid "The payment term whose detail lines will be copied to the new term."
-msgstr "Syarat pembayaran yang baris detailnya akan disalin ke termin baru."
+msgstr "Termin pembayaran yang baris detailnya akan disalin ke termin baru."
 
 #. module: ssi_school_admission
 #: model:ir.model.fields,help:ssi_school_admission.field_school_admission_wizard_create_enrollment__pricelist_id
@@ -3320,7 +3320,7 @@ msgstr "Sekolah tempat tes penerimaan ini dilaksanakan."
 msgid ""
 "The school enrollment created from this admission via the Create Enrollment "
 "wizard, if any."
-msgstr "Pendaftaran sekolah yang dibuat dari penerimaan ini melalui wizard Buat Pendaftaran, jika ada."
+msgstr "Pendaftaran siswa yang dibuat dari penerimaan ini melalui wizard Buat Pendaftaran, jika ada."
 
 #. module: ssi_school_admission
 #: model:ir.model.fields,help:ssi_school_admission.field_school_admission__school_id
