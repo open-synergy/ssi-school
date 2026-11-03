@@ -1,0 +1,67 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* ssi_school_customer_invoice_export_operating_unit
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"Language: id\n"
+
+#. module: ssi_school_customer_invoice_export_operating_unit
+#: code:addons/ssi_school_customer_invoice_export_operating_unit/wizards/school_enrollment_create_invoice_export.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Create invoice export for enrollments\n"
+"Database ID: %s\n"
+"Problem: No exportable move found for operating unit '%s'\n"
+"Solution: Select a different operating unit, or select enrollment(s) "
+"invoiced under operating unit '%s'\n"
+msgstr ""
+"\n"
+"Konteks: Buat ekspor faktur untuk pendaftaran\n"
+"ID Database: %s\n"
+"Masalah: Tidak ditemukan entri jurnal yang dapat diekspor untuk unit operasi '%s'\n"
+"Solusi: Pilih unit operasi lain, atau pilih pendaftaran yang difaktur di bawah unit operasi '%s'\n"
+
+#. module: ssi_school_customer_invoice_export_operating_unit
+#: model:ir.model,name:ssi_school_customer_invoice_export_operating_unit.model_school_enrollment_wizard_create_invoice_export
+msgid "Create Invoice Export for Enrollment Payment Terms"
+msgstr "Buat Ekspor Faktur untuk Termin Pembayaran Pendaftaran"
+
+#. module: ssi_school_customer_invoice_export_operating_unit
+#: model:ir.model.fields,field_description:ssi_school_customer_invoice_export_operating_unit.field_school_enrollment_wizard_create_invoice_export__display_name
+msgid "Display Name"
+msgstr "Nama Tampilan"
+
+#. module: ssi_school_customer_invoice_export_operating_unit
+#: model:ir.model.fields,field_description:ssi_school_customer_invoice_export_operating_unit.field_school_enrollment_wizard_create_invoice_export__id
+msgid "ID"
+msgstr "ID"
+
+#. module: ssi_school_customer_invoice_export_operating_unit
+#: model:ir.model.fields,field_description:ssi_school_customer_invoice_export_operating_unit.field_school_enrollment_wizard_create_invoice_export____last_update
+msgid "Last Modified on"
+msgstr "Terakhir Diubah pada"
+
+#. module: ssi_school_customer_invoice_export_operating_unit
+#: model:ir.model.fields,field_description:ssi_school_customer_invoice_export_operating_unit.field_school_enrollment_wizard_create_invoice_export__operating_unit_id
+msgid "Operating Unit"
+msgstr "Unit Operasi"
+
+#. module: ssi_school_customer_invoice_export_operating_unit
+#: model:ir.model.fields,help:ssi_school_customer_invoice_export_operating_unit.field_school_enrollment_wizard_create_invoice_export__operating_unit_id
+msgid ""
+"Operating unit this export is being run for. Only invoices belonging to this "
+"operating unit are exported, and it is propagated to the resulting "
+"customer_invoice_export document. Defaults to the acting user's own default "
+"operating unit, not the operating unit of the selected enrollment(s), since "
+"the selection may span more than one operating unit."
+msgstr "Unit operasi tempat ekspor ini dijalankan. Hanya faktur milik unit operasi ini yang diekspor, dan nilainya diteruskan ke dokumen customer_invoice_export yang dihasilkan. Secara default memakai unit operasi default pengguna yang menjalankan, bukan unit operasi dari pendaftaran yang dipilih, karena pilihan dapat mencakup lebih dari satu unit operasi."
