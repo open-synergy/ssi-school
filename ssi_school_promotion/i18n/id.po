@@ -1,0 +1,67 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* ssi_school_promotion
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"Language: id\n"
+
+#. module: ssi_school_promotion
+#: model_terms:ir.ui.view,arch_db:ssi_school_promotion.school_enrollment_view_form_promotion
+msgid "Apply Promotion Code"
+msgstr "Terapkan Kode Promosi"
+
+#. module: ssi_school_promotion
+#: model:ir.model.fields,field_description:ssi_school_promotion.field_school_enrollment_payment_term__display_name
+msgid "Display Name"
+msgstr "Nama Tampilan"
+
+#. module: ssi_school_promotion
+#: model:ir.model.fields,field_description:ssi_school_promotion.field_school_enrollment_payment_term__id
+msgid "ID"
+msgstr "ID"
+
+#. module: ssi_school_promotion
+#: model:ir.model.fields,field_description:ssi_school_promotion.field_school_enrollment_payment_term____last_update
+msgid "Last Modified on"
+msgstr "Terakhir Diubah pada"
+
+#. module: ssi_school_promotion
+#: model:ir.model.fields,field_description:ssi_school_promotion.field_school_enrollment_payment_term__promotion_usage_count
+msgid "Num. of Promotion Code Usages"
+msgstr "Jumlah Penggunaan Kode Promosi"
+
+#. module: ssi_school_promotion
+#: model:ir.model.fields,help:ssi_school_promotion.field_school_enrollment_payment_term__promotion_usage_count
+msgid "Number of records in 'Promotion Code Usages'."
+msgstr "Jumlah rekaman di 'Penggunaan Kode Promosi'."
+
+#. module: ssi_school_promotion
+#: model:ir.model.fields,field_description:ssi_school_promotion.field_school_enrollment_payment_term__promotion_usage_ids
+msgid "Promotion Code Usages"
+msgstr "Penggunaan Kode Promosi"
+
+#. module: ssi_school_promotion
+#: model_terms:ir.ui.view,arch_db:ssi_school_promotion.school_enrollment_view_form_promotion
+msgid "Promotions"
+msgstr "Promosi"
+
+#. module: ssi_school_promotion
+#: model:ir.model,name:ssi_school_promotion.model_school_enrollment_payment_term
+msgid "School Enrollment Payment Term"
+msgstr "Termin Pembayaran Pendaftaran Siswa"
+
+#. module: ssi_school_promotion
+#: model:ir.model.fields,help:ssi_school_promotion.field_school_enrollment_payment_term__promotion_usage_ids
+msgid ""
+"promotion_code_usage records whose own 'Reference Document' or 'Referrer "
+"Reference Document' points back to this record."
+msgstr "Rekaman promotion_code_usage yang 'Dokumen Referensi' atau 'Dokumen Referensi Perujuk'-nya mengarah kembali ke rekaman ini."
