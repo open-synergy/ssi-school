@@ -1,0 +1,214 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* ssi_school_health
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"Language: id\n"
+
+#. module: ssi_school_health
+#: model:ir.model.fields,field_description:ssi_school_health.field_school_student__allergy_ids
+#: model_terms:ir.ui.view,arch_db:ssi_school_health.school_student_view_form_health
+msgid "Allergies"
+msgstr "Alergi"
+
+#. module: ssi_school_health
+#: model:ir.model.fields,help:ssi_school_health.field_school_student__allergy_ids
+msgid "Allergies recorded for the student, managed through the linked contact."
+msgstr "Alergi yang tercatat untuk siswa, dikelola melalui kontak yang tertaut."
+
+#. module: ssi_school_health
+#: model:ir.model.fields,field_description:ssi_school_health.field_school_student__disease_history_ids
+#: model_terms:ir.ui.view,arch_db:ssi_school_health.school_student_view_form_health
+msgid "Disease History"
+msgstr "Riwayat Penyakit"
+
+#. module: ssi_school_health
+#: model:ir.model.fields,help:ssi_school_health.field_school_student__disease_history_ids
+msgid ""
+"Disease history recorded for the student, managed through the linked contact."
+msgstr "Riwayat penyakit yang tercatat untuk siswa, dikelola melalui kontak yang tertaut."
+
+#. module: ssi_school_health
+#: model:ir.model.fields,field_description:ssi_school_health.field_school_student__display_name
+msgid "Display Name"
+msgstr "Nama Tampilan"
+
+#. module: ssi_school_health
+#: model:ir.model.fields,field_description:ssi_school_health.field_school_student__family_doctor_id
+msgid "Family Doctor"
+msgstr "Dokter Keluarga"
+
+#. module: ssi_school_health
+#: model:ir.model.fields,help:ssi_school_health.field_school_student__family_doctor_id
+msgid ""
+"Family doctor of the student, taken from the contact. Read-only: change it "
+"by adding or reordering a health provider."
+msgstr "Dokter keluarga siswa, diambil dari kontak. Hanya baca: ubah dengan menambah atau mengurutkan ulang penyedia layanan kesehatan."
+
+#. module: ssi_school_health
+#: model_terms:ir.ui.view,arch_db:ssi_school_health.school_student_view_form_health
+msgid "Head Circumference"
+msgstr "Lingkar Kepala"
+
+#. module: ssi_school_health
+#: model:ir.model.fields,field_description:ssi_school_health.field_school_student__head_circumference
+msgid "Head Circumference (cm)"
+msgstr "Lingkar Kepala (cm)"
+
+#. module: ssi_school_health
+#: model:ir.model.fields,field_description:ssi_school_health.field_school_student__head_circumference_ids
+msgid "Head Circumferences"
+msgstr "Riwayat Lingkar Kepala"
+
+#. module: ssi_school_health
+#: model:ir.model.fields,help:ssi_school_health.field_school_student__head_circumference_ids
+msgid ""
+"Head circumference measurement history of the student, managed through the "
+"linked contact."
+msgstr "Riwayat pengukuran lingkar kepala siswa, dikelola melalui kontak yang tertaut."
+
+#. module: ssi_school_health
+#: model_terms:ir.ui.view,arch_db:ssi_school_health.school_student_view_form_health
+msgid "Health"
+msgstr "Kesehatan"
+
+#. module: ssi_school_health
+#: model:ir.model.fields,field_description:ssi_school_health.field_school_student__health_facility_id
+msgid "Health Facility"
+msgstr "Fasilitas Kesehatan"
+
+#. module: ssi_school_health
+#: model_terms:ir.ui.view,arch_db:ssi_school_health.school_student_view_form_health
+msgid "Health Provider Summary"
+msgstr "Ringkasan Penyedia Layanan Kesehatan"
+
+#. module: ssi_school_health
+#: model:ir.model.fields,field_description:ssi_school_health.field_school_student__health_provider_ids
+#: model_terms:ir.ui.view,arch_db:ssi_school_health.school_student_view_form_health
+msgid "Health Providers"
+msgstr "Penyedia Layanan Kesehatan"
+
+#. module: ssi_school_health
+#: model:ir.model.fields,help:ssi_school_health.field_school_student__health_provider_ids
+msgid ""
+"Health care providers recorded for the student, managed through the linked "
+"contact."
+msgstr "Penyedia layanan kesehatan yang tercatat untuk siswa, dikelola melalui kontak yang tertaut."
+
+#. module: ssi_school_health
+#: model:ir.model.fields,help:ssi_school_health.field_school_student__health_facility_id
+msgid ""
+"Health facility of the student, taken from the contact. Read-only: change it "
+"by adding or reordering a health provider."
+msgstr "Fasilitas kesehatan siswa, diambil dari kontak. Hanya baca: ubah dengan menambah atau mengurutkan ulang penyedia layanan kesehatan."
+
+#. module: ssi_school_health
+#: model_terms:ir.ui.view,arch_db:ssi_school_health.school_student_view_form_health
+msgid "Height"
+msgstr "Tinggi Badan"
+
+#. module: ssi_school_health
+#: model:ir.model.fields,field_description:ssi_school_health.field_school_student__height
+msgid "Height (cm)"
+msgstr "Tinggi Badan (cm)"
+
+#. module: ssi_school_health
+#: model:ir.model.fields,help:ssi_school_health.field_school_student__height_ids
+msgid ""
+"Height measurement history of the student, managed through the linked "
+"contact."
+msgstr "Riwayat pengukuran tinggi badan siswa, dikelola melalui kontak yang tertaut."
+
+#. module: ssi_school_health
+#: model:ir.model.fields,field_description:ssi_school_health.field_school_student__height_ids
+msgid "Heights"
+msgstr "Riwayat Tinggi Badan"
+
+#. module: ssi_school_health
+#: model:ir.model.fields,field_description:ssi_school_health.field_school_student__id
+msgid "ID"
+msgstr "ID"
+
+#. module: ssi_school_health
+#: model:ir.model.fields,field_description:ssi_school_health.field_school_student____last_update
+msgid "Last Modified on"
+msgstr "Terakhir Diubah pada"
+
+#. module: ssi_school_health
+#: model_terms:ir.ui.view,arch_db:ssi_school_health.school_student_view_form_health
+msgid "Latest Measurements"
+msgstr "Pengukuran Terakhir"
+
+#. module: ssi_school_health
+#: model:ir.model.fields,help:ssi_school_health.field_school_student__head_circumference
+msgid ""
+"Latest recorded head circumference (cm) of the student, taken from the "
+"contact. Read-only: change it by adding a head circumference measurement."
+msgstr "Lingkar kepala (cm) terakhir yang tercatat untuk siswa, diambil dari kontak. Hanya baca: ubah dengan menambah pengukuran lingkar kepala."
+
+#. module: ssi_school_health
+#: model:ir.model.fields,help:ssi_school_health.field_school_student__height
+msgid ""
+"Latest recorded height (cm) of the student, taken from the contact. Read-"
+"only: change it by adding a height measurement."
+msgstr "Tinggi badan (cm) terakhir yang tercatat untuk siswa, diambil dari kontak. Hanya baca: ubah dengan menambah pengukuran tinggi badan."
+
+#. module: ssi_school_health
+#: model:ir.model.fields,help:ssi_school_health.field_school_student__weight
+msgid ""
+"Latest recorded weight (kg) of the student, taken from the contact. Read-"
+"only: change it by adding a weight measurement."
+msgstr "Berat badan (kg) terakhir yang tercatat untuk siswa, diambil dari kontak. Hanya baca: ubah dengan menambah pengukuran berat badan."
+
+#. module: ssi_school_health
+#: model:ir.model.fields,field_description:ssi_school_health.field_school_student__medication_ids
+#: model_terms:ir.ui.view,arch_db:ssi_school_health.school_student_view_form_health
+msgid "Medications"
+msgstr "Obat-obatan"
+
+#. module: ssi_school_health
+#: model:ir.model.fields,help:ssi_school_health.field_school_student__medication_ids
+msgid ""
+"Medications recorded for the student, managed through the linked contact."
+msgstr "Obat-obatan yang tercatat untuk siswa, dikelola melalui kontak yang tertaut."
+
+#. module: ssi_school_health
+#: model:ir.model,name:ssi_school_health.model_school_student
+msgid "Student"
+msgstr "Siswa"
+
+#. module: ssi_school_health
+#: model:res.groups,name:ssi_school_health.school_student_health_group
+msgid "Student Health"
+msgstr "Kesehatan Siswa"
+
+#. module: ssi_school_health
+#: model_terms:ir.ui.view,arch_db:ssi_school_health.school_student_view_form_health
+msgid "Weight"
+msgstr "Berat Badan"
+
+#. module: ssi_school_health
+#: model:ir.model.fields,field_description:ssi_school_health.field_school_student__weight
+msgid "Weight (kg)"
+msgstr "Berat Badan (kg)"
+
+#. module: ssi_school_health
+#: model:ir.model.fields,help:ssi_school_health.field_school_student__weight_ids
+msgid ""
+"Weight measurement history of the student, managed through the linked "
+"contact."
+msgstr "Riwayat pengukuran berat badan siswa, dikelola melalui kontak yang tertaut."
+
+#. module: ssi_school_health
+#: model:ir.model.fields,field_description:ssi_school_health.field_school_student__weight_ids
+msgid "Weights"
+msgstr "Riwayat Berat Badan"

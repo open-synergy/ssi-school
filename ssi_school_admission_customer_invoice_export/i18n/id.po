@@ -1,0 +1,265 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* ssi_school_admission_customer_invoice_export
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"Language: id\n"
+
+#. module: ssi_school_admission_customer_invoice_export
+#: code:addons/ssi_school_admission_customer_invoice_export/models/school_admission.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Create invoice export\n"
+"Database ID: %s\n"
+"Problem: Document is not allowed to create invoice export\n"
+"Solution: Check create invoice export policy prerequisite\n"
+msgstr ""
+"\n"
+"Konteks: Buat ekspor faktur\n"
+"ID Database: %s\n"
+"Masalah: Dokumen tidak diizinkan untuk membuat ekspor faktur\n"
+"Solusi: Periksa prasyarat kebijakan buat ekspor faktur\n"
+
+#. module: ssi_school_admission_customer_invoice_export
+#: code:addons/ssi_school_admission_customer_invoice_export/wizards/school_admission_create_invoice_export.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Create invoice export for admissions\n"
+"Database ID: %s\n"
+"Problem: No admission selected\n"
+"Solution: Select at least one admission from the list view before running "
+"this wizard\n"
+msgstr ""
+"\n"
+"Konteks: Buat ekspor faktur untuk penerimaan\n"
+"ID Database: %s\n"
+"Masalah: Belum ada penerimaan yang dipilih\n"
+"Solusi: Pilih minimal satu penerimaan dari tampilan daftar sebelum menjalankan wizard ini\n"
+
+#. module: ssi_school_admission_customer_invoice_export
+#: code:addons/ssi_school_admission_customer_invoice_export/wizards/school_admission_create_invoice_export.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Create invoice export for admissions\n"
+"Database ID: %s\n"
+"Problem: No exportable move found on the selected admission(s)\n"
+"Solution: Select admission(s) that have at least one payment term with an "
+"unpaid (open) customer invoice\n"
+msgstr ""
+"\n"
+"Konteks: Buat ekspor faktur untuk penerimaan\n"
+"ID Database: %s\n"
+"Masalah: Tidak ditemukan faktur yang dapat diekspor pada penerimaan yang dipilih\n"
+"Solusi: Pilih penerimaan yang memiliki minimal satu termin pembayaran dengan faktur pelanggan yang belum dibayar (terbuka)\n"
+
+#. module: ssi_school_admission_customer_invoice_export
+#: code:addons/ssi_school_admission_customer_invoice_export/wizards/school_admission_create_invoice_export.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Create invoice export for admissions\n"
+"Database ID: %s\n"
+"Problem: No summary row was produced for the exported invoices\n"
+"Solution: Check the Journal/Partner/Product criteria on Type '%s'\n"
+msgstr ""
+"\n"
+"Konteks: Buat ekspor faktur untuk penerimaan\n"
+"ID Database: %s\n"
+"Masalah: Tidak ada baris ringkasan yang dihasilkan untuk faktur yang diekspor\n"
+"Solusi: Periksa kriteria Jurnal/Mitra/Produk pada Jenis '%s'\n"
+
+#. module: ssi_school_admission_customer_invoice_export
+#: code:addons/ssi_school_admission_customer_invoice_export/wizards/school_admission_create_invoice_export.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Create invoice export for admissions\n"
+"Database ID: %s\n"
+"Problem: The following admission(s) are not allowed to create invoice "
+"export:\n"
+"%s\n"
+"Solution: Deselect the listed admission(s), or make sure they are open/done "
+"and allowed\n"
+"by the create invoice export policy\n"
+msgstr ""
+"\n"
+"Konteks: Buat ekspor faktur untuk penerimaan\n"
+"ID Database: %s\n"
+"Masalah: Penerimaan berikut tidak diizinkan untuk membuat ekspor faktur:\n"
+"%s\n"
+"Solusi: Batalkan pilihan penerimaan yang tercantum, atau pastikan statusnya terbuka/selesai dan diizinkan\n"
+"oleh kebijakan buat ekspor faktur\n"
+
+#. module: ssi_school_admission_customer_invoice_export
+#: code:addons/ssi_school_admission_customer_invoice_export/wizards/school_admission_create_invoice_export.py:0
+#, python-format
+msgid "- %s: not allowed to create invoice export (check state/policy)"
+msgstr "- %s: tidak diizinkan membuat ekspor faktur (periksa status/kebijakan)"
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.model.fields,field_description:ssi_school_admission_customer_invoice_export.field_school_admission_wizard_create_invoice_export__admission_ids
+msgid "Admissions"
+msgstr "Penerimaan"
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.model.fields,help:ssi_school_admission_customer_invoice_export.field_school_admission_wizard_create_invoice_export__admission_ids
+msgid "Admissions whose unpaid invoices will be exported."
+msgstr "Penerimaan yang fakturnya belum dibayar akan diekspor."
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.model.fields.selection,name:ssi_school_admission_customer_invoice_export.selection__school_admission_wizard_create_invoice_export__output_format__csv
+msgid "CSV"
+msgstr "CSV"
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.model.fields,field_description:ssi_school_admission_customer_invoice_export.field_school_admission__create_invoice_export_ok
+msgid "Can Create Invoice Export"
+msgstr "Dapat Membuat Ekspor Faktur"
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission_customer_invoice_export.school_admission_wizard_create_invoice_export_view_form
+msgid "Cancel"
+msgstr "Batal"
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.actions.act_window,name:ssi_school_admission_customer_invoice_export.school_admission_wizard_create_invoice_export_action
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission_customer_invoice_export.school_admission_view_form_invoice_export
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission_customer_invoice_export.school_admission_wizard_create_invoice_export_view_form
+msgid "Create Invoice Export"
+msgstr "Buat Ekspor Faktur"
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.model,name:ssi_school_admission_customer_invoice_export.model_school_admission_wizard_create_invoice_export
+msgid "Create Invoice Export for Admission Payment Terms"
+msgstr "Buat Ekspor Faktur untuk Termin Pembayaran Penerimaan"
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.model.fields,field_description:ssi_school_admission_customer_invoice_export.field_school_admission_wizard_create_invoice_export__create_uid
+msgid "Created by"
+msgstr "Dibuat oleh"
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.model.fields,field_description:ssi_school_admission_customer_invoice_export.field_school_admission_wizard_create_invoice_export__create_date
+msgid "Created on"
+msgstr "Dibuat pada"
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.model.fields,field_description:ssi_school_admission_customer_invoice_export.field_school_admission_wizard_create_invoice_export__date
+msgid "Date"
+msgstr "Tanggal"
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.model.fields,field_description:ssi_school_admission_customer_invoice_export.field_school_admission_wizard_create_invoice_export__date_end
+msgid "Date End"
+msgstr "Tanggal Selesai"
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.model.fields,field_description:ssi_school_admission_customer_invoice_export.field_school_admission_wizard_create_invoice_export__date_start
+msgid "Date Start"
+msgstr "Tanggal Mulai"
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.model.fields,help:ssi_school_admission_customer_invoice_export.field_school_admission_wizard_create_invoice_export__date
+msgid "Date of the resulting customer invoice export document."
+msgstr "Tanggal dokumen ekspor faktur pelanggan yang dihasilkan."
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.model.fields,field_description:ssi_school_admission_customer_invoice_export.field_school_admission__display_name
+#: model:ir.model.fields,field_description:ssi_school_admission_customer_invoice_export.field_school_admission_wizard_create_invoice_export__display_name
+msgid "Display Name"
+msgstr "Nama Tampilan"
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.model.fields,help:ssi_school_admission_customer_invoice_export.field_school_admission_wizard_create_invoice_export__type_id
+msgid ""
+"Export type that determines the product criteria, the parser code, and the "
+"default output format of the resulting document."
+msgstr "Jenis ekspor yang menentukan kriteria produk, kode parser, dan format keluaran default dari dokumen yang dihasilkan."
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.model.fields,help:ssi_school_admission_customer_invoice_export.field_school_admission_wizard_create_invoice_export__output_format
+msgid ""
+"File format of the resulting document. Automatically proposed from the "
+"selected Type."
+msgstr "Format berkas dari dokumen yang dihasilkan. Diusulkan otomatis dari Jenis yang dipilih."
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.model.fields,field_description:ssi_school_admission_customer_invoice_export.field_school_admission__id
+#: model:ir.model.fields,field_description:ssi_school_admission_customer_invoice_export.field_school_admission_wizard_create_invoice_export__id
+msgid "ID"
+msgstr "ID"
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.model.fields,field_description:ssi_school_admission_customer_invoice_export.field_school_admission____last_update
+#: model:ir.model.fields,field_description:ssi_school_admission_customer_invoice_export.field_school_admission_wizard_create_invoice_export____last_update
+msgid "Last Modified on"
+msgstr "Terakhir Diubah pada"
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.model.fields,field_description:ssi_school_admission_customer_invoice_export.field_school_admission_wizard_create_invoice_export__write_uid
+msgid "Last Updated by"
+msgstr "Terakhir Diperbarui oleh"
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.model.fields,field_description:ssi_school_admission_customer_invoice_export.field_school_admission_wizard_create_invoice_export__write_date
+msgid "Last Updated on"
+msgstr "Terakhir Diperbarui pada"
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.model.fields,help:ssi_school_admission_customer_invoice_export.field_school_admission_wizard_create_invoice_export__date_start
+msgid ""
+"Lower bound (inclusive) on invoice date, passed as-is to the resulting "
+"document. Leave empty for no lower bound."
+msgstr "Batas bawah (inklusif) untuk tanggal faktur, diteruskan apa adanya ke dokumen yang dihasilkan. Biarkan kosong jika tidak ada batas bawah."
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.model.fields,field_description:ssi_school_admission_customer_invoice_export.field_school_admission_wizard_create_invoice_export__output_format
+msgid "Output Format"
+msgstr "Format Keluaran"
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.model.fields,help:ssi_school_admission_customer_invoice_export.field_school_admission__create_invoice_export_ok
+msgid ""
+"Policy that determines whether the unpaid invoices generated from this "
+"admission's payment terms may be exported via the Create Invoice Export "
+"wizard."
+msgstr "Kebijakan yang menentukan apakah faktur yang belum dibayar dan dibuat dari termin pembayaran penerimaan ini boleh diekspor melalui wizard Buat Ekspor Faktur."
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.model,name:ssi_school_admission_customer_invoice_export.model_school_admission
+msgid "School Admission"
+msgstr "Penerimaan Siswa"
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.model.fields.selection,name:ssi_school_admission_customer_invoice_export.selection__school_admission_wizard_create_invoice_export__output_format__txt
+msgid "TXT"
+msgstr "TXT"
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.model.fields,field_description:ssi_school_admission_customer_invoice_export.field_school_admission_wizard_create_invoice_export__type_id
+msgid "Type"
+msgstr "Jenis"
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.model.fields,help:ssi_school_admission_customer_invoice_export.field_school_admission_wizard_create_invoice_export__date_end
+msgid ""
+"Upper bound (inclusive) on invoice date, passed as-is to the resulting "
+"document. Leave empty for no upper bound."
+msgstr "Batas atas (inklusif) untuk tanggal faktur, diteruskan apa adanya ke dokumen yang dihasilkan. Biarkan kosong jika tidak ada batas atas."
+
+#. module: ssi_school_admission_customer_invoice_export
+#: model:ir.model.fields.selection,name:ssi_school_admission_customer_invoice_export.selection__school_admission_wizard_create_invoice_export__output_format__xlsx
+msgid "XLSX"
+msgstr "XLSX"

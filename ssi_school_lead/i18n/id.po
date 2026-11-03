@@ -1,0 +1,455 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* ssi_school_lead
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"Language: id\n"
+
+#. module: ssi_school_lead
+#: code:addons/ssi_school_lead/models/crm_lead.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Set Student NISN\n"
+"Database ID: %s\n"
+"Problem: No Student is selected on this lead\n"
+"Solution: Select the Student first, then fill in the Student NISN\n"
+msgstr ""
+"\n"
+"Konteks: Atur NISN Siswa\n"
+"ID Database: %s\n"
+"Masalah: Tidak ada Siswa yang dipilih pada prospek ini\n"
+"Solusi: Pilih Siswa terlebih dahulu, lalu isi NISN Siswa\n"
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead_create_admission__academic_term_id
+msgid "Academic Term"
+msgstr "Periode Akademik"
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead_create_admission__academic_year_id
+msgid "Academic Year"
+msgstr "Tahun Ajaran"
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,help:ssi_school_lead.field_crm_lead__parent_street2
+msgid ""
+"Additional street address of the parent/guardian, mirrored from their "
+"contact record."
+msgstr "Alamat jalan tambahan orang tua/wali, diambil cerminannya dari catatan kontak mereka."
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead__admission_id
+msgid "Admission"
+msgstr "Penerimaan"
+
+#. module: ssi_school_lead
+#: model_terms:ir.ui.view,arch_db:ssi_school_lead.crm_lead_school_form_view
+msgid "Admission Document"
+msgstr "Dokumen Penerimaan"
+
+#. module: ssi_school_lead
+#: model_terms:ir.ui.view,arch_db:ssi_school_lead.crm_lead_school_form_view
+msgid "Admission Target"
+msgstr "Target Penerimaan"
+
+#. module: ssi_school_lead
+#: model:ir.model,name:ssi_school_lead.model_crm_lead
+msgid "CRM Lead"
+msgstr "Prospek CRM"
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead__create_admission_ok
+msgid "Can Create Admission"
+msgstr "Dapat Membuat Penerimaan Siswa"
+
+#. module: ssi_school_lead
+#: model_terms:ir.ui.view,arch_db:ssi_school_lead.crm_lead_create_admission_view_form
+msgid "Cancel"
+msgstr "Batal"
+
+#. module: ssi_school_lead
+#: model_terms:ir.ui.view,arch_db:ssi_school_lead.crm_lead_school_form_view
+msgid "City"
+msgstr "Kota"
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,help:ssi_school_lead.field_crm_lead__parent_city
+msgid "City of the parent/guardian, mirrored from their contact record."
+msgstr "Kota orang tua/wali, diambil cerminannya dari catatan kontak mereka."
+
+#. module: ssi_school_lead
+#: model_terms:ir.ui.view,arch_db:ssi_school_lead.crm_lead_school_form_view
+msgid "Country"
+msgstr "Negara"
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,help:ssi_school_lead.field_crm_lead__parent_country_id
+msgid "Country of the parent/guardian, mirrored from their contact record."
+msgstr "Negara orang tua/wali, diambil cerminannya dari catatan kontak mereka."
+
+#. module: ssi_school_lead
+#: model_terms:ir.ui.view,arch_db:ssi_school_lead.crm_lead_create_admission_view_form
+msgid "Create"
+msgstr "Buat"
+
+#. module: ssi_school_lead
+#: model_terms:ir.ui.view,arch_db:ssi_school_lead.crm_lead_create_admission_view_form
+#: model_terms:ir.ui.view,arch_db:ssi_school_lead.crm_lead_school_form_view
+msgid "Create Admission"
+msgstr "Buat Penerimaan Siswa"
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead_create_admission__create_uid
+msgid "Created by"
+msgstr "Dibuat oleh"
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead_create_admission__create_date
+msgid "Created on"
+msgstr "Dibuat pada"
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead_create_admission__date
+msgid "Date"
+msgstr "Tanggal"
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_school__default_sales_team_id
+msgid "Default Sales Team"
+msgstr "Tim Penjualan Default"
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead__display_name
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead_create_admission__display_name
+#: model:ir.model.fields,field_description:ssi_school_lead.field_school__display_name
+msgid "Display Name"
+msgstr "Nama Tampilan"
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,help:ssi_school_lead.field_crm_lead__parent_email
+msgid ""
+"Email address of the parent/guardian, mirrored from their contact record."
+msgstr "Alamat email orang tua/wali, diambil cerminannya dari catatan kontak mereka."
+
+#. module: ssi_school_lead
+#: model:ir.model.fields.selection,name:ssi_school_lead.selection__crm_lead__parent_relationship__father
+msgid "Father"
+msgstr "Ayah"
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead_create_admission__grade_id
+msgid "Grade"
+msgstr "Tingkat"
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead_create_admission__grade_type_id
+msgid "Grade Type"
+msgstr "Jenis Tingkat"
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,help:ssi_school_lead.field_crm_lead_create_admission__grade_type_id
+msgid "Grade type derived from the selected school."
+msgstr "Jenis tingkat diturunkan dari sekolah yang dipilih."
+
+#. module: ssi_school_lead
+#: model:ir.model.fields.selection,name:ssi_school_lead.selection__crm_lead__parent_relationship__guardian
+msgid "Guardian"
+msgstr "Wali"
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead__id
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead_create_admission__id
+#: model:ir.model.fields,field_description:ssi_school_lead.field_school__id
+msgid "ID"
+msgstr "ID"
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,help:ssi_school_lead.field_crm_lead__create_admission_ok
+msgid "Indicates whether an admission can still be created for this lead."
+msgstr "Menunjukkan apakah penerimaan masih dapat dibuat untuk prospek ini."
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead____last_update
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead_create_admission____last_update
+#: model:ir.model.fields,field_description:ssi_school_lead.field_school____last_update
+msgid "Last Modified on"
+msgstr "Terakhir Diubah pada"
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead_create_admission__write_uid
+msgid "Last Updated by"
+msgstr "Terakhir Diperbarui oleh"
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead_create_admission__write_date
+msgid "Last Updated on"
+msgstr "Terakhir Diperbarui pada"
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead_create_admission__lead_id
+msgid "Lead"
+msgstr "Prospek"
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,help:ssi_school_lead.field_crm_lead__parent_mobile
+msgid ""
+"Mobile number of the parent/guardian, mirrored from their contact record."
+msgstr "Nomor ponsel orang tua/wali, diambil cerminannya dari catatan kontak mereka."
+
+#. module: ssi_school_lead
+#: model:ir.model.fields.selection,name:ssi_school_lead.selection__crm_lead__parent_relationship__mother
+msgid "Mother"
+msgstr "Ibu"
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,help:ssi_school_lead.field_crm_lead__student_nisn
+msgid ""
+"National student number (NISN) of the prospective student, read from and "
+"written to the contact referenced by the Student field. The value is never "
+"stored on the lead itself: it lives on that contact as an ID number record "
+"under the NISN category. Writing this field updates the contact even when "
+"the current user may not edit contact ID numbers directly. Emptying it "
+"archives the related ID number record instead of deleting it."
+msgstr "Nomor Induk Siswa Nasional (NISN) calon siswa, dibaca dari dan ditulis ke kontak yang dirujuk oleh field Siswa. Nilainya tidak pernah disimpan pada prospek itu sendiri: nilai tersimpan pada kontak tersebut sebagai catatan nomor identitas dalam kategori NISN. Menulis field ini memperbarui kontak meskipun pengguna saat ini tidak boleh mengubah nomor identitas kontak secara langsung. Mengosongkannya akan mengarsipkan catatan nomor identitas terkait, bukan menghapusnya."
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,help:ssi_school_lead.field_crm_lead__student_nickname
+msgid ""
+"Nickname of the prospective student, synchronized from the contact "
+"referenced by the Student field. Writing this field updates that contact's "
+"nickname."
+msgstr "Nama panggilan calon siswa, disinkronkan dari kontak yang dirujuk oleh field Siswa. Menulis field ini memperbarui nama panggilan kontak tersebut."
+
+#. module: ssi_school_lead
+#: model_terms:ir.ui.view,arch_db:ssi_school_lead.crm_lead_school_form_view
+msgid "Parent Address"
+msgstr "Alamat Orang Tua"
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead__parent_city
+msgid "Parent City"
+msgstr "Kota Orang Tua"
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead__parent_country_id
+msgid "Parent Country"
+msgstr "Negara Orang Tua"
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead__parent_email
+msgid "Parent Email"
+msgstr "Email Orang Tua"
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead__parent_mobile
+msgid "Parent Mobile"
+msgstr "Ponsel Orang Tua"
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead__parent_phone
+msgid "Parent Phone"
+msgstr "Telepon Orang Tua"
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead__parent_relationship
+msgid "Parent Relationship"
+msgstr "Hubungan Orang Tua"
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead__parent_state_id
+msgid "Parent State"
+msgstr "Provinsi Orang Tua"
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead__parent_street
+msgid "Parent Street"
+msgstr "Jalan Orang Tua"
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead__parent_street2
+msgid "Parent Street2"
+msgstr "Jalan Orang Tua 2"
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead__parent_zip
+msgid "Parent Zip"
+msgstr "Kode Pos Orang Tua"
+
+#. module: ssi_school_lead
+#: model_terms:ir.ui.view,arch_db:ssi_school_lead.crm_lead_school_form_view
+msgid "Parent/Guardian"
+msgstr "Orang Tua/Wali"
+
+#. module: ssi_school_lead
+#: model_terms:ir.ui.view,arch_db:ssi_school_lead.crm_lead_school_form_view
+msgid "Parent/Guardian Contact"
+msgstr "Kontak Orang Tua/Wali"
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead_create_admission__payment_template_id
+msgid "Payment Template"
+msgstr "Templat Pembayaran"
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,help:ssi_school_lead.field_crm_lead__parent_phone
+msgid ""
+"Phone number of the parent/guardian, mirrored from their contact record."
+msgstr "Nomor telepon orang tua/wali, diambil cerminannya dari catatan kontak mereka."
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,help:ssi_school_lead.field_crm_lead__parent_zip
+msgid ""
+"Postal/zip code of the parent/guardian, mirrored from their contact record."
+msgstr "Kode pos orang tua/wali, diambil cerminannya dari catatan kontak mereka."
+
+#. module: ssi_school_lead
+#: model_terms:ir.ui.view,arch_db:ssi_school_lead.crm_lead_school_form_view
+msgid "Prospective Student"
+msgstr "Calon Siswa"
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,help:ssi_school_lead.field_crm_lead__parent_relationship
+msgid ""
+"Relationship of the parent/guardian contact to the prospective student. Used "
+"to link the student as a child or ward of the parent/guardian contact."
+msgstr "Hubungan kontak orang tua/wali dengan calon siswa. Digunakan untuk menautkan siswa sebagai anak atau tanggungan dari kontak orang tua/wali tersebut."
+
+#. module: ssi_school_lead
+#: model:ir.model,name:ssi_school_lead.model_school
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead__school_id
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead_create_admission__school_id
+msgid "School"
+msgstr "Sekolah"
+
+#. module: ssi_school_lead
+#: model_terms:ir.ui.view,arch_db:ssi_school_lead.crm_lead_school_form_view
+msgid "State"
+msgstr "Provinsi"
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,help:ssi_school_lead.field_crm_lead__parent_state_id
+msgid ""
+"State/province of the parent/guardian, mirrored from their contact record."
+msgstr "Provinsi orang tua/wali, diambil cerminannya dari catatan kontak mereka."
+
+#. module: ssi_school_lead
+#: model_terms:ir.ui.view,arch_db:ssi_school_lead.crm_lead_school_form_view
+msgid "Street 2..."
+msgstr "Jalan 2..."
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,help:ssi_school_lead.field_crm_lead__parent_street
+msgid ""
+"Street address of the parent/guardian, mirrored from their contact record."
+msgstr "Alamat jalan orang tua/wali, diambil cerminannya dari catatan kontak mereka."
+
+#. module: ssi_school_lead
+#: model_terms:ir.ui.view,arch_db:ssi_school_lead.crm_lead_school_form_view
+msgid "Street..."
+msgstr "Jalan..."
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead__student_id
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead_create_admission__student_id
+msgid "Student"
+msgstr "Siswa"
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead__student_nisn
+msgid "Student NISN"
+msgstr "NISN Siswa"
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,field_description:ssi_school_lead.field_crm_lead__student_nickname
+msgid "Student Nickname"
+msgstr "Nama Panggilan Siswa"
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,help:ssi_school_lead.field_crm_lead_create_admission__lead_id
+msgid "The CRM lead this admission is created from."
+msgstr "Prospek CRM tempat penerimaan ini dibuat."
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,help:ssi_school_lead.field_crm_lead_create_admission__academic_term_id
+msgid ""
+"The academic term for the admission. Only terms open for admission are shown."
+msgstr "Periode akademik untuk penerimaan. Hanya periode yang terbuka untuk penerimaan yang ditampilkan."
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,help:ssi_school_lead.field_crm_lead_create_admission__academic_year_id
+msgid "The academic year for the admission."
+msgstr "Tahun ajaran untuk penerimaan."
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,help:ssi_school_lead.field_crm_lead_create_admission__date
+msgid "The date of the admission."
+msgstr "Tanggal penerimaan."
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,help:ssi_school_lead.field_school__default_sales_team_id
+msgid ""
+"The default sales team assigned to this school for automatic CRM lead "
+"routing."
+msgstr "Tim penjualan default yang ditetapkan untuk sekolah ini untuk perutean prospek CRM otomatis."
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,help:ssi_school_lead.field_crm_lead_create_admission__grade_id
+msgid "The grade level the student is being admitted to."
+msgstr "Tingkat kelas tempat siswa diterima."
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,help:ssi_school_lead.field_crm_lead_create_admission__payment_template_id
+msgid ""
+"The payment template to apply to the admission. Auto-populated based on "
+"school, grade, and academic term."
+msgstr "Templat pembayaran yang diterapkan pada penerimaan. Terisi otomatis berdasarkan sekolah, tingkat, dan periode akademik."
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,help:ssi_school_lead.field_crm_lead__student_id
+msgid "The prospective student associated with this lead."
+msgstr "Calon siswa yang terkait dengan prospek ini."
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,help:ssi_school_lead.field_crm_lead__admission_id
+msgid "The school admission record created from this lead."
+msgstr "Catatan penerimaan siswa yang dibuat dari prospek ini."
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,help:ssi_school_lead.field_crm_lead__school_id
+msgid "The school associated with this lead."
+msgstr "Sekolah yang terkait dengan prospek ini."
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,help:ssi_school_lead.field_crm_lead_create_admission__school_id
+msgid "The school the student is being admitted to."
+msgstr "Sekolah tempat siswa diterima."
+
+#. module: ssi_school_lead
+#: model:ir.model.fields,help:ssi_school_lead.field_crm_lead_create_admission__student_id
+msgid "The student being admitted."
+msgstr "Siswa yang diterima."
+
+#. module: ssi_school_lead
+#: model:ir.model,name:ssi_school_lead.model_crm_lead_create_admission
+msgid "Wizard - Create Admission from CRM Lead"
+msgstr "Wizard - Buat Penerimaan dari Prospek CRM"
+
+#. module: ssi_school_lead
+#: model_terms:ir.ui.view,arch_db:ssi_school_lead.crm_lead_create_admission_view_form
+msgid "Year/Term"
+msgstr "Tahun/Periode"
+
+#. module: ssi_school_lead
+#: model_terms:ir.ui.view,arch_db:ssi_school_lead.crm_lead_school_form_view
+msgid "ZIP"
+msgstr "Kode Pos"

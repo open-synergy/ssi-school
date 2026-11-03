@@ -1,0 +1,67 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* ssi_school_admission_lead_operating_unit
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"Language: id\n"
+
+#. module: ssi_school_admission_lead_operating_unit
+#: model:ir.model,name:ssi_school_admission_lead_operating_unit.model_crm_lead
+msgid "CRM Lead"
+msgstr "Prospek CRM"
+
+#. module: ssi_school_admission_lead_operating_unit
+#: model:ir.model.fields,field_description:ssi_school_admission_lead_operating_unit.field_crm_lead__display_name
+#: model:ir.model.fields,field_description:ssi_school_admission_lead_operating_unit.field_crm_lead_create_admission__display_name
+#: model:ir.model.fields,field_description:ssi_school_admission_lead_operating_unit.field_crm_lead_create_admission_form__display_name
+msgid "Display Name"
+msgstr "Nama Tampilan"
+
+#. module: ssi_school_admission_lead_operating_unit
+#: model:ir.model.fields,field_description:ssi_school_admission_lead_operating_unit.field_crm_lead__id
+#: model:ir.model.fields,field_description:ssi_school_admission_lead_operating_unit.field_crm_lead_create_admission__id
+#: model:ir.model.fields,field_description:ssi_school_admission_lead_operating_unit.field_crm_lead_create_admission_form__id
+msgid "ID"
+msgstr "ID"
+
+#. module: ssi_school_admission_lead_operating_unit
+#: model:ir.model.fields,field_description:ssi_school_admission_lead_operating_unit.field_crm_lead____last_update
+#: model:ir.model.fields,field_description:ssi_school_admission_lead_operating_unit.field_crm_lead_create_admission____last_update
+#: model:ir.model.fields,field_description:ssi_school_admission_lead_operating_unit.field_crm_lead_create_admission_form____last_update
+msgid "Last Modified on"
+msgstr "Terakhir Diubah pada"
+
+#. module: ssi_school_admission_lead_operating_unit
+#: model:ir.model.fields,field_description:ssi_school_admission_lead_operating_unit.field_crm_lead_create_admission__operating_unit_id
+#: model:ir.model.fields,field_description:ssi_school_admission_lead_operating_unit.field_crm_lead_create_admission_form__operating_unit_id
+msgid "Operating Unit"
+msgstr "Unit Operasi"
+
+#. module: ssi_school_admission_lead_operating_unit
+#: model:ir.model.fields,help:ssi_school_admission_lead_operating_unit.field_crm_lead_create_admission_form__operating_unit_id
+msgid "Operating unit to assign to the created admission form."
+msgstr "Unit operasi yang ditetapkan pada formulir penerimaan yang dibuat."
+
+#. module: ssi_school_admission_lead_operating_unit
+#: model:ir.model.fields,help:ssi_school_admission_lead_operating_unit.field_crm_lead_create_admission__operating_unit_id
+msgid "Operating unit to assign to the created school admission."
+msgstr "Unit operasi yang ditetapkan pada penerimaan siswa yang dibuat."
+
+#. module: ssi_school_admission_lead_operating_unit
+#: model:ir.model,name:ssi_school_admission_lead_operating_unit.model_crm_lead_create_admission_form
+msgid "Wizard - Create Admission Form from CRM Lead"
+msgstr "Wizard - Buat Formulir Penerimaan dari Prospek CRM"
+
+#. module: ssi_school_admission_lead_operating_unit
+#: model:ir.model,name:ssi_school_admission_lead_operating_unit.model_crm_lead_create_admission
+msgid "Wizard - Create Admission from CRM Lead"
+msgstr "Wizard - Buat Penerimaan dari Prospek CRM"
