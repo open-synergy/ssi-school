@@ -1,0 +1,482 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* ssi_school_admission_lead
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"Language: id\n"
+
+#. module: ssi_school_admission_lead
+#: code:addons/ssi_school_admission_lead/models/crm_lead.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Set Family Card Number\n"
+"Database ID: %s\n"
+"Problem: Family Card Number must be exactly 16 digits\n"
+"Solution: Enter a 16-digit numeric Family Card Number, or leave it empty\n"
+msgstr ""
+"\n"
+"Konteks: Atur Nomor Kartu Keluarga\n"
+"ID Database: %s\n"
+"Masalah: Nomor Kartu Keluarga harus tepat 16 digit\n"
+"Solusi: Masukkan Nomor Kartu Keluarga 16 digit berupa angka, atau biarkan kosong\n"
+
+#. module: ssi_school_admission_lead
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission_lead.crm_lead_admission_kanban_view
+msgid "<strong>Admission: </strong>"
+msgstr "<strong>Penerimaan: </strong>"
+
+#. module: ssi_school_admission_lead
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission_lead.crm_lead_admission_kanban_view
+msgid "<strong>Test: </strong>"
+msgstr "<strong>Tes: </strong>"
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead_create_admission_form__academic_term_id
+msgid "Academic Term"
+msgstr "Periode Akademik"
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead_create_admission_form__academic_year_id
+msgid "Academic Year"
+msgstr "Tahun Ajaran"
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead__admission_form_id
+msgid "Admission Form"
+msgstr "Formulir Penerimaan Siswa"
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead__admission_test_id
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission_lead.crm_lead_admission_form_view
+msgid "Admission Test"
+msgstr "Tes Penerimaan Siswa"
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead__allowed_previous_school_ids
+msgid "Allowed Previous Schools"
+msgstr "Sekolah Asal yang Diizinkan"
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead__birth_city
+msgid "Birth City"
+msgstr "Kota Lahir"
+
+#. module: ssi_school_admission_lead
+#: model:ir.model,name:ssi_school_admission_lead.model_crm_lead
+msgid "CRM Lead"
+msgstr "Prospek CRM"
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead__create_admission_form_ok
+msgid "Can Create Admission Form"
+msgstr "Dapat Membuat Formulir Penerimaan"
+
+#. module: ssi_school_admission_lead
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission_lead.crm_lead_create_admission_form_view_form
+msgid "Cancel"
+msgstr "Batal"
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead__birth_city
+msgid ""
+"City of birth of the prospective student, synchronized from the contact "
+"referenced by the Student field. Writing this field updates the contact "
+"itself, so the identity data is not duplicated on the lead."
+msgstr "Kota lahir calon siswa, disinkronkan dari kontak yang dirujuk oleh field Siswa. Menulis field ini akan memperbarui kontak itu sendiri, sehingga data identitas tidak diduplikasi pada prospek."
+
+#. module: ssi_school_admission_lead
+#: model:ir.model,name:ssi_school_admission_lead.model_res_company
+msgid "Companies"
+msgstr "Perusahaan"
+
+#. module: ssi_school_admission_lead
+#: model:ir.model,name:ssi_school_admission_lead.model_res_config_settings
+msgid "Config Settings"
+msgstr "Pengaturan Konfigurasi"
+
+#. module: ssi_school_admission_lead
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission_lead.crm_lead_create_admission_form_view_form
+msgid "Create"
+msgstr "Buat"
+
+#. module: ssi_school_admission_lead
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission_lead.crm_lead_admission_form_view
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission_lead.crm_lead_create_admission_form_view_form
+msgid "Create Admission Form"
+msgstr "Buat Formulir Penerimaan"
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead_create_admission_form__create_uid
+msgid "Created by"
+msgstr "Dibuat oleh"
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead_create_admission_form__create_date
+msgid "Created on"
+msgstr "Dibuat pada"
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead_create_admission_form__date
+msgid "Date"
+msgstr "Tanggal"
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead__student_birthdate
+msgid ""
+"Date of birth of the prospective student, synchronized from the contact "
+"referenced by the Student field. Writing this field updates the contact "
+"itself, so the identity data is not duplicated on the lead."
+msgstr "Tanggal lahir calon siswa, disinkronkan dari kontak yang dirujuk oleh field Siswa. Menulis field ini akan memperbarui kontak itu sendiri, sehingga data identitas tidak diduplikasi pada prospek."
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead__display_name
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead_create_admission_form__display_name
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_res_company__display_name
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr "Nama Tampilan"
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields.selection,name:ssi_school_admission_lead.selection__res_company__previous_school_selection_method__domain
+msgid "Domain"
+msgstr "Domain"
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead__family_card_number
+msgid "Family Card Number"
+msgstr "Nomor Kartu Keluarga"
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead__family_card_number
+msgid ""
+"Family Card Number (Nomor Kartu Keluarga/No. KK) of the prospective student, "
+"captured on the lead itself. Left empty, it stays valid; when filled, it "
+"must be exactly 16 digits."
+msgstr "Nomor Kartu Keluarga (No. KK) calon siswa, dicatat langsung pada prospek. Jika dikosongkan, tetap valid; jika diisi, harus tepat 16 digit."
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead_create_admission_form__fee_template_id
+msgid "Fee Template"
+msgstr "Templat Biaya"
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead__student_gender
+msgid ""
+"Gender of the prospective student, synchronized from the contact referenced "
+"by the Student field. Writing this field updates the contact itself, so the "
+"identity data is not duplicated on the lead."
+msgstr "Jenis kelamin calon siswa, disinkronkan dari kontak yang dirujuk oleh field Siswa. Menulis field ini akan memperbarui kontak itu sendiri, sehingga data identitas tidak diduplikasi pada prospek."
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead__grade_id
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead_create_admission_form__grade_id
+msgid "Grade"
+msgstr "Tingkat"
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead__grade_type_id
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead_create_admission_form__grade_type_id
+msgid "Grade Type"
+msgstr "Jenis Tingkat"
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead_create_admission_form__grade_type_id
+msgid "Grade type derived from the selected school."
+msgstr "Jenis tingkat diturunkan dari sekolah yang dipilih."
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead__grade_type_id
+msgid ""
+"Grade type derived from the selected school. Used to restrict the grades "
+"that can be selected on this lead."
+msgstr "Jenis tingkat diturunkan dari sekolah yang dipilih. Digunakan untuk membatasi tingkat yang dapat dipilih pada prospek ini."
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead__id
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead_create_admission_form__id
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_res_company__id
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_res_config_settings__id
+msgid "ID"
+msgstr "ID"
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead__create_admission_form_ok
+msgid "Indicates whether an admission form can still be created for this lead."
+msgstr "Menunjukkan apakah formulir penerimaan masih dapat dibuat untuk prospek ini."
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead____last_update
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead_create_admission_form____last_update
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_res_company____last_update
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_res_config_settings____last_update
+msgid "Last Modified on"
+msgstr "Terakhir Diubah pada"
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead_create_admission_form__write_uid
+msgid "Last Updated by"
+msgstr "Terakhir Diperbarui oleh"
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead_create_admission_form__write_date
+msgid "Last Updated on"
+msgstr "Terakhir Diperbarui pada"
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead_create_admission_form__lead_id
+msgid "Lead"
+msgstr "Prospek"
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields.selection,name:ssi_school_admission_lead.selection__res_company__previous_school_selection_method__manual
+msgid "Manual"
+msgstr "Manual"
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_res_company__previous_school_selection_method
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_res_config_settings__previous_school_selection_method
+msgid ""
+"Method used to filter the partners that can be selected as the previous "
+"school of a prospective student on a CRM lead. Manual: select from a fixed "
+"list. Domain: filter using an Odoo domain expression. Python Code: compute "
+"the allowed partners programmatically."
+msgstr "Metode yang digunakan untuk menyaring mitra yang dapat dipilih sebagai sekolah asal calon siswa pada prospek CRM. Manual: pilih dari daftar tetap. Domain: saring menggunakan ekspresi domain Odoo. Kode Python: hitung mitra yang diizinkan secara terprogram."
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead__nationality_id
+msgid "Nationality"
+msgstr "Kewarganegaraan"
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead__nationality_id
+msgid ""
+"Nationality of the prospective student, synchronized from the contact "
+"referenced by the Student field. Writing this field updates the contact "
+"itself, so the identity data is not duplicated on the lead."
+msgstr "Kewarganegaraan calon siswa, disinkronkan dari kontak yang dirujuk oleh field Siswa. Menulis field ini akan memperbarui kontak itu sendiri, sehingga data identitas tidak diduplikasi pada prospek."
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_res_company__previous_school_domain
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_res_config_settings__previous_school_domain
+msgid ""
+"Odoo domain expression used to filter the partners allowed as the previous "
+"school of a prospective student when the selection method is Domain."
+msgstr "Ekspresi domain Odoo yang digunakan untuk menyaring mitra yang diizinkan sebagai sekolah asal calon siswa ketika metode pemilihan adalah Domain."
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead_create_admission_form__parent_id
+msgid "Parent"
+msgstr "Orang Tua"
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_res_company__previous_school_ids
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_res_config_settings__previous_school_ids
+msgid ""
+"Partners allowed as the previous school of a prospective student when the "
+"selection method is set to Manual."
+msgstr "Mitra yang diizinkan sebagai sekolah asal calon siswa ketika metode pemilihan diatur ke Manual."
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead__allowed_previous_school_ids
+msgid ""
+"Partners that can be selected on the Previous School field, computed from "
+"the company's Previous School Selection Method (manual/domain/code)."
+msgstr "Mitra yang dapat dipilih pada field Sekolah Asal, dihitung dari Metode Pemilihan Sekolah Asal perusahaan (manual/domain/kode)."
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead__previous_school_id
+msgid "Previous School"
+msgstr "Sekolah Asal"
+
+#. module: ssi_school_admission_lead
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission_lead.res_config_settings_view_form
+msgid "Previous School Configuration"
+msgstr "Konfigurasi Sekolah Asal"
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_res_company__previous_school_domain
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_res_config_settings__previous_school_domain
+msgid "Previous School Domain"
+msgstr "Domain Sekolah Asal"
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_res_company__previous_school_python_code
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_res_config_settings__previous_school_python_code
+msgid "Previous School Python Code"
+msgstr "Kode Python Sekolah Asal"
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_res_company__previous_school_selection_method
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_res_config_settings__previous_school_selection_method
+msgid "Previous School Selection Method"
+msgstr "Metode Pemilihan Sekolah Asal"
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_res_company__previous_school_ids
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_res_config_settings__previous_school_ids
+msgid "Previous Schools"
+msgstr "Sekolah Asal"
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead_create_admission_form__pricelist_id
+msgid "Pricelist"
+msgstr "Daftar Harga"
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields.selection,name:ssi_school_admission_lead.selection__res_company__previous_school_selection_method__code
+msgid "Python Code"
+msgstr "Kode Python"
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_res_company__previous_school_python_code
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_res_config_settings__previous_school_python_code
+msgid ""
+"Python code that returns a recordset (or list of IDs) of partners allowed as "
+"the previous school of a prospective student when the selection method is "
+"Python Code."
+msgstr "Kode Python yang mengembalikan recordset (atau daftar ID) mitra yang diizinkan sebagai sekolah asal calon siswa ketika metode pemilihan adalah Kode Python."
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead__religion_id
+msgid "Religion"
+msgstr "Agama"
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead__religion_id
+msgid ""
+"Religion of the prospective student, synchronized from the contact "
+"referenced by the Student field. Writing this field updates the contact "
+"itself, so the identity data is not duplicated on the lead."
+msgstr "Agama calon siswa, disinkronkan dari kontak yang dirujuk oleh field Siswa. Menulis field ini akan memperbarui kontak itu sendiri, sehingga data identitas tidak diduplikasi pada prospek."
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead_create_admission_form__school_id
+msgid "School"
+msgstr "Sekolah"
+
+#. module: ssi_school_admission_lead
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission_lead.res_config_settings_view_form
+msgid "School Admission Lead"
+msgstr "Prospek Penerimaan Siswa"
+
+#. module: ssi_school_admission_lead
+#: model:ir.actions.act_window,name:ssi_school_admission_lead.res_config_settings_action
+#: model:ir.ui.menu,name:ssi_school_admission_lead.res_config_settings_menu
+msgid "Settings"
+msgstr "Pengaturan"
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead_create_admission_form__student_id
+msgid "Student"
+msgstr "Siswa"
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead__student_birthdate
+msgid "Student Birthdate"
+msgstr "Tanggal Lahir Siswa"
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,field_description:ssi_school_admission_lead.field_crm_lead__student_gender
+msgid "Student Gender"
+msgstr "Jenis Kelamin Siswa"
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead_create_admission_form__lead_id
+msgid "The CRM lead this admission form is created from."
+msgstr "Prospek CRM tempat formulir penerimaan ini dibuat."
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead_create_admission_form__academic_term_id
+msgid ""
+"The academic term for the admission form. Only terms open for admission are "
+"shown."
+msgstr "Termin akademik untuk formulir penerimaan. Hanya termin yang dibuka untuk penerimaan yang ditampilkan."
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead_create_admission_form__academic_year_id
+msgid "The academic year for the admission form."
+msgstr "Tahun ajaran untuk formulir penerimaan."
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead__admission_test_id
+msgid ""
+"The admission test linked to the associated admission form, populated "
+"automatically."
+msgstr "Tes penerimaan yang terhubung dengan formulir penerimaan terkait, diisi secara otomatis."
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead_create_admission_form__date
+msgid "The date of the admission form."
+msgstr "Tanggal formulir penerimaan."
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead_create_admission_form__fee_template_id
+msgid ""
+"The fee template to apply to the admission form. Auto-populated based on "
+"school and grade."
+msgstr "Templat biaya yang diterapkan pada formulir penerimaan. Diisi otomatis berdasarkan sekolah dan tingkat."
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead__grade_id
+msgid ""
+"The grade level the prospective student is applying for. Only grades "
+"belonging to the grade type of the selected school can be chosen."
+msgstr "Tingkat yang dituju calon siswa. Hanya tingkat yang termasuk jenis tingkat dari sekolah yang dipilih yang dapat dipilih."
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead_create_admission_form__grade_id
+msgid "The grade level the student is applying for."
+msgstr "Tingkat yang dituju siswa."
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead_create_admission_form__parent_id
+msgid "The parent or guardian of the student."
+msgstr "Orang tua atau wali siswa."
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead_create_admission_form__pricelist_id
+msgid "The pricelist applied to the admission fees."
+msgstr "Daftar harga yang diterapkan pada biaya penerimaan."
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead__previous_school_id
+msgid ""
+"The prospective student's previous school, restricted to the partners "
+"allowed by the company's Previous School configuration (see Allowed Previous "
+"Schools)."
+msgstr "Sekolah asal calon siswa, dibatasi pada mitra yang diizinkan oleh konfigurasi Sekolah Asal perusahaan (lihat Sekolah Asal yang Diizinkan)."
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead__admission_form_id
+msgid "The school admission form created from or linked to this lead."
+msgstr "Formulir penerimaan siswa yang dibuat dari atau terhubung dengan prospek ini."
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead_create_admission_form__school_id
+msgid "The school the student is applying to."
+msgstr "Sekolah tempat siswa mendaftar."
+
+#. module: ssi_school_admission_lead
+#: model:ir.model.fields,help:ssi_school_admission_lead.field_crm_lead_create_admission_form__student_id
+msgid "The student submitting the admission form."
+msgstr "Siswa yang mengirimkan formulir penerimaan."
+
+#. module: ssi_school_admission_lead
+#: model:ir.model,name:ssi_school_admission_lead.model_crm_lead_create_admission_form
+msgid "Wizard - Create Admission Form from CRM Lead"
+msgstr "Wizard - Buat Formulir Penerimaan dari Prospek CRM"
+
+#. module: ssi_school_admission_lead
+#: model_terms:ir.ui.view,arch_db:ssi_school_admission_lead.crm_lead_create_admission_form_view_form
+msgid "Year/Term"
+msgstr "Tahun/Periode"
