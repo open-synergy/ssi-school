@@ -46,7 +46,7 @@ msgstr ""
 "\n"
 "Konteks: Batalkan pendaftaran\n"
 "ID Database: %s\n"
-"Masalah: Syarat pembayaran '%s' sudah terhubung ke faktur\n"
+"Masalah: Termin pembayaran '%s' sudah terhubung ke faktur\n"
 "Solusi: Hapus atau lepaskan faktur pada termin pembayaran sebelum membatalkan pendaftaran ini\n"
 
 #. module: ssi_school
@@ -197,8 +197,8 @@ msgstr ""
 "\n"
 "Konteks: Buat faktur pelanggan dari termin pembayaran\n"
 "ID Database: %s\n"
-"Masalah: Syarat pembayaran '%s' tidak memiliki baris detail yang dapat difakturkan -- semua baris telah dialihkan\n"
-"Solusi: Tidak ada yang dapat difakturkan; jumlahnya sudah ditagihkan pada syarat yang menjadi tujuannya\n"
+"Masalah: Termin pembayaran '%s' tidak memiliki baris detail yang dapat difaktur -- semua baris telah dialihkan\n"
+"Solusi: Tidak ada yang dapat difaktur; jumlahnya sudah ditagihkan pada termin yang menjadi tujuannya\n"
 
 #. module: ssi_school
 #: code:addons/ssi_school/models/school_enrollment.py:0
@@ -316,8 +316,8 @@ msgstr ""
 "\n"
 "Konteks: Hapus termin pembayaran\n"
 "ID Database: %s\n"
-"Masalah: Syarat pembayaran '%s' terkunci dan tidak dapat dihapus\n"
-"Solusi: Syarat pembayaran yang terkunci bersifat permanen; buat yang baru melalui addendum\n"
+"Masalah: Termin pembayaran '%s' terkunci dan tidak dapat dihapus\n"
+"Solusi: Termin pembayaran yang terkunci bersifat permanen; buat yang baru melalui addendum\n"
 
 #. module: ssi_school
 #: code:addons/ssi_school/models/school_enrollment_payment_term_detail.py:0
@@ -351,7 +351,7 @@ msgstr ""
 "\n"
 "Konteks: Selesaikan pendaftaran\n"
 "ID Database: %s\n"
-"Masalah: Syarat pembayaran '%s' memiliki faktur pelanggan yang belum berstatus Belum Dibayar/Lunas\n"
+"Masalah: Termin pembayaran '%s' memiliki faktur pelanggan yang belum berstatus Belum Dibayar/Lunas\n"
 "Solusi: Konfirmasi dan buka faktur pelanggan sebelum menyelesaikan pendaftaran ini\n"
 
 #. module: ssi_school
@@ -621,7 +621,7 @@ msgstr ""
 "\n"
 "Konteks: Perbarui termin pembayaran\n"
 "ID Database: %s\n"
-"Masalah: Syarat pembayaran '%s' terkunci dan tidak dapat diubah\n"
+"Masalah: Termin pembayaran '%s' terkunci dan tidak dapat diubah\n"
 "Solusi: Tambahkan termin pembayaran baru melalui mekanisme addendum, bukan mengubah yang ini\n"
 
 #. module: ssi_school
@@ -768,7 +768,7 @@ msgstr "<span class=\"o_stat_text\">Guru</span>"
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment__payment_template_id
 msgid ""
 "A payment template that can be applied to auto-populate the billing terms."
-msgstr "Templat pembayaran yang dapat diterapkan untuk mengisi otomatis syarat penagihan."
+msgstr "Templat pembayaran yang dapat diterapkan untuk mengisi otomatis termin penagihan."
 
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_student__blood_type
@@ -1058,7 +1058,7 @@ msgid ""
 "Amount already realized on the invoiced payment terms that are neither "
 "cancelled nor voided. It includes every credit reconciled to the invoices: "
 "payments received, deductions, and other credits."
-msgstr "Jumlah yang sudah direalisasikan pada termin pembayaran yang sudah difakturkan dan tidak dibatalkan maupun dialihkan. Termasuk setiap kredit yang direkonsiliasi ke faktur: pembayaran yang diterima, potongan, dan kredit lainnya."
+msgstr "Jumlah yang sudah direalisasikan pada termin pembayaran yang difaktur dan tidak dibatalkan maupun dialihkan. Termasuk setiap kredit yang direkonsiliasi ke faktur: pembayaran yang diterima, potongan, dan kredit lainnya."
 
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment__amount_payment
@@ -1165,14 +1165,14 @@ msgstr "Ringkasan detail termin pembayaran yang dikelola otomatis, dikelompokkan
 msgid ""
 "Automatically set to True if this semester/term is the first within the "
 "academic year."
-msgstr "Otomatis bernilai True jika semester/periode ini adalah yang pertama dalam tahun ajaran."
+msgstr "Otomatis bernilai True jika periode ini adalah yang pertama dalam tahun ajaran."
 
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_academic_term__last_term
 msgid ""
 "Automatically set to True if this semester/term is the last within the "
 "academic year."
-msgstr "Otomatis bernilai True jika semester/periode ini adalah yang terakhir dalam tahun ajaran."
+msgstr "Otomatis bernilai True jika periode ini adalah yang terakhir dalam tahun ajaran."
 
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_term_detail__locked
@@ -1188,7 +1188,7 @@ msgid ""
 "Automatically set to True when the enrollment is opened. Locked payment "
 "terms can no longer be edited or deleted; new terms added afterwards via the "
 "addendum mechanism start unlocked."
-msgstr "Otomatis bernilai True saat pendaftaran dibuka. Syarat pembayaran yang terkunci tidak dapat lagi diubah atau dihapus; termin pembayaran baru yang ditambahkan setelahnya melalui mekanisme addendum dimulai dalam keadaan tidak terkunci."
+msgstr "Otomatis bernilai True saat pendaftaran dibuka. Termin pembayaran yang terkunci tidak dapat lagi diubah atau dihapus; termin pembayaran baru yang ditambahkan setelahnya melalui mekanisme addendum dimulai dalam keadaan tidak terkunci."
 
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__available_seat
@@ -1231,7 +1231,7 @@ msgid ""
 "confirm, Uninvoiced = enrollment open/done but no customer invoice yet, "
 "Invoiced = customer invoice created, Manually Controlled = managed manually, "
 "Cancelled = enrollment cancelled."
-msgstr "Status penagihan termin pembayaran: Draf = pendaftaran masih draf/konfirmasi, Belum Difaktur = pendaftaran terbuka/selesai tetapi belum ada faktur pelanggan, Sudah Difaktur = faktur pelanggan sudah dibuat, Dikendalikan Manual = dikelola secara manual, Dibatalkan = pendaftaran dibatalkan."
+msgstr "Status penagihan termin pembayaran: Draf = pendaftaran masih draf/konfirmasi, Belum Difaktur = pendaftaran terbuka/selesai tetapi belum ada faktur pelanggan, Difaktur = faktur pelanggan sudah dibuat, Dikendalikan Manual = dikelola secara manual, Dibatalkan = pendaftaran dibatalkan."
 
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_term__state
@@ -1241,7 +1241,7 @@ msgid ""
 "invoice created, Paid = the linked customer invoice is fully paid, Voided = "
 "every detail line has had its amount moved to another payment term, Manually "
 "Controlled = managed manually, Cancelled = enrollment cancelled."
-msgstr "Status penagihan: Draf = pendaftaran masih draf/konfirmasi, Belum Difaktur = pendaftaran terbuka/selesai tetapi belum ada faktur pelanggan, Sudah Difaktur = faktur pelanggan sudah dibuat, Lunas = faktur pelanggan terkait sudah dibayar penuh, Dialihkan = seluruh baris detail sudah dialihkan jumlahnya ke termin pembayaran lain, Dikendalikan Manual = dikelola secara manual, Dibatalkan = pendaftaran dibatalkan."
+msgstr "Status penagihan: Draf = pendaftaran masih draf/konfirmasi, Belum Difaktur = pendaftaran terbuka/selesai tetapi belum ada faktur pelanggan, Difaktur = faktur pelanggan sudah dibuat, Lunas = faktur pelanggan terkait sudah dibayar penuh, Dialihkan = seluruh baris detail sudah dialihkan jumlahnya ke termin pembayaran lain, Dikendalikan Manual = dikelola secara manual, Dibatalkan = pendaftaran dibatalkan."
 
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_student__birth_city
@@ -2281,7 +2281,7 @@ msgstr "Pendaftaran yang dibuat atau ditautkan dalam batch Wali Kelas ini."
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment_wizard_create_due_invoice__enrollment_ids
 msgid "Enrollments whose due payment terms will be invoiced."
-msgstr "Pendaftaran yang termin pembayaran jatuh temponya akan difakturkan."
+msgstr "Pendaftaran yang termin pembayaran jatuh temponya akan difaktur."
 
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_fee_analysis__date_due
@@ -2339,7 +2339,7 @@ msgstr "Suku guru, disinkronkan dari alamat rumah karyawan."
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_academic_term__state
 msgid "Execution status of the semester/term: Unstarted, On Progress, or Done."
-msgstr "Status pelaksanaan semester/periode: Belum Dimulai, Dalam Proses, atau Selesai."
+msgstr "Status pelaksanaan periode: Belum Dimulai, Dalam Proses, atau Selesai."
 
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__fail_ok
@@ -2814,7 +2814,7 @@ msgid ""
 "If enabled, enrollments using this template post one journal entry when they "
 "reach Done, moving the amount of every invoiced payment term detail that "
 "carries a Final Account from its temporary account to that Final Account."
-msgstr "Jika diaktifkan, pendaftaran yang menggunakan templat ini membukukan satu entri jurnal saat mencapai status Selesai, memindahkan jumlah setiap detail termin pembayaran yang sudah difakturkan dan memiliki Akun Akhir dari akun sementaranya ke Akun Akhir tersebut."
+msgstr "Jika diaktifkan, pendaftaran yang menggunakan templat ini membukukan satu entri jurnal saat mencapai status Selesai, memindahkan jumlah setiap detail termin pembayaran yang difaktur dan memiliki Akun Akhir dari akun sementaranya ke Akun Akhir tersebut."
 
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template__auto_confirm_customer_invoice
@@ -2843,7 +2843,7 @@ msgid ""
 "If enabled, this enrollment posts one journal entry when it reaches Done, "
 "moving the amount of every invoiced payment term detail that carries a Final "
 "Account from its temporary account to that Final Account."
-msgstr "Jika diaktifkan, pendaftaran ini membukukan satu entri jurnal saat mencapai status Selesai, memindahkan jumlah setiap detail termin pembayaran yang sudah difakturkan dan memiliki Akun Akhir dari akun sementaranya ke Akun Akhir tersebut."
+msgstr "Jika diaktifkan, pendaftaran ini membukukan satu entri jurnal saat mencapai status Selesai, memindahkan jumlah setiap detail termin pembayaran yang difaktur dan memiliki Akun Akhir dari akun sementaranya ke Akun Akhir tersebut."
 
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_template__is_default
@@ -2898,12 +2898,12 @@ msgstr "Durasi Tanggal Faktur"
 #: model:ir.model.fields.selection,name:ssi_school.selection__school_enrollment_payment_term__state__invoiced
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_payment_term_view_search
 msgid "Invoiced"
-msgstr "Sudah Difaktur"
+msgstr "Difaktur"
 
 #. module: ssi_school
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_fee_analysis_view_search
 msgid "Invoiced Term"
-msgstr "Termin Sudah Difaktur"
+msgstr "Termin Difaktur"
 
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school__message_is_follower
@@ -3074,7 +3074,7 @@ msgstr "Daftar periode pembayaran dalam templat ini yang akan diterapkan pada pe
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_academic_year__term_ids
 msgid "List of semesters/terms belonging to this academic year."
-msgstr "Daftar semester/periode yang termasuk dalam tahun ajaran ini."
+msgstr "Daftar periode yang termasuk dalam tahun ajaran ini."
 
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment__allowed_student_ids
@@ -3639,7 +3639,7 @@ msgstr "Dalam proses"
 msgid ""
 "One debit/credit pair per invoiced payment term detail released by the "
 "Revenue Recognition entry."
-msgstr "Satu pasangan debit/kredit untuk setiap detail termin pembayaran yang sudah difakturkan dan dilepaskan oleh entri Pengakuan Pendapatan."
+msgstr "Satu pasangan debit/kredit untuk setiap detail termin pembayaran yang difaktur dan dilepaskan oleh entri Pengakuan Pendapatan."
 
 #. module: ssi_school
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_academic_term_view_form
@@ -3857,7 +3857,7 @@ msgid ""
 "Policy that determines whether new payment terms/details may be added to "
 "this enrollment while it is On Progress (open), via the addendum mechanism. "
 "Existing terms/details created before the addendum remain locked."
-msgstr "Kebijakan yang menentukan apakah termin pembayaran/detail baru boleh ditambahkan ke pendaftaran ini selama masih Dalam Proses (terbuka), melalui mekanisme addendum. Syarat pembayaran/detail yang sudah ada sebelum addendum tetap terkunci."
+msgstr "Kebijakan yang menentukan apakah termin pembayaran/detail baru boleh ditambahkan ke pendaftaran ini selama masih Dalam Proses (terbuka), melalui mekanisme addendum. Termin pembayaran/detail yang sudah ada sebelum addendum tetap terkunci."
 
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment__copy_payment_term_ok
@@ -4153,7 +4153,7 @@ msgstr "Ganti"
 msgid ""
 "Replace: delete existing payment terms on each target before copying. Add: "
 "append source terms to each target's existing terms."
-msgstr "Ganti: hapus termin pembayaran yang ada pada setiap tujuan sebelum menyalin. Tambah: tambahkan syarat sumber ke syarat yang sudah ada pada setiap tujuan."
+msgstr "Ganti: hapus termin pembayaran yang ada pada setiap tujuan sebelum menyalin. Tambah: tambahkan termin sumber ke termin yang sudah ada pada setiap tujuan."
 
 #. module: ssi_school
 #: model:ir.ui.menu,name:ssi_school.menu_school_report
@@ -4957,27 +4957,27 @@ msgstr "Periode Akademik yang menjadi dasar templat ini. Kosongkan jika berlaku 
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_student_mutation__academic_year_id
 msgid "The academic year of the enrollment being mutated."
-msgstr "Tahun akademik dari pendaftaran yang dimutasi."
+msgstr "Tahun ajaran dari pendaftaran yang dimutasi."
 
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_academic_term__year_id
 msgid "The academic year that this semester/term belongs to."
-msgstr "Tahun akademik tempat semester/periode ini termasuk."
+msgstr "Tahun ajaran tempat periode ini termasuk."
 
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment_fee_analysis__academic_year_id
 msgid "The academic year the enrollment is based on."
-msgstr "Tahun akademik yang menjadi dasar pendaftaran ini."
+msgstr "Tahun ajaran yang menjadi dasar pendaftaran ini."
 
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_homeroom__academic_year_id
 msgid "The academic year this Homeroom batch is based on."
-msgstr "Tahun akademik yang menjadi dasar batch Wali Kelas ini."
+msgstr "Tahun ajaran yang menjadi dasar batch Wali Kelas ini."
 
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment__academic_year_id
 msgid "The academic year this enrollment is based on."
-msgstr "Tahun akademik yang menjadi dasar pendaftaran ini."
+msgstr "Tahun ajaran yang menjadi dasar pendaftaran ini."
 
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment__receivable_journal_id
@@ -5136,7 +5136,7 @@ msgstr "Tanggal selesai tahun ajaran ini."
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_term_detail__term_id
 msgid "The enrollment payment term that owns this fee line."
-msgstr "Syarat pembayaran pendaftaran yang memiliki baris biaya ini."
+msgstr "Termin pembayaran pendaftaran yang memiliki baris biaya ini."
 
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment_fee_analysis__enrollment_id
@@ -5166,7 +5166,7 @@ msgstr "Pendaftaran yang termin pembayarannya (dan baris detailnya) akan disalin
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_academic_term__date_start
 msgid "The first date of this semester/term."
-msgstr "Tanggal pertama semester/periode ini."
+msgstr "Tanggal pertama periode ini."
 
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_academic_year__first_term_id
@@ -5220,12 +5220,12 @@ msgstr "Jenis tingkat awal dari sekolah, diisi otomatis dari data sekolah."
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment_revenue_recognition_line__payment_term_detail_id
 msgid "The invoiced payment term detail this Recognition Line releases."
-msgstr "Detail termin pembayaran yang sudah difakturkan yang dilepaskan oleh baris Pengakuan ini."
+msgstr "Detail termin pembayaran yang difaktur yang dilepaskan oleh baris Pengakuan ini."
 
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_academic_term__date_end
 msgid "The last date of this semester/term."
-msgstr "Tanggal terakhir semester/periode ini."
+msgstr "Tanggal terakhir periode ini."
 
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_academic_year__last_term_id
@@ -5264,7 +5264,7 @@ msgstr "Templat induk yang memiliki periode pembayaran ini."
 msgid ""
 "The payment billing terms that must be settled by the student for this "
 "enrollment."
-msgstr "Syarat penagihan pembayaran yang harus dilunasi siswa untuk pendaftaran ini."
+msgstr "Termin penagihan pembayaran yang harus dilunasi siswa untuk pendaftaran ini."
 
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment_fee_analysis__payment_template_id
@@ -5279,12 +5279,12 @@ msgstr "Detail termin pembayaran (baris biaya) yang diwakili oleh baris analisis
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment_fee_analysis__term_id
 msgid "The payment term that owns the fee line."
-msgstr "Syarat pembayaran yang memiliki baris biaya ini."
+msgstr "Termin pembayaran yang memiliki baris biaya ini."
 
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_term_wizard_duplicate__term_id
 msgid "The payment term whose detail lines will be copied to the new term."
-msgstr "Syarat pembayaran yang baris detailnya akan disalin ke termin baru."
+msgstr "Termin pembayaran yang baris detailnya akan disalin ke termin baru."
 
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_homeroom__grade_class_id
