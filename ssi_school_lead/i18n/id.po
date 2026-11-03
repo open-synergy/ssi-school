@@ -383,7 +383,7 @@ msgstr "Prospek CRM tempat penerimaan ini dibuat."
 #: model:ir.model.fields,help:ssi_school_lead.field_crm_lead_create_admission__academic_term_id
 msgid ""
 "The academic term for the admission. Only terms open for admission are shown."
-msgstr "Semester untuk penerimaan. Hanya semester yang terbuka untuk penerimaan yang ditampilkan."
+msgstr "Periode akademik untuk penerimaan. Hanya periode yang terbuka untuk penerimaan yang ditampilkan."
 
 #. module: ssi_school_lead
 #: model:ir.model.fields,help:ssi_school_lead.field_crm_lead_create_admission__academic_year_id
@@ -412,7 +412,7 @@ msgstr "Tingkat kelas tempat siswa diterima."
 msgid ""
 "The payment template to apply to the admission. Auto-populated based on "
 "school, grade, and academic term."
-msgstr "Templat pembayaran yang diterapkan pada penerimaan. Terisi otomatis berdasarkan sekolah, tingkat, dan semester."
+msgstr "Templat pembayaran yang diterapkan pada penerimaan. Terisi otomatis berdasarkan sekolah, tingkat, dan periode akademik."
 
 #. module: ssi_school_lead
 #: model:ir.model.fields,help:ssi_school_lead.field_crm_lead__student_id
@@ -422,7 +422,7 @@ msgstr "Calon siswa yang terkait dengan prospek ini."
 #. module: ssi_school_lead
 #: model:ir.model.fields,help:ssi_school_lead.field_crm_lead__admission_id
 msgid "The school admission record created from this lead."
-msgstr "Catatan penerimaan sekolah yang dibuat dari prospek ini."
+msgstr "Catatan penerimaan siswa yang dibuat dari prospek ini."
 
 #. module: ssi_school_lead
 #: model:ir.model.fields,help:ssi_school_lead.field_crm_lead__school_id
