@@ -1,0 +1,152 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* ssi_school_operating_unit
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"Language: id\n"
+
+#. module: ssi_school_operating_unit
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school__display_name
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_academic_term__display_name
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_academic_year__display_name
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_enrollment__display_name
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_enrollment_payment_term__display_name
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_enrollment_revenue_recognition_line__display_name
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_grade__display_name
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_grade_class__display_name
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_grade_type__display_name
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_homeroom__display_name
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_student__display_name
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_student_mutation__display_name
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_teacher__display_name
+msgid "Display Name"
+msgstr "Nama Tampilan"
+
+#. module: ssi_school_operating_unit
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school__id
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_academic_term__id
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_academic_year__id
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_enrollment__id
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_enrollment_payment_term__id
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_enrollment_revenue_recognition_line__id
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_grade__id
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_grade_class__id
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_grade_type__id
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_homeroom__id
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_student__id
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_student_mutation__id
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_teacher__id
+msgid "ID"
+msgstr "ID"
+
+#. module: ssi_school_operating_unit
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school____last_update
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_academic_term____last_update
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_academic_year____last_update
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_enrollment____last_update
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_enrollment_payment_term____last_update
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_enrollment_revenue_recognition_line____last_update
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_grade____last_update
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_grade_class____last_update
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_grade_type____last_update
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_homeroom____last_update
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_student____last_update
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_student_mutation____last_update
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_teacher____last_update
+msgid "Last Modified on"
+msgstr "Terakhir Diubah pada"
+
+#. module: ssi_school_operating_unit
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school__operating_unit_ids
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_academic_term__operating_unit_ids
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_academic_year__operating_unit_ids
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_enrollment__operating_unit_id
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_grade__operating_unit_ids
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_grade_class__operating_unit_ids
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_grade_type__operating_unit_ids
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_homeroom__operating_unit_id
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_student__operating_unit_ids
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_student_mutation__operating_unit_id
+#: model:ir.model.fields,field_description:ssi_school_operating_unit.field_school_teacher__operating_unit_ids
+#: model:res.groups,name:ssi_school_operating_unit.school_enrollment_operating_unit_group
+#: model:res.groups,name:ssi_school_operating_unit.school_homeroom_operating_unit_group
+#: model:res.groups,name:ssi_school_operating_unit.school_student_mutation_operating_unit_group
+#: model_terms:ir.ui.view,arch_db:ssi_school_operating_unit.school_enrollment_view_search_ou
+#: model_terms:ir.ui.view,arch_db:ssi_school_operating_unit.school_homeroom_view_search_ou
+#: model_terms:ir.ui.view,arch_db:ssi_school_operating_unit.school_student_mutation_view_search_ou
+msgid "Operating Unit"
+msgstr "Unit Operasi"
+
+#. module: ssi_school_operating_unit
+#: model:ir.model,name:ssi_school_operating_unit.model_school
+msgid "School"
+msgstr "Sekolah"
+
+#. module: ssi_school_operating_unit
+#: model:ir.model,name:ssi_school_operating_unit.model_school_academic_term
+msgid "School Academic Term"
+msgstr "Periode Akademik Sekolah"
+
+#. module: ssi_school_operating_unit
+#: model:ir.model,name:ssi_school_operating_unit.model_school_academic_year
+msgid "School Academic Year"
+msgstr "Tahun Ajaran Sekolah"
+
+#. module: ssi_school_operating_unit
+#: model:ir.model,name:ssi_school_operating_unit.model_school_enrollment
+msgid "School Enrollment"
+msgstr "Pendaftaran Siswa"
+
+#. module: ssi_school_operating_unit
+#: model:ir.model,name:ssi_school_operating_unit.model_school_enrollment_payment_term
+msgid "School Enrollment Payment Term"
+msgstr "Termin Pembayaran Pendaftaran Siswa"
+
+#. module: ssi_school_operating_unit
+#: model:ir.model,name:ssi_school_operating_unit.model_school_enrollment_revenue_recognition_line
+msgid "School Enrollment Revenue Recognition - Line"
+msgstr "Baris Pengakuan Pendapatan Pendaftaran Siswa"
+
+#. module: ssi_school_operating_unit
+#: model:ir.model,name:ssi_school_operating_unit.model_school_grade
+msgid "School Grade"
+msgstr "Tingkat Sekolah"
+
+#. module: ssi_school_operating_unit
+#: model:ir.model,name:ssi_school_operating_unit.model_school_grade_class
+msgid "School Grade Class"
+msgstr "Kelas Tingkat Sekolah"
+
+#. module: ssi_school_operating_unit
+#: model:ir.model,name:ssi_school_operating_unit.model_school_grade_type
+msgid "School Grade Type"
+msgstr "Jenis Tingkat Sekolah"
+
+#. module: ssi_school_operating_unit
+#: model:ir.model,name:ssi_school_operating_unit.model_school_homeroom
+msgid "School Homeroom"
+msgstr "Wali Kelas Sekolah"
+
+#. module: ssi_school_operating_unit
+#: model:ir.model,name:ssi_school_operating_unit.model_school_student
+msgid "Student"
+msgstr "Siswa"
+
+#. module: ssi_school_operating_unit
+#: model:ir.model,name:ssi_school_operating_unit.model_school_student_mutation
+msgid "Student Class Mutation"
+msgstr "Mutasi Kelas Siswa"
+
+#. module: ssi_school_operating_unit
+#: model:ir.model,name:ssi_school_operating_unit.model_school_teacher
+msgid "Teacher"
+msgstr "Guru"
