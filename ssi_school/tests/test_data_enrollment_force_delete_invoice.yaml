@@ -313,12 +313,14 @@ scenarios:
         domain:
           - ["term_id", "=", "REC: term.id"]
           - ["customer_invoice_line_id", "!=", false]
+        save_as: "_check"
         expect_count: 0
 
       - step: "Assert the invoice no longer exists"
         action: "search"
         model: "customer_invoice"
         domain: [["partner_id", "=", "REC: contact.id"]]
+        save_as: "_check"
         expect_count: 0
 
   - name: "Force Delete Invoice - Open Invoice Without Payment Posts Chatter Note"
@@ -347,6 +349,15 @@ scenarios:
             type: "value"
             expected: "open"
 
+      - step:
+          "Record the invoice number in a partner name before it is deleted (the chatter
+          note must contain it)"
+        action: "create"
+        model: "res.partner"
+        save_as: "number_holder"
+        values:
+          name: "EVAL: registry['invoice'].display_name"
+
       - step: "Force delete the invoice"
         action: "call"
         target: "term"
@@ -370,12 +381,14 @@ scenarios:
         domain:
           - ["term_id", "=", "REC: term.id"]
           - ["customer_invoice_line_id", "!=", false]
+        save_as: "_check"
         expect_count: 0
 
       - step: "Assert the invoice no longer exists"
         action: "search"
         model: "customer_invoice"
         domain: [["partner_id", "=", "REC: contact.id"]]
+        save_as: "_check"
         expect_count: 0
 
       - step: "Assert the enrollment chatter recorded the force delete"
@@ -385,6 +398,11 @@ scenarios:
           - ["model", "=", "school_enrollment"]
           - ["res_id", "=", "REC: enrollment.id"]
           - ["body", "ilike", "force deleted"]
+          - ["body", "ilike", "EVAL: registry['number_holder'].name"]
+          - ["body", "ilike", "total 1000000.0"]
+          - ["body", "ilike", "state open"]
+          - ["body", "ilike", "EVAL: env.ref('base.user_admin').name"]
+        save_as: "_check"
         expect_count: 1
 
   - name: "Force Delete Invoice - Partially Reconciled Invoice Keeps Payment"
@@ -489,12 +507,14 @@ scenarios:
         domain:
           - ["term_id", "=", "REC: term.id"]
           - ["customer_invoice_line_id", "!=", false]
+        save_as: "_check"
         expect_count: 0
 
       - step: "Assert the invoice no longer exists"
         action: "search"
         model: "customer_invoice"
         domain: [["partner_id", "=", "REC: contact.id"]]
+        save_as: "_check"
         expect_count: 0
 
       - step: "Assert the payment journal item is no longer reconciled"
@@ -645,12 +665,14 @@ scenarios:
         domain:
           - ["term_id", "=", "REC: term.id"]
           - ["customer_invoice_line_id", "!=", false]
+        save_as: "_check"
         expect_count: 0
 
       - step: "Assert the invoice no longer exists"
         action: "search"
         model: "customer_invoice"
         domain: [["partner_id", "=", "REC: contact.id"]]
+        save_as: "_check"
         expect_count: 0
 
       - step: "Assert the payment journal item is no longer reconciled"
