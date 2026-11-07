@@ -42,6 +42,7 @@
             <field name="date_due" />
             <field name="currency_id" invisible="1" />
             <field name="enrollment_state" invisible="1" />
+            <field name="force_delete_term_ok" invisible="1" />
             <field name="amount_untaxed" />
             <field name="amount_tax" />
             <field name="amount_total" />
@@ -61,6 +62,14 @@
                     type="object"
                     icon="fa-eraser"
                     states="invoiced"
+                />
+            <button
+                    name="action_force_delete_invoice"
+                    title="Force Delete Invoice"
+                    type="object"
+                    icon="fa-trash"
+                    confirm="The reconciliation of this invoice will be undone and the invoice will be deleted. Continue?"
+                    attrs="{'invisible': ['|','|',('state','not in',['invoiced','paid']),('customer_invoice_id','=',False),('force_delete_term_ok','=',False)]}"
                 />
             <button
                     name="action_disconnect_invoice"
@@ -100,7 +109,15 @@
     <field name="mode">primary</field>
     <field name="arch" type="xml">
         <form>
-            <header />
+            <header>
+                <button
+                        name="action_force_delete_invoice"
+                        string="Force Delete Invoice"
+                        type="object"
+                        confirm="The reconciliation of this invoice will be undone and the invoice will be deleted. Continue?"
+                        attrs="{'invisible': ['|','|',('state','not in',['invoiced','paid']),('customer_invoice_id','=',False),('force_delete_term_ok','=',False)]}"
+                    />
+            </header>
             <sheet>
                 <group name="term_header" colspan="4" col="2">
                     <group name="term_header_left" colspan="1" col="2">
@@ -127,6 +144,9 @@
                         <field name="locked" invisible="1" />
                         <field name="enrollment_state" invisible="1" />
                         <field name="addendum_ok" invisible="1" />
+                        <field name="force_delete_term_ok" invisible="1" />
+                        <field name="state" invisible="1" />
+                        <field name="customer_invoice_id" invisible="1" />
                     </group>
                 </group>
                 <notebook>

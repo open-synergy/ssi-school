@@ -1015,6 +1015,63 @@ odoo.define("ssi_school.school_enrollment_tour", function (require) {
         )
     );
 
+    // IK: docs/school_enrollment/25-force-delete-invoice.md
+    tour.register(
+        "ssi_school_school_enrollment_force_delete_invoice",
+        {
+            test: true,
+            url: "/web",
+        },
+        [].concat(
+            // Flow 1 -- Open the Enrollments menu.
+            openEnrollmentList(),
+            // Flow 2 -- Open the record whose term invoice will be
+            // force deleted.
+            openRecordByStudent("TOUR ENR Force Delete Student"),
+            [
+                // Flow 3 -- On the Billing tab, click the Force Delete
+                // Invoice button of the Invoiced payment term.
+                {
+                    content: "Open the Billing tab",
+                    trigger: ".o_notebook .nav-link:contains(Billing)",
+                },
+                {
+                    // Gerbang: sebelum aksi, baris termin berstatus
+                    // Invoiced -- selector ini tidak cocok bila aksi
+                    // sudah berjalan (patterns.md §P).
+                    content: "Payment term is Invoiced before the action",
+                    trigger:
+                        ".o_data_row:has(.o_data_cell.o_list_char[title='TOUR ENR FD TERM']) .o_data_cell:contains(Invoiced)",
+                    run: function () {
+                        // Assertion only.
+                    },
+                },
+                {
+                    content: "Click the Force Delete Invoice button",
+                    trigger:
+                        ".o_data_row:has(.o_data_cell.o_list_char[title='TOUR ENR FD TERM']) button[name='action_force_delete_invoice']:not(.o_invisible_modifier)",
+                },
+
+                // Flow 4 -- Click OK on the confirmation dialog.
+                {
+                    content: "Confirm the dialog",
+                    trigger: ".modal-footer button.btn-primary",
+                    in_modal: true,
+                },
+
+                // Post-Condition -- the payment term returns to Uninvoiced.
+                {
+                    content: "Payment term status is now Uninvoiced",
+                    trigger:
+                        ".o_data_row:has(.o_data_cell.o_list_char[title='TOUR ENR FD TERM']) .o_data_cell:contains(Uninvoiced)",
+                    run: function () {
+                        // Assertion only.
+                    },
+                },
+            ]
+        )
+    );
+
     // IK: docs/school_enrollment/21-print.md
     //
     // Boundary (patterns.md §Q): this tour only proves the button opens

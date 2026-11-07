@@ -479,6 +479,17 @@ class SchoolEnrollment(models.Model):
             "before the addendum remain locked."
         ),
     )
+    force_delete_term_ok = fields.Boolean(
+        string="Can Force Delete Term Invoice",
+        compute="_compute_policy",
+        store=False,
+        compute_sudo=True,
+        help=(
+            "Policy that determines whether the customer invoice of an "
+            "invoiced or paid payment term may be force deleted, "
+            "whatever the invoice state."
+        ),
+    )
     create_invoice_ok = fields.Boolean(
         string="Can Create Due Invoice",
         compute="_compute_policy",
@@ -678,9 +689,9 @@ class SchoolEnrollment(models.Model):
         entry point for the extra policy fields declared here
         (``pass_ok``, ``fail_ok``, ``drop_out_ok``, ``graduate_ok``,
         ``copy_payment_term_ok``, ``addendum_ok``,
-        ``create_invoice_ok``); the values themselves are still
-        produced by the mixin implementation reached through
-        ``super()``.
+        ``create_invoice_ok``, ``force_delete_term_ok``); the values
+        themselves are still produced by the mixin implementation
+        reached through ``super()``.
 
         :return: None
         """
@@ -1875,6 +1886,7 @@ Solution: Delete or disconnect the invoice on the payment term before cancelling
             "copy_payment_term_ok",
             "addendum_ok",
             "create_invoice_ok",
+            "force_delete_term_ok",
         ]
         res += policy_field
         return res
