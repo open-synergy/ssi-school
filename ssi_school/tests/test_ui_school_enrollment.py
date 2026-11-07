@@ -461,6 +461,25 @@ class TestUiSchoolEnrollment(HttpSavepointCase):
             }
         )
 
+        # 25-force-delete-invoice.md -- On Progress record with one
+        # Invoiced payment term whose invoice is still a draft, so no
+        # reconciliation is involved (the reconciliation rules are covered
+        # by the YAML unit tests). The term is created after opening, so
+        # it carries a customer invoice that the tour force deletes.
+        cls.enrollment_force_delete = _create_enrollment(
+            "TOUR ENR Force Delete Student", cls.academic_term_1
+        )
+        _bypass(cls.enrollment_force_delete).action_confirm()
+        _bypass(cls.enrollment_force_delete).action_approve_approval()
+        force_delete_term = cls.env["school_enrollment_payment_term"].create(
+            {
+                "enrollment_id": cls.enrollment_force_delete.id,
+                "name": "TOUR ENR FD TERM",
+                "sequence": 10,
+            }
+        )
+        force_delete_term.action_create_invoice()
+
         # 21-print.md -- any record; Print does not depend on status.
         cls.enrollment_print = _create_enrollment(
             "TOUR ENR Print Student", cls.academic_term_1
@@ -571,6 +590,12 @@ class TestUiSchoolEnrollment(HttpSavepointCase):
         """IK: docs/school_enrollment/20-close-addendum.md"""
         self.start_tour(
             "/web", "ssi_school_school_enrollment_close_addendum", login="admin"
+        )
+
+    def test_force_delete_invoice(self):
+        """IK: docs/school_enrollment/25-force-delete-invoice.md"""
+        self.start_tour(
+            "/web", "ssi_school_school_enrollment_force_delete_invoice", login="admin"
         )
 
     def test_print(self):

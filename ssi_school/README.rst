@@ -128,6 +128,7 @@ Enrollment
 * `Print Enrollment <docs/school_enrollment/21-print.html>`_
 * `Reload Template Policy - Enrollment <docs/school_enrollment/22-reload-template-policy.html>`_
 * `Copy Payment Terms - Enrollment <docs/school_enrollment/24-copy-payment-term.html>`_
+* `Force Delete Invoice - Enrollment <docs/school_enrollment/25-force-delete-invoice.html>`_
 
 Student Class Mutation
 -----------------------
