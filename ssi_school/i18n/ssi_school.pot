@@ -245,6 +245,39 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school
+#: code:addons/ssi_school/models/customer_invoice.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Force delete customer invoice\n"
+"Database ID: %s\n"
+"Problem: Line '%s' was already released by the Revenue Recognition of enrollment '%s'\n"
+"Solution: Revenue Recognition entries cannot be undone by deleting this invoice\n"
+msgstr ""
+
+#. module: ssi_school
+#: code:addons/ssi_school/models/school_enrollment_payment_term.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Force delete customer invoice of payment term\n"
+"Database ID: %s\n"
+"Problem: Payment term '%s' is not invoiced or paid, or has no customer invoice\n"
+"Solution: Only a term that holds a customer invoice can have it force deleted\n"
+msgstr ""
+
+#. module: ssi_school
+#: code:addons/ssi_school/models/school_enrollment_payment_term.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Force delete customer invoice of payment term\n"
+"Database ID: %s\n"
+"Problem: You are not allowed to force delete the invoice of payment term '%s'\n"
+"Solution: Check the force delete term policy prerequisite\n"
+msgstr ""
+
+#. module: ssi_school
 #: code:addons/ssi_school/models/school_homeroom.py:0
 #, python-format
 msgid ""
@@ -1144,6 +1177,12 @@ msgid "Can Finished"
 msgstr ""
 
 #. module: ssi_school
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__force_delete_term_ok
+#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term__force_delete_term_ok
+msgid "Can Force Delete Term Invoice"
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_homeroom__generate_enrollments_ok
 msgid "Can Generate Enrollments"
 msgstr ""
@@ -1615,6 +1654,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__customer_invoice_type_id
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_template__customer_invoice_type_id
 msgid "Customer Invoice Type"
+msgstr ""
+
+#. module: ssi_school
+#: code:addons/ssi_school/models/school_enrollment_payment_term.py:0
+#, python-format
+msgid ""
+"Customer invoice %(number)s (total %(amount)s, state %(state)s) of payment "
+"term %(term)s was force deleted by %(user)s."
 msgstr ""
 
 #. module: ssi_school
@@ -2236,6 +2283,13 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school.field_school_student_mutation__activity_type_icon
 #: model:ir.model.fields,help:ssi_school.field_school_teacher__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
+msgstr ""
+
+#. module: ssi_school
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_payment_term_view_form_embedded
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_payment_term_view_tree
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_form
+msgid "Force Delete Invoice"
 msgstr ""
 
 #. module: ssi_school
@@ -3652,6 +3706,13 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment__pass_ok
 msgid "Policy that determines whether the Pass action button is visible."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment__force_delete_term_ok
+msgid ""
+"Policy that determines whether the customer invoice of an invoiced or paid "
+"payment term may be force deleted, whatever the invoice state."
 msgstr ""
 
 #. module: ssi_school
@@ -5077,6 +5138,15 @@ msgid "The receivable account used to record enrollment billing."
 msgstr ""
 
 #. module: ssi_school
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_payment_term_view_form_embedded
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_payment_term_view_tree
+#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_form
+msgid ""
+"The reconciliation of this invoice will be undone and the invoice will be "
+"deleted. Continue?"
+msgstr ""
+
+#. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_student_mutation__school_id
 msgid "The school of the enrollment being mutated."
 msgstr ""
@@ -5648,6 +5718,13 @@ msgstr ""
 msgid ""
 "Whether the owning enrollment currently allows adding new payment "
 "terms/details via the addendum mechanism."
+msgstr ""
+
+#. module: ssi_school
+#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_term__force_delete_term_ok
+msgid ""
+"Whether the owning enrollment currently allows force deleting the customer "
+"invoice of this payment term."
 msgstr ""
 
 #. module: ssi_school
