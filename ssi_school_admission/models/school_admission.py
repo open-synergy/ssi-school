@@ -309,6 +309,17 @@ class SchoolAdmission(models.Model):
             "before the addendum remain locked."
         ),
     )
+    force_delete_term_ok = fields.Boolean(
+        string="Can Force Delete Term Invoice",
+        compute="_compute_policy",
+        store=False,
+        compute_sudo=True,
+        help=(
+            "Policy that determines whether the customer invoice of an "
+            "invoiced or paid payment term may be force deleted, "
+            "whatever the invoice state."
+        ),
+    )
     create_invoice_ok = fields.Boolean(
         string="Can Create Due Invoice",
         compute="_compute_policy",
@@ -484,8 +495,8 @@ class SchoolAdmission(models.Model):
         Delegates to the mixin implementation; it is redefined here only
         so the extra policy fields declared by this model (
         ``copy_payment_term_ok``, ``addendum_ok``, ``create_invoice_ok``,
-        ``create_enrollment_ok``) are evaluated together with the
-        standard workflow policies.
+        ``create_enrollment_ok``, ``force_delete_term_ok``) are
+        evaluated together with the standard workflow policies.
         """
         _super = super()
         _super._compute_policy()  # pylint: disable=protected-access
@@ -1169,6 +1180,7 @@ Solution: Open the student profile from the Result tab instead of creating a new
             "manual_number_ok",
             "copy_payment_term_ok",
             "addendum_ok",
+            "force_delete_term_ok",
             "create_invoice_ok",
             "create_enrollment_ok",
             "create_student_ok",

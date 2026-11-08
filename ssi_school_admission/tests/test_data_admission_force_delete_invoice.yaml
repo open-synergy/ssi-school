@@ -1,0 +1,754 @@
+options:
+  auto_refresh: true
+
+# `setup:` replays before every scenario in the same transaction, so every
+# unique value (codes) is generated from a record count on each replay.
+setup:
+  steps:
+    - step: "Setup - get sale journal"
+      action: "search"
+      model: "account.journal"
+      domain: [["type", "=", "sale"]]
+      save_as: "sale_journal"
+      limit: 1
+
+    - step: "Setup - create general journal for payment entries"
+      action: "create"
+      model: "account.journal"
+      save_as: "general_journal"
+      values:
+        name:
+          "EVAL: 'Force Delete General Journal %d' %
+          env['account.journal'].search_count([])"
+        code: "EVAL: 'FDJ%d' % env['account.journal'].search_count([])"
+        type: "general"
+
+    - step: "Setup - get receivable account type"
+      action: "ref"
+      xml_id: "account.data_account_type_receivable"
+      save_as: "receivable_type"
+
+    - step: "Setup - get revenue account type"
+      action: "ref"
+      xml_id: "account.data_account_type_revenue"
+      save_as: "revenue_type"
+
+    - step: "Setup - create Receivable account"
+      action: "create"
+      model: "account.account"
+      save_as: "receivable_account"
+      values:
+        name:
+          "EVAL: 'Force Delete Receivable %d' % env['account.account'].search_count([])"
+        code: "EVAL: 'FDR%d' % env['account.account'].search_count([])"
+        user_type_id: "REC: receivable_type.id"
+        reconcile: true
+
+    - step: "Setup - create Income account"
+      action: "create"
+      model: "account.account"
+      save_as: "income_account"
+      values:
+        name: "EVAL: 'Force Delete Income %d' % env['account.account'].search_count([])"
+        code: "EVAL: 'FDI%d' % env['account.account'].search_count([])"
+        user_type_id: "REC: revenue_type.id"
+
+    - step: "Setup - create Contra account"
+      action: "create"
+      model: "account.account"
+      save_as: "contra_account"
+      values:
+        name: "EVAL: 'Force Delete Contra %d' % env['account.account'].search_count([])"
+        code: "EVAL: 'FDC%d' % env['account.account'].search_count([])"
+        user_type_id: "REC: revenue_type.id"
+
+    - step: "Setup - create customer invoice type"
+      action: "create"
+      model: "customer_invoice_type"
+      save_as: "ci_type"
+      values:
+        name:
+          "EVAL: 'Force Delete Invoice Type %d' %
+          env['customer_invoice_type'].search_count([])"
+        code: "EVAL: 'FDT%d' % env['customer_invoice_type'].search_count([])"
+        journal_id: "REC: sale_journal.id"
+        receivable_account_id: "REC: receivable_account.id"
+
+    - step: "Setup - create product"
+      action: "create"
+      model: "product.product"
+      save_as: "product"
+      values:
+        name: "EVAL: 'Force Delete Fee %d' % env['product.product'].search_count([])"
+        type: "service"
+        list_price: 1000000.0
+
+    - step: "Setup - create pricelist"
+      action: "create"
+      model: "product.pricelist"
+      save_as: "pricelist"
+      values:
+        name:
+          "EVAL: 'Force Delete Pricelist %d' % env['product.pricelist'].search_count([])"
+        currency_id: "EVAL: env.company.currency_id.id"
+
+    - step: "Setup - create grade type"
+      action: "create"
+      model: "school_grade_type"
+      save_as: "grade_type"
+      values:
+        name:
+          "EVAL: 'Force Delete Grade Type %d' %
+          env['school_grade_type'].search_count([])"
+        code: "EVAL: 'FDGT%d' % env['school_grade_type'].search_count([])"
+        sequence: 10
+
+    - step: "Setup - create academic year"
+      action: "create"
+      model: "school_academic_year"
+      save_as: "academic_year"
+      values:
+        name:
+          "EVAL: 'Force Delete Year %d' % env['school_academic_year'].search_count([])"
+        code: "EVAL: 'FDAY%d' % env['school_academic_year'].search_count([])"
+        date_start: "2024-07-01"
+        date_end: "2025-06-30"
+
+    - step: "Setup - create academic term"
+      action: "create"
+      model: "school_academic_term"
+      save_as: "academic_term"
+      values:
+        name:
+          "EVAL: 'Force Delete Semester A %d' %
+          env['school_academic_term'].search_count([])"
+        code: "EVAL: 'FDSA%d' % env['school_academic_term'].search_count([])"
+        date_start: "2024-07-01"
+        date_end: "2024-12-31"
+        year_id: "EVAL: registry['academic_year'].id"
+        enrollment_state: "open"
+
+    - step: "Setup - create school"
+      action: "create"
+      model: "school"
+      save_as: "school"
+      values:
+        name: "EVAL: 'Force Delete School %d' % env['school'].search_count([])"
+        code: "EVAL: 'FDSCH%d' % env['school'].search_count([])"
+        grade_type_id: "EVAL: registry['grade_type'].id"
+
+    - step: "Setup - create grade"
+      action: "create"
+      model: "school_grade"
+      save_as: "grade"
+      values:
+        name: "EVAL: 'Force Delete Grade %d' % env['school_grade'].search_count([])"
+        code: "EVAL: 'FDGR%d' % env['school_grade'].search_count([])"
+        sequence: 10
+        type_id: "EVAL: registry['grade_type'].id"
+
+    - step: "Setup - create payment template"
+      action: "create"
+      model: "school_admission_payment_template"
+      save_as: "payment_template"
+      values:
+        customer_invoice_type_id: "REC: ci_type.id"
+        name:
+          "EVAL: 'Force Delete Template %d' %
+          env['school_admission_payment_template'].search_count([])"
+        code:
+          "EVAL: 'FDPT%d' % env['school_admission_payment_template'].search_count([])"
+        school_id: "EVAL: registry['school'].id"
+        grade_id: "EVAL: registry['grade'].id"
+        academic_term_id: "EVAL: registry['academic_term'].id"
+        term_ids:
+          - - 0
+            - 0
+            - name: "Term 1 Force Delete"
+              sequence: 10
+              detail_ids:
+                - - 0
+                  - 0
+                  - product_id: "EVAL: registry['product'].id"
+                    name: "Fee Force Delete"
+                    account_id: "EVAL: registry['income_account'].id"
+                    uom_quantity: 1.0
+                    uom_id: "REF: uom.product_uom_unit"
+                    price_unit: 1000000.0
+
+    - step: "Setup - create student contact"
+      action: "create"
+      model: "res.partner"
+      save_as: "contact"
+      values:
+        name: "EVAL: 'Student Contact ADFD %d' % env['res.partner'].search_count([])"
+
+    - step: "Setup - create admission"
+      action: "create"
+      model: "school_admission"
+      save_as: "admission"
+      values:
+        user_id: "REF: base.user_admin"
+        customer_invoice_type_id: "REC: ci_type.id"
+        receivable_account_id: "REC: receivable_account.id"
+        date: "2024-07-01"
+        academic_year_id: "EVAL: registry['academic_year'].id"
+        academic_term_id: "EVAL: registry['academic_term'].id"
+        school_id: "EVAL: registry['school'].id"
+        grade_id: "EVAL: registry['grade'].id"
+        student_id: "EVAL: registry['contact'].id"
+        payment_template_id: "EVAL: registry['payment_template'].id"
+        pricelist_id: "EVAL: registry['pricelist'].id"
+        currency_id: "EVAL: env.company.currency_id.id"
+        receivable_journal_id: "EVAL: registry['sale_journal'].id"
+
+    - step: "Setup - confirm admission"
+      action: "call"
+      target: "admission"
+      method: "action_confirm"
+      as_user: "base.user_admin"
+
+    - step: "Setup - compute payment"
+      action: "call"
+      target: "admission"
+      method: "action_compute_payment"
+      as_user: "base.user_admin"
+
+    - step: "Setup - assert admission is confirm before approve (forces refresh, T-04)"
+      action: "assert"
+      target: "admission"
+      asserts:
+        state:
+          type: "value"
+          expected: "confirm"
+
+    - step: "Setup - approve admission"
+      action: "call"
+      target: "admission"
+      method: "action_approve_approval"
+      as_user: "base.user_admin"
+      asserts:
+        state:
+          type: "value"
+          expected: "open"
+
+    - step: "Setup - get the payment term"
+      action: "search"
+      model: "school_admission_payment_term"
+      domain: [["admission_id", "=", "REC: admission.id"]]
+      save_as: "term"
+      expect_count: 1
+
+    - step: "Setup - create the term invoice"
+      action: "call"
+      target: "term"
+      method: "action_create_invoice"
+      as_user: "base.user_admin"
+
+    - step: "Setup - get the created customer invoice"
+      action: "search"
+      model: "customer_invoice"
+      domain: [["id", "=", "REC: term.customer_invoice_id.id"]]
+      save_as: "invoice"
+      expect_count: 1
+
+scenarios:
+  - name: "Force Delete Invoice - Draft Invoice"
+    steps:
+      - step: "Force delete the invoice"
+        action: "call"
+        target: "term"
+        method: "action_force_delete_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Assert the term is uninvoiced again"
+        action: "assert"
+        target: "term"
+        asserts:
+          customer_invoice_id:
+            type: "value"
+            operator: "is_falsy"
+          state:
+            type: "value"
+            expected: "uninvoiced"
+
+      - step: "Assert no detail line keeps an invoice line link"
+        action: "search"
+        model: "school_admission_payment_term_detail"
+        domain:
+          - ["term_id", "=", "REC: term.id"]
+          - ["customer_invoice_line_id", "!=", false]
+        save_as: "_check"
+        expect_count: 0
+
+      - step: "Assert the invoice no longer exists"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["partner_id", "=", "REC: contact.id"]]
+        save_as: "_check"
+        expect_count: 0
+
+  - name: "Force Delete Invoice - Open Invoice Without Payment Posts Chatter Note"
+    steps:
+      - step: "Confirm the invoice"
+        action: "call"
+        target: "invoice"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert the invoice is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "invoice"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Open the invoice"
+        action: "call"
+        target: "invoice"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step:
+          "Record the invoice number in a partner name before it is deleted (the chatter
+          note must contain it)"
+        action: "create"
+        model: "res.partner"
+        save_as: "number_holder"
+        values:
+          name: "EVAL: registry['invoice'].display_name"
+
+      - step: "Force delete the invoice"
+        action: "call"
+        target: "term"
+        method: "action_force_delete_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Assert the term is uninvoiced again"
+        action: "assert"
+        target: "term"
+        asserts:
+          customer_invoice_id:
+            type: "value"
+            operator: "is_falsy"
+          state:
+            type: "value"
+            expected: "uninvoiced"
+
+      - step: "Assert no detail line keeps an invoice line link"
+        action: "search"
+        model: "school_admission_payment_term_detail"
+        domain:
+          - ["term_id", "=", "REC: term.id"]
+          - ["customer_invoice_line_id", "!=", false]
+        save_as: "_check"
+        expect_count: 0
+
+      - step: "Assert the invoice no longer exists"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["partner_id", "=", "REC: contact.id"]]
+        save_as: "_check"
+        expect_count: 0
+
+      - step: "Assert the admission chatter recorded the force delete"
+        action: "search"
+        model: "mail.message"
+        domain:
+          - ["model", "=", "school_admission"]
+          - ["res_id", "=", "REC: admission.id"]
+          - ["body", "ilike", "force deleted"]
+          - ["body", "ilike", "EVAL: registry['number_holder'].name"]
+          - ["body", "ilike", "total 1000000.0"]
+          - ["body", "ilike", "state open"]
+          - ["body", "ilike", "EVAL: env.ref('base.user_admin').name"]
+        save_as: "_check"
+        expect_count: 1
+
+  - name: "Force Delete Invoice - Partially Reconciled Invoice Keeps Payment"
+    steps:
+      - step: "Confirm the invoice"
+        action: "call"
+        target: "invoice"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert the invoice is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "invoice"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Open the invoice"
+        action: "call"
+        target: "invoice"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Get the invoice receivable journal item"
+        action: "search"
+        model: "account.move.line"
+        domain: [["id", "=", "REC: invoice.receivable_move_line_id.id"]]
+        save_as: "receivable_ml"
+        expect_count: 1
+
+      - step: "Create the payment entry crediting the receivable account"
+        action: "create"
+        model: "account.move"
+        save_as: "payment_move"
+        values:
+          journal_id: "REC: general_journal.id"
+          date: 2024-08-01
+          line_ids:
+            - - 0
+              - 0
+              - name: "Payment partial"
+                account_id: "REC: receivable_account.id"
+                partner_id: "REC: contact.id"
+                credit: 400000.0
+            - - 0
+              - 0
+              - name: "Payment contra partial"
+                account_id: "REC: contra_account.id"
+                debit: 400000.0
+
+      - step: "Post the payment entry"
+        action: "call"
+        target: "payment_move"
+        method: "action_post"
+
+      - step: "Get the payment receivable-side journal item"
+        action: "search"
+        model: "account.move.line"
+        domain:
+          - ["move_id", "=", "REC: payment_move.id"]
+          - ["account_id", "=", "REC: receivable_account.id"]
+        save_as: "payment_ml"
+        expect_count: 1
+
+      - step: "Get both journal items to reconcile"
+        action: "search"
+        model: "account.move.line"
+        domain: [["id", "in", ["REC: receivable_ml.id", "REC: payment_ml.id"]]]
+        save_as: "to_reconcile"
+        expect_count: 2
+
+      - step: "Reconcile the receivable line against the payment"
+        action: "call"
+        target: "to_reconcile"
+        method: "reconcile"
+
+      - step: "Force delete the invoice"
+        action: "call"
+        target: "term"
+        method: "action_force_delete_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Assert the term is uninvoiced again"
+        action: "assert"
+        target: "term"
+        asserts:
+          customer_invoice_id:
+            type: "value"
+            operator: "is_falsy"
+          state:
+            type: "value"
+            expected: "uninvoiced"
+
+      - step: "Assert no detail line keeps an invoice line link"
+        action: "search"
+        model: "school_admission_payment_term_detail"
+        domain:
+          - ["term_id", "=", "REC: term.id"]
+          - ["customer_invoice_line_id", "!=", false]
+        save_as: "_check"
+        expect_count: 0
+
+      - step: "Assert the invoice no longer exists"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["partner_id", "=", "REC: contact.id"]]
+        save_as: "_check"
+        expect_count: 0
+
+      - step: "Assert the payment journal item is no longer reconciled"
+        action: "assert"
+        target: "payment_ml"
+        asserts:
+          reconciled:
+            type: "value"
+            expected: false
+
+      - step: "Assert the payment entry still exists and is posted"
+        action: "assert"
+        target: "payment_move"
+        asserts:
+          state:
+            type: "value"
+            expected: "posted"
+
+  - name: "Force Delete Invoice - Paid Invoice On Done Admission"
+    steps:
+      - step: "Confirm the invoice"
+        action: "call"
+        target: "invoice"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert the invoice is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "invoice"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Open the invoice"
+        action: "call"
+        target: "invoice"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Get the invoice receivable journal item"
+        action: "search"
+        model: "account.move.line"
+        domain: [["id", "=", "REC: invoice.receivable_move_line_id.id"]]
+        save_as: "receivable_ml"
+        expect_count: 1
+
+      - step: "Create the payment entry crediting the receivable account"
+        action: "create"
+        model: "account.move"
+        save_as: "payment_move"
+        values:
+          journal_id: "REC: general_journal.id"
+          date: 2024-08-01
+          line_ids:
+            - - 0
+              - 0
+              - name: "Payment full"
+                account_id: "REC: receivable_account.id"
+                partner_id: "REC: contact.id"
+                credit: 1000000.0
+            - - 0
+              - 0
+              - name: "Payment contra full"
+                account_id: "REC: contra_account.id"
+                debit: 1000000.0
+
+      - step: "Post the payment entry"
+        action: "call"
+        target: "payment_move"
+        method: "action_post"
+
+      - step: "Get the payment receivable-side journal item"
+        action: "search"
+        model: "account.move.line"
+        domain:
+          - ["move_id", "=", "REC: payment_move.id"]
+          - ["account_id", "=", "REC: receivable_account.id"]
+        save_as: "payment_ml"
+        expect_count: 1
+
+      - step: "Get both journal items to reconcile"
+        action: "search"
+        model: "account.move.line"
+        domain: [["id", "in", ["REC: receivable_ml.id", "REC: payment_ml.id"]]]
+        save_as: "to_reconcile"
+        expect_count: 2
+
+      - step: "Reconcile the receivable line against the payment"
+        action: "call"
+        target: "to_reconcile"
+        method: "reconcile"
+
+      - step: "Assert the invoice is done once fully reconciled"
+        action: "assert"
+        target: "invoice"
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+      - step: "Assert the term is paid"
+        action: "assert"
+        target: "term"
+        asserts:
+          state:
+            type: "value"
+            expected: "paid"
+
+      - step: "Finish the admission"
+        action: "call"
+        target: "admission"
+        method: "action_done"
+        as_user: "base.user_admin"
+
+      - step: "Assert the admission is done and the term stays locked"
+        action: "assert"
+        target: "admission"
+        asserts:
+          state:
+            type: "value"
+            expected: "done"
+
+      - step: "Force delete the invoice"
+        action: "call"
+        target: "term"
+        method: "action_force_delete_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Assert the term is uninvoiced again"
+        action: "assert"
+        target: "term"
+        asserts:
+          customer_invoice_id:
+            type: "value"
+            operator: "is_falsy"
+          state:
+            type: "value"
+            expected: "uninvoiced"
+
+      - step: "Assert no detail line keeps an invoice line link"
+        action: "search"
+        model: "school_admission_payment_term_detail"
+        domain:
+          - ["term_id", "=", "REC: term.id"]
+          - ["customer_invoice_line_id", "!=", false]
+        save_as: "_check"
+        expect_count: 0
+
+      - step: "Assert the invoice no longer exists"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["partner_id", "=", "REC: contact.id"]]
+        save_as: "_check"
+        expect_count: 0
+
+      - step: "Assert the payment journal item is no longer reconciled"
+        action: "assert"
+        target: "payment_ml"
+        asserts:
+          reconciled:
+            type: "value"
+            expected: false
+
+      - step: "Assert the payment entry still exists and is posted"
+        action: "assert"
+        target: "payment_move"
+        asserts:
+          state:
+            type: "value"
+            expected: "posted"
+
+  - name: "Force Delete Invoice - Rejected Without The Policy"
+    steps:
+      - step: "Confirm the invoice"
+        action: "call"
+        target: "invoice"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+
+      - step: "Assert the invoice is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "invoice"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Open the invoice"
+        action: "call"
+        target: "invoice"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Create an admission user who is not a validator"
+        action: "create"
+        model: "res.users"
+        save_as: "plain_user"
+        values:
+          name: "EVAL: 'Force Delete Plain User %d' % env['res.users'].search_count([])"
+          login:
+            "EVAL: 'force_delete_plain_%d@example.com' %
+            env['res.users'].search_count([])"
+          groups_id:
+            - - 6
+              - 0
+              - - "REF: base.group_user"
+                - "REF: ssi_school_admission.school_admission_user_group"
+
+      - step: "Calling the action directly without the policy is rejected"
+        action: "call"
+        target: "term"
+        method: "action_force_delete_invoice"
+        as_user: "plain_user"
+        expect_error:
+          type: "UserError"
+          message_contains: "not allowed to force delete"
+
+      - step: "Assert the term still holds its invoice"
+        action: "assert"
+        target: "term"
+        asserts:
+          customer_invoice_id:
+            type: "value"
+            operator: "is_truthy"
+          state:
+            type: "value"
+            expected: "invoiced"
+
+  - name: "Force Delete Invoice - Uninvoiced Term Is Rejected"
+    steps:
+      - step: "Delete the draft invoice so the term becomes uninvoiced"
+        action: "call"
+        target: "term"
+        method: "action_delete_invoice"
+        as_user: "base.user_admin"
+
+      - step: "Assert the term is uninvoiced"
+        action: "assert"
+        target: "term"
+        asserts:
+          customer_invoice_id:
+            type: "value"
+            operator: "is_falsy"
+          state:
+            type: "value"
+            expected: "uninvoiced"
+
+      - step: "Force delete is rejected because the term holds no invoice"
+        action: "call"
+        target: "term"
+        method: "action_force_delete_invoice"
+        as_user: "base.user_admin"
+        expect_error:
+          type: "UserError"
+          message_contains: "not invoiced or paid"
+
+      - step: "Assert the term is still uninvoiced"
+        action: "assert"
+        target: "term"
+        asserts:
+          state:
+            type: "value"
+            expected: "uninvoiced"

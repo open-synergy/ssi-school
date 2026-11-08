@@ -379,6 +379,29 @@ class TestUiSchoolAdmission(HttpSavepointCase):
             }
         )
 
+        # 23-force-delete-invoice.md -- On Progress record with one
+        # Invoiced payment term whose invoice is still a draft, so no
+        # reconciliation is involved (the reconciliation rules are covered
+        # by the YAML unit tests). The header values copied onto the
+        # invoice are set here for the same reason as above.
+        cls.admission_force_delete = _create_admission(
+            "TOUR ADM Force Delete Student",
+            customer_invoice_type_id=cls.ci_type.id,
+            pricelist_id=cls.pricelist.id,
+            receivable_journal_id=cls.ci_journal.id,
+            receivable_account_id=cls.ci_account.id,
+        )
+        _bypass(cls.admission_force_delete).action_confirm()
+        _bypass(cls.admission_force_delete).action_approve_approval()
+        force_delete_term = cls.env["school_admission_payment_term"].create(
+            {
+                "admission_id": cls.admission_force_delete.id,
+                "name": "TOUR ADM FD TERM",
+                "sequence": 10,
+            }
+        )
+        force_delete_term.action_create_invoice()
+
         # 16-create-enrollment.md -- On Progress (school_student created
         # automatically by action_approve_approval).
         cls.admission_enrollment = _create_admission("TOUR ADM Enrollment Student")
@@ -503,6 +526,14 @@ class TestUiSchoolAdmission(HttpSavepointCase):
         self.start_tour(
             "/web",
             "ssi_school_admission_school_admission_create_enrollment",
+            login="admin",
+        )
+
+    def test_force_delete_invoice(self):
+        """IK: docs/school_admission/23-force-delete-invoice.md"""
+        self.start_tour(
+            "/web",
+            "ssi_school_admission_school_admission_force_delete_invoice",
             login="admin",
         )
 

@@ -227,6 +227,7 @@
                             <field name="currency_id" invisible="1" />
                             <field name="admission_state" invisible="1" />
                             <field name="addendum_ok" invisible="1" />
+                            <field name="force_delete_term_ok" invisible="1" />
                             <field name="locked" invisible="1" />
                             <field name="amount_untaxed" />
                             <field name="amount_tax" />
@@ -247,6 +248,14 @@
                                     type="object"
                                     icon="fa-eraser"
                                     states="invoiced"
+                                />
+                            <button
+                                    name="action_force_delete_invoice"
+                                    title="Force Delete Invoice"
+                                    type="object"
+                                    icon="fa-trash"
+                                    confirm="The reconciliation of this invoice will be undone and the invoice will be deleted. Continue?"
+                                    attrs="{'invisible': ['|','|',('state','not in',['invoiced','paid']),('customer_invoice_id','=',False),('force_delete_term_ok','=',False)]}"
                                 />
                             <button
                                     name="action_disconnect_invoice"
@@ -339,6 +348,7 @@
             </xpath>
             <xpath expr="//group[@name='policy_2']" position="inside">
                 <field name="addendum_ok" />
+                <field name="force_delete_term_ok" />
                 <field name="create_invoice_ok" />
                 <field name="create_enrollment_ok" />
                 <field name="create_student_ok" />
