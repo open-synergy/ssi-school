@@ -3,3 +3,4 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from . import test_school_enrollment_payment_term_promotion  # noqa: F401
+from . import test_school_enrollment_payment_term_promotion_force_delete  # noqa: F401

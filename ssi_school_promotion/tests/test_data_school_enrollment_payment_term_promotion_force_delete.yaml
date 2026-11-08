@@ -1,0 +1,471 @@
+# Copyright 2026 OpenSynergy Indonesia
+# Copyright 2026 PT. Simetri Sinergi Indonesia
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+#
+# T-01 (odoo-development-unit-test/test-traps.md): scenarios in one YAML
+# file share one un-rolled-back DB transaction and a `setup:` block replays
+# before every scenario, so this file uses exactly ONE scenario, no
+# `setup:` block. Fixture codes use the `FDP1` prefix, deliberately
+# different from the other test file of this module, to avoid
+# unique-constraint collisions.
+#
+# The fixture follows test_data_school_enrollment_payment_term_promotion.yaml
+# (term A + promotion usage) and ssi_school's force delete test (enrollment
+# confirmed and approved to `open`).
+options:
+  auto_refresh: true
+
+scenarios:
+  - name: "Force Delete Invoice - guard of promotion code usage allocation"
+    steps:
+      - step: "Get revenue account type"
+        action: "ref"
+        xml_id: "account.data_account_type_revenue"
+        save_as: "revenue_type"
+      - step: "Get receivable account type"
+        action: "ref"
+        xml_id: "account.data_account_type_receivable"
+        save_as: "receivable_type"
+      - step: "Create income account"
+        action: "create"
+        model: "account.account"
+        save_as: "income_account"
+        values:
+          code: "FDP1-INC"
+          name: "School Enrollment Force Delete Promotion Income"
+          user_type_id: "REC: revenue_type.id"
+      - step: "Create receivable account"
+        action: "create"
+        model: "account.account"
+        save_as: "receivable_account"
+        values:
+          code: "FDP1-RECV"
+          name: "School Enrollment Force Delete Promotion Receivable"
+          user_type_id: "REC: receivable_type.id"
+          reconcile: true
+      - step: "Create sales journal"
+        action: "create"
+        model: "account.journal"
+        save_as: "journal"
+        values:
+          name: "School Enrollment Force Delete Promotion Journal"
+          code: "FDP1J"
+          type: "sale"
+      - step: "Create customer invoice type"
+        action: "create"
+        model: "customer_invoice_type"
+        save_as: "ci_type"
+        values:
+          name: "School Enrollment Force Delete Promotion Invoice Type"
+          code: "FDP1CIT"
+          journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+      - step: "Create product"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "School Enrollment Force Delete Promotion Product"
+          type: "service"
+          list_price: 1000000.0
+      - step: "Create pricelist"
+        action: "create"
+        model: "product.pricelist"
+        save_as: "pricelist"
+        values:
+          name: "School Enrollment Force Delete Promotion Pricelist"
+          currency_id: "REC: company.currency_id.id"
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "School Enrollment Force Delete Promotion Grade Type"
+          code: "FDP1GT"
+          sequence: 10
+      - step: "Create academic year"
+        action: "create"
+        model: "school_academic_year"
+        save_as: "academic_year"
+        values:
+          name: "2024/2025 FDP1"
+          code: "FDP1AY"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+      - step: "Create academic term"
+        action: "create"
+        model: "school_academic_term"
+        save_as: "academic_term"
+        values:
+          name: "Semester FDP1"
+          code: "FDP1AT"
+          date_start: "2024-07-01"
+          date_end: "2025-06-30"
+          year_id: "REC: academic_year.id"
+          enrollment_state: "open"
+      - step: "Create school"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School FDP1"
+          code: "FDP1SCH"
+          grade_type_id: "REC: grade_type.id"
+      - step: "Create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade FDP1"
+          code: "FDP1G"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+      - step: "Create grade class"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class FDP1"
+          code: "FDP1GC"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+      - step: "Create student contact"
+        action: "create"
+        model: "res.partner"
+        save_as: "contact"
+        values:
+          name: "Student Contact FDP1"
+      - step: "Create student"
+        action: "create"
+        model: "school_student"
+        save_as: "student"
+        values:
+          name: "Student FDP1"
+          code: "FDP1STU"
+          contact_id: "REC: contact.id"
+          school_id: "REC: school.id"
+      - step: "Create enrollment"
+        action: "create"
+        model: "school_enrollment"
+        save_as: "enrollment"
+        values:
+          date: "2024-07-01"
+          academic_year_id: "REC: academic_year.id"
+          academic_term_id: "REC: academic_term.id"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          grade_class_id: "REC: grade_class.id"
+          student_id: "REC: student.id"
+          currency_id: "REC: company.currency_id.id"
+          pricelist_id: "REC: pricelist.id"
+          receivable_journal_id: "REC: journal.id"
+          receivable_account_id: "REC: receivable_account.id"
+          customer_invoice_type_id: "REC: ci_type.id"
+          auto_confirm_customer_invoice: false
+      - step: "Create payment term A"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_a"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term A FDP1"
+          sequence: 10
+          date_invoice: "2024-07-05"
+          date_due: "2024-07-20"
+      - step: "Create payment term A detail"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        save_as: "detail_a"
+        values:
+          term_id: "REC: term_a.id"
+          product_id: "REC: product.id"
+          name: "Registration Fee FDP1"
+          account_id: "REC: income_account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+      - step: "Create sibling payment term B (left uninvoiced)"
+        action: "create"
+        model: "school_enrollment_payment_term"
+        save_as: "term_b"
+        values:
+          enrollment_id: "REC: enrollment.id"
+          name: "Term B FDP1"
+          sequence: 20
+          date_invoice: "2024-08-05"
+          date_due: "2024-08-20"
+      - step: "Create payment term B detail"
+        action: "create"
+        model: "school_enrollment_payment_term_detail"
+        save_as: "detail_b"
+        values:
+          term_id: "REC: term_b.id"
+          product_id: "REC: product.id"
+          name: "Tuition Fee FDP1"
+          account_id: "REC: income_account.id"
+          uom_quantity: 1.0
+          uom_id: "REF: uom.product_uom_unit"
+          price_unit: 1000000.0
+      - step: "Confirm enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+      - step: "Assert enrollment is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "enrollment"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+      - step: "Approve enrollment"
+        action: "call"
+        target: "enrollment"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+      - step: "Create customer invoice from term A"
+        action: "call"
+        target: "term_a"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+      - step: "Find the customer invoice created for term A"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["id", "=", "REC: term_a.customer_invoice_id.id"]]
+        save_as: "invoice_a"
+        expect_count: 1
+      - step: "Confirm the customer invoice"
+        action: "call"
+        target: "invoice_a"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+      - step: "Assert invoice is confirm before approve (forces refresh, T-04)"
+        action: "assert"
+        target: "invoice_a"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+      - step: "Approve the customer invoice"
+        action: "call"
+        target: "invoice_a"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+      - step: "Find the invoice's own receivable move line"
+        action: "search"
+        model: "account.move.line"
+        domain: [["id", "=", "REC: invoice_a.receivable_move_line_id.id"]]
+        save_as: "move_line_a"
+        expect_count: 1
+      - step: "Assert the receivable line's residual"
+        action: "assert"
+        target: "move_line_a"
+        asserts:
+          amount_residual:
+            type: "value"
+            expected: 1000000.0
+      - step: "Find school_enrollment_payment_term model"
+        action: "search"
+        model: "ir.model"
+        domain: [["model", "=", "school_enrollment_payment_term"]]
+        save_as: "spt_model"
+        limit: 1
+        expect_count: 1
+      - step:
+          "Create promotion type allowing school_enrollment_payment_term as reference"
+        action: "create"
+        model: "promotion_type"
+        save_as: "ptype"
+        values:
+          name: "School Enrollment Force Delete Promotion Type"
+          code: "/"
+          discount_usage_id:
+            "REF: ssi_product_usage_account_type.product_usage_type_income"
+          account_id: "REC: income_account.id"
+          discount_type: "fixed"
+          discount_amount: 100000.0
+          journal_id: "REC: journal.id"
+          product_id: "REC: product.id"
+          allowed_model_ids:
+            - - 6
+              - 0
+              - - "REC: spt_model.id"
+      - step: "Create promotion code"
+        action: "create"
+        model: "promotion_code"
+        save_as: "code"
+        values:
+          voucher_code: "FDP1-001"
+          type_id: "REC: ptype.id"
+          user_id: "REF: base.user_admin"
+      - step: "Confirm promotion code"
+        action: "call"
+        target: "code"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+      - step: "Refresh code before approval (fresh policy field read)"
+        action: "assert"
+        target: "code"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+      - step: "Approve promotion code"
+        action: "call"
+        target: "code"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+      - step: "Assert term A has no promotion usage yet"
+        action: "assert"
+        target: "term_a"
+        asserts:
+          promotion_usage_count:
+            type: "value"
+            expected: 0
+      - step: "Run the Apply Promotion Code wizard from term A"
+        action: "wizard"
+        model: "apply_promotion_code"
+        target: "term_a"
+        as_user: "base.user_admin"
+        values:
+          promotion_code_id: "REC: code.id"
+        method: "action_apply_promotion_code"
+      - step: "Exactly one usage is created for this code and term A"
+        action: "search"
+        model: "promotion_code_usage"
+        domain:
+          [
+            ["promotion_code_id", "=", "REC: code.id"],
+            [
+              "document_reference",
+              "=",
+              "EVAL: 'school_enrollment_payment_term,%d' % registry['term_a'].id",
+            ],
+          ]
+        save_as: "usage"
+        expect_count: 1
+      - step: "The usage is Draft, referencing term A and its own partner"
+        action: "assert"
+        target: "usage"
+        asserts:
+          state:
+            type: "value"
+            expected: "draft"
+          document_reference:
+            type: "m2o"
+            expected: "REC: term_a"
+          partner_id:
+            type: "m2o"
+            expected: "REC: contact"
+      - step: "Term A now counts the new usage"
+        action: "assert"
+        target: "term_a"
+        asserts:
+          promotion_usage_count:
+            type: "value"
+            expected: 1
+          promotion_usage_ids:
+            type: "m2m"
+            check: "contains"
+            expected_records:
+              - "REC: usage"
+      - step: "Sibling term B still counts zero"
+        action: "assert"
+        target: "term_b"
+        asserts:
+          promotion_usage_count:
+            type: "value"
+            expected: 0
+      - step: "Exactly one allocation row is created"
+        action: "search"
+        model: "promotion_code_usage_allocation"
+        domain: [["usage_id", "=", "REC: usage.id"]]
+        save_as: "alloc_row"
+        expect_count: 1
+      - step: "The allocation row targets term A's own receivable line"
+        action: "assert"
+        target: "alloc_row"
+        asserts:
+          source:
+            type: "value"
+            expected: "customer"
+          move_line_id:
+            type: "m2o"
+            expected: "REC: move_line_a"
+      - step: "Force delete of term A is rejected, naming the allocation"
+        action: "call"
+        target: "term_a"
+        method: "action_force_delete_invoice"
+        as_user: "base.user_admin"
+        expect_error:
+          type: "UserError"
+          message_contains: "referenced by promotion code usage allocation"
+      - step: "Term A and its invoice are unchanged"
+        action: "assert"
+        target: "term_a"
+        asserts:
+          state:
+            type: "value"
+            expected: "invoiced"
+          customer_invoice_id:
+            type: "m2o"
+            expected: "REC: invoice_a"
+      - step: "Invoice A is still open with its full residual"
+        action: "assert"
+        target: "invoice_a"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+          amount_residual:
+            type: "value"
+            expected: 1000000.0
+      - step: "The usage allocation still exists"
+        action: "search"
+        model: "promotion_code_usage_allocation"
+        domain: [["id", "=", "REC: alloc_row.id"]]
+        save_as: "alloc_check"
+        expect_count: 1
+      - step: "Create customer invoice from term B (no allocation)"
+        action: "call"
+        target: "term_b"
+        method: "action_create_invoice"
+        as_user: "base.user_admin"
+      - step: "Find the customer invoice created for term B"
+        action: "search"
+        model: "customer_invoice"
+        domain: [["id", "=", "REC: term_b.customer_invoice_id.id"]]
+        save_as: "invoice_b"
+        expect_count: 1
+      - step: "Force delete of term B (no allocation) is not rejected"
+        action: "call"
+        target: "term_b"
+        method: "action_force_delete_invoice"
+        as_user: "base.user_admin"
+      - step: "Term B is uninvoiced again"
+        action: "assert"
+        target: "term_b"
+        asserts:
+          state:
+            type: "value"
+            expected: "uninvoiced"
