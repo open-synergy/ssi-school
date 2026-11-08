@@ -14,21 +14,40 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: ssi_school_promotion
+#: code:addons/ssi_school_promotion/models/customer_invoice.py:0
+#, python-format
+msgid ""
+"\n"
+"Context: Force delete customer invoice\n"
+"Database ID: %s\n"
+"Problem: Invoice is referenced by promotion code usage allocation '%s' of usage '%s'\n"
+"Solution: Remove the allocation from the promotion code usage document first\n"
+msgstr ""
+
+#. module: ssi_school_promotion
 #: model_terms:ir.ui.view,arch_db:ssi_school_promotion.school_enrollment_view_form_promotion
 msgid "Apply Promotion Code"
 msgstr ""
 
 #. module: ssi_school_promotion
+#: model:ir.model,name:ssi_school_promotion.model_customer_invoice
+msgid "Customer Invoice"
+msgstr ""
+
+#. module: ssi_school_promotion
+#: model:ir.model.fields,field_description:ssi_school_promotion.field_customer_invoice__display_name
 #: model:ir.model.fields,field_description:ssi_school_promotion.field_school_enrollment_payment_term__display_name
 msgid "Display Name"
 msgstr ""
 
 #. module: ssi_school_promotion
+#: model:ir.model.fields,field_description:ssi_school_promotion.field_customer_invoice__id
 #: model:ir.model.fields,field_description:ssi_school_promotion.field_school_enrollment_payment_term__id
 msgid "ID"
 msgstr ""
 
 #. module: ssi_school_promotion
+#: model:ir.model.fields,field_description:ssi_school_promotion.field_customer_invoice____last_update
 #: model:ir.model.fields,field_description:ssi_school_promotion.field_school_enrollment_payment_term____last_update
 msgid "Last Modified on"
 msgstr ""
