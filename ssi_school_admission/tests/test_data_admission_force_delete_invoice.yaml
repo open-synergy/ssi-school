@@ -176,6 +176,13 @@ setup:
                     uom_id: "REF: uom.product_uom_unit"
                     price_unit: 1000000.0
 
+    - step: "Setup - create student contact"
+      action: "create"
+      model: "res.partner"
+      save_as: "contact"
+      values:
+        name: "EVAL: 'Student Contact ADFD %d' % env['res.partner'].search_count([])"
+
     - step: "Setup - create admission"
       action: "create"
       model: "school_admission"
