@@ -598,6 +598,62 @@ odoo.define("ssi_school_admission.school_admission_tour", function (require) {
         )
     );
 
+    // IK: docs/school_admission/23-force-delete-invoice.md
+    tour.register(
+        "ssi_school_admission_school_admission_force_delete_invoice",
+        {
+            test: true,
+            url: "/web",
+        },
+        [].concat(
+            // Flow 1 -- Open the Admissions menu.
+            openAdmissionList(),
+            // Flow 2 -- Open the record whose term invoice will be
+            // force deleted.
+            openRecordByStudent("TOUR ADM Force Delete Student"),
+            [
+                // Flow 3 -- On the Fee tab, click the Force Delete
+                // Invoice button of the Invoiced payment term.
+                {
+                    content: "Open the Fee tab",
+                    trigger: ".o_notebook .nav-link:contains(Fee)",
+                },
+                {
+                    // Gate: before the action the term row is Invoiced --
+                    // this selector cannot match once the action ran.
+                    content: "Payment term is Invoiced before the action",
+                    trigger:
+                        ".o_data_row:has(.o_data_cell.o_list_char[title='TOUR ADM FD TERM']) .o_data_cell:contains(Invoiced)",
+                    run: function () {
+                        // Assertion only.
+                    },
+                },
+                {
+                    content: "Click the Force Delete Invoice button",
+                    trigger:
+                        ".o_data_row:has(.o_data_cell.o_list_char[title='TOUR ADM FD TERM']) button[name='action_force_delete_invoice']:not(.o_invisible_modifier)",
+                },
+
+                // Flow 4 -- Click OK on the confirmation dialog.
+                {
+                    content: "Confirm the dialog",
+                    trigger: ".modal-footer button.btn-primary",
+                    in_modal: true,
+                },
+
+                // Post-Condition -- the payment term returns to Uninvoiced.
+                {
+                    content: "Payment term status is now Uninvoiced",
+                    trigger:
+                        ".o_data_row:has(.o_data_cell.o_list_char[title='TOUR ADM FD TERM']) .o_data_cell:contains(Uninvoiced)",
+                    run: function () {
+                        // Assertion only.
+                    },
+                },
+            ]
+        )
+    );
+
     // IK: docs/school_admission/16-create-enrollment.md
     //
     // Boundary (Design Decision of ssi-school#227): only verifies the

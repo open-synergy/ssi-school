@@ -269,6 +269,14 @@ class SchoolAdmissionPaymentTerm(models.Model):
             "payment terms/details via the addendum mechanism."
         ),
     )
+    force_delete_term_ok = fields.Boolean(
+        string="Can Force Delete Term Invoice",
+        related="admission_id.force_delete_term_ok",
+        help=(
+            "Whether the owning admission currently allows force "
+            "deleting the customer invoice of this payment term."
+        ),
+    )
     locked = fields.Boolean(
         string="Locked",
         default=False,
@@ -406,6 +414,21 @@ Solution: Locked payment terms are permanent; create a new one via addendum inst
         for record in self.sudo():
             record._delete_invoice()  # pylint: disable=protected-access
 
+    def action_force_delete_invoice(self):
+        """Force delete the customer invoice of the selected terms.
+
+        Triggered by the Force Delete Invoice button. For every selected
+        record the policy is checked *before* switching to ``sudo``,
+        then ``_force_delete_invoice`` runs in ``sudo``.
+
+        :raises UserError: when the policy is not granted, or by any
+            check of ``_force_delete_invoice``
+        :return: None
+        """
+        for record in self:
+            record._check_force_delete_invoice_policy()
+            record.sudo()._force_delete_invoice()
+
     def action_disconnect_invoice(self):
         """Detach the customer invoice without deleting it.
 
@@ -524,6 +547,104 @@ Solution: Nothing to invoice; the amount was already billed on the term it moved
         self.write({"customer_invoice_id": invoice.id})
         if self.admission_id.auto_confirm_customer_invoice:
             invoice.action_confirm()
+
+    def _check_force_delete_invoice_policy(self):
+        """Reject a force delete when the policy is not granted.
+
+        :raises UserError: when ``force_delete_term_ok`` is false
+        :return: None
+        """
+        self.ensure_one()
+        if not self.force_delete_term_ok:
+            error_message = (
+                _(
+                    """
+Context: Force delete customer invoice of payment term
+Database ID: %s
+Problem: You are not allowed to force delete the invoice of payment term '%s'
+Solution: Check the force delete term policy prerequisite
+"""
+                )
+                % (self.id, self.name)
+            )
+            raise UserError(error_message)
+
+    def _clear_invoice_links_for_force_delete(self):
+        """Clear the invoice line link of every child row of this term.
+
+        Cross-module hook (contract K2) used only by the force delete
+        flow; ``_delete_invoice`` never calls it. Empties
+        ``customer_invoice_line_id`` of each ``detail_ids`` row. A glue
+        module holding other child rows (for example extracurricular
+        details) overrides it to clear its own rows, then calls
+        ``super()``.
+
+        :return: None
+        """
+        self.ensure_one()
+        self.detail_ids.write({"customer_invoice_line_id": False})
+
+    def _force_delete_invoice(self):
+        """Delete the customer invoice of this term whatever its state.
+
+        Runs in one transaction; any failure rolls everything back.
+        Validates the term and the invoice (``_check_force_delete_allowed``),
+        and for a non-draft invoice undoes the reconciliation of its
+        receivable line, cancels and restarts it (policy bypassed) and
+        resets its number. Then it clears the child row links, detaches
+        the term, deletes the invoice and posts a note on the admission
+        chatter.
+
+        :raises UserError: when the term is neither invoiced nor paid,
+            has no invoice, or the invoice is blocked by a guard
+        :return: None
+        """
+        self.ensure_one()
+        invoice = self.customer_invoice_id
+        if self.state not in ("invoiced", "paid") or not invoice:
+            error_message = (
+                _(
+                    """
+Context: Force delete customer invoice of payment term
+Database ID: %s
+Problem: Payment term '%s' is not invoiced or paid, or has no customer invoice
+Solution: Only a term that holds a customer invoice can have it force deleted
+"""
+                )
+                % (self.id, self.name)
+            )
+            raise UserError(error_message)
+        invoice._check_force_delete_allowed()  # pylint: disable=protected-access
+        number = invoice.display_name
+        amount_total = invoice.amount_total
+        invoice_state = invoice.state
+        if invoice_state != "draft":
+            receivable_line = invoice.receivable_move_line_id
+            if receivable_line:
+                receivable_line.remove_move_reconcile()
+            invoice = invoice.with_context(bypass_policy_check=True)
+            invoice.action_cancel()
+            invoice.action_restart()
+            invoice._reset_document_number()  # pylint: disable=protected-access
+        self._clear_invoice_links_for_force_delete()
+        self.write({"customer_invoice_id": False})
+        invoice.unlink()
+        self.admission_id.message_post(
+            body=_(
+                "Customer invoice %(number)s (total %(amount)s, state "
+                "%(state)s) of payment term %(term)s was force deleted by "
+                "%(user)s."
+            )
+            % {
+                "number": number,
+                "amount": amount_total,
+                "state": invoice_state,
+                "term": self.name,
+                "user": self.env.user.name,
+            },
+            message_type="notification",
+            subtype_xmlid="mail.mt_note",
+        )
 
     def _disconnect_invoice(self):
         """Detach the customer invoice from this term without deleting it.
