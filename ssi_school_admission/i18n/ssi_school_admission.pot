@@ -1462,6 +1462,15 @@ msgid "Forms"
 msgstr ""
 
 #. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__note
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form__note
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_test__note
+msgid ""
+"Free-form note attached to the document, used for any additional remarks or "
+"information related to the transaction."
+msgstr ""
+
+#. module: ssi_school_admission
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission__grade_id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_analysis__grade_id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_fee_template__grade_id
@@ -2078,6 +2087,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_form_tax__partner_id
 #: model:ir.model.fields,field_description:ssi_school_admission.field_school_admission_payment_term__partner_id
 msgid "Partner"
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__company_partner_id
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form__company_partner_id
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_test__company_partner_id
+msgid ""
+"Partner (res.partner) linked to the document's company\n"
+"\n"
+"* Automatically follows 'company_id.partner_id'.\n"
+"* Used for reporting/printing documents that require the company-level\n"
+"  partner instead of the responsible user's partner."
 msgstr ""
 
 #. module: ssi_school_admission
@@ -3631,6 +3652,18 @@ msgstr ""
 #. module: ssi_school_admission
 #: model:ir.model.fields,help:ssi_school_admission.field_school_admission_fee_analysis__admission_state
 msgid "Workflow state of the owning admission."
+msgstr ""
+
+#. module: ssi_school_admission
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission__state
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_form__state
+#: model:ir.model.fields,help:ssi_school_admission.field_school_admission_test__state
+msgid ""
+"Workflow status of the document\n"
+"\n"
+"* 'draft' is the only base state provided by this mixin.\n"
+"* Other states (e.g. confirmed, done, cancel) are added by derivative mixin\n"
+"  modules (such as confirm/done/cancel mixins) via 'selection_add'."
 msgstr ""
 
 #. module: ssi_school_admission
