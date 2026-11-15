@@ -47,6 +47,17 @@ class School(models.Model):  # pylint: disable=too-few-public-methods
         ),
     )
 
+    partner_id = fields.Many2one(
+        string="Partner",
+        comodel_name="res.partner",
+        required=False,
+        ondelete="restrict",
+        help=(
+            "Contact that holds the identity of this school, such as its "
+            "address. Leave empty when not needed."
+        ),
+    )
+
     @api.onchange(
         "company_id",
     )

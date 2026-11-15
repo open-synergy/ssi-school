@@ -7,4 +7,8 @@
     <field name="name">NISN</field>
     <field name="code">nisn</field>
 </record>
+<record id="partner_identification_nuptk" model="res.partner.id_category">
+    <field name="name">NUPTK</field>
+    <field name="code">nuptk</field>
+</record>
 </odoo>

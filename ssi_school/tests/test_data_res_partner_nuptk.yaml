@@ -1,0 +1,243 @@
+options:
+  auto_refresh: true
+
+scenarios:
+  - name: "Create partner with NUPTK stores it as an ID number"
+    steps:
+      - step: "Create partner with NUPTK"
+        action: "create"
+        model: "res.partner"
+        save_as: "partner"
+        values:
+          name: "NUPTK Partner Create"
+          nuptk: "1234567890123456"
+
+      - step: "Assert NUPTK value and its ID number record"
+        action: "assert"
+        target: "partner"
+        asserts:
+          nuptk:
+            type: "value"
+            expected: "1234567890123456"
+          id_numbers:
+            type: "o2m"
+            check: "count"
+            expected_count: 1
+          id_numbers.category_id.code:
+            type: "value"
+            expected: "nuptk"
+
+  - name: "Search partner by NUPTK"
+    steps:
+      - step: "Create partner to be searched"
+        action: "create"
+        model: "res.partner"
+        save_as: "partner"
+        values:
+          name: "NUPTK Partner Search"
+          nuptk: "6543210987654321"
+
+      - step: "Search partner by NUPTK"
+        action: "search"
+        model: "res.partner"
+        domain:
+          - ["nuptk", "=", "6543210987654321"]
+        save_as: "partners_by_nuptk"
+        expect_count: 1
+
+      - step: "Assert the searched partner is the created one"
+        action: "assert"
+        target: "partners_by_nuptk"
+        asserts:
+          id:
+            type: "value"
+            expected: "REC: partner.id"
+
+  - name: "Emptying NUPTK archives the ID number record"
+    steps:
+      - step: "Create partner with NUPTK to be emptied"
+        action: "create"
+        model: "res.partner"
+        save_as: "partner"
+        values:
+          name: "NUPTK Partner Archive"
+          nuptk: "1111222233334444"
+
+      - step: "Empty the NUPTK"
+        action: "write"
+        target: "partner"
+        values:
+          nuptk: false
+
+      - step: "Assert NUPTK is empty and no active ID number left"
+        action: "assert"
+        target: "partner"
+        asserts:
+          nuptk:
+            type: "value"
+            operator: "is_falsy"
+          id_numbers:
+            type: "o2m"
+            check: "count"
+            expected_count: 0
+
+      - step: "Assert the ID number record is archived, not deleted"
+        action: "search"
+        model: "res.partner.id_number"
+        domain:
+          - ["partner_id", "=", "REC: partner.id"]
+          - ["category_id.code", "=", "nuptk"]
+          - ["active", "=", false]
+        save_as: "archived_id_numbers"
+        expect_count: 1
+
+  - name: "Writing NUPTK is rejected when the partner has multiple NUPTK records"
+    steps:
+      - step: "Create partner with NUPTK"
+        action: "create"
+        model: "res.partner"
+        save_as: "partner"
+        values:
+          name: "NUPTK Partner Multiple"
+          nuptk: "2222333344445555"
+
+      - step: "Get the NUPTK category"
+        action: "ref"
+        xml_id: "ssi_school.partner_identification_nuptk"
+        save_as: "nuptk_category"
+
+      - step: "Create a second NUPTK ID number directly"
+        action: "create"
+        model: "res.partner.id_number"
+        save_as: "second_id_number"
+        values:
+          partner_id: "REC: partner.id"
+          category_id: "REC: nuptk_category.id"
+          name: "2222333344445556"
+
+      - step: "Assert the partner now has two NUPTK ID numbers"
+        action: "assert"
+        target: "partner"
+        asserts:
+          id_numbers:
+            type: "o2m"
+            check: "count"
+            expected_count: 2
+
+      - step: "Writing NUPTK must be rejected"
+        action: "write"
+        target: "partner"
+        expect_error:
+          type: "ValidationError"
+          message_contains: "multiple IDs of this type"
+        values:
+          nuptk: "2222333344445557"
+
+  - name: "Teacher reads NUPTK from the employee home address"
+    steps:
+      - step: "Create home address partner with NUPTK"
+        action: "create"
+        model: "res.partner"
+        save_as: "partner"
+        values:
+          name: "NUPTK Teacher Home Address"
+          nuptk: "9988776655443322"
+
+      - step: "Create employee"
+        action: "create"
+        model: "hr.employee"
+        save_as: "employee"
+        values:
+          name: "NUPTK Teacher Employee"
+          company_id: "base.main_company"
+          address_home_id: "REC: partner.id"
+
+      - step: "Create teacher"
+        action: "create"
+        model: "school_teacher"
+        save_as: "teacher"
+        values:
+          name: "NUPTK Teacher"
+          code: "TCHNUPTK"
+          employee_id: "REC: employee.id"
+
+      - step: "Assert teacher NUPTK equals the partner NUPTK"
+        action: "assert"
+        target: "teacher"
+        asserts:
+          nuptk:
+            type: "value"
+            expected: "9988776655443322"
+
+  - name: "School partner and class expertise fields are stored"
+    steps:
+      - step: "Create partner for the school"
+        action: "create"
+        model: "res.partner"
+        save_as: "partner"
+        values:
+          name: "School Identity Partner"
+          street: "Jl. Pendidikan 1"
+
+      - step: "Create grade type"
+        action: "create"
+        model: "school_grade_type"
+        save_as: "grade_type"
+        values:
+          name: "Grade Type Expertise"
+          code: "GTEXP"
+          sequence: 10
+
+      - step: "Create school with partner"
+        action: "create"
+        model: "school"
+        save_as: "school"
+        values:
+          name: "School Expertise"
+          code: "SCHEXP"
+          grade_type_id: "REC: grade_type.id"
+          partner_id: "REC: partner.id"
+
+      - step: "Create grade"
+        action: "create"
+        model: "school_grade"
+        save_as: "grade"
+        values:
+          name: "Grade Expertise"
+          code: "GEXP"
+          sequence: 10
+          type_id: "REC: grade_type.id"
+
+      - step: "Create grade class with expertise"
+        action: "create"
+        model: "school_grade_class"
+        save_as: "grade_class"
+        values:
+          name: "Class Expertise"
+          code: "CEXP"
+          school_id: "REC: school.id"
+          grade_id: "REC: grade.id"
+          expertise_program: "Business and Management"
+          expertise_concentration: "Accounting"
+
+      - step: "Assert school partner"
+        action: "assert"
+        target: "school"
+        asserts:
+          partner_id:
+            type: "m2o"
+            expected: "REC: partner"
+          partner_id.street:
+            type: "value"
+            expected: "Jl. Pendidikan 1"
+
+      - step: "Assert class expertise"
+        action: "assert"
+        target: "grade_class"
+        asserts:
+          expertise_program:
+            type: "value"
+            expected: "Business and Management"
+          expertise_concentration:
+            type: "value"
+            expected: "Accounting"

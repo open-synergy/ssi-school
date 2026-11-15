@@ -6,12 +6,12 @@ from odoo import fields, models
 
 
 class ResPartner(models.Model):
-    """Expose the national student number (NISN) on a contact.
+    """Expose the NISN and NUPTK identification numbers on a contact.
 
-    The value is not stored on ``res.partner`` itself. It is kept as a
-    ``res.partner.id_number`` record whose category code is ``nisn``, and
-    surfaced here as a ``Char`` field through the helper methods provided
-    by ``partner_identification``.
+    The values are not stored on ``res.partner`` itself. Each is kept as
+    a ``res.partner.id_number`` record whose category code is ``nisn`` or
+    ``nuptk``, and surfaced here as a ``Char`` field through the helper
+    methods provided by ``partner_identification``.
     """
 
     _inherit = "res.partner"
@@ -34,4 +34,24 @@ class ResPartner(models.Model):
         "already has more than one ID number under the NISN category, "
         "writing through this field is rejected with a validation error and "
         "the ID Numbers tab must be used instead.",
+    )
+    nuptk = fields.Char(
+        string="NUPTK",
+        compute=lambda s: s._compute_identification(
+            "nuptk",
+            "nuptk",
+        ),
+        inverse=lambda s: s._inverse_identification(
+            "nuptk",
+            "nuptk",
+        ),
+        search=lambda s, *a: s._search_identification("nuptk", *a),
+        help="Nomor Unik Pendidik dan Tenaga Kependidikan (NUPTK), the "
+        "unique number of an educator or education staff member, stored "
+        "as an ID number record under the NUPTK category. Emptying this "
+        "field archives the related ID number record instead of deleting "
+        "it, so the history is preserved. When the contact already has "
+        "more than one ID number under the NUPTK category, writing "
+        "through this field is rejected with a validation error and the "
+        "ID Numbers tab must be used instead.",
     )

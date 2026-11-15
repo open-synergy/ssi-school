@@ -32,6 +32,20 @@ class SchoolGradeClass(models.Model):  # pylint: disable=too-few-public-methods
         store=True,
         help="The grade type from the selected school, populated automatically.",
     )
+    expertise_program = fields.Char(
+        string="Expertise Program",
+        help=(
+            "Expertise program of this class, used by vocational schools. "
+            "Leave empty when not applicable."
+        ),
+    )
+    expertise_concentration = fields.Char(
+        string="Expertise Concentration",
+        help=(
+            "Expertise concentration of this class, used by vocational "
+            "schools. Leave empty when not applicable."
+        ),
+    )
     grade_id = fields.Many2one(
         string="Grade",
         comodel_name="school_grade",

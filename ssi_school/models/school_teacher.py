@@ -33,6 +33,14 @@ class SchoolTeacher(models.Model):  # pylint: disable=too-few-public-methods
         readonly=False,
         help="Teacher photo, taken from the employee's home address.",
     )
+    nuptk = fields.Char(
+        related="employee_id.address_home_id.nuptk",
+        readonly=False,
+        help=(
+            "NUPTK (Nomor Unik Pendidik dan Tenaga Kependidikan) of the "
+            "teacher, synchronized from the employee's home address."
+        ),
+    )
     street = fields.Char(
         related="employee_id.address_home_id.street",
         store=True,
