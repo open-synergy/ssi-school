@@ -49,6 +49,8 @@
                 <field name="school_id" />
                 <field name="grade_type_id" />
                 <field name="grade_id" />
+                <field name="expertise_program" />
+                <field name="expertise_concentration" />
                 <field name="capacity" />
                 <field name="student_count" />
                 <field name="available_seat" />
@@ -68,6 +70,8 @@
                 <field name="school_id" />
                 <field name="grade_type_id" />
                 <field name="grade_id" domain="[('type_id', '=', grade_type_id)]" />
+                <field name="expertise_program" />
+                <field name="expertise_concentration" />
                 <field name="capacity" />
                 <field name="student_count" />
                 <field name="available_seat" />

@@ -5,6 +5,7 @@
 from . import (  # noqa: F401
     common,
     test_res_partner_nisn,
+    test_res_partner_nuptk,
     test_hr_employee,
     test_school_grade_type,
     test_school_grade,

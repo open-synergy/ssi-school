@@ -55,6 +55,7 @@
                             colspan="4"
                             col="2"
                         >
+                        <field name="nuptk" />
                         <field name="gender" />
                         <field name="birthdate_date" />
                         <field name="age" />

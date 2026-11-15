@@ -64,6 +64,7 @@
                 <field name="grade_type_id" />
                 <field name="company_id" />
                 <field name="branch_id" />
+                <field name="partner_id" />
             </xpath>
         </data>
     </field>
