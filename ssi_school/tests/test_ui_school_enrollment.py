@@ -444,23 +444,6 @@ class TestUiSchoolEnrollment(HttpSavepointCase):
             }
         )
 
-        # 20-close-addendum.md -- On Progress record with one currently
-        # UNLOCKED payment term. Post-open locking only affects terms that
-        # existed BEFORE the enrollment opened, so this term is added
-        # afterwards to simulate an addendum line.
-        cls.enrollment_addendum = _create_enrollment(
-            "TOUR ENR Addendum Student", cls.academic_term_1
-        )
-        _bypass(cls.enrollment_addendum).action_confirm()
-        _bypass(cls.enrollment_addendum).action_approve_approval()
-        cls.env["school_enrollment_payment_term"].create(
-            {
-                "enrollment_id": cls.enrollment_addendum.id,
-                "name": "TOUR ENR ADDENDUM TERM",
-                "sequence": 10,
-            }
-        )
-
         # 25-force-delete-invoice.md -- On Progress record with one
         # Invoiced payment term whose invoice is still a draft, so no
         # reconciliation is involved (the reconciliation rules are covered
@@ -584,12 +567,6 @@ class TestUiSchoolEnrollment(HttpSavepointCase):
         """IK: docs/school_enrollment/19-create-due-invoice.md"""
         self.start_tour(
             "/web", "ssi_school_school_enrollment_create_due_invoice", login="admin"
-        )
-
-    def test_close_addendum(self):
-        """IK: docs/school_enrollment/20-close-addendum.md"""
-        self.start_tour(
-            "/web", "ssi_school_school_enrollment_close_addendum", login="admin"
         )
 
     def test_force_delete_invoice(self):

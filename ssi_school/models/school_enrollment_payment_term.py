@@ -289,14 +289,6 @@ class SchoolEnrollmentPaymentTerm(models.Model):
             "term-level actions such as duplication."
         ),
     )
-    addendum_ok = fields.Boolean(
-        string="Can Addendum",
-        related="enrollment_id.addendum_ok",
-        help=(
-            "Whether the owning enrollment currently allows adding new "
-            "payment terms/details via the addendum mechanism."
-        ),
-    )
     force_delete_term_ok = fields.Boolean(
         string="Can Force Delete Term Invoice",
         related="enrollment_id.force_delete_term_ok",
@@ -313,8 +305,8 @@ class SchoolEnrollmentPaymentTerm(models.Model):
         help=(
             "Automatically set to True when the enrollment is opened. "
             "Locked payment terms can no longer be edited or deleted; "
-            "new terms added afterwards via the addendum mechanism start "
-            "unlocked."
+            "changes go through a Payment Term Amendment or Transfer "
+            "document."
         ),
     )
 
@@ -326,8 +318,9 @@ class SchoolEnrollmentPaymentTerm(models.Model):
         belongs to ``ADDENDUM_LOCK_ALLOWED_FIELDS``
         (``customer_invoice_id``, ``manually_control``, ``locked``,
         ``sequence``) -- the bookkeeping fields that stay writable even
-        after locking. Otherwise a locked term may not be changed and a
-        new term has to be added through the addendum mechanism.
+        after locking. Otherwise a locked term may not be changed; the
+        change has to go through a Payment Term Amendment or Transfer
+        document.
 
         :param vals: write values whose keys are checked against the
             allowed field set
@@ -347,7 +340,7 @@ class SchoolEnrollmentPaymentTerm(models.Model):
 Context: Update payment term
 Database ID: %s
 Problem: Payment term '%s' is locked and cannot be modified
-Solution: Add a new payment term via the addendum mechanism instead of editing this one
+Solution: Use a Payment Term Amendment or Transfer document instead of editing this one
 """
                     )
                     % (record.id, record.name)
@@ -360,8 +353,8 @@ Solution: Add a new payment term via the addendum mechanism instead of editing t
         Guard called from ``unlink``. Deletion only passes when the
         context carries ``bypass_addendum_lock``; a locked term is
         permanent because it may already be reflected in a customer
-        invoice, so a correction has to be booked as a new addendum
-        term.
+        invoice, so a correction has to go through a Payment Term
+        Amendment or Transfer document.
 
         :raises UserError: when a locked term is deleted
         :return: None
@@ -376,7 +369,7 @@ Solution: Add a new payment term via the addendum mechanism instead of editing t
 Context: Delete payment term
 Database ID: %s
 Problem: Payment term '%s' is locked and cannot be deleted
-Solution: Locked payment terms are permanent; create a new one via addendum instead
+Solution: Locked payment terms are permanent; use a Payment Term Amendment or Transfer document
 """
                     )
                     % (record.id, record.name)

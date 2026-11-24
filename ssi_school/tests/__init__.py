@@ -42,6 +42,7 @@ from . import (  # noqa: F401
     test_school_enrollment_net_billing,
     test_school_enrollment_payment_status,
     test_school_enrollment_addendum,
+    test_school_enrollment_lock_migration,
     test_school_enrollment_revenue_recognition,
     test_school_enrollment_restart_unlock,
     test_school_enrollment_integrity,

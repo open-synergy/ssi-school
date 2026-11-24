@@ -9,14 +9,14 @@ from odoo.tests import tagged
 
 @tagged("post_install", "-at_install")
 class TestSchoolEnrollmentAddendum(YamlTransactionCase):
-    """Cover the addendum flow of an already open enrollment.
+    """Cover the payment term lock of an already open enrollment.
 
     Opening an enrollment locks its payment terms and details, so the
     scenarios check that locked records reject both write and unlink,
-    that closing an addendum locks only the terms added afterwards, and
-    that the addendum can be repeated several times on one enrollment.
+    and that the ``bypass_addendum_lock`` context still lets the
+    amendment and transfer documents write a locked detail line.
     """
 
     def test_enrollment_addendum(self):
-        """Run every payment term locking scenario of the addendum."""
+        """Run every payment term locking scenario of an open enrollment."""
         self.run_yaml_scenario("test_data_enrollment_addendum.yaml")

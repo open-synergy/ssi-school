@@ -102,14 +102,6 @@ class SchoolEnrollmentPaymentTermDetail(
         compute_sudo=True,
         help="Products allowed on this line, per the enrollment's payment template.",
     )
-    addendum_ok = fields.Boolean(
-        string="Can Addendum",
-        related="term_id.enrollment_id.addendum_ok",
-        help=(
-            "Whether the owning enrollment currently allows adding new "
-            "payment terms/details via the addendum mechanism."
-        ),
-    )
     locked = fields.Boolean(
         string="Locked",
         default=False,
@@ -118,8 +110,8 @@ class SchoolEnrollmentPaymentTermDetail(
         help=(
             "Automatically set to True when the enrollment is opened. "
             "Locked detail lines can no longer be edited or deleted; "
-            "new detail lines added afterwards via the addendum mechanism "
-            "start unlocked."
+            "changes go through a Payment Term Amendment or Transfer "
+            "document."
         ),
     )
     voided = fields.Boolean(
@@ -153,8 +145,8 @@ class SchoolEnrollmentPaymentTermDetail(
         ``account_id``) is a second, narrower exception: writable on a
         locked record only while its own ``customer_invoice_line_id``
         is still empty, rejected once that record is invoiced. Every
-        other field stays permanently locked, and a new line has to be
-        added through the addendum mechanism instead.
+        other field stays permanently locked; changes go through a
+        Payment Term Amendment or Transfer document instead.
 
         :param vals: write values whose keys are checked against the
             allowed field sets
@@ -180,7 +172,7 @@ class SchoolEnrollmentPaymentTermDetail(
 Context: Update payment term detail
 Database ID: %s
 Problem: Payment term detail '%s' is locked and cannot be modified
-Solution: Add a new detail line via the addendum mechanism instead of editing this one
+Solution: Use a Payment Term Amendment or Transfer document instead of editing this one
 """
                     )
                     % (record.id, record.name)
@@ -193,8 +185,8 @@ Solution: Add a new detail line via the addendum mechanism instead of editing th
         Guard called from ``unlink``. Deletion only passes when the
         context carries ``bypass_addendum_lock``; a locked detail line
         is permanent because it may already be reflected in a customer
-        invoice line, so a correction has to be booked as a new
-        addendum line.
+        invoice line, so a correction has to go through a Payment
+        Term Amendment or Transfer document.
 
         :raises UserError: when a locked detail line is deleted
         :return: None
@@ -209,7 +201,7 @@ Solution: Add a new detail line via the addendum mechanism instead of editing th
 Context: Delete payment term detail
 Database ID: %s
 Problem: Payment term detail '%s' is locked and cannot be deleted
-Solution: Locked detail lines are permanent; create a new one via the addendum mechanism
+Solution: Locked detail lines are permanent; use a Payment Term Amendment or Transfer document
 """
                     )
                     % (record.id, record.name)

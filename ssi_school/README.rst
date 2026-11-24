@@ -124,7 +124,6 @@ Enrollment
 * `Set Result to Drop Out - Enrollment <docs/school_enrollment/17-drop-out.html>`_
 * `Set Result to Graduate - Enrollment <docs/school_enrollment/18-graduate.html>`_
 * `Create Due Invoice - Enrollment <docs/school_enrollment/19-create-due-invoice.html>`_
-* `Close Addendum - Enrollment <docs/school_enrollment/20-close-addendum.html>`_
 * `Print Enrollment <docs/school_enrollment/21-print.html>`_
 * `Reload Template Policy - Enrollment <docs/school_enrollment/22-reload-template-policy.html>`_
 * `Copy Payment Terms - Enrollment <docs/school_enrollment/24-copy-payment-term.html>`_
@@ -187,6 +186,17 @@ To install this module, you need to:
 4.  Go to menu *Apps -> Apps -> Main Apps*
 5.  Search For *School*
 6.  Install the module
+
+Known issues
+============
+
+The Close Addendum action and the ``addendum_ok`` policy of the enrollment
+were removed. Payment terms and details of an open enrollment can no longer
+be added or changed from the enrollment form; use a Payment Term Amendment
+or Payment Term Transfer document instead. Upgrade this module only on
+instances where the ``ssi_school_payment_term_amendment`` module is already
+installed. On upgrade, the terms and details of every open or done
+enrollment that were still unlocked are locked.
 
 Bug Tracker
 ===========

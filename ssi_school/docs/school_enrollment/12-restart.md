@@ -26,5 +26,5 @@
 - Status returns to **Draft**.
 - All approval records are removed and the approval template is cleared. A later Confirm
   starts the approval process from the beginning.
-- Any Payment Term or Payment Term Detail line that had been locked (e.g. by
-  `20-close-addendum`) is unlocked again.
+- Any Payment Term or Payment Term Detail line that had been locked when the enrollment
+  was opened is unlocked again.
