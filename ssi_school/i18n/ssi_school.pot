@@ -208,7 +208,7 @@ msgid ""
 "Context: Delete payment term\n"
 "Database ID: %s\n"
 "Problem: Payment term '%s' is locked and cannot be deleted\n"
-"Solution: Locked payment terms are permanent; create a new one via addendum instead\n"
+"Solution: Locked payment terms are permanent; use a Payment Term Amendment or Transfer document\n"
 msgstr ""
 
 #. module: ssi_school
@@ -219,7 +219,7 @@ msgid ""
 "Context: Delete payment term detail\n"
 "Database ID: %s\n"
 "Problem: Payment term detail '%s' is locked and cannot be deleted\n"
-"Solution: Locked detail lines are permanent; create a new one via the addendum mechanism\n"
+"Solution: Locked detail lines are permanent; use a Payment Term Amendment or Transfer document\n"
 msgstr ""
 
 #. module: ssi_school
@@ -443,7 +443,7 @@ msgid ""
 "Context: Update payment term\n"
 "Database ID: %s\n"
 "Problem: Payment term '%s' is locked and cannot be modified\n"
-"Solution: Add a new payment term via the addendum mechanism instead of editing this one\n"
+"Solution: Use a Payment Term Amendment or Transfer document instead of editing this one\n"
 msgstr ""
 
 #. module: ssi_school
@@ -454,7 +454,7 @@ msgid ""
 "Context: Update payment term detail\n"
 "Database ID: %s\n"
 "Problem: Payment term detail '%s' is locked and cannot be modified\n"
-"Solution: Add a new detail line via the addendum mechanism instead of editing this one\n"
+"Solution: Use a Payment Term Amendment or Transfer document instead of editing this one\n"
 msgstr ""
 
 #. module: ssi_school
@@ -989,16 +989,16 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_term_detail__locked
 msgid ""
 "Automatically set to True when the enrollment is opened. Locked detail lines"
-" can no longer be edited or deleted; new detail lines added afterwards via "
-"the addendum mechanism start unlocked."
+" can no longer be edited or deleted; changes go through a Payment Term "
+"Amendment or Transfer document."
 msgstr ""
 
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_term__locked
 msgid ""
 "Automatically set to True when the enrollment is opened. Locked payment "
-"terms can no longer be edited or deleted; new terms added afterwards via the"
-" addendum mechanism start unlocked."
+"terms can no longer be edited or deleted; changes go through a Payment Term "
+"Amendment or Transfer document."
 msgstr ""
 
 #. module: ssi_school
@@ -1124,13 +1124,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:ssi_school.school_branch_action
 #: model:ir.ui.menu,name:ssi_school.school_branch_menu
 msgid "Branches"
-msgstr ""
-
-#. module: ssi_school
-#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__addendum_ok
-#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term__addendum_ok
-#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__addendum_ok
-msgid "Can Addendum"
 msgstr ""
 
 #. module: ssi_school
@@ -1344,11 +1337,6 @@ msgstr ""
 #. module: ssi_school
 #: model:ir.model.fields.selection,name:ssi_school.selection__school_academic_term__enrollment_state__close
 msgid "Close"
-msgstr ""
-
-#. module: ssi_school
-#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_form
-msgid "Close Addendum"
 msgstr ""
 
 #. module: ssi_school
@@ -3744,14 +3732,6 @@ msgid ""
 msgstr ""
 
 #. module: ssi_school
-#: model:ir.model.fields,help:ssi_school.field_school_enrollment__addendum_ok
-msgid ""
-"Policy that determines whether new payment terms/details may be added to "
-"this enrollment while it is On Progress (open), via the addendum mechanism. "
-"Existing terms/details created before the addendum remain locked."
-msgstr ""
-
-#. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment__copy_payment_term_ok
 msgid ""
 "Policy that determines whether payment terms may be copied into this "
@@ -5372,11 +5352,6 @@ msgstr ""
 
 #. module: ssi_school
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_form
-msgid "This will lock all currently unlocked payment terms/details. Continue?"
-msgstr ""
-
-#. module: ssi_school
-#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_form
 msgid "This will replace existing payment terms. Continue?"
 msgstr ""
 
@@ -5791,14 +5766,6 @@ msgstr ""
 #: model:ir.model.fields,help:ssi_school.field_school_student_mutation__website_message_ids
 #: model:ir.model.fields,help:ssi_school.field_school_teacher__website_message_ids
 msgid "Website communication history"
-msgstr ""
-
-#. module: ssi_school
-#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_term__addendum_ok
-#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_term_detail__addendum_ok
-msgid ""
-"Whether the owning enrollment currently allows adding new payment "
-"terms/details via the addendum mechanism."
 msgstr ""
 
 #. module: ssi_school
