@@ -310,14 +310,14 @@ msgid ""
 "Context: Delete payment term\n"
 "Database ID: %s\n"
 "Problem: Payment term '%s' is locked and cannot be deleted\n"
-"Solution: Locked payment terms are permanent; create a new one via addendum "
-"instead\n"
+"Solution: Locked payment terms are permanent; use a Payment Term Amendment or "
+"Transfer document\n"
 msgstr ""
 "\n"
 "Konteks: Hapus termin pembayaran\n"
 "ID Database: %s\n"
 "Masalah: Termin pembayaran '%s' terkunci dan tidak dapat dihapus\n"
-"Solusi: Termin pembayaran yang terkunci bersifat permanen; buat yang baru melalui addendum\n"
+"Solusi: Termin pembayaran yang terkunci bersifat permanen; gunakan dokumen Perubahan Termin Pembayaran atau Transfer Termin Pembayaran\n"
 
 #. module: ssi_school
 #: code:addons/ssi_school/models/school_enrollment_payment_term_detail.py:0
@@ -327,14 +327,14 @@ msgid ""
 "Context: Delete payment term detail\n"
 "Database ID: %s\n"
 "Problem: Payment term detail '%s' is locked and cannot be deleted\n"
-"Solution: Locked detail lines are permanent; create a new one via the "
-"addendum mechanism\n"
+"Solution: Locked detail lines are permanent; use a Payment Term Amendment or "
+"Transfer document\n"
 msgstr ""
 "\n"
 "Konteks: Hapus detail termin pembayaran\n"
 "ID Database: %s\n"
 "Masalah: Detail termin pembayaran '%s' terkunci dan tidak dapat dihapus\n"
-"Solusi: Baris detail yang terkunci bersifat permanen; buat yang baru melalui mekanisme addendum\n"
+"Solusi: Baris detail yang terkunci bersifat permanen; gunakan dokumen Perubahan Termin Pembayaran atau Transfer Termin Pembayaran\n"
 
 #. module: ssi_school
 #: code:addons/ssi_school/models/school_enrollment.py:0
@@ -615,14 +615,14 @@ msgid ""
 "Context: Update payment term\n"
 "Database ID: %s\n"
 "Problem: Payment term '%s' is locked and cannot be modified\n"
-"Solution: Add a new payment term via the addendum mechanism instead of "
+"Solution: Use a Payment Term Amendment or Transfer document instead of "
 "editing this one\n"
 msgstr ""
 "\n"
 "Konteks: Perbarui termin pembayaran\n"
 "ID Database: %s\n"
 "Masalah: Termin pembayaran '%s' terkunci dan tidak dapat diubah\n"
-"Solusi: Tambahkan termin pembayaran baru melalui mekanisme addendum, bukan mengubah yang ini\n"
+"Solusi: Gunakan dokumen Perubahan Termin Pembayaran atau Transfer Termin Pembayaran, bukan mengubah yang ini\n"
 
 #. module: ssi_school
 #: code:addons/ssi_school/models/school_enrollment_payment_term_detail.py:0
@@ -632,14 +632,14 @@ msgid ""
 "Context: Update payment term detail\n"
 "Database ID: %s\n"
 "Problem: Payment term detail '%s' is locked and cannot be modified\n"
-"Solution: Add a new detail line via the addendum mechanism instead of "
+"Solution: Use a Payment Term Amendment or Transfer document instead of "
 "editing this one\n"
 msgstr ""
 "\n"
 "Konteks: Perbarui detail termin pembayaran\n"
 "ID Database: %s\n"
 "Masalah: Detail termin pembayaran '%s' terkunci dan tidak dapat diubah\n"
-"Solusi: Tambahkan baris detail baru melalui mekanisme addendum, bukan mengubah yang ini\n"
+"Solusi: Gunakan dokumen Perubahan Termin Pembayaran atau Transfer Termin Pembayaran, bukan mengubah yang ini\n"
 
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term__customer_invoice_id
@@ -1178,17 +1178,17 @@ msgstr "Otomatis bernilai True jika periode ini adalah yang terakhir dalam tahun
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_term_detail__locked
 msgid ""
 "Automatically set to True when the enrollment is opened. Locked detail lines "
-"can no longer be edited or deleted; new detail lines added afterwards via "
-"the addendum mechanism start unlocked."
-msgstr "Otomatis bernilai True saat pendaftaran dibuka. Baris detail yang terkunci tidak dapat lagi diubah atau dihapus; baris detail baru yang ditambahkan setelahnya melalui mekanisme addendum dimulai dalam keadaan tidak terkunci."
+"can no longer be edited or deleted; changes go through a Payment Term "
+"Amendment or Transfer document."
+msgstr "Otomatis bernilai True saat pendaftaran dibuka. Baris detail yang terkunci tidak dapat lagi diubah atau dihapus; perubahan dilakukan melalui dokumen Perubahan Termin Pembayaran atau Transfer Termin Pembayaran."
 
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_term__locked
 msgid ""
 "Automatically set to True when the enrollment is opened. Locked payment "
-"terms can no longer be edited or deleted; new terms added afterwards via the "
-"addendum mechanism start unlocked."
-msgstr "Otomatis bernilai True saat pendaftaran dibuka. Termin pembayaran yang terkunci tidak dapat lagi diubah atau dihapus; termin pembayaran baru yang ditambahkan setelahnya melalui mekanisme addendum dimulai dalam keadaan tidak terkunci."
+"terms can no longer be edited or deleted; changes go through a Payment Term "
+"Amendment or Transfer document."
+msgstr "Otomatis bernilai True saat pendaftaran dibuka. Termin pembayaran yang terkunci tidak dapat lagi diubah atau dihapus; perubahan dilakukan melalui dokumen Perubahan Termin Pembayaran atau Transfer Termin Pembayaran."
 
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_grade_class__available_seat
@@ -1314,13 +1314,6 @@ msgstr "Cabang yang membawahi unit sekolah ini. Kosongkan jika unit langsung dib
 #: model:ir.ui.menu,name:ssi_school.school_branch_menu
 msgid "Branches"
 msgstr "Cabang"
-
-#. module: ssi_school
-#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__addendum_ok
-#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term__addendum_ok
-#: model:ir.model.fields,field_description:ssi_school.field_school_enrollment_payment_term_detail__addendum_ok
-msgid "Can Addendum"
-msgstr "Dapat Membuat Addendum"
 
 #. module: ssi_school
 #: model:ir.model.fields,field_description:ssi_school.field_school_enrollment__approve_ok
@@ -1530,11 +1523,6 @@ msgstr "Ruang Kelas"
 #: model:ir.model.fields.selection,name:ssi_school.selection__school_academic_term__enrollment_state__close
 msgid "Close"
 msgstr "Tutup"
-
-#. module: ssi_school
-#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_form
-msgid "Close Addendum"
-msgstr "Tutup Addendum"
 
 #. module: ssi_school
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_academic_term_view_form
@@ -3852,14 +3840,6 @@ msgid ""
 msgstr "Kebijakan yang menentukan apakah faktur boleh dibuat untuk termin pembayaran yang jatuh tempo, melalui wizard Buat Faktur Jatuh Tempo."
 
 #. module: ssi_school
-#: model:ir.model.fields,help:ssi_school.field_school_enrollment__addendum_ok
-msgid ""
-"Policy that determines whether new payment terms/details may be added to "
-"this enrollment while it is On Progress (open), via the addendum mechanism. "
-"Existing terms/details created before the addendum remain locked."
-msgstr "Kebijakan yang menentukan apakah termin pembayaran/detail baru boleh ditambahkan ke pendaftaran ini selama masih Dalam Proses (terbuka), melalui mekanisme addendum. Termin pembayaran/detail yang sudah ada sebelum addendum tetap terkunci."
-
-#. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment__copy_payment_term_ok
 msgid ""
 "Policy that determines whether payment terms may be copied into this "
@@ -5476,11 +5456,6 @@ msgstr "Tindakan ini akan memasukkan satu pekerjaan per calon siswa ke antrean u
 
 #. module: ssi_school
 #: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_form
-msgid "This will lock all currently unlocked payment terms/details. Continue?"
-msgstr "Tindakan ini akan mengunci semua termin pembayaran/detail yang saat ini belum terkunci. Lanjutkan?"
-
-#. module: ssi_school
-#: model_terms:ir.ui.view,arch_db:ssi_school.school_enrollment_view_form
 msgid "This will replace existing payment terms. Continue?"
 msgstr "Tindakan ini akan mengganti termin pembayaran yang ada. Lanjutkan?"
 
@@ -5913,14 +5888,6 @@ msgstr "Pesan Situs Web"
 #: model:ir.model.fields,help:ssi_school.field_school_teacher__website_message_ids
 msgid "Website communication history"
 msgstr "Riwayat komunikasi situs web"
-
-#. module: ssi_school
-#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_term__addendum_ok
-#: model:ir.model.fields,help:ssi_school.field_school_enrollment_payment_term_detail__addendum_ok
-msgid ""
-"Whether the owning enrollment currently allows adding new payment terms/"
-"details via the addendum mechanism."
-msgstr "Apakah pendaftaran pemilik saat ini mengizinkan penambahan termin pembayaran/detail baru melalui mekanisme addendum."
 
 #. module: ssi_school
 #: model:ir.model.fields,help:ssi_school.field_school_enrollment_fee_analysis__enrollment_state

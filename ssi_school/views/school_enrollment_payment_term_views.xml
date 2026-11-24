@@ -143,7 +143,6 @@
                         <field name="currency_id" invisible="1" />
                         <field name="locked" invisible="1" />
                         <field name="enrollment_state" invisible="1" />
-                        <field name="addendum_ok" invisible="1" />
                         <field name="force_delete_term_ok" invisible="1" />
                         <field name="state" invisible="1" />
                         <field name="customer_invoice_id" invisible="1" />
@@ -155,7 +154,7 @@
                                 name="detail_ids"
                                 colspan="2"
                                 nolabel="1"
-                                attrs="{'readonly': [('enrollment_state','!=','draft'),('addendum_ok','=',False)]}"
+                                attrs="{'readonly': [('enrollment_state','!=','draft')]}"
                             >
                             <tree decoration-muted="voided">
                                 <field name="sequence" widget="handle" />

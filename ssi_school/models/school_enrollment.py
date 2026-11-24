@@ -467,18 +467,6 @@ class SchoolEnrollment(models.Model):
             "copied into this enrollment."
         ),
     )
-    addendum_ok = fields.Boolean(
-        string="Can Addendum",
-        compute="_compute_policy",
-        store=False,
-        compute_sudo=True,
-        help=(
-            "Policy that determines whether new payment terms/details may "
-            "be added to this enrollment while it is On Progress (open), "
-            "via the addendum mechanism. Existing terms/details created "
-            "before the addendum remain locked."
-        ),
-    )
     force_delete_term_ok = fields.Boolean(
         string="Can Force Delete Term Invoice",
         compute="_compute_policy",
@@ -688,7 +676,7 @@ class SchoolEnrollment(models.Model):
         Overridden only to give this model its own ``_compute_policy``
         entry point for the extra policy fields declared here
         (``pass_ok``, ``fail_ok``, ``drop_out_ok``, ``graduate_ok``,
-        ``copy_payment_term_ok``, ``addendum_ok``,
+        ``copy_payment_term_ok``,
         ``create_invoice_ok``, ``force_delete_term_ok``); the values
         themselves are still produced by the mixin implementation
         reached through ``super()``.
@@ -1449,8 +1437,8 @@ Solution: Choose a different Grade Class or increase its capacity
         Post-open hook: runs after ``_10_enroll_student`` once the
         enrollment reaches ``open`` and calls ``_lock_payment_term``,
         freezing the terms and detail lines that exist at that moment.
-        Terms added later through the addendum mechanism stay unlocked
-        until Close Addendum is used.
+        Terms added later through a Payment Term Amendment or Transfer
+        document are handled by those documents.
 
         :return: None
         """
@@ -1628,19 +1616,6 @@ Solution: Confirm and open the customer invoice before finishing this enrollment
         self.ensure_one()
         self._delete_standard_move()  # Mixin
         self.recognition_line_ids.unlink()
-
-    def action_close_addendum(self):
-        """Close the addendum and lock the payment terms again.
-
-        Triggered by the Close Addendum button. For every selected
-        record, runs ``_lock_payment_term`` in ``sudo`` so the terms
-        and detail lines added during the addendum become locked and
-        can no longer be edited or deleted.
-
-        :return: None
-        """
-        for record in self.sudo():
-            record._lock_payment_term()  # pylint: disable=protected-access
 
     def action_open_create_due_invoice_wizard(self):
         """Open the Create Due Invoice wizard for this enrollment.
@@ -1884,7 +1859,6 @@ Solution: Delete or disconnect the invoice on the payment term before cancelling
             "drop_out_ok",
             "graduate_ok",
             "copy_payment_term_ok",
-            "addendum_ok",
             "create_invoice_ok",
             "force_delete_term_ok",
         ]

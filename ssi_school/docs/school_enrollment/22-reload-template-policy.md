@@ -25,5 +25,5 @@
 - **Policy Template** is recomputed and re-assigned to the highest-sequence
   `policy.template` for this model whose condition currently matches the record. This
   may change which action buttons and policy fields (`confirm_ok`,
-  `restart_approval_ok`, the Pass/Fail/Drop Out/Graduate/Create Due Invoice/Close
-  Addendum policy fields, etc.) are granted, without changing the record's status.
+  `restart_approval_ok`, the Pass/Fail/Drop Out/Graduate/Create Due Invoice policy
+  fields, etc.) are granted, without changing the record's status.
